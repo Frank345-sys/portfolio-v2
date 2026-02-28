@@ -1,68 +1,268 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════
+      TOKENS BASE (NO USAR DIRECTO EN COMPONENTES)
+  ═══════════════════════════════════════════════════════════════ */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* GRAYS */
+  --color-gray-50: #f7f7f7;
+  --color-gray-200: #ebebeb;
+  --color-gray-300: #d1d1d1;
+  --color-gray-400: #a3a3a3;
+  --color-gray-500: #7b7b7b;
+  --color-gray-600: #5c5c5c;
+  --color-gray-700: #333333;
+  --color-gray-800: #292929;
+  --color-gray-950: #171717;
+  --color-white: #ffffff;
+  --color-gray-alpha-10: rgba(153, 160, 174, 0.1);
+  --color-gray-alpha-16: rgba(153, 160, 174, 0.16);
+  --color-gray-alpha-24: rgba(153, 160, 174, 0.24);
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* BLUE (INFORMATION) */
+  --color-blue-50: #ebf1ff;
+  --color-blue-200: #c0d5ff;
+  --color-blue-400: #6895ff;
+  --color-blue-500: #335cff;
+  --color-blue-950: #122368;
+  --color-blue-alpha-10: rgba(51, 92, 255, 0.1);
+  --color-blue-alpha-16: rgba(51, 92, 255, 0.16);
+  --color-blue-alpha-24: rgba(51, 92, 255, 0.24);
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* ORANGE (WARNING) */
+  --color-orange-50: #fff3eb;
+  --color-orange-200: #ffd9c0;
+  --color-orange-500: #fa7319;
+  --color-orange-600: #e16614;
+  --color-orange-950: #71330a;
+  --color-orange-alpha-10: rgba(255, 145, 71, 0.1);
+  --color-orange-alpha-16: rgba(255, 145, 71, 0.16);
+  --color-orange-alpha-24: rgba(255, 145, 71, 0.24);
+
+  /* RED (ERROR) */
+  --color-red-50: #fff0f0;
+  --color-red-200: #ffc0c0;
+  --color-red-400: #ff5757;
+  --color-red-500: #ff2323;
+  --color-red-600: #ff0000;
+  --color-red-950: #500000;
+  --color-red-alpha-10: rgba(255, 35, 35, 0.1);
+  --color-red-alpha-16: rgba(255, 35, 35, 0.16);
+  --color-red-alpha-24: rgba(255, 35, 35, 0.24);
+
+  /* GREEN (SUCCESS) */
+  --color-green-50: #e0faec;
+  --color-green-200: #c2f5da;
+  --color-green-400: #3ee089;
+  --color-green-500: #1fc16b;
+  --color-green-600: #1daf61;
+  --color-green-950: #0b4627;
+  --color-green-alpha-10: rgba(31, 193, 107, 0.1);
+  --color-green-alpha-16: rgba(31, 193, 107, 0.16);
+  --color-green-alpha-24: rgba(31, 193, 107, 0.24);
+
+  /* YELLOW (IDLE) */
+  --color-yellow-50: #fffaeb;
+  --color-yellow-200: #ffecc0;
+  --color-yellow-400: #ffd268;
+  --color-yellow-500: #f6b51e;
+  --color-yellow-600: #e6a819;
+  --color-yellow-950: #624c18;
+  --color-yellow-alpha-10: rgba(246, 181, 30, 0.1);
+  --color-yellow-alpha-16: rgba(246, 181, 30, 0.16);
+  --color-yellow-alpha-24: rgba(246, 181, 30, 0.24);
+
+  /* PURPLE (FEATURE) */
+  --color-purple-50: #efebff;
+  --color-purple-200: #cac0ff;
+  --color-purple-400: #8c71f6;
+  --color-purple-500: #7d52f4;
+  --color-purple-950: #351a75;
+  --color-purple-alpha-10: rgba(120, 77, 239, 0.1);
+  --color-purple-alpha-16: rgba(120, 77, 239, 0.16);
+  --color-purple-alpha-24: rgba(120, 77, 239, 0.24);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* ═══════════════════════════════════════════════════════════════
+     SEMANTIC TOKENS - LIGHT MODE
+     ═══════════════════════════════════════════════════════════════ */
+@theme {
+  /* ─────────────────────────────────────────────────────────────
+       TEXTOS NEUTRALES
+       Uso: text-strong, text-subtle, text-soft, text-disabled, text-white
+       ───────────────────────────────────────────────────────────── */
+  --color-text-strong: var(--color-gray-950);
+  --color-text-subtle: var(--color-gray-600);
+  --color-text-soft: var(--color-gray-400);
+  --color-text-disabled: var(--color-gray-300);
+  --color-text-white: var(--color-white);
+
+  /* ─────────────────────────────────────────────────────────────
+       FONDOS NEUTRALES
+       Uso: bg-strong, bg-surface, bg-subtle, bg-soft, bg-weak, bg-white
+       ───────────────────────────────────────────────────────────── */
+  --color-bg-strong: var(--color-gray-950);
+  --color-bg-surface: var(--color-gray-800);
+  --color-bg-subtle: var(--color-gray-300);
+  --color-bg-soft: var(--color-gray-200);
+  --color-bg-weak: var(--color-gray-50);
+  --color-bg-white: var(--color-white);
+
+  /* ─────────────────────────────────────────────────────────────
+       BORDES NEUTRALES
+       Uso: border-stroke-strong, border-stroke-subtle, border-stroke-soft
+       ───────────────────────────────────────────────────────────── */
+  --color-stroke-strong: var(--color-gray-950);
+  --color-stroke-subtle: var(--color-gray-300);
+  --color-stroke-soft: var(--color-gray-200);
+
+  /* ─────────────────────────────────────────────────────────────
+       INFORMATION
+       Uso: text-information-base, bg-information-light, etc.
+       ───────────────────────────────────────────────────────────── */
+  --color-information-base: var(--color-blue-500);
+  --color-information-dark: var(--color-blue-950);
+  --color-information-light: var(--color-blue-200);
+  --color-information-lighter: var(--color-blue-50);
+
+  /* ─────────────────────────────────────────────────────────────
+       WARNING
+       Uso: text-warning-base, bg-warning-light, etc.
+       ───────────────────────────────────────────────────────────── */
+  --color-warning-base: var(--color-orange-500);
+  --color-warning-dark: var(--color-orange-950);
+  --color-warning-light: var(--color-orange-200);
+  --color-warning-lighter: var(--color-orange-50);
+
+  /* ─────────────────────────────────────────────────────────────
+       ERROR
+       Uso: text-error-base, bg-error-light, etc.
+       ───────────────────────────────────────────────────────────── */
+  --color-error-base: var(--color-red-500);
+  --color-error-dark: var(--color-red-950);
+  --color-error-light: var(--color-red-200);
+  --color-error-lighter: var(--color-red-50);
+
+  /* ─────────────────────────────────────────────────────────────
+       SUCCESS
+       Uso: text-success-base, bg-success-light, etc.
+       ───────────────────────────────────────────────────────────── */
+  --color-success-base: var(--color-green-500);
+  --color-success-dark: var(--color-green-950);
+  --color-success-light: var(--color-green-200);
+  --color-success-lighter: var(--color-green-50);
+
+  /* ─────────────────────────────────────────────────────────────
+       IDLE (INACTIVIDAD)
+       Uso: text-idle-base, bg-idle-light, etc.
+       ───────────────────────────────────────────────────────────── */
+  --color-idle-base: var(--color-yellow-500);
+  --color-idle-dark: var(--color-yellow-950);
+  --color-idle-light: var(--color-yellow-200);
+  --color-idle-lighter: var(--color-yellow-50);
+
+  /* ─────────────────────────────────────────────────────────────
+       FEATURE (NOVEDADES)
+       Uso: text-feature-base, bg-feature-light, etc.
+       ───────────────────────────────────────────────────────────── */
+  --color-feature-base: var(--color-purple-500);
+  --color-feature-dark: var(--color-purple-950);
+  --color-feature-light: var(--color-purple-200);
+  --color-feature-lighter: var(--color-purple-50);
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+/* ═══════════════════════════════════════════════════════════════
+     DARK MODE
+     ═══════════════════════════════════════════════════════════════ */
+.dark {
+  /* TEXTOS NEUTRALES */
+  --color-text-strong: var(--color-white);
+  --color-text-subtle: var(--color-gray-400);
+  --color-text-soft: var(--color-gray-500);
+  --color-text-disabled: var(--color-gray-600);
+  --color-text-white: var(--color-gray-950);
+
+  /* FONDOS NEUTRALES */
+  --color-bg-strong: var(--color-white);
+  --color-bg-surface: var(--color-gray-200);
+  --color-bg-subtle: var(--color-gray-600);
+  --color-bg-soft: var(--color-gray-700);
+  --color-bg-weak: var(--color-gray-800);
+  --color-bg-white: var(--color-gray-950);
+
+  /* BORDES NEUTRALES */
+  --color-stroke-strong: var(--color-white);
+  --color-stroke-subtle: var(--color-gray-600);
+  --color-stroke-soft: var(--color-gray-700);
+
+  /* INFORMATION */
+  --color-information-dark: var(--color-blue-400);
+  --color-information-light: var(--color-blue-alpha-24);
+  --color-information-lighter: var(--color-blue-alpha-16);
+
+  /* WARNING */
+  --color-warning-base: var(--color-orange-600);
+  --color-warning-dark: var(--color-blue-400);
+  --color-warning-light: var(--color-orange-alpha-24);
+  --color-warning-lighter: var(--color-orange-alpha-16);
+
+  /* ERROR */
+  --color-error-base: var(--color-red-600);
+  --color-error-dark: var(--color-red-400);
+  --color-error-light: var(--color-red-alpha-24);
+  --color-error-lighter: var(--color-red-alpha-16);
+
+  /* SUCCESS */
+  --color-success-base: var(--color-green-600);
+  --color-success-dark: var(--color-green-400);
+  --color-success-light: var(--color-green-alpha-24);
+  --color-success-lighter: var(--color-green-alpha-16);
+
+  /* IDLE */
+  --color-idle-base: var(--color-yellow-600);
+  --color-idle-dark: var(--color-yellow-400);
+  --color-idle-light: var(--color-yellow-alpha-24);
+  --color-idle-lighter: var(--color-yellow-alpha-16);
+
+  /* FEATURE */
+  --color-feature-dark: var(--color-purple-400);
+  --color-feature-light: var(--color-purple-alpha-24);
+  --color-feature-lighter: var(--color-purple-alpha-16);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* ═══════════════════════════════════════════════════════════════
+   TRANSICIÓN SUAVE ENTRE THEMES
+   ═══════════════════════════════════════════════════════════════ */
+
+html {
+  background-color: var(--color-bg-weak);
+  color: var(--color-text-strong);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+*,
+*::before,
+*::after {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    fill 0.25s ease,
+    stroke 0.25s ease;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Solo animar cuando el usuario cambia el theme */
+html.theme-transition,
+html.theme-transition * {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    fill 0.25s ease,
+    stroke 0.25s ease;
 }
