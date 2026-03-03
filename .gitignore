@@ -27,5 +27,8 @@ dist-ssr
 # Cursor rules
 .cursor/
 
+# AI agents
+.agents/
+
 # Test coverage
 coverage/
