@@ -1,37 +1,38 @@
-## 📌 Description
+## Descripción corta
 
-Provide a short summary of the changes and the related issue.
+Breve resumen del cambio y el porqué.
 
----
-
-## 🔧 Type of Change
+## Tipo de cambio
 
 - [ ] feat
 - [ ] fix
+- [ ] docs
 - [ ] refactor
 - [ ] chore
-- [ ] docs
-- [ ] style
+- [ ] perf
 - [ ] test
 
----
+## Issue relacionado
 
-## 🧪 How Has This Been Tested?
+Closes #<número> (solo si aplica y se proporciona)
 
-Describe how you tested your changes.
+## Cambios principales
 
----
+- Punto 1
+- Punto 2
 
-## 📷 Screenshots (if applicable)
+## Cómo probar / QA
 
-Add screenshots here.
+1. Paso 1
+2. Paso 2
 
----
+## Checklist
 
-## ✅ Checklist
+- [ ] Tests añadidos / actualizados
+- [ ] Lint y formateo ejecutados
+- [ ] Build pasa localmente
+- [ ] Documentación actualizada (si aplica)
 
-- [ ] Code follows project conventions
-- [ ] Self-reviewed code
-- [ ] No console errors
-- [ ] Prettier and ESLint pass
-- [ ] Commit message follows Conventional Commits
+## Notas para el reviewer
+
+Contexto adicional o pasos necesarios.
