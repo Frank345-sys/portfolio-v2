@@ -292,6 +292,7 @@ Este proyecto sigue el modelo **Gitflow** con las siguientes ramas:
 ### Flujo completo
 
 1. Crear rama desde `develop`:
+
    ```bash
    git checkout develop
    git pull origin develop
@@ -323,6 +324,7 @@ Este proyecto sigue el modelo **Gitflow** con las siguientes ramas:
 ### Hotfix
 
 Para bugs críticos en producción:
+
 ```bash
 git checkout main
 git checkout -b hotfix/nombre-bug
