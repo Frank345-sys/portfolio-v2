@@ -266,6 +266,7 @@ Commitlint está configurado **tanto en local como en CI**. Las siguientes restr
 - **Sin acentos ni caracteres especiales** en el subject (p. ej. usar "semanticas" en lugar de "semánticas").
 - **Sin guiones** en palabras del subject (p. ej. "reexports" en lugar de "re-exports").
 - **Scope mínimo 3 caracteres** (p. ej. usar `workflow` en lugar de `ci` para GitHub Actions).
+- **Scope en kebab-case** (minúsculas y guiones; p. ej. `design-tokens` o `tokens`).
 - **Header máximo 100 caracteres** (tipo + scope + descripción).
 
 - **Local:** Se usa `@commitlint/cli` y `@commitlint/config-conventional` como devDependencies. El archivo `commitlint.config.cjs` en la raíz extiende `@commitlint/config-conventional` y define las reglas anteriores. El hook **commit-msg** de Husky ejecuta `npx commitlint --edit "$1"` y valida el mensaje antes de que el commit quede registrado.
