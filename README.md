@@ -275,18 +275,60 @@ En `package.json`, clave `"lint-staged"`: archivos `*.{js,jsx,ts,tsx}`; comandos
 
 ---
 
-## 🔁 Flujo commit → push → PR
+## 🔁 Gitflow
 
-1. Crear rama desde `main` (o la rama base).
-2. Desarrollar usando el alias `@/` para imports desde `src/`.
-3. Opcional en local: `npm run format`, `npm run lint`, `npm run test`, `npm run typecheck`.
-4. `git add` y `git commit`:
-   - **pre-commit** ejecuta lint-staged, `test:changed` y typecheck; si algo falla, el commit no se completa.
-   - **commit-msg** ejecuta Commitlint sobre el mensaje; si el formato no es válido, el commit se aborta.
-5. `git push`. En GitHub se ejecutan los workflows:
-   - **ci.yml:** lint, typecheck, test, build.
-   - **commitlint.yml:** validación de mensajes de commit en el rango subido.
-6. Abrir PR; usar la plantilla `.github/pull_request_template.md` si existe. Los mismos workflows validan la rama y los mensajes de los commits del PR.
+Este proyecto sigue el modelo **Gitflow** con las siguientes ramas:
+
+| Rama        | Tipo       | Propósito                                                                     |
+| ----------- | ---------- | ----------------------------------------------------------------------------- |
+| `main`      | Permanente | Código en producción. Solo recibe merges desde `release/*` y `hotfix/*`       |
+| `develop`   | Permanente | Rama de integración. Todas las features se integran aquí                      |
+| `feat/*`    | Temporal   | Nueva funcionalidad. Se crea y mergea en `develop`                            |
+| `fix/*`     | Temporal   | Corrección de bugs. Se crea y mergea en `develop`                             |
+| `chore/*`   | Temporal   | Cambios de configuración. Se crea y mergea en `develop`                       |
+| `release/*` | Temporal   | Preparación de release. Se crea desde `main`, recibe merges de `develop`      |
+| `hotfix/*`  | Temporal   | Fix urgente en producción. Se crea desde `main`, mergea en `main` y `develop` |
+
+### Flujo completo
+
+1. Crear rama desde `develop`:
+   ```bash
+   git checkout develop
+   git pull origin develop
+   git checkout -b feat/nombre-feature
+   ```
+
+2. Desarrollar con commits atómicos siguiendo Conventional Commits.
+
+3. Antes de cada commit, el pre-commit ejecuta automáticamente:
+   lint-staged → test:changed → typecheck → commitlint
+
+4. Abrir PR hacia `develop` usando la plantilla del proyecto.
+
+5. CI debe pasar: lint + typecheck + test + build.
+
+6. Merge a `develop`.
+
+7. Cuando `develop` tenga suficientes features para una release:
+   ```bash
+   git checkout main
+   git checkout -b release/1.0.0
+   ```
+   Abrir PR de `develop` → `release/1.0.0`, luego PR de `release/1.0.0` → `main`.
+   ```bash
+   git tag v1.0.0
+   git push origin v1.0.0
+   ```
+
+### Hotfix
+
+Para bugs críticos en producción:
+```bash
+git checkout main
+git checkout -b hotfix/nombre-bug
+# fix the bug
+# open PR to main AND develop
+```
 
 ---
 
