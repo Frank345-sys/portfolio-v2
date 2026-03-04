@@ -260,14 +260,16 @@ El script `prepare` en `package.json` ejecuta `husky` tras `npm install`, instal
 
 ### Commitlint (local y en CI)
 
-Commitlint está configurado **tanto en local como en CI**.
+Commitlint está configurado **tanto en local como en CI**. Las siguientes restricciones se aplican automáticamente en cada commit mediante el hook **commit-msg** de Husky:
 
-- **Local:** Se usa `@commitlint/cli` y `@commitlint/config-conventional` como devDependencies. El archivo `commitlint.config.cjs` en la raíz extiende `@commitlint/config-conventional`. El hook **commit-msg** de Husky ejecuta `npx commitlint --edit "$1"` y valida el mensaje antes de que el commit quede registrado.
-- **CI:** El workflow `.github/workflows/commitlint.yml` se dispara en **push** y **pull_request** (todas las ramas). Tras checkout con historial completo (`fetch-depth: 0`), Node 20 y `npm ci`, se ejecuta Commitlint sobre el rango de commits:
-  - **En push:** `npx commitlint --from ${{ github.event.before }} --to ${{ github.sha }} --verbose`
-  - **En pull_request:** `npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose`
+- **Subject en minúsculas** (sin mayúsculas salvo acrónimos si se permitieran; en la práctica usar todo en minúsculas).
+- **Sin acentos ni caracteres especiales** en el subject (p. ej. usar "semanticas" en lugar de "semánticas").
+- **Sin guiones** en palabras del subject (p. ej. "reexports" en lugar de "re-exports").
+- **Scope mínimo 3 caracteres** (p. ej. usar `workflow` en lugar de `ci` para GitHub Actions).
+- **Header máximo 100 caracteres** (tipo + scope + descripción).
 
-Si algún mensaje del rango no cumple la convención, el job falla.
+- **Local:** Se usa `@commitlint/cli` y `@commitlint/config-conventional` como devDependencies. El archivo `commitlint.config.cjs` en la raíz extiende `@commitlint/config-conventional` y define las reglas anteriores. El hook **commit-msg** de Husky ejecuta `npx commitlint --edit "$1"` y valida el mensaje antes de que el commit quede registrado.
+- **CI:** El workflow `.github/workflows/commitlint.yml` se dispara en **push** y **pull_request** (todas las ramas). La validación de mensajes se ejecuta **solo en pull_request**: tras checkout con historial completo (`fetch-depth: 0`), Node 20 y `npm ci`, se ejecuta commitlint sobre el rango de commits entre la base y la cabeza del PR. Si la base no está disponible (por ejemplo, primer push a una rama nueva, SHA en ceros), se valida solo el último commit (HEAD~1..HEAD) para evitar el error "Invalid revision range".
 
 ### lint-staged
 
