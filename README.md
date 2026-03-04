@@ -12,7 +12,7 @@
 
 ## 📌 Descripción del proyecto
 
-**portfolio-v2** es una SPA (Single Page Application) que sirve como portfolio personal de Frank González. Está construida con React 19, Vite 7 y TypeScript en modo estricto, utiliza Tailwind CSS 4 para estilos y un sistema de design tokens con colores semánticos. Incluye una pipeline de calidad completa: ESLint, Prettier, Husky (pre-commit y commit-msg), lint-staged, Commitlint (local y en CI) y dos workflows de GitHub Actions (CI y validación de mensajes de commit).
+**portfolio-v2** es una SPA (Single Page Application) que sirve como mi portfolio personal. Está construida con React 19, Vite 7 y TypeScript en modo estricto, utiliza Tailwind CSS 4 para estilos y un sistema de design tokens con colores semánticos. Incluye una pipeline de calidad completa: ESLint, Prettier, Husky (pre-commit y commit-msg), lint-staged, Commitlint (local y en CI) y dos workflows de GitHub Actions (CI y validación de mensajes de commit).
 
 ---
 
