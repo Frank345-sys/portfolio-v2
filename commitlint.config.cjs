@@ -3,7 +3,36 @@ module.exports = {
   rules: {
     'subject-case': [2, 'always', 'lower-case'],
     'scope-case': [2, 'always', 'kebab-case'],
-    'scope-min-length': [2, 'always', 3],
+    'scope-min-length': [2, 'always', 2],
     'header-max-length': [2, 'always', 100],
+    'scope-enum': [
+      2,
+      'always',
+      [
+        // Estándar
+        'tokens',
+        'components',
+        'hooks',
+        'utils',
+        'styles',
+        'layout',
+        'theme',
+        'seo',
+        'test',
+        'workflow',
+        'config',
+        'deps',
+        'readme',
+        'gitflow',
+        'build',
+        'ci',
+        'release',
+        // Secciones portfolio
+        'hero',
+        'about',
+        'projects',
+        'contact',
+      ],
+    ],
   },
 }
