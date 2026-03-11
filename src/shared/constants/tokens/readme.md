@@ -7,14 +7,15 @@ Sistema completo de tokens de diseño basado para landing pages.
 ```bash
 # Coloca estos archivos en tu proyecto
 src/
-  styles/
+  constans/
     tokens/
-      typography.ts
-      layout.ts
-      button.ts
-      badge.ts
-      input.ts
       animation.ts
+      badge.ts
+      button.ts
+      input.ts
+      layout.ts
+      shadow.ts
+      typography.ts
       index.ts
 ```
 
@@ -35,14 +36,8 @@ export default function Hero() {
             La mejor plataforma para llevar tu negocio al siguiente nivel
           </p>
           <div className={LAYOUT.hero.ctas}>
-            <button
-              className={`${BUTTON.base.default} ${BUTTON.variant.primary} ${BUTTON.size.lg}`}
-            >
-              Comenzar gratis
-            </button>
-            <button
-              className={`${BUTTON.base.default} ${BUTTON.variant.secondary} ${BUTTON.size.lg}`}
-            >
+            <button className={BUTTON.special.cta}>Comenzar gratis</button>
+            <button className={cn(BUTTON.variant.text.primary, BUTTON.size.lg)}>
               Ver demo
             </button>
           </div>
@@ -70,9 +65,7 @@ export default function Hero() {
         </p>
         <div className={LAYOUT.hero.ctas}>
           <button className={BUTTON.special.cta}>Acción principal</button>
-          <button
-            className={`${BUTTON.base.default} ${BUTTON.variant.tertiary} ${BUTTON.size.lg}`}
-          >
+          <button className={cn(BUTTON.variant.text.primary, BUTTON.size.lg)}>
             Acción secundaria →
           </button>
         </div>
@@ -108,12 +101,18 @@ export default function Hero() {
         {features.map((feature, i) => (
           <div
             key={i}
-            className={`${LAYOUT.card.interactive} ${ANIMATION.hover.lift}`}
+            className={cn(LAYOUT.card.interactive, ANIMATION.hover.lift)}
           >
             <div className={LAYOUT.flex.stackCompact}>
-              <div className={`${BADGE.special.pill} ${BADGE.variant.primary}`}>
+              <span
+                className={cn(
+                  BADGE.base.default,
+                  BADGE.size.md,
+                  BADGE.variant.primary
+                )}
+              >
                 {feature.icon}
-              </div>
+              </span>
               <h3 className={TYPOGRAPHY.title.card}>{feature.title}</h3>
               <p className={TYPOGRAPHY.paragraph.secondary}>
                 {feature.description}
@@ -144,7 +143,7 @@ export default function Hero() {
         {plans.map((plan) => (
           <div
             key={plan.name}
-            className={`${LAYOUT.card.elevated} ${LAYOUT.flex.stack}`}
+            className={cn(LAYOUT.card.elevated, LAYOUT.flex.stack)}
           >
             <div>
               <h3 className={TYPOGRAPHY.title.card}>{plan.name}</h3>
@@ -166,7 +165,11 @@ export default function Hero() {
             </ul>
 
             <button
-              className={`${BUTTON.base.default} ${BUTTON.variant.primary} ${BUTTON.size.md} w-full`}
+              className={cn(
+                BUTTON.variant.contained.primary,
+                BUTTON.size.md,
+                'w-full'
+              )}
             >
               Comenzar
             </button>
@@ -267,7 +270,11 @@ export default function Hero() {
         </div>
 
         <button
-          className={`${BUTTON.base.default} ${BUTTON.variant.primary} ${BUTTON.size.lg} w-full`}
+          className={cn(
+            BUTTON.variant.contained.primary,
+            BUTTON.size.lg,
+            'w-full'
+          )}
         >
           Enviar mensaje
         </button>
@@ -320,6 +327,8 @@ export default function Hero() {
 
 ## 🎭 Animaciones
 
+Los tokens de animación están centralizados en `animation.ts`. El resto de archivos (`button.ts`, `badge.ts`, `input.ts`, `layout.ts`, `typography.ts`) los importan internamente — no necesitas combinarlos manualmente en esos casos.
+
 ```tsx
 // Fade in al cargar
 <div className={ANIMATION.fade.inFromBottom}>
@@ -331,21 +340,30 @@ export default function Hero() {
   Card que se eleva al hover
 </div>
 
+// Transiciones reutilizables
+<div className={ANIMATION.transition.default}>transition-all 300ms</div>
+<div className={ANIMATION.transition.colors}>transition-colors 300ms</div>
+<div className={ANIMATION.transition.fast}>transition-all 150ms</div>
+
 // Scroll reveal (con Intersection Observer)
 <div className={`${ANIMATION.scroll.reveal} data-[visible=true]:${ANIMATION.scroll.visible}`}>
   Aparece al hacer scroll
 </div>
+
+// Loading states
+<div className={ANIMATION.loading.skeleton} />
+<div className={ANIMATION.loading.spinner} />
 ```
 
 ## 🎨 Badges y Pills
 
 ```tsx
-// Nuevo feature
-<span className={`${BADGE.base.default} ${BADGE.size.sm} ${BADGE.variant.feature}`}>
+// Badge estándar
+<span className={cn(BADGE.base.default, BADGE.size.sm, BADGE.variant.feature)}>
   ✨ Nuevo
 </span>
 
-// Categorías
+// Categorías con pill
 <div className={BADGE.group.horizontal}>
   {categories.map(cat => (
     <span key={cat} className={BADGE.special.pill}>
@@ -354,9 +372,13 @@ export default function Hero() {
   ))}
 </div>
 
+// Chip seleccionable / seleccionado
+<span className={BADGE.special.chip}>React</span>
+<span className={BADGE.special.chipActive}>TypeScript</span>
+
 // Estado online
 <div className="flex items-center gap-2">
-  <span className={`${BADGE.special.dot} ${BADGE.status.online}`} />
+  <span className={cn(BADGE.special.dot, BADGE.status.online)} />
   <span>En línea</span>
 </div>
 ```
@@ -367,54 +389,78 @@ export default function Hero() {
 import { cva } from 'class-variance-authority'
 import { BUTTON } from '@/styles/tokens'
 
-const buttonVariants = cva(BUTTON.base.default, {
+const buttonVariants = cva('', {
   variants: {
     variant: {
-      primary: BUTTON.variant.primary,
-      secondary: BUTTON.variant.secondary,
+      primary: BUTTON.variant.contained.primary,
+      outlined: BUTTON.variant.outlined.primary,
+      text: BUTTON.variant.text.primary,
     },
     size: {
       sm: BUTTON.size.sm,
+      md: BUTTON.size.md,
       lg: BUTTON.size.lg,
     },
   },
   defaultVariants: {
     variant: 'primary',
-    size: 'lg',
+    size: 'md',
   },
 })
 
 // Uso
-;<button className={buttonVariants({ variant: 'primary', size: 'lg' })}>
+<button className={buttonVariants({ variant: 'primary', size: 'lg' })}>
   Click me
 </button>
 ```
+
+## 🌑 Sombras
+
+Las sombras se importan desde `shadow.ts` y ya están integradas internamente en `layout.ts`. Úsalas directamente si necesitas elevar un elemento puntual:
+
+```tsx
+import { SHADOW } from '@/styles/tokens'
+
+<div className={SHADOW.md}>card con sombra media</div>
+<div className={SHADOW.lg}>modal o popover</div>
+```
+
+Escala disponible: `xs` → `sm` → `md` → `lg` → `xlg` → `x2lg`
 
 ## 📱 Responsive Design
 
 Todos los tokens incluyen breakpoints responsive:
 
-- `sm:` - 640px+
-- `md:` - 768px+
-- `lg:` - 1024px+
+- `sm:` — 640px+
+- `md:` — 768px+
+- `lg:` — 1024px+
 
-Los tamaños de texto, spacing, y layouts se ajustan automáticamente.
+Los tamaños de texto, spacing y layouts se ajustan automáticamente.
 
 ## 🎯 Tokens Semánticos
 
-Usa los tokens semánticos de Blife en lugar de colores genéricos:
+Usa los tokens semánticos en lugar de colores genéricos de Tailwind:
 
 ```tsx
 // ❌ No hagas esto
 <p className="text-gray-600">Texto</p>
+<div className="shadow-lg">Card</div>
+<div className="transition-all duration-300 ease-in-out">...</div>
 
 // ✅ Haz esto
 <p className="text-subtle">Texto</p>
+<div className={SHADOW.lg}>Card</div>
+<div className={ANIMATION.transition.default}>...</div>
 ```
 
-Tokens disponibles:
+**Texto:** `text-strong` · `text-subtle` · `text-soft` · `text-disabled` · `text-white`
 
-- **Texto**: `text-strong`, `text-subtle`, `text-soft`, `text-disabled`
-- **Fondos**: `bg-weak`, `bg-soft`, `bg-subtle`, `bg-surface`, `bg-strong`
-- **Bordes**: `border-stroke-soft`, `border-stroke-subtle`, `border-stroke-strong`
-- **Estados**: `bg-error-lighter`, `text-success-dark`, etc.
+**Fondos:** `bg-white` · `bg-weak` · `bg-soft` · `bg-subtle` · `bg-surface` · `bg-strong`
+
+**Bordes:** `border-stroke-soft` · `border-stroke-subtle` · `border-stroke-strong`
+
+**Estados:** `bg-information-lighter` · `text-information-dark` · `bg-error-lighter` · `text-success-dark` · etc.
+
+**Sombras:** `SHADOW.xs` · `SHADOW.sm` · `SHADOW.md` · `SHADOW.lg` · `SHADOW.xlg` · `SHADOW.x2lg`
+
+**Transiciones:** `ANIMATION.transition.fast` · `ANIMATION.transition.default` · `ANIMATION.transition.slow` · `ANIMATION.transition.colors`

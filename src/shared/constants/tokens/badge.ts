@@ -1,3 +1,5 @@
+import { ANIMATION } from './animation'
+
 /**
  * Tokens de badges: base, tamaños, variantes, especiales, estado y grupos.
  *
@@ -69,10 +71,10 @@ export const BADGE = {
       'inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-error-base text-white text-xs font-bold rounded-full',
 
     /** Pill grande (categoría, tag) */
-    pill: 'px-4 py-2 bg-weak text-subtle text-sm font-medium rounded-full hover:bg-soft transition-colors',
+    pill: `px-4 py-2 bg-weak text-subtle text-sm font-medium rounded-full hover:bg-soft ${ANIMATION.transition.colors}`,
 
     /** Chip seleccionable */
-    chip: 'px-4 py-2 bg-white border-2 border-stroke-soft text-subtle text-sm font-medium rounded-full hover:border-information-base hover:bg-information-lighter hover:text-information-dark transition-all cursor-pointer',
+    chip: `px-4 py-2 bg-white border-2 border-stroke-soft text-subtle text-sm font-medium rounded-full hover:border-information-base hover:bg-information-lighter hover:text-information-dark ${ANIMATION.transition.default} cursor-pointer`,
 
     /** Chip seleccionado */
     chipActive:
