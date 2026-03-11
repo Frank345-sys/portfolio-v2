@@ -1,3 +1,6 @@
+import { ANIMATION } from './animation'
+import { SHADOW } from './shadow'
+
 /**
  * Tokens de layout: contenedores, secciones, grids, flex, cards, hero, CTA, header, footer, divider.
  * Usar para espaciado, disposición y estructura de la página.
@@ -112,7 +115,7 @@ export const LAYOUT = {
     wrap: 'flex flex-wrap gap-4 sm:gap-6',
 
     /** Toggle/control en línea (label del ThemeToggle, etc.) */
-    inlineToggle: 'inline-flex cursor-pointer items-center gap-3 select-none',
+    inlineToggle: 'inline-flex items-center gap-3 select-none',
   },
 
   card: {
@@ -120,12 +123,10 @@ export const LAYOUT = {
     default: 'bg-white rounded-lg border border-stroke-soft p-6 sm:p-8',
 
     /** Card con sombra */
-    elevated:
-      'bg-white rounded-lg border border-stroke-soft shadow-lg p-6 sm:p-8',
+    elevated: `bg-white rounded-lg border border-stroke-soft ${SHADOW.lg} p-6 sm:p-8`,
 
     /** Card interactiva */
-    interactive:
-      'bg-white rounded-lg border border-stroke-soft p-6 sm:p-8 hover:border-stroke-subtle transition-all hover:shadow-md',
+    interactive: `bg-white rounded-lg border border-stroke-soft p-6 sm:p-8 hover:border-stroke-subtle hover:${SHADOW.md} ${ANIMATION.transition.default}`,
 
     /** Card compacta */
     compact: 'bg-white rounded-lg border border-stroke-soft p-4 sm:p-6',
@@ -160,9 +161,11 @@ export const LAYOUT = {
   },
 
   header: {
-    /** Header sticky */
-    sticky:
-      'sticky top-0 z-50 bg-white border-b border-stroke-soft backdrop-blur-sm bg-white/80',
+    /** Barra del header (fixed, fondo y borde semánticos para light/dark) */
+    bar: `fixed top-0 right-0 left-0 z-50 backdrop-blur-sm ${SHADOW.sm}`,
+
+    /** Header sticky (alternativa con sticky) */
+    sticky: `sticky top-0 z-50 backdrop-blur-sm ${SHADOW.sm}`,
 
     /** Header con padding */
     wrapper: 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4',

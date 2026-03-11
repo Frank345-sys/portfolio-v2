@@ -1,3 +1,5 @@
+import { ANIMATION } from './animation'
+
 /**
  * Tokens de tipografía para títulos, párrafos, labels, links y variantes especiales.
  * Usar en lugar de clases Tailwind sueltas para mantener consistencia.
@@ -15,53 +17,55 @@ export const TYPOGRAPHY = {
 
     /** Título de sección */
     section:
-      'text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-strong leading-tight',
+      'text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-strong leading-tight tracking-tight',
 
     /** Subtítulo de sección */
-    subsection: 'text-xl sm:text-2xl md:text-3xl font-semibold text-strong',
+    subsection:
+      'text-xl sm:text-2xl md:text-3xl font-semibold text-strong leading-tight tracking-tight',
 
     /** Título de card/componente */
-    card: 'text-lg sm:text-xl md:text-2xl font-semibold text-strong',
+    card: 'text-lg sm:text-xl md:text-2xl font-semibold text-strong leading-tight',
 
     /** Título pequeño */
-    small: 'text-base sm:text-lg md:text-xl font-semibold text-strong',
+    small:
+      'text-base sm:text-lg md:text-xl font-semibold text-strong leading-tight',
   },
 
   heading: {
     /** H1 */
-    h1: 'text-4xl sm:text-5xl md:text-6xl font-bold text-strong',
+    h1: 'text-4xl sm:text-5xl md:text-6xl font-bold text-strong leading-tight tracking-tight',
 
     /** H2 */
-    h2: 'text-3xl sm:text-4xl md:text-5xl font-bold text-strong',
+    h2: 'text-3xl sm:text-4xl md:text-5xl font-bold text-strong leading-tight tracking-tight',
 
     /** H3 */
-    h3: 'text-2xl sm:text-3xl md:text-4xl font-semibold text-strong',
+    h3: 'text-2xl sm:text-3xl md:text-4xl font-semibold text-strong leading-tight tracking-tight',
 
     /** H4 */
-    h4: 'text-xl sm:text-2xl md:text-3xl font-semibold text-strong',
+    h4: 'text-xl sm:text-2xl md:text-3xl font-semibold text-strong leading-tight tracking-tight',
 
     /** H5 */
-    h5: 'text-lg sm:text-xl md:text-2xl font-semibold text-strong',
+    h5: 'text-lg sm:text-xl md:text-2xl font-semibold text-strong leading-tight',
 
     /** H6 */
-    h6: 'text-base sm:text-lg md:text-xl font-medium text-strong',
+    h6: 'text-base sm:text-lg md:text-xl font-medium text-strong leading-tight',
   },
 
   paragraph: {
-    /** Texto principal - lectura cómoda */
-    primary: 'text-base sm:text-lg text-subtle leading-relaxed',
+    /** Texto principal */
+    primary: 'text-base sm:text-lg text-subtle',
 
     /** Texto secundario */
-    secondary: 'text-sm sm:text-base text-subtle leading-relaxed',
+    secondary: 'text-sm sm:text-base text-subtle',
 
     /** Lead/intro debajo del hero */
-    lead: 'text-lg sm:text-xl md:text-2xl text-subtle leading-relaxed font-normal',
+    lead: 'text-lg sm:text-xl md:text-2xl text-subtle font-normal',
 
     /** Texto grande destacado */
-    large: 'text-xl sm:text-2xl text-subtle leading-relaxed',
+    large: 'text-xl sm:text-2xl text-subtle',
 
     /** Texto muted/apoyo */
-    muted: 'text-sm sm:text-base text-soft leading-relaxed',
+    muted: 'text-sm sm:text-base text-soft',
 
     /** Texto muy pequeño */
     small: 'text-xs sm:text-sm text-soft',
@@ -77,9 +81,9 @@ export const TYPOGRAPHY = {
     /** Labels pequeños */
     small: 'text-xs font-medium text-subtle',
 
-    /** Overline/eyebrow (texto sobre títulos) */
+    /** Overline/eyebrow */
     overline:
-      'text-xs sm:text-sm font-semibold text-subtle uppercase tracking-wider',
+      'text-xs sm:text-sm font-semibold text-subtle uppercase tracking-widest',
 
     /** Badge/pill text */
     badge: 'text-xs font-semibold uppercase tracking-wide',
@@ -87,18 +91,16 @@ export const TYPOGRAPHY = {
 
   link: {
     /** Link estándar */
-    default:
-      'text-information-base hover:text-information-dark underline underline-offset-2 transition-colors',
+    default: `text-information-base hover:text-information-dark underline underline-offset-2 ${ANIMATION.transition.colors}`,
 
     /** Link sin underline */
-    plain:
-      'text-information-base hover:text-information-dark transition-colors',
+    plain: `text-information-base hover:text-information-dark ${ANIMATION.transition.colors}`,
 
     /** Link en navegación */
-    nav: 'text-subtle hover:text-strong transition-colors font-medium',
+    nav: `text-subtle hover:text-strong ${ANIMATION.transition.colors} font-medium`,
 
     /** Link en footer */
-    footer: 'text-soft hover:text-subtle transition-colors text-sm',
+    footer: `text-soft hover:text-subtle ${ANIMATION.transition.colors} text-sm`,
   },
 
   special: {
@@ -109,28 +111,25 @@ export const TYPOGRAPHY = {
     code: 'text-sm font-mono bg-soft text-strong px-1.5 py-0.5 rounded',
 
     /** Quote */
-    quote: 'text-lg sm:text-xl md:text-2xl text-subtle italic leading-relaxed',
+    quote: 'text-lg sm:text-xl md:text-2xl text-subtle italic',
 
     /** Número destacado/stat */
-    stat: 'text-4xl sm:text-5xl md:text-6xl font-bold text-strong tabular-nums',
+    stat: 'text-xl sm:text-2xl md:text-3xl font-bold text-strong tabular-nums leading-tight',
 
     /** Precio */
     price:
-      'text-3xl sm:text-4xl md:text-5xl font-bold text-strong tabular-nums',
+      'text-3xl sm:text-4xl md:text-5xl font-bold text-strong tabular-nums leading-tight',
   },
 
-  /**
-   * Clases base sin color (para composición con CVA)
-   */
   base: {
-    h1: 'text-4xl sm:text-5xl md:text-6xl font-bold leading-tight',
-    h2: 'text-3xl sm:text-4xl md:text-5xl font-bold leading-tight',
-    h3: 'text-2xl sm:text-3xl md:text-4xl font-semibold',
-    h4: 'text-xl sm:text-2xl md:text-3xl font-semibold',
-    h5: 'text-lg sm:text-xl md:text-2xl font-semibold',
-    h6: 'text-base sm:text-lg md:text-xl font-medium',
-    p: 'text-base sm:text-lg leading-relaxed',
-    lead: 'text-lg sm:text-xl md:text-2xl leading-relaxed',
+    h1: 'text-4xl sm:text-5xl md:text-6xl font-bold leading-tight tracking-tight',
+    h2: 'text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight',
+    h3: 'text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight tracking-tight',
+    h4: 'text-xl sm:text-2xl md:text-3xl font-semibold leading-tight tracking-tight',
+    h5: 'text-lg sm:text-xl md:text-2xl font-semibold leading-tight',
+    h6: 'text-base sm:text-lg md:text-xl font-medium leading-tight',
+    p: 'text-base sm:text-lg',
+    lead: 'text-lg sm:text-xl md:text-2xl',
     small: 'text-sm sm:text-base',
     xs: 'text-xs sm:text-sm',
   },

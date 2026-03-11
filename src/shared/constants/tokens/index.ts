@@ -2,7 +2,7 @@
  * Sistema de Design Tokens para Landing Pages
  *
  * Uso:
- * import { TYPOGRAPHY, LAYOUT, BUTTON } from '@/styles/tokens'
+ * import { TYPOGRAPHY, LAYOUT, BUTTON } from '@/shared/constants/tokens'
  *
  * <h1 className={TYPOGRAPHY.title.hero}>Hero Title</h1>
  * <div className={LAYOUT.container.full}>...</div>
@@ -17,6 +17,7 @@ export * from './button'
 export * from './badge'
 export * from './animation'
 export * from './input'
+export * from './shadow'
 
 // Re-exportar todo junto para importaciones más limpias
 export { TYPOGRAPHY } from './typography'
@@ -25,3 +26,4 @@ export { BUTTON } from './button'
 export { BADGE } from './badge'
 export { ANIMATION } from './animation'
 export { INPUT } from './input'
+export { SHADOW } from './shadow'
