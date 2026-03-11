@@ -1,5 +1,9 @@
 import type { ComponentType } from 'react'
 
+/**
+ * Datos de una caja flotante: posición (%), tamaño, opacidad, parámetros
+ * de animación e icono. Generada por `generateBoxes` y consumida por `FloatingBox`.
+ */
 export interface BoxData {
   id: number
   x: number
@@ -14,6 +18,10 @@ export interface BoxData {
   Icon: ComponentType
 }
 
+/**
+ * Configuración de layout por breakpoint: zonas izquierda/derecha (porcentajes)
+ * y rango de tamaño de las cajas. Usado en `VIEWPORT_CONFIG`.
+ */
 export interface ViewportConfig {
   count: number
   sizeMin: number
