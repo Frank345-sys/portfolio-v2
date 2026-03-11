@@ -16,8 +16,10 @@ import {
 } from '@/shared/icons'
 import type { ViewportConfig } from './types'
 
+/** Opacidades disponibles para las cajas (determinista por seededRand). */
 export const OPACITIES = [1, 0.85, 0.7, 0.55, 0.4] as const
 
+/** Iconos asignados cíclicamente a cada caja (14 cajas, 14 iconos). */
 export const ICONS = [
   JsIcon,
   TsIcon,
@@ -35,6 +37,10 @@ export const ICONS = [
   VsCodeIcon,
 ] as const
 
+/**
+ * Configuración de layout por breakpoint (mobile-sm, mobile, tablet, desktop).
+ * Define zonas izquierda/derecha en % y rango de tamaño de cajas.
+ */
 export const VIEWPORT_CONFIG: Record<
   'mobile-sm' | 'mobile' | 'tablet' | 'desktop',
   ViewportConfig
