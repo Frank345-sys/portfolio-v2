@@ -17,7 +17,7 @@ import {
 import type { ViewportConfig } from './types'
 
 /** Opacidades disponibles para las cajas (determinista por seededRand). */
-export const OPACITIES = [1, 0.85, 0.7, 0.55, 0.4] as const
+export const OPACITIES = [1, 0.9, 0.8, 0.7, 0.6] as const
 
 /** Iconos asignados cíclicamente a cada caja (14 cajas, 14 iconos). */
 export const ICONS = [
