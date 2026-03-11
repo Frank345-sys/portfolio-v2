@@ -46,7 +46,7 @@ export function BackgroundBoxes({ children }: BackgroundBoxesProps) {
         ))}
       </ul>
       <div
-        className="relative flex h-full flex-col items-center justify-center backdrop-blur-[1px]"
+        className="relative flex h-full flex-col items-center justify-center backdrop-blur-[2px]"
         data-testid="background-boxes-content"
       >
         {children}
