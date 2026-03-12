@@ -1,11 +1,13 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* ═══════════════════════════════════════════════════════════════
-      TOKENS BASE (NO USAR DIRECTO EN COMPONENTES)
-  ═══════════════════════════════════════════════════════════════ */
+   TOKENS BASE
+   Valores primitivos. NO usar directo en componentes.
+   Referenciar siempre a través de los tokens semánticos.
+   ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* GRAYS */
+  /* ── GRAYS ─────────────────────────────────────────────────── */
   --color-gray-50: #f7f7f7;
   --color-gray-200: #ebebeb;
   --color-gray-300: #d1d1d1;
@@ -16,92 +18,111 @@
   --color-gray-800: #292929;
   --color-gray-950: #171717;
   --color-white: #ffffff;
+
   --color-gray-alpha-10: rgba(153, 160, 174, 0.1);
   --color-gray-alpha-16: rgba(153, 160, 174, 0.16);
   --color-gray-alpha-24: rgba(153, 160, 174, 0.24);
 
-  /* BLUE (INFORMATION) */
+  /* ── BLUE (information) ────────────────────────────────────── */
   --color-blue-50: #ebf1ff;
   --color-blue-200: #c0d5ff;
   --color-blue-400: #6895ff;
   --color-blue-500: #335cff;
   --color-blue-950: #122368;
+
   --color-blue-alpha-10: rgba(51, 92, 255, 0.1);
   --color-blue-alpha-16: rgba(51, 92, 255, 0.16);
   --color-blue-alpha-24: rgba(51, 92, 255, 0.24);
 
-  /* ORANGE (WARNING) */
+  /* ── ORANGE (warning) ──────────────────────────────────────── */
   --color-orange-50: #fff3eb;
   --color-orange-200: #ffd9c0;
+  --color-orange-400: #ffa468; /* dark mode warning-dark — valor oficial paleta Blife */
   --color-orange-500: #fa7319;
   --color-orange-600: #e16614;
   --color-orange-950: #71330a;
+
   --color-orange-alpha-10: rgba(255, 145, 71, 0.1);
   --color-orange-alpha-16: rgba(255, 145, 71, 0.16);
   --color-orange-alpha-24: rgba(255, 145, 71, 0.24);
 
-  /* RED (ERROR) */
+  /* ── RED (error) ───────────────────────────────────────────── */
   --color-red-50: #fff0f0;
   --color-red-200: #ffc0c0;
   --color-red-400: #ff5757;
   --color-red-500: #ff2323;
   --color-red-600: #ff0000;
   --color-red-950: #500000;
+
   --color-red-alpha-10: rgba(255, 35, 35, 0.1);
   --color-red-alpha-16: rgba(255, 35, 35, 0.16);
   --color-red-alpha-24: rgba(255, 35, 35, 0.24);
 
-  /* GREEN (SUCCESS) */
+  /* ── GREEN (success) ───────────────────────────────────────── */
   --color-green-50: #e0faec;
   --color-green-200: #c2f5da;
   --color-green-400: #3ee089;
   --color-green-500: #1fc16b;
   --color-green-600: #1daf61;
   --color-green-950: #0b4627;
+
   --color-green-alpha-10: rgba(31, 193, 107, 0.1);
   --color-green-alpha-16: rgba(31, 193, 107, 0.16);
   --color-green-alpha-24: rgba(31, 193, 107, 0.24);
 
-  /* YELLOW (IDLE) */
+  /* ── YELLOW (idle) ─────────────────────────────────────────── */
   --color-yellow-50: #fffaeb;
   --color-yellow-200: #ffecc0;
   --color-yellow-400: #ffd268;
   --color-yellow-500: #f6b51e;
   --color-yellow-600: #e6a819;
   --color-yellow-950: #624c18;
+
   --color-yellow-alpha-10: rgba(246, 181, 30, 0.1);
   --color-yellow-alpha-16: rgba(246, 181, 30, 0.16);
   --color-yellow-alpha-24: rgba(246, 181, 30, 0.24);
 
-  /* PURPLE (FEATURE) */
+  /* ── PURPLE (feature) ──────────────────────────────────────── */
   --color-purple-50: #efebff;
   --color-purple-200: #cac0ff;
   --color-purple-400: #8c71f6;
   --color-purple-500: #7d52f4;
   --color-purple-950: #351a75;
+
   --color-purple-alpha-10: rgba(120, 77, 239, 0.1);
   --color-purple-alpha-16: rgba(120, 77, 239, 0.16);
   --color-purple-alpha-24: rgba(120, 77, 239, 0.24);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-     SEMANTIC TOKENS - LIGHT MODE
-     ═══════════════════════════════════════════════════════════════ */
+   TOKENS SEMÁNTICOS — LIGHT MODE (default)
+   Usar estas clases en los componentes, nunca los tokens base.
+   ═══════════════════════════════════════════════════════════════ */
+
 @theme {
-  /* ─────────────────────────────────────────────────────────────
-       TEXTOS NEUTRALES
-       Uso: text-strong, text-subtle, text-soft, text-disabled, text-white
-       ───────────────────────────────────────────────────────────── */
+  /* ── Textos neutrales ──────────────────────────────────────────
+     Controlan la jerarquía visual del contenido escrito.
+     text-strong   → títulos y texto principal (máximo contraste)
+     text-subtle   → texto secundario y descripciones
+     text-soft     → notas, placeholders y apoyo
+     text-disabled → estados deshabilitados
+     text-white    → texto sobre fondos oscuros
+     ─────────────────────────────────────────────────────────── */
   --color-text-strong: var(--color-gray-950);
   --color-text-subtle: var(--color-gray-600);
   --color-text-soft: var(--color-gray-400);
   --color-text-disabled: var(--color-gray-300);
   --color-text-white: var(--color-white);
 
-  /* ─────────────────────────────────────────────────────────────
-       FONDOS NEUTRALES
-       Uso: bg-strong, bg-surface, bg-subtle, bg-soft, bg-weak, bg-white
-       ───────────────────────────────────────────────────────────── */
+  /* ── Fondos neutrales ──────────────────────────────────────────
+     Definen las superficies y contextos visuales.
+     bg-strong  → máximo contraste (ej: botón dark)
+     bg-surface → contenedores y componentes destacados
+     bg-subtle  → fondos secundarios y áreas de apoyo
+     bg-soft    → secciones amplias o backgrounds de UI
+     bg-weak    → fondos muy sutiles
+     bg-white   → blanco puro / base de página
+     ─────────────────────────────────────────────────────────── */
   --color-bg-strong: var(--color-gray-950);
   --color-bg-surface: var(--color-gray-800);
   --color-bg-subtle: var(--color-gray-300);
@@ -109,81 +130,130 @@
   --color-bg-weak: var(--color-gray-50);
   --color-bg-white: var(--color-white);
 
-  /* ─────────────────────────────────────────────────────────────
-       BORDES NEUTRALES
-       Uso: border-stroke-strong, border-stroke-subtle, border-stroke-soft
-       ───────────────────────────────────────────────────────────── */
+  /* ── Bordes neutrales ──────────────────────────────────────────
+     Establecen separaciones y definiciones de elementos.
+     stroke-strong → separaciones fuertes y límites importantes
+     stroke-subtle → separaciones visibles pero no dominantes
+     stroke-soft   → separaciones suaves y delicadas
+     ─────────────────────────────────────────────────────────── */
   --color-stroke-strong: var(--color-gray-950);
   --color-stroke-subtle: var(--color-gray-300);
   --color-stroke-soft: var(--color-gray-200);
 
-  /* ─────────────────────────────────────────────────────────────
-       INFORMATION
-       Uso: text-information-base, bg-information-light, etc.
-       ───────────────────────────────────────────────────────────── */
+  /* ── Information (azul) ────────────────────────────────────────
+     Mensajes de ayuda, notas y estados informativos.
+     base    → color principal informativo
+     dark    → estados intensos / hover
+     light   → fondos de tips y ayuda
+     lighter → fondos muy sutiles informativos
+     ─────────────────────────────────────────────────────────── */
   --color-information-base: var(--color-blue-500);
   --color-information-dark: var(--color-blue-950);
   --color-information-light: var(--color-blue-200);
   --color-information-lighter: var(--color-blue-50);
 
-  /* ─────────────────────────────────────────────────────────────
-       WARNING
-       Uso: text-warning-base, bg-warning-light, etc.
-       ───────────────────────────────────────────────────────────── */
+  /* ── Warning (naranja) ─────────────────────────────────────────
+     Alertas preventivas y avisos no críticos.
+     ─────────────────────────────────────────────────────────── */
   --color-warning-base: var(--color-orange-500);
   --color-warning-dark: var(--color-orange-950);
   --color-warning-light: var(--color-orange-200);
   --color-warning-lighter: var(--color-orange-50);
 
-  /* ─────────────────────────────────────────────────────────────
-       ERROR
-       Uso: text-error-base, bg-error-light, etc.
-       ───────────────────────────────────────────────────────────── */
+  /* ── Error (rojo) ──────────────────────────────────────────────
+     Problemas, bloqueos y estados críticos.
+     ─────────────────────────────────────────────────────────── */
   --color-error-base: var(--color-red-500);
   --color-error-dark: var(--color-red-950);
   --color-error-light: var(--color-red-200);
   --color-error-lighter: var(--color-red-50);
 
-  /* ─────────────────────────────────────────────────────────────
-       SUCCESS
-       Uso: text-success-base, bg-success-light, etc.
-       ───────────────────────────────────────────────────────────── */
+  /* ── Success (verde) ───────────────────────────────────────────
+     Confirmaciones y procesos completados.
+     ─────────────────────────────────────────────────────────── */
   --color-success-base: var(--color-green-500);
   --color-success-dark: var(--color-green-950);
   --color-success-light: var(--color-green-200);
   --color-success-lighter: var(--color-green-50);
 
-  /* ─────────────────────────────────────────────────────────────
-       IDLE (INACTIVIDAD)
-       Uso: text-idle-base, bg-idle-light, etc.
-       ───────────────────────────────────────────────────────────── */
+  /* ── Idle (amarillo) ───────────────────────────────────────────
+     Estados inactivos, ausentes o en pausa.
+     ─────────────────────────────────────────────────────────── */
   --color-idle-base: var(--color-yellow-500);
   --color-idle-dark: var(--color-yellow-950);
   --color-idle-light: var(--color-yellow-200);
   --color-idle-lighter: var(--color-yellow-50);
 
-  /* ─────────────────────────────────────────────────────────────
-       FEATURE (NOVEDADES)
-       Uso: text-feature-base, bg-feature-light, etc.
-       ───────────────────────────────────────────────────────────── */
+  /* ── Feature (morado) ──────────────────────────────────────────
+     Novedades, características nuevas y badges de producto.
+     ─────────────────────────────────────────────────────────── */
   --color-feature-base: var(--color-purple-500);
   --color-feature-dark: var(--color-purple-950);
   --color-feature-light: var(--color-purple-200);
   --color-feature-lighter: var(--color-purple-50);
+
+  /* ── Hero / BackgroundBoxes ────────────────────────────────────
+     Tokens específicos del HeroSection y las cajas flotantes.
+     No usar en otros contextos.
+     ─────────────────────────────────────────────────────────── */
+  --color-hero-bg: var(--color-gray-200);
+  --color-hero-glow: color-mix(
+    in srgb,
+    var(--color-error-base) 6%,
+    transparent
+  );
+  --color-hero-vignette: color-mix(
+    in srgb,
+    var(--color-gray-200) 60%,
+    transparent
+  );
+
+  --color-floating-box-bg: var(--color-gray-50);
+  --color-floating-box-bg-hover: var(--color-white);
+  --color-floating-box-border: var(--color-gray-alpha-24);
+  --color-floating-box-border-hover: var(--color-gray-alpha-24);
+  --color-floating-box-glow: color-mix(
+    in srgb,
+    var(--color-error-base) 12%,
+    transparent
+  );
+
+  /* ── Sombras semánticas ────────────────────────────────────────
+     Escala de elevación de 6 niveles.
+     xs   → inputs en focus, bordes sutiles
+     sm   → cards estáticas, badges
+     md   → dropdowns, tooltips
+     lg   → FloatingBox en reposo, modales pequeños
+     xlg  → FloatingBox en hover, drawers
+     2xlg → modales grandes, popovers prominentes
+     ─────────────────────────────────────────────────────────── */
+  --shadow-elevation-xs: 0 1px 2px rgb(0 0 0 / 0.08);
+  --shadow-elevation-sm:
+    0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.16);
+  --shadow-elevation-md:
+    0 3px 8px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.18);
+  --shadow-elevation-lg:
+    0 6px 16px rgb(0 0 0 / 0.14), 0 3px 6px rgb(0 0 0 / 0.28);
+  --shadow-elevation-xlg:
+    0 10px 28px rgb(0 0 0 / 0.18), 0 4px 10px rgb(0 0 0 / 0.38);
+  --shadow-elevation-2xlg:
+    0 18px 40px rgb(0 0 0 / 0.22), 0 8px 16px rgb(0 0 0 / 0.44);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-     DARK MODE
-     ═══════════════════════════════════════════════════════════════ */
+   TOKENS SEMÁNTICOS — DARK MODE
+   Solo se redefinen los tokens que cambian respecto al light.
+   ═══════════════════════════════════════════════════════════════ */
+
 .dark {
-  /* TEXTOS NEUTRALES */
+  /* ── Textos neutrales ── */
   --color-text-strong: var(--color-white);
   --color-text-subtle: var(--color-gray-400);
   --color-text-soft: var(--color-gray-500);
   --color-text-disabled: var(--color-gray-600);
   --color-text-white: var(--color-gray-950);
 
-  /* FONDOS NEUTRALES */
+  /* ── Fondos neutrales ── */
   --color-bg-strong: var(--color-white);
   --color-bg-surface: var(--color-gray-200);
   --color-bg-subtle: var(--color-gray-600);
@@ -191,48 +261,76 @@
   --color-bg-weak: var(--color-gray-800);
   --color-bg-white: var(--color-gray-950);
 
-  /* BORDES NEUTRALES */
+  /* ── Bordes neutrales ── */
   --color-stroke-strong: var(--color-white);
   --color-stroke-subtle: var(--color-gray-600);
   --color-stroke-soft: var(--color-gray-700);
 
-  /* INFORMATION */
+  /* ── Information ── */
   --color-information-dark: var(--color-blue-400);
   --color-information-light: var(--color-blue-alpha-24);
   --color-information-lighter: var(--color-blue-alpha-16);
 
-  /* WARNING */
+  /* ── Warning ── */
   --color-warning-base: var(--color-orange-600);
-  --color-warning-dark: var(--color-blue-400);
+  --color-warning-dark: var(
+    --color-orange-400
+  ); /* fix: era blue-400 por error */
   --color-warning-light: var(--color-orange-alpha-24);
   --color-warning-lighter: var(--color-orange-alpha-16);
 
-  /* ERROR */
+  /* ── Error ── */
   --color-error-base: var(--color-red-600);
   --color-error-dark: var(--color-red-400);
   --color-error-light: var(--color-red-alpha-24);
   --color-error-lighter: var(--color-red-alpha-16);
 
-  /* SUCCESS */
+  /* ── Success ── */
   --color-success-base: var(--color-green-600);
   --color-success-dark: var(--color-green-400);
   --color-success-light: var(--color-green-alpha-24);
   --color-success-lighter: var(--color-green-alpha-16);
 
-  /* IDLE */
+  /* ── Idle ── */
   --color-idle-base: var(--color-yellow-600);
   --color-idle-dark: var(--color-yellow-400);
   --color-idle-light: var(--color-yellow-alpha-24);
   --color-idle-lighter: var(--color-yellow-alpha-16);
 
-  /* FEATURE */
+  /* ── Feature ── */
   --color-feature-dark: var(--color-purple-400);
   --color-feature-light: var(--color-purple-alpha-24);
   --color-feature-lighter: var(--color-purple-alpha-16);
+
+  /* ── Hero / BackgroundBoxes ── */
+  --color-hero-bg: var(--color-bg-weak);
+  --color-hero-glow: color-mix(
+    in srgb,
+    var(--color-error-base) 7%,
+    transparent
+  );
+
+  --color-floating-box-bg: var(--color-gray-700);
+  --color-floating-box-bg-hover: var(--color-gray-600);
+  --color-floating-box-border: var(--color-gray-alpha-16);
+  --color-floating-box-border-hover: var(--color-gray-alpha-24);
+
+  /* ── Sombras (más visibles en dark) ── */
+  --shadow-elevation-xs: 0 1px 2px rgb(0 0 0 / 0.18);
+  --shadow-elevation-sm:
+    0 1px 3px rgb(0 0 0 / 0.2), 0 1px 2px rgb(0 0 0 / 0.28);
+  --shadow-elevation-md:
+    0 3px 8px rgb(0 0 0 / 0.22), 0 1px 3px rgb(0 0 0 / 0.3);
+  --shadow-elevation-lg:
+    0 6px 16px rgb(0 0 0 / 0.26), 0 3px 6px rgb(0 0 0 / 0.4);
+  --shadow-elevation-xlg:
+    0 10px 28px rgb(0 0 0 / 0.32), 0 4px 10px rgb(0 0 0 / 0.5);
+  --shadow-elevation-2xlg:
+    0 18px 40px rgb(0 0 0 / 0.38), 0 8px 16px rgb(0 0 0 / 0.56);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   TRANSICIÓN SUAVE ENTRE THEMES
+   ESTILOS BASE
    ═══════════════════════════════════════════════════════════════ */
 
 html {
@@ -246,18 +344,6 @@ html {
 *,
 *::before,
 *::after {
-  transition:
-    background-color 0.25s ease,
-    color 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    fill 0.25s ease,
-    stroke 0.25s ease;
-}
-
-/* Solo animar cuando el usuario cambia el theme */
-html.theme-transition,
-html.theme-transition * {
   transition:
     background-color 0.25s ease,
     color 0.25s ease,
