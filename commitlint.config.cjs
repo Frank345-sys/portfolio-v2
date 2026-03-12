@@ -29,9 +29,12 @@ module.exports = {
         'release',
         // Secciones portfolio
         'hero',
+        'header',
         'about',
         'projects',
         'contact',
+        'footer',
+        'skills',
       ],
     ],
   },
