@@ -35,6 +35,11 @@ module.exports = {
         'contact',
         'footer',
         'skills',
+        //temporales
+        'app',
+        'main',
+        'index',
+        'commitlint',
       ],
     ],
   },
