@@ -1,7 +1,8 @@
 module.exports = {
   extends: ['@commitlint/config-conventional'],
   rules: {
-    'subject-case': [2, 'always', 'lower-case'],
+    //'subject-case': [2, 'always', 'lower-case'],
+    'subject-case': [0],
     'scope-case': [2, 'always', 'kebab-case'],
     'scope-min-length': [2, 'always', 2],
     'header-max-length': [2, 'always', 100],
@@ -35,6 +36,11 @@ module.exports = {
         'contact',
         'footer',
         'skills',
+        //temporales
+        'app',
+        'main',
+        'index',
+        'commitlint',
       ],
     ],
   },
