@@ -1,8 +1,9 @@
 import { HeroSection } from '@/components/HeroSection'
+import { Header } from '@/components/Header'
 
 /**
  * Componente raíz de la aplicación. Renderiza el layout principal
- * con la sección hero.
+ * con la sección hero y el header.
  *
  * @example
  * ```tsx
@@ -11,8 +12,11 @@ import { HeroSection } from '@/components/HeroSection'
  */
 export function App() {
   return (
-    <main>
-      <HeroSection />
-    </main>
+    <>
+      <Header />
+      <main>
+        <HeroSection />
+      </main>
+    </>
   )
 }
