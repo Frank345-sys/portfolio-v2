@@ -1,12 +1,10 @@
 import type { Variants } from 'motion/react'
 import type { NavItem } from './types'
 
-/** Ítems de navegación por defecto */
+/** Ítems de navegación por defecto (secciones actuales del portfolio) */
 export const DEFAULT_NAV_ITEMS: ReadonlyArray<NavItem> = [
   { href: '#inicio', label: 'Inicio' },
   { href: '#sobre-mi', label: 'Sobre mí' },
-  { href: '#proyectos', label: 'Proyectos' },
-  { href: '#contacto', label: 'Contacto' },
 ]
 
 /** Spring compartido para las líneas del botón hamburguesa */
