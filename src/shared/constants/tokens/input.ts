@@ -1,9 +1,9 @@
 import { ANIMATION } from './animation'
 
 const inputBase =
-  `w-full rounded-lg border border-stroke-soft bg-bg-white px-3 py-2 text-sm text-text-subtle placeholder:text-text-soft ${ANIMATION.transition.default} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-information-base focus-visible:ring-offset-2 [--tw-ring-offset-color:var(--color-bg-weak)] disabled:cursor-not-allowed disabled:opacity-50` as const
+  `w-full rounded-lg border border-stroke-soft bg-bg-white px-3 py-2 text-sm placeholder:text-text-soft ${ANIMATION.transition.default} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-information-base focus-visible:ring-offset-2 [--tw-ring-offset-color:var(--color-bg-weak)] disabled:cursor-not-allowed disabled:opacity-50` as const
 
-const labelBase = 'block text-sm font-medium text-text-strong' as const
+const labelBase = 'block text-sm font-medium' as const
 
 /**
  * Tokens para inputs, textareas, labels y grupos de formularios.
