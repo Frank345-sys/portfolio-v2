@@ -73,7 +73,7 @@ export const BADGE = {
      * @use Categorías sin carga semántica, tags genéricos.
      * @combine BADGE.size.* via cn().
      */
-    neutral: `${base} bg-bg-soft text-text-subtle`,
+    neutral: `${base} bg-bg-soft`,
 
     /**
      * @use Máximo contraste — sobre fondos claros o imágenes.
@@ -117,7 +117,7 @@ export const BADGE = {
      * @use Tags de categoría, etiquetas de contenido, pills de filtro no interactivos.
      * @nocombine BADGE.size.* (tamaño propio), BADGE.variant.* (estilo propio)
      */
-    pill: `px-4 py-2 bg-bg-weak text-text-subtle text-sm font-medium rounded-full hover:bg-bg-soft ${ANIMATION.transition.colors}`,
+    pill: `px-4 py-2 bg-bg-weak text-sm font-medium rounded-full hover:bg-bg-soft ${ANIMATION.transition.colors}`,
 
     /**
      * @use Filtros o tags seleccionables — estado no activo.
@@ -125,7 +125,7 @@ export const BADGE = {
      * @combine BADGE.special.chipActive — alternar entre ambos según estado.
      * @nocombine BADGE.size.* (tamaño propio), BADGE.variant.* (estilo propio)
      */
-    chip: `px-4 py-2 bg-bg-white border-2 border-stroke-soft text-text-subtle text-sm font-medium rounded-full cursor-pointer hover:border-information-base hover:bg-information-lighter hover:text-information-dark ${ANIMATION.transition.default}`,
+    chip: `px-4 py-2 bg-bg-white border-2 border-stroke-soft text-sm font-medium rounded-full cursor-pointer hover:border-information-base hover:bg-information-lighter hover:text-information-dark ${ANIMATION.transition.default}`,
 
     /**
      * @use Filtros o tags seleccionables — estado activo.
@@ -151,7 +151,7 @@ export const BADGE = {
      * @use Indicador de presencia inactiva — usuario offline, servicio caído.
      * @combine BADGE.size.* via cn().
      */
-    offline: `${base} bg-bg-soft text-text-subtle`,
+    offline: `${base} bg-bg-soft`,
 
     /**
      * @use Indicador de ocupado — usuario en reunión, servicio con carga alta.
