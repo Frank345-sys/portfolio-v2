@@ -1,29 +1,19 @@
 /**
- * Sistema de Design Tokens para Landing Pages
+ * Design Tokens — re-exports centralizados.
  *
- * Uso:
- * import { TYPOGRAPHY, LAYOUT, BUTTON } from '@/shared/constants/tokens'
+ * Importar desde '@/shared/constants/tokens' (no desde archivos individuales).
  *
- * <h1 className={TYPOGRAPHY.title.hero}>Hero Title</h1>
- * <div className={LAYOUT.container.full}>...</div>
- * <button className={`${BUTTON.base.default} ${BUTTON.variant.primary} ${BUTTON.size.lg}`}>
- *   Click me
- * </button>
+ * @example
+ * ```tsx
+ * import { TYPOGRAPHY, LAYOUT, BUTTON, CARD, Z } from '@/shared/constants/tokens'
+ * ```
  */
 
-export * from './typography'
-export * from './layout'
-export * from './button'
-export * from './badge'
 export * from './animation'
+export * from './badge'
+export * from './button'
+export * from './card'
 export * from './input'
-export * from './shadow'
-
-// Re-exportar todo junto para importaciones más limpias
-export { TYPOGRAPHY } from './typography'
-export { LAYOUT } from './layout'
-export { BUTTON } from './button'
-export { BADGE } from './badge'
-export { ANIMATION } from './animation'
-export { INPUT } from './input'
-export { SHADOW } from './shadow'
+export * from './layout'
+export * from './typography'
+export * from './z'
