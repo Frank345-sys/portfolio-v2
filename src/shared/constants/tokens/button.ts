@@ -161,7 +161,7 @@ export const BUTTON = {
      * @nocombine BUTTON.size.* (usa padding circular propio `p-2`)
      * @warning Sin texto visible — requiere `aria-label` para accesibilidad.
      */
-    icon: `p-2 rounded-full text-text-subtle hover:bg-bg-soft active:bg-bg-subtle ${ANIMATION.transition.colors} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-information-base disabled:opacity-40 disabled:pointer-events-none cursor-pointer`,
+    icon: `p-2 rounded-full hover:bg-bg-soft active:bg-bg-subtle ${ANIMATION.transition.colors} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-information-base disabled:opacity-40 disabled:pointer-events-none cursor-pointer`,
 
     /**
      * @use Link autónomo con ícono — CTAs de texto con flecha, "Ver más", "Descargar".
