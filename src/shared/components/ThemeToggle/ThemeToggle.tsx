@@ -1,4 +1,4 @@
-import { motion } from 'motion/react'
+import { m } from 'motion/react'
 import { useTheme } from '@/shared/components/ThemeToggle/hooks/useTheme'
 import { LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
@@ -10,7 +10,9 @@ const TOGGLE_SPRING = {
 }
 /**
  * Control para alternar entre tema claro y oscuro. Usa un botón tipo switch
- * con animación de layout (Motion) y sincroniza con useTheme.
+ * con animación de layout (Motion `m`) y sincroniza con useTheme.
+ *
+ * @returns {JSX.Element} Switch accesible y etiqueta de modo actual.
  *
  * @example
  * ```tsx
@@ -32,28 +34,25 @@ export function ThemeToggle() {
         onClick={toggle}
         className={cn(
           'flex h-5 w-9 shrink-0 rounded-full p-0.5',
-          'focus-visible:ring-information-base focus-visible:ring-offset-bg-weak focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+          'focus-visible:ring-information-base [--tw-ring-offset-color:var(--color-bg-weak)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
           isDark
             ? 'bg-information-light justify-start'
             : 'bg-stroke-strong/20 justify-end',
           'cursor-pointer'
         )}
       >
-        <motion.div
+        <m.div
           layout
           transition={TOGGLE_SPRING}
           className={cn(
             'h-4 w-4 shrink-0 rounded-full',
-            isDark
-              ? 'bg-information-base shadow-elevation-sm'
-              : 'shadow-elevation-sm bg-white'
+            isDark ? 'bg-information-base' : 'bg-bg-white',
+            'shadow-elevation-sm'
           )}
         />
       </button>
 
-      <span
-        className={cn(TYPOGRAPHY.paragraph.small, 'text-subtle font-medium')}
-      >
+      <span className={cn(TYPOGRAPHY.paragraph.small, 'font-medium')}>
         {isDark ? 'Dark mode' : 'Light mode'}
       </span>
     </div>
