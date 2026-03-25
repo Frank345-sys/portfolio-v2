@@ -1,6 +1,11 @@
 import type { BoxData, ViewportConfig } from '../types'
 import { OPACITIES, ICONS, VIEWPORT_CONFIG } from '../constants'
 
+/**
+ * Número fijo de `FloatingBox` (7 a la izquierda, 7 a la derecha).
+ */
+export const FLOATING_BOX_COUNT = 14
+
 /** Función interna determinista — no exportar */
 function seededRand(i: number, salt = 0): number {
   const x = Math.sin(i * 127.1 + salt * 311.7 + 43758.5453) * 43758.5453
@@ -30,18 +35,23 @@ export function getViewportKey(
 export function generateBoxes(viewportWidth: number): BoxData[] {
   const key = getViewportKey(viewportWidth)
   const cfg: ViewportConfig = VIEWPORT_CONFIG[key]
-  const half = 7
+  const half = FLOATING_BOX_COUNT / 2
 
-  const totalRange = 90
+  // Rango vertical compacto y centrado para que las cajas no se vean tan dispersas.
+  const totalRange = 82
   const stripeHeight = totalRange / half
+  const topMargin = (100 - totalRange) / 2
+  // Desplaza el bloque completo hacia abajo (top en %).
+  const verticalOffset = 2
 
   const leftYPositions = Array.from({ length: half }, (_, i) => {
     const r = (salt: number) => seededRand(i, salt)
-    const stripeStart = 4 + i * stripeHeight
-    return stripeStart + r(2) * stripeHeight * 0.7
+    const stripeStart = topMargin + i * stripeHeight + verticalOffset
+    // Menos variación dentro de cada franja para evitar separación excesiva.
+    return stripeStart + r(2) * stripeHeight * 0.58
   })
 
-  return Array.from({ length: 14 }, (_, i) => {
+  return Array.from({ length: FLOATING_BOX_COUNT }, (_, i) => {
     const r = (salt: number) => seededRand(i, salt)
     const isLeft = i < half
     const mirrorIndex = isLeft ? i : i - half
