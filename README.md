@@ -282,15 +282,15 @@ En `package.json`, clave `"lint-staged"`: archivos `*.{js,jsx,ts,tsx}`; comandos
 
 Este proyecto sigue el modelo **Gitflow** con las siguientes ramas:
 
-| Rama        | Tipo       | Propósito                                                                     |
-| ----------- | ---------- | ----------------------------------------------------------------------------- |
-| `main`      | Permanente | Código en producción. Solo recibe merges desde `release/*` y `hotfix/*`       |
-| `develop`   | Permanente | Rama de integración. Todas las features se integran aquí                      |
-| `feat/*`    | Temporal   | Nueva funcionalidad. Se crea y mergea en `develop`                            |
-| `fix/*`     | Temporal   | Corrección de bugs. Se crea y mergea en `develop`                             |
-| `chore/*`   | Temporal   | Cambios de configuración. Se crea y mergea en `develop`                       |
-| `release/*` | Temporal   | Preparación de release. Se crea desde `main`, recibe merges de `develop`      |
-| `hotfix/*`  | Temporal   | Fix urgente en producción. Se crea desde `main`, mergea en `main` y `develop` |
+| Rama        | Tipo       | Propósito                                                                                           |
+| ----------- | ---------- | --------------------------------------------------------------------------------------------------- |
+| `main`      | Permanente | Código en producción. Solo recibe merges desde `release/*` y `hotfix/*`                             |
+| `develop`   | Permanente | Rama de integración. Todas las features se integran aquí                                            |
+| `feat/*`    | Temporal   | Nueva funcionalidad. Se crea y mergea en `develop`                                                  |
+| `fix/*`     | Temporal   | Corrección de bugs. Se crea y mergea en `develop`                                                   |
+| `chore/*`   | Temporal   | Cambios de configuración. Se crea y mergea en `develop`                                             |
+| `release/*` | Temporal   | Preparación de release. Se crea desde `develop`; luego merge a `main` (tag) y de vuelta a `develop` |
+| `hotfix/*`  | Temporal   | Fix urgente en producción. Se crea desde `main`, mergea en `main` y `develop`                       |
 
 ### Flujo completo
 
@@ -313,16 +313,26 @@ Este proyecto sigue el modelo **Gitflow** con las siguientes ramas:
 
 6. Merge a `develop`.
 
-7. Cuando `develop` tenga suficientes features para una release:
+7. Cuando `develop` esté listo para una release:
+
    ```bash
-   git checkout main
+   git checkout develop
+   git pull origin develop
    git checkout -b release/1.0.0
    ```
-   Abrir PR de `develop` → `release/1.0.0`, luego PR de `release/1.0.0` → `main`.
+
+   En la rama `release/*`: versión, changelog y solo fixes menores de cierre.
+
+8. Abrir PR **release/1.0.0** → **main**. Tras el merge, etiquetar en `main`:
+
    ```bash
+   git checkout main
+   git pull origin main
    git tag v1.0.0
    git push origin v1.0.0
    ```
+
+9. Integrar la release en `develop` (PR **release/1.0.0** → **develop** o merge de `main` en `develop`) para alinear ramas.
 
 ### Hotfix
 
