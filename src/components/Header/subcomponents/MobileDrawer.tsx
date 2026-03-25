@@ -1,4 +1,5 @@
-import { motion, AnimatePresence } from 'motion/react'
+import { m, AnimatePresence } from 'motion/react'
+import { useFocusTrap } from '@/shared/hooks/useFocusTrap'
 import { BUTTON, LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
@@ -18,6 +19,9 @@ interface MobileDrawerProps {
  * animación spring. Incluye links de navegación y ThemeToggle.
  * Controlado externamente mediante `isOpen` y `onClose`.
  *
+ * @param props - Estado del drawer, callback de cierre, nombre del sitio e ítems de nav.
+ * @returns {JSX.Element} Overlay + panel dialog animado o null si está cerrado.
+ *
  * @example
  * ```tsx
  * <MobileDrawer
@@ -34,43 +38,54 @@ export function MobileDrawer({
   siteName,
   navItems,
 }: MobileDrawerProps) {
+  const drawerRef = useFocusTrap<HTMLDivElement>(isOpen)
+
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
+          <m.div
             key="overlay"
             initial="hidden"
             animate="visible"
             exit="exit"
             variants={OVERLAY_VARIANTS}
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden"
+            className="bg-bg-white/40 fixed inset-0 z-50 backdrop-blur-sm md:hidden"
             onClick={onClose}
             aria-hidden="true"
           />
-          <motion.div
+          <m.div
+            ref={drawerRef}
             key="drawer"
             id="mobile-menu"
             initial="hidden"
             animate="visible"
             exit="exit"
             variants={DRAWER_VARIANTS}
-            className="bg-bg-white border-stroke-soft shadow-elevation-lg fixed top-0 right-0 z-50 flex h-full w-72 flex-col border-l-2 md:hidden"
+            className={cn(
+              'bg-bg-white border-stroke-soft fixed top-0 right-0 z-50 flex h-full w-72 flex-col border-l md:hidden',
+              'shadow-elevation-lg'
+            )}
             role="dialog"
             aria-modal="true"
-            aria-label="Menú de navegación"
+            aria-labelledby="mobile-menu-title"
           >
-            {/* Header */}
+            {/* Header — misma altura que LAYOUT.header.wrapper (py-4) */}
             <div
               className={cn(
                 LAYOUT.flex.between,
-                'border-stroke-soft border-b-2 px-6 py-3'
+                LAYOUT.header.wrapper,
+                'border-stroke-soft border-b'
               )}
             >
               <div className="flex items-center gap-2">
-                <CodeIcon aria-hidden="true" className="h-6 w-6" />
+                <CodeIcon
+                  aria-hidden="true"
+                  className="h-7 w-7 md:h-10 md:w-10"
+                />
                 <span
-                  className={cn(TYPOGRAPHY.label.default, 'tracking-tight')}
+                  id="mobile-menu-title"
+                  className={TYPOGRAPHY.label.default}
                 >
                   {siteName}
                 </span>
@@ -81,7 +96,7 @@ export function MobileDrawer({
                 aria-label="Cerrar menú"
                 className={BUTTON.special.icon}
               >
-                <CloseIcon className="h-6 w-6" />
+                <CloseIcon className="h-7 w-7" />
               </button>
             </div>
 
@@ -97,7 +112,8 @@ export function MobileDrawer({
                   onClick={onClose}
                   className={cn(
                     TYPOGRAPHY.link.nav,
-                    'hover:bg-bg-soft rounded-lg px-3 py-2 text-base transition-colors duration-200'
+                    'hover:bg-bg-soft rounded-lg px-3 py-2',
+                    TYPOGRAPHY.paragraph.small
                   )}
                 >
                   {item.label}
@@ -106,10 +122,10 @@ export function MobileDrawer({
             </nav>
 
             {/* ThemeToggle */}
-            <div className="border-stroke-soft border-t-2 px-6 py-5">
+            <div className="border-stroke-soft border-t px-6 py-4">
               <ThemeToggle />
             </div>
-          </motion.div>
+          </m.div>
         </>
       )}
     </AnimatePresence>
