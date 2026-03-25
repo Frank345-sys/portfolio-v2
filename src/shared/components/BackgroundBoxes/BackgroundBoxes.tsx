@@ -3,7 +3,8 @@ import type { BoxData } from './types'
 import { generateBoxes } from './utils'
 import { useParallaxMouse } from './hooks/useParallaxMouse'
 import { FloatingBox } from './subcomponents/FloatingBox'
-
+import { LAYOUT } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
 export interface BackgroundBoxesProps {
   /** Contenido a renderizar centrado sobre el fondo de cajas flotantes */
   children?: React.ReactNode
@@ -14,7 +15,8 @@ export interface BackgroundBoxesProps {
  * a los laterales del viewport. Reacciona al movimiento del mouse
  * con efecto parallax y se adapta a cambios de tamaño de pantalla.
  *
- * @param children - Contenido a renderizar centrado sobre el fondo
+ * @param props - `children` opcional centrado sobre el fondo.
+ * @returns {JSX.Element} Contenedor a pantalla completa con lista de `FloatingBox` y slot de contenido.
  * @example
  * ```tsx
  * <BackgroundBoxes>
@@ -39,14 +41,23 @@ export function BackgroundBoxes({ children }: BackgroundBoxesProps) {
   }, [])
 
   return (
-    <div className="relative h-screen max-h-[800px] min-h-[640px] w-full overflow-hidden">
-      <ul className="absolute inset-0">
+    <div
+      className={
+        'bg-bg-white relative h-screen max-h-[680px] min-h-[640px] w-full overflow-hidden'
+      }
+    >
+      {/* Cajas flotantes */}
+      <ul className={cn(LAYOUT.container.wide, 'absolute inset-0 list-none')}>
         {boxes.map((box) => (
           <FloatingBox key={box.id} box={box} mouseX={mouseX} mouseY={mouseY} />
         ))}
       </ul>
+      {/* Contenido del fondo */}
       <div
-        className="relative flex h-full flex-col items-center justify-center backdrop-blur-[2px]"
+        className={cn(
+          LAYOUT.flex.center,
+          'relative h-full flex-col backdrop-blur-[1.5px]'
+        )}
         data-testid="background-boxes-content"
       >
         {children}
