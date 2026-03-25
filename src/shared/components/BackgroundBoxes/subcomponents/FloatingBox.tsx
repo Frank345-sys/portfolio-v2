@@ -1,9 +1,9 @@
-import { useEffect } from 'react'
-import { motion, useMotionValue, useSpring } from 'motion/react'
+import { useEffect, type ComponentType, type SVGProps } from 'react'
+import { m, useMotionValue, useSpring } from 'motion/react'
 import type { MotionValue } from 'motion/react'
 import type { BoxData } from '../types'
 import { cn } from '@/shared/utils/cn'
-import { SHADOW } from '@/shared/constants/tokens'
+import { LAYOUT } from '@/shared/constants/tokens'
 
 /** Props del componente FloatingBox: datos de la caja y valores de mouse para parallax */
 interface FloatingBoxProps {
@@ -17,6 +17,7 @@ interface FloatingBoxProps {
  * infinita y desplazamiento parallax según la posición del mouse.
  *
  * @param props - box (BoxData), mouseX y mouseY (MotionValue)
+ * @returns {JSX.Element} Ítem de lista animado con icono centrado.
  */
 export function FloatingBox({ box, mouseX, mouseY }: FloatingBoxProps) {
   const stiffness = 50 + Math.abs(box.depth) * 30
@@ -35,11 +36,12 @@ export function FloatingBox({ box, mouseX, mouseY }: FloatingBoxProps) {
     }
   }, [mouseX, mouseY, box.depth, pxVal, pyVal])
 
-  const Icon = box.Icon
+  const Icon = box.Icon as ComponentType<SVGProps<SVGSVGElement>>
 
   return (
-    <motion.li
+    <m.li
       className="absolute list-none"
+      aria-hidden="true"
       style={{
         left: `${box.x}%`,
         top: `${box.y}%`,
@@ -59,7 +61,7 @@ export function FloatingBox({ box, mouseX, mouseY }: FloatingBoxProps) {
         },
       }}
     >
-      <motion.div
+      <m.div
         className="h-full w-full"
         animate={{ y: [0, -box.floatAmp, 0] }}
         transition={{
@@ -71,14 +73,18 @@ export function FloatingBox({ box, mouseX, mouseY }: FloatingBoxProps) {
       >
         <div
           className={cn(
-            'flex h-full w-full items-center justify-center rounded-2xl border backdrop-blur-sm select-none',
-            'bg-floating-box-bg border-floating-box-border',
-            SHADOW.xlg
+            'bg-bg-weak',
+            LAYOUT.flex.center,
+            'h-full w-full rounded-xl select-none md:rounded-2xl',
+            'shadow-elevation-lg'
           )}
         >
-          <Icon />
+          <Icon
+            aria-hidden="true"
+            className="h-[60%] w-[60%] shrink-0 sm:h-[55%] sm:w-[55%] md:h-[50%] md:w-[50%]"
+          />
         </div>
-      </motion.div>
-    </motion.li>
+      </m.div>
+    </m.li>
   )
 }

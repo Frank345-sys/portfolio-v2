@@ -9,6 +9,7 @@
 :root {
   /* ── GRAYS ─────────────────────────────────────────────────── */
   --color-gray-50: #f7f7f7;
+  --color-gray-100: #f0f0f0;
   --color-gray-200: #ebebeb;
   --color-gray-300: #d1d1d1;
   --color-gray-400: #a3a3a3;
@@ -16,7 +17,9 @@
   --color-gray-600: #5c5c5c;
   --color-gray-700: #333333;
   --color-gray-800: #292929;
+  --color-gray-900: #1c1c1c;
   --color-gray-950: #171717;
+  --color-gray-1000: #111111;
   --color-white: #ffffff;
 
   --color-gray-alpha-10: rgba(153, 160, 174, 0.1);
@@ -37,9 +40,8 @@
   /* ── ORANGE (warning) ──────────────────────────────────────── */
   --color-orange-50: #fff3eb;
   --color-orange-200: #ffd9c0;
-  --color-orange-400: #ffa468; /* dark mode warning-dark — valor oficial paleta Blife */
+  --color-orange-400: #ffa468;
   --color-orange-500: #fa7319;
-  --color-orange-600: #e16614;
   --color-orange-950: #71330a;
 
   --color-orange-alpha-10: rgba(255, 145, 71, 0.1);
@@ -51,7 +53,6 @@
   --color-red-200: #ffc0c0;
   --color-red-400: #ff5757;
   --color-red-500: #ff2323;
-  --color-red-600: #ff0000;
   --color-red-950: #500000;
 
   --color-red-alpha-10: rgba(255, 35, 35, 0.1);
@@ -63,7 +64,6 @@
   --color-green-200: #c2f5da;
   --color-green-400: #3ee089;
   --color-green-500: #1fc16b;
-  --color-green-600: #1daf61;
   --color-green-950: #0b4627;
 
   --color-green-alpha-10: rgba(31, 193, 107, 0.1);
@@ -75,7 +75,6 @@
   --color-yellow-200: #ffecc0;
   --color-yellow-400: #ffd268;
   --color-yellow-500: #f6b51e;
-  --color-yellow-600: #e6a819;
   --color-yellow-950: #624c18;
 
   --color-yellow-alpha-10: rgba(246, 181, 30, 0.1);
@@ -120,15 +119,15 @@
      bg-surface → contenedores y componentes destacados
      bg-subtle  → fondos secundarios y áreas de apoyo
      bg-soft    → secciones amplias o backgrounds de UI
-     bg-weak    → fondos muy sutiles
-     bg-white   → blanco puro / base de página
+     bg-weak    → página base y secciones
+     bg-white   → blanco puro / superficies elevadas, cards
      ─────────────────────────────────────────────────────────── */
   --color-bg-strong: var(--color-gray-950);
   --color-bg-surface: var(--color-gray-800);
   --color-bg-subtle: var(--color-gray-300);
   --color-bg-soft: var(--color-gray-200);
-  --color-bg-weak: var(--color-gray-50);
-  --color-bg-white: var(--color-white);
+  --color-bg-weak: var(--color-white);
+  --color-bg-white: var(--color-gray-50);
 
   /* ── Bordes neutrales ──────────────────────────────────────────
      Establecen separaciones y definiciones de elementos.
@@ -204,11 +203,11 @@
   );
   --color-hero-vignette: color-mix(
     in srgb,
-    var(--color-gray-200) 60%,
+    var(--color-bg-soft) 60%,
     transparent
   );
 
-  --color-floating-box-bg: var(--color-gray-50);
+  --color-floating-box-bg: var(--color-white);
   --color-floating-box-bg-hover: var(--color-white);
   --color-floating-box-border: var(--color-gray-alpha-24);
   --color-floating-box-border-hover: var(--color-gray-alpha-24);
@@ -219,25 +218,25 @@
   );
 
   /* ── Sombras semánticas ────────────────────────────────────────
-     Escala de elevación de 6 niveles.
+     Escala de elevación de 6 niveles — convención xs/sm/md/lg/xl/2xl.
      xs   → inputs en focus, bordes sutiles
      sm   → cards estáticas, badges
      md   → dropdowns, tooltips
-     lg   → FloatingBox en reposo, modales pequeños
-     xlg  → FloatingBox en hover, drawers
-     2xlg → modales grandes, popovers prominentes
+     lg   → modales pequeños, paneles flotantes en reposo
+     xl   → popovers, drawers, overlays
+     2xl  → modales grandes, dialogs prominentes
      ─────────────────────────────────────────────────────────── */
-  --shadow-elevation-xs: 0 1px 2px rgb(0 0 0 / 0.08);
+  --shadow-elevation-xs: 0 1px 2px rgb(0 0 0 / 0.06);
   --shadow-elevation-sm:
-    0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.16);
+    0 2px 4px rgb(0 0 0 / 0.08), 0 1px 2px rgb(0 0 0 / 0.12);
   --shadow-elevation-md:
-    0 3px 8px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.18);
+    0 4px 8px rgb(0 0 0 / 0.1), 0 2px 4px rgb(0 0 0 / 0.16);
   --shadow-elevation-lg:
-    0 6px 16px rgb(0 0 0 / 0.14), 0 3px 6px rgb(0 0 0 / 0.28);
-  --shadow-elevation-xlg:
-    0 10px 28px rgb(0 0 0 / 0.18), 0 4px 10px rgb(0 0 0 / 0.38);
-  --shadow-elevation-2xlg:
-    0 18px 40px rgb(0 0 0 / 0.22), 0 8px 16px rgb(0 0 0 / 0.44);
+    0 8px 16px rgb(0 0 0 / 0.12), 0 3px 6px rgb(0 0 0 / 0.2);
+  --shadow-elevation-xl:
+    0 14px 28px rgb(0 0 0 / 0.14), 0 6px 12px rgb(0 0 0 / 0.26);
+  --shadow-elevation-2xl:
+    0 20px 40px rgb(0 0 0 / 0.18), 0 8px 16px rgb(0 0 0 / 0.32);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -246,20 +245,32 @@
    ═══════════════════════════════════════════════════════════════ */
 
 .dark {
-  /* ── Textos neutrales ── */
-  --color-text-strong: var(--color-white);
+  /* ── Textos neutrales ──
+     strong = gris muy claro (títulos, menos brillo que white)
+     subtle = gris claro (cuerpo y descripciones)
+     soft = gris más suave (notas, secundario)
+     disabled = gris medio (estados deshabilitados)
+     ─────────────────────────────────────────────────────────── */
+  --color-text-strong: var(--color-gray-50);
   --color-text-subtle: var(--color-gray-400);
   --color-text-soft: var(--color-gray-500);
   --color-text-disabled: var(--color-gray-600);
-  --color-text-white: var(--color-gray-950);
 
-  /* ── Fondos neutrales ── */
+  /* ── Fondos neutrales ──
+     Ajustados para la estética del portafolio:
+     bg-white   → #111111  fondo base de sección (el más profundo)
+     bg-weak    → #1a1a1a  cards y superficies elevadas sobre el fondo
+     bg-soft    → #292929  elementos sobre cards: inputs, secondary surfaces
+     bg-subtle  → #5c5c5c  se mantiene
+     bg-surface → #333333  se mantiene
+     bg-strong  → white    máximo contraste inverso
+     ─────────────────────────────────────────────────────────── */
   --color-bg-strong: var(--color-white);
   --color-bg-surface: var(--color-gray-200);
   --color-bg-subtle: var(--color-gray-600);
   --color-bg-soft: var(--color-gray-700);
-  --color-bg-weak: var(--color-gray-800);
-  --color-bg-white: var(--color-gray-950);
+  --color-bg-weak: var(--color-gray-900);
+  --color-bg-white: var(--color-gray-1000);
 
   /* ── Bordes neutrales ── */
   --color-stroke-strong: var(--color-white);
@@ -273,9 +284,7 @@
 
   /* ── Warning ── */
   --color-warning-base: var(--color-orange-600);
-  --color-warning-dark: var(
-    --color-orange-400
-  ); /* fix: era blue-400 por error */
+  --color-warning-dark: var(--color-orange-400);
   --color-warning-light: var(--color-orange-alpha-24);
   --color-warning-lighter: var(--color-orange-alpha-16);
 
@@ -293,12 +302,13 @@
 
   /* ── Idle ── */
   --color-idle-base: var(--color-yellow-600);
-  --color-idle-dark: var(--color-yellow-400);
+  --color-idle-dark: var(--color-yellow-200);
   --color-idle-light: var(--color-yellow-alpha-24);
   --color-idle-lighter: var(--color-yellow-alpha-16);
 
   /* ── Feature ── */
-  --color-feature-dark: var(--color-purple-400);
+  --color-feature-base: var(--color-purple-500);
+  --color-feature-dark: var(--color-purple-200);
   --color-feature-light: var(--color-purple-alpha-24);
   --color-feature-lighter: var(--color-purple-alpha-16);
 
@@ -307,6 +317,11 @@
   --color-hero-glow: color-mix(
     in srgb,
     var(--color-error-base) 7%,
+    transparent
+  );
+  --color-hero-vignette: color-mix(
+    in srgb,
+    var(--color-bg-soft) 60%,
     transparent
   );
 
@@ -323,9 +338,9 @@
     0 3px 8px rgb(0 0 0 / 0.22), 0 1px 3px rgb(0 0 0 / 0.3);
   --shadow-elevation-lg:
     0 6px 16px rgb(0 0 0 / 0.26), 0 3px 6px rgb(0 0 0 / 0.4);
-  --shadow-elevation-xlg:
+  --shadow-elevation-xl:
     0 10px 28px rgb(0 0 0 / 0.32), 0 4px 10px rgb(0 0 0 / 0.5);
-  --shadow-elevation-2xlg:
+  --shadow-elevation-2xl:
     0 18px 40px rgb(0 0 0 / 0.38), 0 8px 16px rgb(0 0 0 / 0.56);
 }
 
@@ -335,20 +350,57 @@
 
 html {
   background-color: var(--color-bg-weak);
-  color: var(--color-text-strong);
+  /* Base en gris claro; blanco solo para títulos y resaltados (text-strong) */
+  color: var(--color-text-subtle);
+  scroll-behavior: smooth;
   transition:
     background-color 0.25s ease,
     color 0.25s ease;
 }
 
-*,
-*::before,
-*::after {
+body {
+  color: var(--color-text-subtle);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILIDADES GLOBALES
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Transición suave solo al cambiar tema — no afecta animaciones de componentes */
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
   transition:
     background-color 0.25s ease,
     color 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    fill 0.25s ease,
-    stroke 0.25s ease;
+    border-color 0.25s ease !important;
+}
+
+@layer components {
+  /* Anillo giratorio alrededor de avatares destacados */
+  .u-avatar-feature-ring {
+    border: 2px dashed
+      color-mix(in srgb, var(--color-information-base) 40%, transparent);
+    margin: -4px;
+  }
+
+  /* Gradiente y halo para avatar principal del hero */
+  .u-avatar-feature-gradient {
+    background: linear-gradient(
+      135deg,
+      var(--color-information-base) 0%,
+      var(--color-success-base) 100%
+    );
+    box-shadow:
+      0 0 0 1px
+        color-mix(in srgb, var(--color-information-base) 50%, transparent),
+      0 0 0 8px
+        color-mix(in srgb, var(--color-information-base) 8%, transparent);
+  }
 }

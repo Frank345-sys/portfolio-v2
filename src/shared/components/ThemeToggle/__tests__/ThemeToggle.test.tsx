@@ -1,7 +1,8 @@
 import { vi, type Mock } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { renderWithMotion } from '@/test/renderWithMotion'
 import { ThemeToggle } from '../ThemeToggle'
 import { useTheme } from '@/shared/components/ThemeToggle/hooks/useTheme'
 
@@ -18,7 +19,7 @@ describe('ThemeToggle', () => {
       setTheme: vi.fn(),
     })
 
-    render(<ThemeToggle />)
+    renderWithMotion(<ThemeToggle />)
 
     expect(screen.getByText(/dark mode/i)).toBeInTheDocument()
   })
@@ -29,7 +30,7 @@ describe('ThemeToggle', () => {
       setTheme: vi.fn(),
     })
 
-    render(<ThemeToggle />)
+    renderWithMotion(<ThemeToggle />)
 
     expect(screen.getByText(/light mode/i)).toBeInTheDocument()
   })
@@ -42,7 +43,7 @@ describe('ThemeToggle', () => {
     })
 
     const user = userEvent.setup()
-    render(<ThemeToggle />)
+    renderWithMotion(<ThemeToggle />)
 
     await user.click(screen.getByRole('switch'))
 
@@ -57,7 +58,7 @@ describe('ThemeToggle', () => {
     })
 
     const user = userEvent.setup()
-    render(<ThemeToggle />)
+    renderWithMotion(<ThemeToggle />)
 
     await user.click(screen.getByRole('switch'))
 
@@ -69,7 +70,7 @@ describe('ThemeToggle', () => {
       isDark: true,
       setTheme: vi.fn(),
     })
-    render(<ThemeToggle />)
+    renderWithMotion(<ThemeToggle />)
     const switch_ = screen.getByRole('switch', { name: /alternar tema/i })
     expect(switch_).toHaveAttribute('aria-checked', 'true')
   })

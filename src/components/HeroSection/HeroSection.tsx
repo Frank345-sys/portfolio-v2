@@ -12,6 +12,9 @@ const HERO_STATS = [
 /**
  * Sección hero principal del portfolio.
  * Muestra nombre, rol, descripción, CTA de CV y stats de impacto.
+ * Envuelve el contenido en `BackgroundBoxes` (parallax de iconos).
+ *
+ * @returns {JSX.Element} Bloque hero principal con título, CTA y métricas.
  *
  * @example
  * ```tsx
@@ -22,12 +25,18 @@ export function HeroSection() {
   return (
     <BackgroundBoxes>
       <section
-        className={cn(LAYOUT.section.hero, 'w-full')}
+        id="inicio"
+        className={cn(LAYOUT.section.hero, 'h-full w-full md:h-auto md:w-auto')}
         aria-labelledby="hero-heading"
       >
-        <div className={cn(LAYOUT.container.narrow, LAYOUT.hero.centered)}>
-          <div className={cn(LAYOUT.hero.stack, 'items-center')}>
-            {/* Título: nombre + rol */}
+        <div className={cn(LAYOUT.container.narrow, LAYOUT.px)}>
+          <div
+            className={cn(
+              LAYOUT.flex.center,
+              'flex-col gap-6 text-center sm:gap-8'
+            )}
+          >
+            {/* Título: nombre + rol del desarrollador */}
             <div className="flex flex-col gap-1 sm:gap-2">
               <h1 id="hero-heading" className={TYPOGRAPHY.title.hero}>
                 Frank González
@@ -42,36 +51,46 @@ export function HeroSection() {
               </p>
             </div>
 
-            {/* Descripción */}
+            {/* Descripción del rol */}
             <p className={cn(TYPOGRAPHY.paragraph.lead, 'max-w-2xl')}>
               Especializado en construir interfaces modernas y accesibles con
               React, TypeScript y las mejores herramientas del ecosistema web.
             </p>
 
+            {/* CTA de descarga de CV */}
             <a
               href="/cv.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className={cn(BUTTON.special.cta, BUTTON.size.responsive)}
+              className={BUTTON.special.cta}
               aria-label="Abrir CV de Frank González en nueva pestaña"
             >
               Descargar CV
               <DownloadIcon aria-hidden="true" />
             </a>
 
-            {/* Stats */}
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:flex-nowrap md:gap-8">
+            {/* Stats de impacto */}
+            <ul
+              className={cn(
+                LAYOUT.flex.center,
+                'list-none flex-wrap gap-4 sm:gap-6 md:gap-8'
+              )}
+              aria-label="Estadísticas de impacto"
+            >
               {HERO_STATS.map(({ value, label }) => (
-                <div key={label} className="flex flex-col items-center gap-1">
+                <li key={label} className={'flex flex-col items-center gap-1'}>
                   <span className={TYPOGRAPHY.special.stat}>{value}</span>
                   <span
-                    className={cn(TYPOGRAPHY.label.overline, 'text-center')}
+                    className={cn(
+                      TYPOGRAPHY.label.default,
+                      'text-text-strong text-center'
+                    )}
                   >
                     {label}
                   </span>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
       </section>
