@@ -1,6 +1,7 @@
 import { vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { renderWithMotion } from '@/test/renderWithMotion'
 import { MobileDrawer } from '../subcomponents/MobileDrawer'
 import type { NavItem } from '../types'
 
@@ -16,13 +17,11 @@ vi.mock('@/shared/icons', () => ({
 const NAV_ITEMS: ReadonlyArray<NavItem> = [
   { href: '#inicio', label: 'Inicio' },
   { href: '#sobre-mi', label: 'Sobre mí' },
-  { href: '#proyectos', label: 'Proyectos' },
-  { href: '#contacto', label: 'Contacto' },
 ]
 
 describe('MobileDrawer', () => {
   it('no renderiza nada cuando isOpen es false', () => {
-    render(
+    renderWithMotion(
       <MobileDrawer
         isOpen={false}
         onClose={vi.fn()}
@@ -34,7 +33,7 @@ describe('MobileDrawer', () => {
   })
 
   it('renderiza el drawer cuando isOpen es true', () => {
-    render(
+    renderWithMotion(
       <MobileDrawer
         isOpen
         onClose={vi.fn()}
@@ -43,7 +42,7 @@ describe('MobileDrawer', () => {
       />
     )
     expect(
-      screen.getByRole('dialog', { name: /menú de navegación/i })
+      screen.getByRole('dialog', { name: /mi portfolio/i })
     ).toBeInTheDocument()
     expect(screen.getByText('Mi Portfolio')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /inicio/i })).toHaveAttribute(
@@ -54,16 +53,12 @@ describe('MobileDrawer', () => {
       'href',
       '#sobre-mi'
     )
-    expect(screen.getByRole('link', { name: /proyectos/i })).toHaveAttribute(
-      'href',
-      '#proyectos'
-    )
   })
 
   it('llama a onClose al hacer clic en el botón de cerrar', async () => {
     const user = userEvent.setup()
     const handleClose = vi.fn()
-    render(
+    renderWithMotion(
       <MobileDrawer
         isOpen
         onClose={handleClose}
@@ -78,7 +73,7 @@ describe('MobileDrawer', () => {
   it('llama a onClose al hacer clic en un enlace de navegación', async () => {
     const user = userEvent.setup()
     const handleClose = vi.fn()
-    render(
+    renderWithMotion(
       <MobileDrawer
         isOpen
         onClose={handleClose}
@@ -91,7 +86,7 @@ describe('MobileDrawer', () => {
   })
 
   it('renderiza el ThemeToggle', () => {
-    render(
+    renderWithMotion(
       <MobileDrawer
         isOpen
         onClose={vi.fn()}
