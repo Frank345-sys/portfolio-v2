@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react'
+import type { ComponentType, SVGProps } from 'react'
 
 /**
  * Datos de una caja flotante: posición (%), tamaño, opacidad, parámetros
@@ -15,7 +15,7 @@ export interface BoxData {
   floatDur: number
   floatDelay: number
   fromLeft: boolean
-  Icon: ComponentType
+  Icon: ComponentType<SVGProps<SVGSVGElement>>
 }
 
 /**

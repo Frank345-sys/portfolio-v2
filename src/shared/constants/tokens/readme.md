@@ -1,46 +1,52 @@
 # Sistema de Design Tokens
 
-Sistema completo de tokens de diseño basado para landing pages.
+Tokens de diseño para el portfolio: tipografía, layout, botones, badges, animaciones, inputs, cards y z-index. Los colores semánticos y la escala de sombras `shadow-elevation-*` se definen en `src/index.css` (Tailwind v4 `@theme`); los archivos en esta carpeta exponen clases y composiciones para usar en componentes.
 
-## 📦 Instalación
+## Estructura
 
-```bash
-# Coloca estos archivos en tu proyecto
+```
 src/
-  constans/
-    tokens/
-      animation.ts
-      badge.ts
-      button.ts
-      input.ts
-      layout.ts
-      shadow.ts
-      typography.ts
-      index.ts
+  shared/
+    constants/
+      tokens/
+        animation.ts   # Transiciones, hover, fade, scroll, loading, stagger
+        badge.ts       # Badges, pills, chips, estado
+        button.ts      # Contained / outlined / text + special (CTA, icon, link)
+        card.ts        # Superficies de card (surface, interactive, overlay, layout)
+        input.ts       # Inputs, labels, helper (default / error / success), grupos
+        layout.ts      # Secciones, contenedores, grids, flex, header, footer, divider
+        typography.ts  # Títulos, párrafos, labels, links, special
+        z.ts           # Z.base | raised | dropdown | drawer | modal | header | toast
+        index.ts       # Re-export de todo
 ```
 
-## 🎨 Uso Básico
+La **fuente de verdad de colores** está en `src/index.css`: `:root` (primitivos), `@theme` (semánticos light) y `.dark` (override dark mode). No usar tokens base (`--color-gray-*`) en componentes; usar siempre las clases semánticas (`text-text-*`, `bg-bg-*`, `border-stroke-*`).
+
+---
+
+## Instalación / Uso
+
+Importar desde `@/shared/constants/tokens`. Combinar tokens con `cn()` (tailwind-merge + clsx):
 
 ```tsx
-import { TYPOGRAPHY, LAYOUT, BUTTON } from '@/styles/tokens'
+import { TYPOGRAPHY, LAYOUT, BUTTON, CARD } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
 
-export default function Hero() {
+export function Hero() {
   return (
     <section className={LAYOUT.section.hero}>
-      <div className={LAYOUT.container.full}>
-        <div className={LAYOUT.hero.stack}>
-          <h1 className={TYPOGRAPHY.title.hero}>
-            Construye productos increíbles
-          </h1>
-          <p className={TYPOGRAPHY.paragraph.lead}>
-            La mejor plataforma para llevar tu negocio al siguiente nivel
-          </p>
-          <div className={LAYOUT.hero.ctas}>
-            <button className={BUTTON.special.cta}>Comenzar gratis</button>
-            <button className={cn(BUTTON.variant.text.primary, BUTTON.size.lg)}>
-              Ver demo
-            </button>
-          </div>
+      <div className={cn(LAYOUT.container.narrow, LAYOUT.px)}>
+        <h1 className={TYPOGRAPHY.title.hero}>Tu nombre</h1>
+        <p className={TYPOGRAPHY.paragraph.lead}>Descripción</p>
+        <div className={LAYOUT.flex.rowResponsive}>
+          <a href="/cv.pdf" className={BUTTON.special.cta}>
+            Descargar CV
+          </a>
+          <button
+            className={cn(BUTTON.variant.outlined.primary, BUTTON.size.lg)}
+          >
+            Ver más
+          </button>
         </div>
       </div>
     </section>
@@ -48,419 +54,372 @@ export default function Hero() {
 }
 ```
 
-## 📚 Ejemplos por Sección
+---
 
-### Hero Section
+## CARD
+
+Las cards se gestionan exclusivamente en `card.ts`. **No existen tokens de card en `LAYOUT`.**
+
+### Categorías
+
+| Token                | Cuándo usar                                                  |
+| -------------------- | ------------------------------------------------------------ |
+| `CARD.surface.*`     | Contenedores estáticos: info, stats, grupos, paneles         |
+| `CARD.interactive.*` | Solo en `<a>` o `<button>` — tienen `cursor-pointer` y hover |
+| `CARD.overlay.*`     | Drawers, tooltips con cuerpo, modales pequeños, sidebars     |
+| `CARD.layout.*`      | Partes internas reutilizables: header, title, body, footer   |
+
+### Variantes de superficie (`CARD.surface`)
+
+| Token                   | Fondo    | Padding | Sombra | Uso típico                                          |
+| ----------------------- | -------- | ------- | ------ | --------------------------------------------------- |
+| `CARD.surface.default`  | bg-white | md      | —      | Contenido principal — padding generoso (p-6 sm:p-8) |
+| `CARD.surface.elevated` | bg-white | md      | md     | Paneles flotantes, contenido prioritario            |
+| `CARD.surface.compact`  | bg-white | sm      | —      | Listas densas, sidebars, widgets compactos          |
+| `CARD.surface.subtle`   | bg-soft  | sm      | —      | Áreas de apoyo, contexto adicional                  |
+| `CARD.surface.weak`     | bg-weak  | sm      | xs     | SkillGroup, ValueCard, info estática                |
+| `CARD.surface.white`    | bg-white | sm      | xs     | Formularios, listados sobre fondos tenues           |
+
+### Variantes interactivas (`CARD.interactive`)
+
+⚠️ Usar **solo** en `<a>`, `<button>` o `[role="button"]`.
+
+| Token                      | Hover                            | Uso típico                   |
+| -------------------------- | -------------------------------- | ---------------------------- |
+| `CARD.interactive.default` | `border-subtle` + sombra xs      | Cards navegables, padding md |
+| `CARD.interactive.weak`    | `border-information` + `bg-soft` | Selección, skill cards       |
+| `CARD.interactive.white`   | `border-subtle` + sombra sm      | Cards de producto, listas    |
+
+### Variantes overlay (`CARD.overlay`)
+
+| Token                | Z-index recomendado | Uso                                    |
+| -------------------- | ------------------- | -------------------------------------- |
+| `CARD.overlay.panel` | `Z.drawer`          | Drawers, tooltips con cuerpo, sidebars |
+| `CARD.overlay.modal` | `Z.modal`           | Modales pequeños, popovers, previews   |
+
+### Estructura interna (`CARD.layout`)
 
 ```tsx
-<section className={LAYOUT.section.hero}>
-  <div className={LAYOUT.container.full}>
-    <div className={LAYOUT.grid.split}>
-      {/* Contenido */}
-      <div className={LAYOUT.hero.stack}>
-        <span className={TYPOGRAPHY.label.overline}>Nuevo lanzamiento</span>
-        <h1 className={TYPOGRAPHY.title.hero}>Tu título impactante aquí</h1>
-        <p className={TYPOGRAPHY.paragraph.lead}>
-          Descripción que engancha y explica el valor principal
-        </p>
-        <div className={LAYOUT.hero.ctas}>
-          <button className={BUTTON.special.cta}>Acción principal</button>
-          <button className={cn(BUTTON.variant.text.primary, BUTTON.size.lg)}>
-            Acción secundaria →
-          </button>
-        </div>
-      </div>
-
-      {/* Imagen/Gráfico */}
-      <div className={ANIMATION.fade.inFromRight}>
-        <img src="/hero.png" alt="Hero" />
-      </div>
-    </div>
+<div className={CARD.surface.weak}>
+  <div className={CARD.layout.header}>
+    <p className={TYPOGRAPHY.title.small}>Título</p>
+    <button>Acción</button>
   </div>
-</section>
-```
-
-### Features Section
-
-```tsx
-<section className={LAYOUT.section.default}>
-  <div className={LAYOUT.container.full}>
-    <div className={LAYOUT.spacing.default}>
-      {/* Header */}
-      <div className="mx-auto max-w-3xl text-center">
-        <h2 className={TYPOGRAPHY.title.section}>
-          Características principales
-        </h2>
-        <p className={TYPOGRAPHY.paragraph.primary}>
-          Todo lo que necesitas para tener éxito
-        </p>
-      </div>
-
-      {/* Features Grid */}
-      <div className={LAYOUT.grid.cols3}>
-        {features.map((feature, i) => (
-          <div
-            key={i}
-            className={cn(LAYOUT.card.interactive, ANIMATION.hover.lift)}
-          >
-            <div className={LAYOUT.flex.stackCompact}>
-              <span
-                className={cn(
-                  BADGE.base.default,
-                  BADGE.size.md,
-                  BADGE.variant.primary
-                )}
-              >
-                {feature.icon}
-              </span>
-              <h3 className={TYPOGRAPHY.title.card}>{feature.title}</h3>
-              <p className={TYPOGRAPHY.paragraph.secondary}>
-                {feature.description}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
-```
-
-### Pricing Section
-
-```tsx
-<section className={LAYOUT.section.default}>
-  <div className={LAYOUT.container.full}>
-    <div className={LAYOUT.spacing.large}>
-      {/* Header */}
-      <div className="mx-auto max-w-2xl text-center">
-        <span className={TYPOGRAPHY.label.overline}>Precios</span>
-        <h2 className={TYPOGRAPHY.title.section}>Elige tu plan perfecto</h2>
-      </div>
-
-      {/* Pricing Cards */}
-      <div className={LAYOUT.grid.cols3}>
-        {plans.map((plan) => (
-          <div
-            key={plan.name}
-            className={cn(LAYOUT.card.elevated, LAYOUT.flex.stack)}
-          >
-            <div>
-              <h3 className={TYPOGRAPHY.title.card}>{plan.name}</h3>
-              <div className="mt-4 flex items-baseline gap-1">
-                <span className={TYPOGRAPHY.special.price}>${plan.price}</span>
-                <span className={TYPOGRAPHY.paragraph.muted}>/mes</span>
-              </div>
-            </div>
-
-            <ul className={LAYOUT.spacing.compact}>
-              {plan.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2">
-                  <span>✓</span>
-                  <span className={TYPOGRAPHY.paragraph.secondary}>
-                    {feature}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <button
-              className={cn(
-                BUTTON.variant.contained.primary,
-                BUTTON.size.md,
-                'w-full'
-              )}
-            >
-              Comenzar
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
-```
-
-### CTA Section
-
-```tsx
-<section className={LAYOUT.section.default}>
-  <div className={LAYOUT.container.full}>
-    <div className={LAYOUT.cta.banner}>
-      <div className={LAYOUT.cta.stack}>
-        <h2 className={TYPOGRAPHY.title.section}>¿Listo para comenzar?</h2>
-        <p className={TYPOGRAPHY.paragraph.primary}>
-          Únete a miles de usuarios satisfechos
-        </p>
-        <div className={BUTTON.group.horizontal}>
-          <button className={BUTTON.special.cta}>Crear cuenta gratis</button>
-          <a href="#" className={BUTTON.special.link}>
-            Conoce más →
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-```
-
-### Testimonials Section
-
-```tsx
-<section className={LAYOUT.section.default}>
-  <div className={LAYOUT.container.full}>
-    <div className={LAYOUT.grid.cols2}>
-      {testimonials.map((testimonial) => (
-        <div key={testimonial.id} className={LAYOUT.card.subtle}>
-          <div className={LAYOUT.flex.stackCompact}>
-            <p className={TYPOGRAPHY.special.quote}>"{testimonial.quote}"</p>
-            <div className="flex items-center gap-3">
-              <img
-                src={testimonial.avatar}
-                alt={testimonial.name}
-                className="h-12 w-12 rounded-full"
-              />
-              <div>
-                <p className={TYPOGRAPHY.label.default}>{testimonial.name}</p>
-                <p className={TYPOGRAPHY.label.small}>{testimonial.role}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
-```
-
-### Form Section
-
-```tsx
-<section className={LAYOUT.section.default}>
-  <div className={LAYOUT.container.narrow}>
-    <div className={LAYOUT.spacing.default}>
-      <h2 className={TYPOGRAPHY.title.section}>Contáctanos</h2>
-
-      <form className={INPUT.group.vertical}>
-        <div>
-          <label className={INPUT.label.required}>Nombre</label>
-          <input
-            type="text"
-            className={INPUT.base.default}
-            placeholder="Tu nombre completo"
-          />
-        </div>
-
-        <div>
-          <label className={INPUT.label.default}>Email</label>
-          <input
-            type="email"
-            className={INPUT.base.default}
-            placeholder="tu@email.com"
-          />
-          <p className={INPUT.helper.default}>Nunca compartiremos tu email</p>
-        </div>
-
-        <div>
-          <label className={INPUT.label.default}>Mensaje</label>
-          <textarea
-            className={INPUT.base.textarea}
-            placeholder="Cuéntanos más..."
-          />
-        </div>
-
-        <button
-          className={cn(
-            BUTTON.variant.contained.primary,
-            BUTTON.size.lg,
-            'w-full'
-          )}
-        >
-          Enviar mensaje
-        </button>
-      </form>
-    </div>
-  </div>
-</section>
-```
-
-### Footer
-
-```tsx
-<footer className={LAYOUT.footer.wrapper}>
-  <div className={LAYOUT.container.full}>
-    <div className={LAYOUT.section.footer}>
-      <div className={LAYOUT.footer.grid}>
-        <div>
-          <h3 className={TYPOGRAPHY.title.small}>Producto</h3>
-          <ul className={LAYOUT.spacing.compact}>
-            <li>
-              <a href="#" className={TYPOGRAPHY.link.footer}>
-                Features
-              </a>
-            </li>
-            <li>
-              <a href="#" className={TYPOGRAPHY.link.footer}>
-                Precios
-              </a>
-            </li>
-            <li>
-              <a href="#" className={TYPOGRAPHY.link.footer}>
-                Casos de uso
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        {/* Más columnas... */}
-      </div>
-
-      <div className={LAYOUT.footer.bottom}>
-        <p className={TYPOGRAPHY.paragraph.small}>
-          © 2024 Tu Empresa. Todos los derechos reservados.
-        </p>
-      </div>
-    </div>
-  </div>
-</footer>
-```
-
-## 🎭 Animaciones
-
-Los tokens de animación están centralizados en `animation.ts`. El resto de archivos (`button.ts`, `badge.ts`, `input.ts`, `layout.ts`, `typography.ts`) los importan internamente — no necesitas combinarlos manualmente en esos casos.
-
-```tsx
-// Fade in al cargar
-<div className={ANIMATION.fade.inFromBottom}>
-  Contenido que aparece desde abajo
-</div>
-
-// Hover effects
-<div className={ANIMATION.hover.lift}>
-  Card que se eleva al hover
-</div>
-
-// Transiciones reutilizables
-<div className={ANIMATION.transition.default}>transition-all 300ms</div>
-<div className={ANIMATION.transition.colors}>transition-colors 300ms</div>
-<div className={ANIMATION.transition.fast}>transition-all 150ms</div>
-
-// Scroll reveal (con Intersection Observer)
-<div className={`${ANIMATION.scroll.reveal} data-[visible=true]:${ANIMATION.scroll.visible}`}>
-  Aparece al hacer scroll
-</div>
-
-// Loading states
-<div className={ANIMATION.loading.skeleton} />
-<div className={ANIMATION.loading.spinner} />
-```
-
-## 🎨 Badges y Pills
-
-```tsx
-// Badge estándar
-<span className={cn(BADGE.base.default, BADGE.size.sm, BADGE.variant.feature)}>
-  ✨ Nuevo
-</span>
-
-// Categorías con pill
-<div className={BADGE.group.horizontal}>
-  {categories.map(cat => (
-    <span key={cat} className={BADGE.special.pill}>
-      {cat}
-    </span>
-  ))}
-</div>
-
-// Chip seleccionable / seleccionado
-<span className={BADGE.special.chip}>React</span>
-<span className={BADGE.special.chipActive}>TypeScript</span>
-
-// Estado online
-<div className="flex items-center gap-2">
-  <span className={cn(BADGE.special.dot, BADGE.status.online)} />
-  <span>En línea</span>
+  <div className={CARD.layout.body}>...</div>
+  <div className={CARD.layout.footer}>...</div>
 </div>
 ```
 
-## 🔧 Composición con CVA (Class Variance Authority)
+### Dark mode
+
+Automático. Los tokens semánticos (`bg-bg-*`, `stroke-*`) se reasignan solos con la clase `.dark` en el ancestro.
+
+---
+
+## LAYOUT
+
+### Padding horizontal
+
+Los containers **no incluyen `px` por defecto**. Añadir `LAYOUT.px` con `cn()` cuando el contenedor necesita margen lateral. Usar el mismo valor en todos los containers de una misma sección para mantener la alineación.
 
 ```tsx
-import { cva } from 'class-variance-authority'
-import { BUTTON } from '@/styles/tokens'
+<div className={cn(LAYOUT.container.full, LAYOUT.px)}>...</div>
+```
 
-const buttonVariants = cva('', {
-  variants: {
-    variant: {
-      primary: BUTTON.variant.contained.primary,
-      outlined: BUTTON.variant.outlined.primary,
-      text: BUTTON.variant.text.primary,
-    },
-    size: {
-      sm: BUTTON.size.sm,
-      md: BUTTON.size.md,
-      lg: BUTTON.size.lg,
-    },
-  },
-  defaultVariants: {
-    variant: 'primary',
-    size: 'md',
-  },
-})
+### Contenedores
 
-// Uso
-<button className={buttonVariants({ variant: 'primary', size: 'lg' })}>
-  Click me
+| Token                           | Uso                                              |
+| ------------------------------- | ------------------------------------------------ |
+| `LAYOUT.container.wide`         | Hero, features (max-w-[1400px])                  |
+| `LAYOUT.container.full`         | Contenedor principal (max-w-7xl)                 |
+| `LAYOUT.container.narrow`       | Timelines, textos largos (max-w-4xl)             |
+| `LAYOUT.container.tight`        | Formularios, CTAs aislados (max-w-2xl)           |
+| `LAYOUT.container.headerNarrow` | Cabeceras de sección — sin `mx-auto` (max-w-3xl) |
+| `LAYOUT.container.reading`      | Artículos, posts (max-w-[65ch])                  |
+
+### Secciones
+
+| Token                    | py            |
+| ------------------------ | ------------- |
+| `LAYOUT.section.hero`    | py-24 → py-48 |
+| `LAYOUT.section.default` | py-20 → py-40 |
+| `LAYOUT.section.compact` | py-16 → py-24 |
+| `LAYOUT.section.small`   | py-12 → py-20 |
+| `LAYOUT.section.footer`  | py-16 → py-24 |
+
+### Spacing
+
+| Token                    | Cuándo usar                                                       |
+| ------------------------ | ----------------------------------------------------------------- |
+| `LAYOUT.spacing.section` | Separación entre secciones de página. ⚠️ Solo en flujo de columna |
+| `LAYOUT.spacing.large`   | Separación entre sub-bloques dentro de una misma sección          |
+| `LAYOUT.spacing.default` | Gap estándar entre elementos                                      |
+| `LAYOUT.spacing.compact` | Gap compacto entre elementos muy relacionados                     |
+| `LAYOUT.spacing.small`   | Gap mínimo — listas, grupos de chips                              |
+
+### Header, Footer, Divider
+
+| Token                       | Uso                                        |
+| --------------------------- | ------------------------------------------ |
+| `LAYOUT.header.bar`         | Header fixed — usar con `Z.header`         |
+| `LAYOUT.header.sticky`      | Header sticky — usar con `Z.header`        |
+| `LAYOUT.header.wrapper`     | Wrapper con padding interno                |
+| `LAYOUT.header.nav`         | Nav links — solo desktop, oculto en mobile |
+| `LAYOUT.footer.wrapper`     | Footer (bg-weak, border-top)               |
+| `LAYOUT.footer.grid`        | Grid de columnas (2 → 4 cols)              |
+| `LAYOUT.footer.bottom`      | Barra inferior copyright + links           |
+| `LAYOUT.divider.horizontal` | Línea horizontal (bg-stroke-soft)          |
+| `LAYOUT.divider.vertical`   | Línea vertical                             |
+| `LAYOUT.divider.section`    | Divider con margen vertical (my-8 → my-12) |
+
+### Grids
+
+| Token                 | Cuándo usar                                                                   |
+| --------------------- | ----------------------------------------------------------------------------- |
+| `LAYOUT.grid.cols2`   | Testimonios, pricing                                                          |
+| `LAYOUT.grid.cols3`   | Features, cards                                                               |
+| `LAYOUT.grid.cols4`   | Logos, iconos                                                                 |
+| `LAYOUT.grid.split`   | Hero split / about (2 cols centradas)                                         |
+| `LAYOUT.grid.autoFit` | Grid responsive auto-fit                                                      |
+| `LAYOUT.grid.masonry` | Columnas altura variable. ⚠️ Orden visual ≠ orden DOM — revisar accesibilidad |
+
+### Flex
+
+| Token                       | Uso                                                     |
+| --------------------------- | ------------------------------------------------------- |
+| `LAYOUT.flex.between`       | Navbar, headers — extremos opuestos                     |
+| `LAYOUT.flex.center`        | Centrar contenido — spinners, estados vacíos            |
+| `LAYOUT.flex.row`           | Fila de CTAs o botones con wrap en mobile               |
+| `LAYOUT.flex.stack`         | Stack vertical de elementos relacionados                |
+| `LAYOUT.flex.start`         | Elementos con ícono a la izquierda                      |
+| `LAYOUT.flex.wrap`          | Grupos de chips, tags o badges                          |
+| `LAYOUT.flex.inlineToggle`  | ThemeToggle, switches con label — incluye `select-none` |
+| `LAYOUT.flex.rowResponsive` | Stack en mobile, fila en desktop                        |
+
+---
+
+## TYPOGRAPHY
+
+Usar siempre tokens de tipografía — incluyen color semántico. No usar clases `text-*` sueltas en cuerpo de texto.
+
+| Categoría | Tokens                                                                                   |
+| --------- | ---------------------------------------------------------------------------------------- |
+| Títulos   | `title.hero`, `section`, `subsection`, `small`, `xsmall`, `xxsmall`                      |
+| Párrafos  | `paragraph.lead`, `large`, `primary`, `secondary`, `muted`, `small`                      |
+| Labels    | `label.default`, `large`, `small`, `overline` — ⚠️ para formularios usar `INPUT.label.*` |
+| Links     | `link.default`, `plain`, `nav`, `footer`                                                 |
+| Special   | `special.stat`, `emphasis`, `caption`, `code`, `quote`                                   |
+
+### TYPOGRAPHY.link vs BUTTON.special.link
+
+| Token                 | Estructura    | Cuándo usar                                     |
+| --------------------- | ------------- | ----------------------------------------------- |
+| `TYPOGRAPHY.link.*`   | texto inline  | Enlace dentro de párrafos, nav, footer          |
+| `BUTTON.special.link` | `inline-flex` | Link autónomo con ícono, fuera de texto corrido |
+
+---
+
+## BUTTON
+
+El base está embebido en cada variante. Combinar **variante + tamaño** con `cn()`.
+
+```tsx
+<button className={cn(BUTTON.variant.contained.primary, BUTTON.size.md)}>
+  Enviar
 </button>
 ```
 
-## 🌑 Sombras
+- **Contained:** `contained.primary`, `success`, `danger`, `warning`, `dark`
+- **Outlined:** `outlined.primary`, `success`, `danger`, `warning`, `neutral`
+- **Text:** `text.primary`, `success`, `danger`, `warning`, `neutral`
+- **Tamaños:** `size.sm`, `md`, `lg`, `xl`, `responsive`
+- **Special:** `special.cta` ⚠️ no combinar con `size.*` — tamaño propio; `special.icon`; `special.link`
+- **Grupos:** `group.horizontal`, `vertical`, `attached`
 
-Las sombras se importan desde `shadow.ts` y ya están integradas internamente en `layout.ts`. Úsalas directamente si necesitas elevar un elemento puntual:
+---
+
+## BADGE
+
+### Composición con size
+
+| Token                      | Combina con `BADGE.size.*` |
+| -------------------------- | -------------------------- |
+| `BADGE.variant.*`          | ✅ Sí                      |
+| `BADGE.status.*`           | ✅ Sí                      |
+| `BADGE.special.pill`       | ❌ No — tamaño propio      |
+| `BADGE.special.chip`       | ❌ No — tamaño propio      |
+| `BADGE.special.chipActive` | ❌ No — tamaño propio      |
+| `BADGE.special.dot`        | ❌ No — tamaño fijo        |
+| `BADGE.special.new`        | ❌ No — posición absoluta  |
+| `BADGE.special.counter`    | ❌ No — dimensión mínima   |
 
 ```tsx
-import { SHADOW } from '@/styles/tokens'
+// ✅ Correcto
+<span className={cn(BADGE.variant.primary, BADGE.size.sm)}>Nuevo</span>
+<button className={BADGE.special.chip}>React</button>
 
-<div className={SHADOW.md}>card con sombra media</div>
-<div className={SHADOW.lg}>modal o popover</div>
+// ❌ Incorrecto — conflicto de padding
+<span className={cn(BADGE.special.pill, BADGE.size.lg)}>Tag</span>
 ```
 
-Escala disponible: `xs` → `sm` → `md` → `lg` → `xlg` → `x2lg`
+- **Variantes:** `primary`, `success`, `error`, `warning`, `feature`, `neutral`, `dark`, `outline`
+- **Status:** `status.online`, `offline`, `busy`, `away`
+- **Special:** `special.pill`, `chip`, `chipActive`, `dot`, `new`, `counter`
+- **Grupos:** `group.horizontal`, `vertical`
 
-## 📱 Responsive Design
+⚠️ `BADGE.status.online` usar solo sobre `bg-bg-white`.
 
-Todos los tokens incluyen breakpoints responsive:
+---
 
-- `sm:` — 640px+
-- `md:` — 768px+
-- `lg:` — 1024px+
+## ANIMATION
 
-Los tamaños de texto, spacing y layouts se ajustan automáticamente.
-
-## 🎯 Tokens Semánticos
-
-Usa los tokens semánticos en lugar de colores genéricos de Tailwind:
+- **Transiciones:** `transition.default`, `fast`, `slow`, `colors`, `opacity`, `transform`, `shadow`
+- **Hover:** `hover.lift`, `scale`, `glow`, `underline`
+- **Fade:** `fade.in`, `inFromTop`, `inFromBottom`, `inFromLeft`, `inFromRight`, `out`
+- **Slide:** `slide.fromTop`, `fromBottom`, `fromLeft`, `fromRight`
+- **Stagger:** `stagger.child1`…`child5` — requiere clase `group` en el padre. Escala lineal de 75ms: `0 / 75 / 150 / 225 / 300ms`.
+- **Scroll:** `scroll.reveal` + `scroll.visible` — requieren Intersection Observer
+- **Loading:** `loading.skeleton` (combinar con dimensiones explícitas), `loading.spinner`
 
 ```tsx
-// ❌ No hagas esto
+// Stagger — clase `group` obligatoria en el padre
+<ul className="group">
+  <li className={ANIMATION.stagger.child1}>Item 1</li>
+  <li className={ANIMATION.stagger.child2}>Item 2</li>
+</ul>
+
+// Scroll reveal — requiere Intersection Observer
+<div ref={ref} className={ANIMATION.scroll.reveal}>...</div>
+// En el observer: entry.target.classList.add(...ANIMATION.scroll.visible.split(' '))
+
+// Skeleton con dimensiones
+<div className={cn(ANIMATION.loading.skeleton, 'h-4 w-32')} />
+```
+
+---
+
+## INPUT
+
+```tsx
+<div className={INPUT.group.vertical}>
+  <label className={INPUT.label.required}>Email</label>
+  <input className={INPUT.base.default} aria-invalid={hasError} />
+  {hasError ? (
+    <span className={INPUT.helper.error}>El email no es válido.</span>
+  ) : (
+    <span className={INPUT.helper.default}>
+      Te notificaremos solo cuando sea necesario.
+    </span>
+  )}
+</div>
+```
+
+| Token                  | Uso                                               |
+| ---------------------- | ------------------------------------------------- |
+| `INPUT.base.default`   | Input estándar de una línea                       |
+| `INPUT.base.textarea`  | Textarea (min-h-[120px])                          |
+| `INPUT.label.default`  | Label sin requerido                               |
+| `INPUT.label.required` | Label con asterisco automático via CSS            |
+| `INPUT.helper.default` | Texto de ayuda neutro                             |
+| `INPUT.helper.error`   | Mensaje de error — usar con `aria-invalid="true"` |
+| `INPUT.helper.success` | Confirmación de campo válido                      |
+| `INPUT.group.vertical` | Stack label + input + helper                      |
+
+⚠️ `helper.error` y `helper.success` son mutuamente excluyentes — no mostrar ambos a la vez.
+
+---
+
+## SHADOW ELEVATION
+
+Usar siempre clases semánticas `shadow-elevation-*`. No inventar sombras con `shadow-[...]`.
+
+| Clase                  | Uso                                 |
+| ---------------------- | ----------------------------------- |
+| `shadow-elevation-xs`  | Inputs en focus, cards compactas    |
+| `shadow-elevation-sm`  | Headers, barras de navegación       |
+| `shadow-elevation-md`  | Cards elevated, dropdowns           |
+| `shadow-elevation-lg`  | Modales pequeños, paneles flotantes |
+| `shadow-elevation-xl`  | Popovers, drawers, overlays         |
+| `shadow-elevation-2xl` | Dialogs, modales grandes            |
+
+⚠️ Reservar `shadow-elevation-2xl` para el nivel más alto de la jerarquía visual — dos elementos con `2xl` en la misma pantalla eliminan la noción de profundidad.
+
+---
+
+## Z
+
+Usar siempre `Z.*`. No usar clases `z-*` sueltas en componentes.
+
+| Token        | z-index | Uso                                                               |
+| ------------ | ------- | ----------------------------------------------------------------- |
+| `Z.base`     | 0       | Elementos sin apilamiento especial                                |
+| `Z.raised`   | 10      | Cards en hover, elementos que se elevan al interactuar            |
+| `Z.dropdown` | 20      | Dropdowns, tooltips, menús contextuales                           |
+| `Z.drawer`   | 30      | Drawers, sidebars deslizables — combinar con `CARD.overlay.panel` |
+| `Z.modal`    | 40      | Modales, diálogos — combinar con `CARD.overlay.modal`             |
+| `Z.header`   | 50      | Navbar fija — combinar con `LAYOUT.header.bar`                    |
+| `Z.toast`    | 60      | Notificaciones toast — nivel máximo, siempre visible              |
+
+```tsx
+// Modal con backdrop
+<div className={cn(CARD.overlay.modal, Z.modal)}>...</div>
+<div className="fixed inset-0 bg-black/40 z-[39]" /> {/* backdrop justo debajo */}
+
+// Drawer
+<aside className={cn(CARD.overlay.panel, Z.drawer)}>...</aside>
+
+// Toast
+<div className={cn('fixed bottom-4 right-4', Z.toast)}>...</div>
+```
+
+⚠️ `Z.toast` es el nivel máximo del sistema — no añadir elementos por encima. El backdrop de un modal siempre va en `z-[39]` (un nivel por debajo de `Z.modal`).
+
+---
+
+## Tokens semánticos de color
+
+En componentes usar **siempre** las clases semánticas. Nunca los primitivos (`gray-*`, `blue-*`, etc.).
+
+```tsx
+// ❌ Evitar
 <p className="text-gray-600">Texto</p>
-<div className="shadow-lg">Card</div>
-<div className="transition-all duration-300 ease-in-out">...</div>
 
-// ✅ Haz esto
-<p className="text-subtle">Texto</p>
-<div className={SHADOW.lg}>Card</div>
-<div className={ANIMATION.transition.default}>...</div>
+// ✅ Correcto
+<p className="text-text-subtle">Texto</p>
+<div className="bg-bg-white shadow-elevation-lg">Card</div>
 ```
 
-**Texto:** `text-strong` · `text-subtle` · `text-soft` · `text-disabled` · `text-white`
+**Texto:** `text-text-strong` · `text-text-subtle` · `text-text-soft` · `text-text-disabled` · `text-text-white`
 
-**Fondos:** `bg-white` · `bg-weak` · `bg-soft` · `bg-subtle` · `bg-surface` · `bg-strong`
+**Fondos:** `bg-bg-white` · `bg-bg-weak` · `bg-bg-soft` · `bg-bg-subtle` · `bg-bg-medium` · `bg-bg-surface` · `bg-bg-strong`
 
-**Bordes:** `border-stroke-soft` · `border-stroke-subtle` · `border-stroke-strong`
+**Bordes:** `border-stroke-soft` · `border-stroke-subtle` · `border-stroke-medium` · `border-stroke-strong`
 
-**Estados:** `bg-information-lighter` · `text-information-dark` · `bg-error-lighter` · `text-success-dark` · etc.
+**Estados:** `bg-information-light`, `text-information-dark`, `bg-success-light`, `text-feature-dark`, etc. En dark mode los tokens `*-light` resuelven a capas semi-transparentes (`*-alpha-24`).
 
-**Sombras:** `SHADOW.xs` · `SHADOW.sm` · `SHADOW.md` · `SHADOW.lg` · `SHADOW.xlg` · `SHADOW.x2lg`
+---
 
-**Transiciones:** `ANIMATION.transition.fast` · `ANIMATION.transition.default` · `ANIMATION.transition.slow` · `ANIMATION.transition.colors`
+## Dark mode
+
+Los colores semánticos se redefinen en `.dark` en `src/index.css`. Al usar solo clases semánticas la interfaz se adapta sin lógica extra en los componentes.
+
+---
+
+## Composición con `cn()`
+
+```tsx
+// Combinación simple
+<button className={cn(BUTTON.variant.contained.primary, BUTTON.size.md)} />
+
+// Condicional
+<div className={cn(CARD.surface.weak, isActive && 'ring-2 ring-information-base')} />
+
+// Variantes en componentes
+function Card({ interactive = false }) {
+  return (
+    <div className={interactive ? CARD.interactive.weak : CARD.surface.weak}>
+      ...
+    </div>
+  )
+}
+```

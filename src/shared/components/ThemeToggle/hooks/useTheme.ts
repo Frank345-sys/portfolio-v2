@@ -30,6 +30,12 @@ function applyTheme(theme: Theme) {
   }
 }
 
+/**
+ * Lee y persiste el tema (claro/oscuro) en `localStorage`, aplica la clase `dark`
+ * en `<html>` y escucha cambios de `prefers-color-scheme` si no hay valor guardado.
+ *
+ * @returns Estado `isDark` y `setTheme` para alternar o fijar el tema.
+ */
 export function useTheme(): UseThemeReturn {
   const [theme, setThemeState] = useState<Theme>(() => {
     const stored = getStoredTheme()
@@ -54,7 +60,15 @@ export function useTheme(): UseThemeReturn {
     return () => media.removeEventListener('change', handleChange)
   }, [])
 
-  const setTheme = (next: Theme) => setThemeState(next)
+  const setTheme = (next: Theme) => {
+    const root = document.documentElement
+    root.classList.add('theme-transitioning')
+    applyTheme(next)
+    setThemeState(next)
+    window.setTimeout(() => {
+      root.classList.remove('theme-transitioning')
+    }, 300)
+  }
 
   return {
     isDark: theme === 'dark',

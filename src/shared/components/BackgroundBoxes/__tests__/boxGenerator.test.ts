@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { generateBoxes, getViewportKey } from '../utils'
+import { generateBoxes, getViewportKey, FLOATING_BOX_COUNT } from '../utils'
 
 describe('getViewportKey', () => {
   it('retorna mobile-sm para width < 480', () => {
@@ -23,32 +23,34 @@ describe('getViewportKey', () => {
   })
 })
 
-describe('generateBoxes - simétrico 14 cajas', () => {
-  it('siempre genera 14 cajas sin importar el breakpoint', () => {
-    expect(generateBoxes(375)).toHaveLength(14)
-    expect(generateBoxes(480)).toHaveLength(14)
-    expect(generateBoxes(900)).toHaveLength(14)
-    expect(generateBoxes(1440)).toHaveLength(14)
+describe('generateBoxes - simétrico (FLOATING_BOX_COUNT cajas)', () => {
+  const half = FLOATING_BOX_COUNT / 2
+
+  it('siempre genera FLOATING_BOX_COUNT cajas sin importar el breakpoint', () => {
+    expect(generateBoxes(375)).toHaveLength(FLOATING_BOX_COUNT)
+    expect(generateBoxes(480)).toHaveLength(FLOATING_BOX_COUNT)
+    expect(generateBoxes(900)).toHaveLength(FLOATING_BOX_COUNT)
+    expect(generateBoxes(1440)).toHaveLength(FLOATING_BOX_COUNT)
   })
 
-  it('7 cajas por lado en todos los breakpoints', () => {
+  it('mitad izquierda / mitad derecha en todos los breakpoints', () => {
     ;[375, 480, 900, 1440].forEach((width) => {
       const boxes = generateBoxes(width)
-      expect(boxes.filter((b) => b.fromLeft)).toHaveLength(7)
-      expect(boxes.filter((b) => !b.fromLeft)).toHaveLength(7)
+      expect(boxes.filter((b) => b.fromLeft)).toHaveLength(half)
+      expect(boxes.filter((b) => !b.fromLeft)).toHaveLength(half)
     })
   })
 
   it('cada caja derecha tiene el mismo Y que su par izquierda', () => {
     const boxes = generateBoxes(1440)
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < half; i++) {
       expect(boxes[i]!.y).toBeCloseTo(boxes[i + 7]!.y, 5)
     }
   })
 
   it('las cajas izquierdas y derechas tienen X distintos', () => {
     const boxes = generateBoxes(1440)
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < half; i++) {
       expect(boxes[i]!.x).not.toBeCloseTo(boxes[i + 7]!.x, 0)
     }
   })

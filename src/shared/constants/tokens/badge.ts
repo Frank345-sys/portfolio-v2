@@ -1,116 +1,185 @@
 import { ANIMATION } from './animation'
 
+const base =
+  'inline-flex items-center gap-2 font-semibold rounded-full' as const
+
 /**
- * Tokens de badges: base, tamaños, variantes, especiales, estado y grupos.
+ * Tokens de badges: tamaños, variantes semánticas, especiales, estado y grupos.
+ *
+ * Composición general:
+ * - `BADGE.variant.*` y `BADGE.status.*` se combinan con `BADGE.size.*` via cn().
+ * - `BADGE.special.*` son componentes completos — ya incluyen tamaño propio.
  *
  * @example
  * ```tsx
- * <span className={cn(BADGE.base.default, BADGE.variant.primary, BADGE.size.sm)}>
- *   Nuevo
- * </span>
+ * // Badge estándar
+ * <span className={cn(BADGE.variant.primary, BADGE.size.sm)}>Nuevo</span>
+ *
+ * // Chip seleccionable
+ * <button className={isActive ? BADGE.special.chipActive : BADGE.special.chip}>
+ *   React
+ * </button>
+ *
+ * // Dot de estado
+ * <span className={cn(BADGE.special.dot, 'bg-success-base')} />
  * ```
  */
 export const BADGE = {
-  base: {
-    /** Base compartido */
-    default: 'inline-flex items-center font-semibold rounded-full',
-
-    /** Con icono */
-    withIcon: 'inline-flex items-center gap-1.5',
-
-    /** Con dot */
-    withDot: 'inline-flex items-center gap-2',
-  },
-
+  // ── Tamaños ───────────────────────────────────────────────────────────────
   size: {
-    /** Pequeño */
+    /** @use Etiquetas compactas, tablas, espacios muy densos. */
     sm: 'px-2.5 py-0.5 text-xs',
 
-    /** Mediano */
+    /** @use Uso general. */
     md: 'px-3 py-1 text-sm',
 
-    /** Grande */
+    /** @use Badges destacados en hero o cabeceras de sección. */
     lg: 'px-4 py-1.5 text-base',
   },
 
+  // ── Variantes semánticas ──────────────────────────────────────────────────
   variant: {
-    /** Badge primario */
-    primary: 'bg-information-lighter text-information-dark',
+    /**
+     * @use Estados informativos, novedades, categorías neutras.
+     * @combine BADGE.size.* via cn() para controlar el tamaño.
+     */
+    primary: `${base} bg-information-light text-information-dark`,
 
-    /** Badge de éxito */
-    success: 'bg-success-lighter text-success-dark',
+    /**
+     * @use Confirmaciones, estados completados, validaciones positivas.
+     * @combine BADGE.size.* via cn().
+     */
+    success: `${base} bg-success-light text-success-dark`,
 
-    /** Badge de error */
-    error: 'bg-error-lighter text-error-dark',
+    /**
+     * @use Errores, estados críticos, elementos bloqueados.
+     * @combine BADGE.size.* via cn().
+     */
+    error: `${base} bg-error-light text-error-dark`,
 
-    /** Badge de advertencia */
-    warning: 'bg-warning-lighter text-warning-dark',
+    /**
+     * @use Advertencias, acciones preventivas, estados en riesgo.
+     * @combine BADGE.size.* via cn().
+     */
+    warning: `${base} bg-warning-light text-warning-dark`,
 
-    /** Badge de feature/nuevo */
-    feature: 'bg-feature-lighter text-feature-dark',
+    /**
+     * @use Novedades de producto, features nuevas, betas.
+     * @combine BADGE.size.* via cn().
+     */
+    feature: `${base} bg-feature-light text-feature-dark`,
 
-    /** Badge neutral */
-    neutral: 'bg-soft text-subtle',
+    /**
+     * @use Categorías sin carga semántica, tags genéricos.
+     * @combine BADGE.size.* via cn().
+     */
+    neutral: `${base} bg-bg-soft`,
 
-    /** Badge oscuro */
-    dark: 'bg-strong text-white',
+    /**
+     * @use Máximo contraste — sobre fondos claros o imágenes.
+     * @combine BADGE.size.* via cn().
+     */
+    dark: `${base} bg-bg-strong text-text-white`,
 
-    /** Badge con outline */
-    outline: 'bg-white border-2 border-stroke-subtle text-strong',
+    /**
+     * @use Badges sutiles sin relleno — sobre fondos blancos o cards.
+     * @combine BADGE.size.* via cn().
+     */
+    outline: `${base} bg-bg-white border border-stroke-subtle text-text-strong`,
   },
 
+  // ── Especiales ────────────────────────────────────────────────────────────
+  // Componentes completos con tamaño propio.
+  // NO combinar con BADGE.size.* — generaría conflicto de padding.
   special: {
-    /** Dot de estado (online/offline) */
-    dot: 'w-2 h-2 rounded-full',
+    /**
+     * @use Indicador circular de color — presencia, disponibilidad, estado.
+     * @combine Color de fondo con cn(): `cn(BADGE.special.dot, 'bg-success-base')`
+     * @nocombine BADGE.size.* (es un dot de tamaño fijo, no un badge de texto)
+     */
+    dot: 'w-2.5 h-2.5 rounded-full shrink-0',
 
-    /** New badge (esquina superior derecha) */
-    new: 'absolute -top-2 -right-2 bg-error-base text-white px-2 py-0.5 text-xs font-bold rounded-full',
+    /**
+     * @use Notificación de novedad sobre un elemento — posición absoluta esquina superior derecha.
+     * @warning El padre debe tener `position: relative` para que el posicionamiento funcione.
+     * @nocombine BADGE.size.* (ya tiene padding propio)
+     */
+    new: 'absolute -top-2 -right-2 z-10 bg-error-base text-text-white px-2 py-0.5 text-xs font-bold rounded-full',
 
-    /** Counter/número */
+    /**
+     * @use Contador de notificaciones o items — número dentro de un círculo pequeño.
+     * @nocombine BADGE.size.* (ya tiene dimensiones mínimas propias)
+     */
     counter:
-      'inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-error-base text-white text-xs font-bold rounded-full',
+      'inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-error-base text-text-white text-xs font-bold rounded-full',
 
-    /** Pill grande (categoría, tag) */
-    pill: `px-4 py-2 bg-weak text-subtle text-sm font-medium rounded-full hover:bg-soft ${ANIMATION.transition.colors}`,
+    /**
+     * @use Tags de categoría, etiquetas de contenido, pills de filtro no interactivos.
+     * @nocombine BADGE.size.* (tamaño propio), BADGE.variant.* (estilo propio)
+     */
+    pill: `px-4 py-2 bg-bg-weak text-sm font-medium rounded-full hover:bg-bg-soft ${ANIMATION.transition.colors}`,
 
-    /** Chip seleccionable */
-    chip: `px-4 py-2 bg-white border-2 border-stroke-soft text-subtle text-sm font-medium rounded-full hover:border-information-base hover:bg-information-lighter hover:text-information-dark ${ANIMATION.transition.default} cursor-pointer`,
+    /**
+     * @use Filtros o tags seleccionables — estado no activo.
+     *      Usar en `<button>` — tiene cursor y estados hover/active.
+     * @combine BADGE.special.chipActive — alternar entre ambos según estado.
+     * @nocombine BADGE.size.* (tamaño propio), BADGE.variant.* (estilo propio)
+     */
+    chip: `px-4 py-2 bg-bg-white border-2 border-stroke-soft text-sm font-medium rounded-full cursor-pointer hover:border-information-base hover:bg-information-lighter hover:text-information-dark ${ANIMATION.transition.default}`,
 
-    /** Chip seleccionado */
+    /**
+     * @use Filtros o tags seleccionables — estado activo.
+     *      Usar en `<button>` — alternar con chip según estado.
+     * @combine BADGE.special.chip — alternar entre ambos según estado.
+     * @nocombine BADGE.size.* (tamaño propio), BADGE.variant.* (estilo propio)
+     */
     chipActive:
-      'px-4 py-2 bg-information-base text-white text-sm font-medium rounded-full',
+      'px-4 py-2 bg-information-base text-text-white text-sm font-medium rounded-full',
   },
 
+  // ── Estado / presencia ────────────────────────────────────────────────────
   status: {
-    /** Online/activo */
-    online: 'bg-success-lighter text-success-dark',
+    /**
+     * @use Indicador de presencia activa — usuario online, servicio activo.
+     * @combine BADGE.size.* via cn().
+     * @warning Usar solo sobre `bg-bg-white` — el fondo success-base pierde
+     *          contraste dentro de otros badges de color.
+     */
+    online: `${base} bg-success-base text-text-white`,
 
-    /** Offline/inactivo */
-    offline: 'bg-soft text-subtle',
+    /**
+     * @use Indicador de presencia inactiva — usuario offline, servicio caído.
+     * @combine BADGE.size.* via cn().
+     */
+    offline: `${base} bg-bg-soft`,
 
-    /** Ocupado */
-    busy: 'bg-warning-lighter text-warning-dark',
+    /**
+     * @use Indicador de ocupado — usuario en reunión, servicio con carga alta.
+     * @combine BADGE.size.* via cn().
+     */
+    busy: `${base} bg-warning-light text-warning-dark`,
 
-    /** Ausente */
-    away: 'bg-idle-lighter text-idle-dark',
+    /**
+     * @use Indicador de ausencia temporal — usuario ausente, servicio en mantenimiento.
+     * @combine BADGE.size.* via cn().
+     */
+    away: `${base} bg-idle-light text-idle-dark`,
   },
 
   group: {
-    /** Grupo horizontal */
+    /** @use Grupo de badges en fila — filtros, categorías, tags. */
     horizontal: 'inline-flex flex-wrap gap-2',
 
-    /** Grupo vertical */
+    /** @use Grupo de badges apilados — listas de estado, listados verticales. */
     vertical: 'flex flex-col gap-2',
   },
 } as const
 
-/** Claves del objeto BADGE.size */
-export type BadgeSizeKey = keyof typeof BADGE.size
-/** Claves del objeto BADGE.variant */
-export type BadgeVariantKey = keyof typeof BADGE.variant
-/** Claves del objeto BADGE.special */
-export type BadgeSpecialKey = keyof typeof BADGE.special
-/** Claves del objeto BADGE.status */
-export type BadgeStatusKey = keyof typeof BADGE.status
-/** Claves del objeto BADGE.group */
-export type BadgeGroupKey = keyof typeof BADGE.group
+export type BadgeCategory = keyof typeof BADGE
+export type BadgeVariant<C extends BadgeCategory> = keyof (typeof BADGE)[C]
+
+export type BadgeSizeKey = BadgeVariant<'size'>
+export type BadgeVariantKey = BadgeVariant<'variant'>
+export type BadgeSpecialKey = BadgeVariant<'special'>
+export type BadgeStatusKey = BadgeVariant<'status'>
+export type BadgeGroupKey = BadgeVariant<'group'>
