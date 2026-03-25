@@ -1,14 +1,16 @@
 import { describe, it, expect } from 'vitest'
-import { act, render, screen } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
+import { renderWithMotion } from '@/test/renderWithMotion'
 import { BackgroundBoxes } from '../BackgroundBoxes'
+import { FLOATING_BOX_COUNT } from '../utils'
 
 describe('BackgroundBoxes', () => {
   it('renderiza sin errores', () => {
-    expect(() => render(<BackgroundBoxes />)).not.toThrow()
+    expect(() => renderWithMotion(<BackgroundBoxes />)).not.toThrow()
   })
 
   it('renderiza el contenido hijo (children)', () => {
-    render(
+    renderWithMotion(
       <BackgroundBoxes>
         <p>Contenido de prueba</p>
       </BackgroundBoxes>
@@ -17,22 +19,25 @@ describe('BackgroundBoxes', () => {
   })
 
   it('renderiza sin errores cuando no hay children', () => {
-    const { container } = render(<BackgroundBoxes />)
+    const { container } = renderWithMotion(<BackgroundBoxes />)
     const root = container.firstElementChild
     expect(root).toBeInTheDocument()
     expect(root?.className).toContain('overflow-hidden')
   })
 
-  // CORREGIDO: el root no tiene bg-hero-bg — ese token está en HeroSection,
-  // no en BackgroundBoxes. Se reemplaza por un test significativo.
-  it('renderiza 14 FloatingBox en desktop', () => {
-    render(<BackgroundBoxes />)
-    expect(document.querySelectorAll('.bg-floating-box-bg').length).toBe(14)
+  /**
+   * Cada FloatingBox es un <li aria-hidden> (decorativo). Se usa hidden: true
+   * para incluirlos en la consulta, alineado con FLOATING_BOX_COUNT del generador.
+   */
+  it('renderiza un ítem de lista por cada caja flotante', () => {
+    renderWithMotion(<BackgroundBoxes />)
+    expect(screen.getAllByRole('listitem', { hidden: true })).toHaveLength(
+      FLOATING_BOX_COUNT
+    )
   })
 
-  // CORREGIDO: siempre son 14 cajas independientemente del breakpoint
-  it('sigue renderizando 14 FloatingBox tras resize a mobile', () => {
-    render(<BackgroundBoxes />)
+  it('mantiene el número de cajas tras resize a mobile', () => {
+    renderWithMotion(<BackgroundBoxes />)
     act(() => {
       Object.defineProperty(window, 'innerWidth', {
         value: 375,
@@ -40,6 +45,8 @@ describe('BackgroundBoxes', () => {
       })
       window.dispatchEvent(new Event('resize'))
     })
-    expect(document.querySelectorAll('.bg-floating-box-bg').length).toBe(14)
+    expect(screen.getAllByRole('listitem', { hidden: true })).toHaveLength(
+      FLOATING_BOX_COUNT
+    )
   })
 })
