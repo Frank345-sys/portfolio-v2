@@ -40,50 +40,24 @@
 
 ```
 src/
-├── App.css
 ├── App.tsx
 ├── index.css
 ├── main.tsx
 ├── components/
-│   ├── AboutSection/
-│   │   ├── AboutSection.tsx
-│   │   ├── AboutSection.test.tsx
-│   │   └── index.ts
-│   ├── Button/
-│   │   ├── Button.tsx
-│   │   └── Button.test.tsx
-│   ├── ContactSection/
-│   │   ├── ContactSection.tsx
-│   │   ├── ContactSection.test.tsx
-│   │   └── index.ts
+│   ├── AboutSection/       # sección “Sobre mí” + __tests__
+│   ├── Footer/             # pie de página (copyright + enlaces)
+│   ├── Header/             # barra + __tests__ (subcomponents, constants)
 │   ├── HeroSection/
-│   │   ├── HeroSection.tsx
-│   │   ├── HeroSection.test.tsx
-│   │   └── index.ts
-│   └── ProjectsSection/
-│       ├── ProjectsSection.tsx
-│       ├── ProjectsSection.test.tsx
-│       └── index.ts
+│   ├── ProjectsSection/    # hooks/, subcomponents/, ProjectsSection.test.tsx
+│   └── ...
 ├── shared/
-│   ├── components/
-│   │   ├── ThemeToggle.tsx
-│   │   └── ThemeToggle.test.tsx
-│   ├── constants/
-│   │   ├── animation.ts
-│   │   ├── badge.ts
-│   │   ├── button.ts
-│   │   ├── index.ts
-│   │   ├── input.ts
-│   │   ├── layout.ts
-│   │   ├── readme.md
-│   │   ├── typography.ts
+│   ├── components/         # Avatar, BadgeRow, ThemeToggle/, etc. + __tests__
+│   ├── constants/          # tokens/, skills/, enums/
 │   ├── hooks/
-│   │   ├── useTheme.ts
-│   │   └── useTheme.test.ts
 │   └── utils/
-│       └── cn.ts
 └── test/
-    └── setup.ts
+    ├── setup.ts
+    └── renderWithMotion.tsx
 ```
 
 - **`src/main.tsx`** — Punto de entrada; monta la app con React StrictMode y comprobación segura del elemento `#root`.
