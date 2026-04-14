@@ -1,4 +1,4 @@
-import { cn } from './cn'
+import { cn } from '../cn'
 
 describe('cn', () => {
   it('combina varias clases en una sola cadena', () => {
