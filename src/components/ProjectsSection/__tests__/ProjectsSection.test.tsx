@@ -30,11 +30,10 @@ function mockScrollAndObservers(options?: { lgMatches?: boolean }) {
     thresholds = []
   } as unknown as typeof IntersectionObserver
 
-  const matches = lgMatches
   const listeners: Array<(e: MediaQueryListEvent) => void> = []
-  const mql = {
+  const lgMql = {
     get matches() {
-      return matches
+      return lgMatches
     },
     media: LG_MEDIA,
     addEventListener: vi.fn(
@@ -48,7 +47,23 @@ function mockScrollAndObservers(options?: { lgMatches?: boolean }) {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     configurable: true,
-    value: vi.fn(() => mql),
+    value: vi.fn((query: string) => {
+      // motion-dom usa "(prefers-reduced-motion)" al inicializar; no reutilizar el MQL de `lg`
+      // (antes devolvía `matches: true` y Motion mostraba aviso falso en consola).
+      if (query.includes('prefers-reduced-motion')) {
+        return {
+          matches: false,
+          media: query,
+          onchange: null,
+          addListener: vi.fn(),
+          removeListener: vi.fn(),
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+          dispatchEvent: vi.fn(),
+        }
+      }
+      return lgMql
+    }),
   })
 }
 
