@@ -56,18 +56,20 @@ src/
 │   ├── hooks/
 │   └── utils/
 └── test/
-    ├── setup.ts
-    └── renderWithMotion.tsx
+    ├── setup.ts                 # jest-dom + mock de matchMedia (Motion / breakpoints)
+    ├── renderWithMotion.tsx     # render con LazyMotion para tests de animación
+    ├── stackSkillLabelSet.ts    # helper solo para tests de sincronía de skills
+    └── stackSkillLabelSet.test.ts
 ```
 
-- **`src/main.tsx`** — Punto de entrada; monta la app con React StrictMode y comprobación segura del elemento `#root`.
-- **`src/App.tsx`** — Componente raíz: header con ThemeToggle y main con las cuatro secciones (Hero, About, Projects, Contact).
-- **`src/components/`** — Secciones de la página: HeroSection, AboutSection, ProjectsSection, ContactSection y el componente reutilizable Button. Cada sección tiene su `.tsx`, `.test.tsx` e `index.ts`.
-- **`src/shared/components/`** — Componentes compartidos (ThemeToggle) y sus tests.
-- **`src/shared/constants/`** — Design tokens (tipografía, layout, botones, badges, animación, input) y documentación interna.
-- **`src/shared/hooks/`** — Hooks reutilizables (useTheme) y sus tests.
-- **`src/shared/utils/`** — Utilidades (cn para combinar clases).
-- **`src/test/setup.ts`** — Setup global de Vitest (importa `@testing-library/jest-dom`).
+- **`src/main.tsx`** — Punto de entrada; monta la app con React StrictMode, estilos globales (incl. Lenis) y comprobación segura del elemento `#root`.
+- **`src/App.tsx`** — Raíz de la SPA: `SmoothScrollRoot` (Lenis si no hay `prefers-reduced-motion`), skip link, `Header` y `main` con Hero, About y Projects.
+- **`src/components/`** — Secciones y piezas de dominio: p. ej. `Header/`, `HeroSection/`, `AboutSection/`, `ProjectsSection/` (cada una con tests y `index.ts` donde aplica).
+- **`src/shared/components/`** — Componentes compartidos (ThemeToggle, SmoothScrollRoot, carruseles, etc.) y sus tests.
+- **`src/shared/constants/`** — Design tokens (`tokens/`), skills y enums.
+- **`src/shared/hooks/`** — Hooks reutilizables (p. ej. useFocusTrap) y tests.
+- **`src/shared/utils/`** — Utilidades de producción (p. ej. `cn`).
+- **`src/test/`** — Setup de Vitest, helpers de render y utilidades usadas solo en tests.
 
 ---
 
