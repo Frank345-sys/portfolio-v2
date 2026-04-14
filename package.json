@@ -1,7 +1,7 @@
 {
   "name": "portfolio-v2",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,7 +16,9 @@
     "test:changed": "vitest --changed --run",
     "test:coverage": "vitest run --coverage && start coverage/index.html",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm run lint && npm run test"
+    "check": "npm run typecheck && npm run lint && npm run test",
+    "deploy": "npm run build && gh-pages -d build",
+    "preview:build": "vite preview --outDir build"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -51,6 +53,7 @@
     "eslint-plugin-testing-library": "^7.16.2",
     "eslint-plugin-tsdoc": "^0.5.2",
     "eslint-plugin-vitest": "^0.5.4",
+    "gh-pages": "^6.3.0",
     "globals": "^16.5.0",
     "husky": "^9.1.7",
     "jsdom": "^28.1.0",
