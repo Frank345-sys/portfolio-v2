@@ -6,6 +6,10 @@ import {
 } from '@/shared/constants/motion'
 import { TYPOGRAPHY, BADGE } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
+
+/** Recorrido del knob: ancho útil del track (w-9 − padding) menos el dot xl (w-4). */
+const KNOB_TRAVEL_X_PX = 16
+
 /**
  * Conmutador accesible (`role="switch"`) claro/oscuro, sincronizado con `useTheme`
  * y etiqueta de modo visible.
@@ -29,15 +33,13 @@ export function ThemeToggle() {
         aria-label="Alternar tema claro u oscuro"
         onClick={toggle}
         className={cn(
-          'flex h-5 w-9 shrink-0 rounded-full p-0.5',
+          'flex h-5 w-9 shrink-0 items-center rounded-full p-0.5',
           'focus-visible:ring-information-base cursor-pointer [--tw-ring-offset-color:var(--color-bg-weak)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-          isDark
-            ? 'bg-information-light justify-start'
-            : 'bg-stroke-strong/20 justify-end'
+          isDark ? 'bg-information-light' : 'bg-stroke-strong/20'
         )}
       >
         <m.div
-          layout
+          animate={{ x: isDark ? 0 : KNOB_TRAVEL_X_PX }}
           transition={MOTION_ANIMATION.spring.control}
           className={cn(
             BADGE.special.dot,
