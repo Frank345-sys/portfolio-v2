@@ -10,6 +10,13 @@
  * <div className={ANIMATION.hover.lift}>...</div>
  * ```
  */
+// Constante interna — no exportar. Usada solo para componer hover.*
+const _hoverTransition = {
+  transform: 'transition-transform duration-300',
+  all: 'transition-all duration-300',
+  shadow: 'transition-shadow duration-300',
+} as const
+
 export const ANIMATION = {
   // ── Transiciones ──────────────────────────────────────────────────────────
   // Controlan duration y easing. Usar una sola variante por elemento —
@@ -61,20 +68,20 @@ export const ANIMATION = {
      * @use Cards clickeables, avatares, thumbnails.
      * @nocombine ANIMATION.transition.* (ya incluye transition-transform)
      */
-    scale: 'hover:scale-105 transition-transform duration-300',
+    scale: `hover:scale-105 ${_hoverTransition.transform}`, // transición compuesta desde constante privada, evita conflicto con ANIMATION.transition.*
 
     /**
      * @use Cards con énfasis fuerte — el elemento sube visualmente al hacer hover.
      * @nocombine ANIMATION.transition.* (ya incluye transition-all)
      */
-    lift: 'hover:-translate-y-1 hover:shadow-elevation-lg transition-all duration-300',
+    lift: `hover:-translate-y-1 hover:shadow-elevation-lg ${_hoverTransition.all}`,
 
     /**
      * @use Elementos con foco especial — añade glow de color information al hover.
      * @nocombine ANIMATION.transition.* (ya incluye transition-shadow)
      * @warning Solo visible sobre fondos claros — el glow pierde contraste en dark mode.
      */
-    glow: 'hover:shadow-elevation-lg hover:shadow-information-lighter transition-shadow duration-300',
+    glow: `hover:shadow-elevation-lg hover:shadow-information-lighter ${_hoverTransition.shadow}`,
 
     /**
      * @use Links en párrafos o nav items con underline animado al hover.
@@ -82,7 +89,7 @@ export const ANIMATION = {
      * @warning Requiere position:relative en el elemento padre si no está ya presente.
      */
     underline:
-      'relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-information-base after:transition-all after:duration-300 hover:after:w-full',
+      'relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-information-base after:transition-all after:duration-300 hover:after:w-full', // relative confirmado en el token para evitar dependencia implícita de contexto
   },
 
   // ── Fade ──────────────────────────────────────────────────────────────────
@@ -154,14 +161,16 @@ export const ANIMATION = {
   },
 
   // ── Stagger ───────────────────────────────────────────────────────────────
-  // Requiere clase `group` en el elemento padre.
   // Aplicar child1..child5 a hijos consecutivos en orden DOM.
   // Escala lineal: 0 / 75 / 150 / 225 / 300ms — incrementos uniformes de 75ms.
+  // @warning Máximo 5 hijos. Para listas más largas usar JS con CSS custom properties:
+  //          style={{ transitionDelay: `${index * 75}ms` }} directamente en cada hijo.
+  // La transición debe estar activa en el elemento para que el delay tenga efecto.
   stagger: {
     /**
      * @use Primer hijo de una lista con entrada escalonada.
-     * @warning El padre debe tener la clase `group` para que los delays se coordinen.
-     * @combine No necesita combinación adicional — ya incluye transition-all.
+     * @combine Una animación o transición activa en el mismo elemento — el delay
+     *          solo tiene efecto si hay una transition o animation en curso.
      */
     child1: 'transition-all duration-300 delay-0',
 
@@ -205,10 +214,10 @@ export const ANIMATION = {
 
   loading: {
     /**
-     * @use Placeholder de contenido en carga — skeleton loader.
+     * @use Placeholder de contenido en carga — skeleton con shimmer (`.u-skeleton-shimmer` en `index.css`, tokens semánticos).
      * @combine Dimensiones explícitas con cn(): `cn(ANIMATION.loading.skeleton, 'h-4 w-32')`
      */
-    skeleton: 'animate-pulse bg-bg-soft rounded',
+    skeleton: 'u-skeleton-shimmer rounded',
 
     /**
      * @use Indicador de proceso en curso — spinner circular.
@@ -222,7 +231,6 @@ export const ANIMATION = {
 export type AnimationCategory = keyof typeof ANIMATION
 export type AnimationVariant<C extends AnimationCategory> =
   keyof (typeof ANIMATION)[C]
-
 export type TransitionKey = AnimationVariant<'transition'>
 export type HoverKey = AnimationVariant<'hover'>
 export type FadeKey = AnimationVariant<'fade'>

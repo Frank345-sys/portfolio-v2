@@ -40,60 +40,36 @@
 
 ```
 src/
-├── App.css
 ├── App.tsx
 ├── index.css
 ├── main.tsx
 ├── components/
-│   ├── AboutSection/
-│   │   ├── AboutSection.tsx
-│   │   ├── AboutSection.test.tsx
-│   │   └── index.ts
-│   ├── Button/
-│   │   ├── Button.tsx
-│   │   └── Button.test.tsx
-│   ├── ContactSection/
-│   │   ├── ContactSection.tsx
-│   │   ├── ContactSection.test.tsx
-│   │   └── index.ts
+│   ├── AboutSection/       # sección “Sobre mí” + __tests__
+│   ├── Footer/             # pie de página (copyright + enlaces)
+│   ├── Header/             # barra + __tests__ (subcomponents, constants)
 │   ├── HeroSection/
-│   │   ├── HeroSection.tsx
-│   │   ├── HeroSection.test.tsx
-│   │   └── index.ts
-│   └── ProjectsSection/
-│       ├── ProjectsSection.tsx
-│       ├── ProjectsSection.test.tsx
-│       └── index.ts
+│   ├── ProjectsSection/    # hooks/, subcomponents/, ProjectsSection.test.tsx
+│   └── ...
 ├── shared/
-│   ├── components/
-│   │   ├── ThemeToggle.tsx
-│   │   └── ThemeToggle.test.tsx
-│   ├── constants/
-│   │   ├── animation.ts
-│   │   ├── badge.ts
-│   │   ├── button.ts
-│   │   ├── index.ts
-│   │   ├── input.ts
-│   │   ├── layout.ts
-│   │   ├── readme.md
-│   │   ├── typography.ts
+│   ├── components/         # Avatar, BadgeRow, ThemeToggle/, etc. + __tests__
+│   ├── constants/          # tokens/, skills/, enums/
 │   ├── hooks/
-│   │   ├── useTheme.ts
-│   │   └── useTheme.test.ts
 │   └── utils/
-│       └── cn.ts
 └── test/
-    └── setup.ts
+    ├── setup.ts                 # jest-dom + mock de matchMedia (Motion / breakpoints)
+    ├── renderWithMotion.tsx     # render con LazyMotion para tests de animación
+    ├── stackSkillLabelSet.ts    # helper solo para tests de sincronía de skills
+    └── stackSkillLabelSet.test.ts
 ```
 
-- **`src/main.tsx`** — Punto de entrada; monta la app con React StrictMode y comprobación segura del elemento `#root`.
-- **`src/App.tsx`** — Componente raíz: header con ThemeToggle y main con las cuatro secciones (Hero, About, Projects, Contact).
-- **`src/components/`** — Secciones de la página: HeroSection, AboutSection, ProjectsSection, ContactSection y el componente reutilizable Button. Cada sección tiene su `.tsx`, `.test.tsx` e `index.ts`.
-- **`src/shared/components/`** — Componentes compartidos (ThemeToggle) y sus tests.
-- **`src/shared/constants/`** — Design tokens (tipografía, layout, botones, badges, animación, input) y documentación interna.
-- **`src/shared/hooks/`** — Hooks reutilizables (useTheme) y sus tests.
-- **`src/shared/utils/`** — Utilidades (cn para combinar clases).
-- **`src/test/setup.ts`** — Setup global de Vitest (importa `@testing-library/jest-dom`).
+- **`src/main.tsx`** — Punto de entrada; monta la app con React StrictMode, estilos globales (incl. Lenis) y comprobación segura del elemento `#root`.
+- **`src/App.tsx`** — Raíz de la SPA: `SmoothScrollRoot` (Lenis si no hay `prefers-reduced-motion`), skip link, `Header` y `main` con Hero, About y Projects.
+- **`src/components/`** — Secciones y piezas de dominio: p. ej. `Header/`, `HeroSection/`, `AboutSection/`, `ProjectsSection/` (cada una con tests y `index.ts` donde aplica).
+- **`src/shared/components/`** — Componentes compartidos (ThemeToggle, SmoothScrollRoot, carruseles, etc.) y sus tests.
+- **`src/shared/constants/`** — Design tokens (`tokens/`), skills y enums.
+- **`src/shared/hooks/`** — Hooks reutilizables (p. ej. useFocusTrap) y tests.
+- **`src/shared/utils/`** — Utilidades de producción (p. ej. `cn`).
+- **`src/test/`** — Setup de Vitest, helpers de render y utilidades usadas solo en tests.
 
 ---
 
@@ -104,8 +80,10 @@ Definidos en `package.json`. Uso: `npm run <script>`.
 | Script            | Comando                                              | Descripción                                               |
 | ----------------- | ---------------------------------------------------- | --------------------------------------------------------- |
 | **dev**           | `vite`                                               | Servidor de desarrollo con HMR.                           |
-| **build**         | `tsc -b && vite build`                               | Type-check y build de producción.                         |
+| **build**         | `tsc -b && vite build`                               | Type-check y build de producción (salida en `build/`).     |
 | **preview**       | `vite preview`                                       | Sirve el build en local.                                  |
+| **preview:build** | `vite preview --outDir build`                      | Preview del artefacto generado en `build/`.               |
+| **deploy**        | `npm run build && gh-pages -d build`               | Sube el sitio a la rama `gh-pages` (GitHub Pages).        |
 | **lint**          | `eslint .`                                           | Lint de todo el proyecto.                                 |
 | **format**        | `prettier --write .`                                 | Formateo con Prettier.                                    |
 | **prepare**       | `husky`                                              | Instala hooks de Husky (post-`npm install`).              |
@@ -115,6 +93,21 @@ Definidos en `package.json`. Uso: `npm run <script>`.
 | **test:ui**       | `vitest --ui --open`                                 | UI de Vitest en el navegador.                             |
 | **test:coverage** | `vitest run --coverage && start coverage/index.html` | Cobertura y apertura del informe HTML (Windows: `start`). |
 | **typecheck**     | `tsc --noEmit`                                       | Comprobación de tipos sin emitir archivos.                |
+
+### GitHub Pages (`gh-pages`)
+
+1. En el repo: **Settings → Pages** → Source: rama `gh-pages`, carpeta `/ (root)`.
+2. Sitio en subruta (`https://usuario.github.io/portfolio-v2/`): antes del build, define la base de Vite:
+
+   ```bash
+   set VITE_BASE_PATH=/portfolio-v2/
+   npm run deploy
+   ```
+
+   (En PowerShell: `$env:VITE_BASE_PATH="/portfolio-v2/"; npm run deploy`.) Ajusta `/portfolio-v2/` al nombre real del repositorio.
+
+3. Dominio propio o `username.github.io` con sitio en la raíz: usa `VITE_BASE_PATH=/` (por defecto) y `npm run deploy`.
+4. La primera vez, `gh-pages` crea/actualiza la rama `gh-pages` con el contenido de `build/`. Requiere permisos de push al remoto.
 
 **test:coverage:** El comando actual usa `start`, que es **solo para Windows**. En otros sistemas, tras ejecutar `vitest run --coverage`:
 
@@ -318,12 +311,12 @@ Este proyecto sigue el modelo **Gitflow** con las siguientes ramas:
    ```bash
    git checkout develop
    git pull origin develop
-   git checkout -b release/1.0.0
+   git checkout -b release/v1.0.0
    ```
 
    En la rama `release/*`: versión, changelog y solo fixes menores de cierre.
 
-8. Abrir PR **release/1.0.0** → **main**. Tras el merge, etiquetar en `main`:
+8. Abrir PR **release/v1.0.0** → **main**. Tras el merge, etiquetar en `main`:
 
    ```bash
    git checkout main
@@ -332,7 +325,7 @@ Este proyecto sigue el modelo **Gitflow** con las siguientes ramas:
    git push origin v1.0.0
    ```
 
-9. Integrar la release en `develop` (PR **release/1.0.0** → **develop** o merge de `main` en `develop`) para alinear ramas.
+9. Integrar la release en `develop` (PR **release/v1.0.0** → **develop** o merge de `main` en `develop`) para alinear ramas.
 
 ### Hotfix
 

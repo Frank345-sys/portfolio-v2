@@ -3,9 +3,12 @@ import { SectionLabel } from '@/shared/components/SectionLabel'
 import { LinkCard } from '@/shared/components/LinkCard'
 import { ABOUT_CERTS } from '../constants'
 
+/**
+ * Listado de certificaciones en grid; cada ítem es un `LinkCard` enlazado.
+ */
 export function AboutCerts() {
   return (
-    <div className={LAYOUT.spacing.compact}>
+    <div className={LAYOUT.spacing.default}>
       <SectionLabel as="h3">Certificaciones</SectionLabel>
       <div className={LAYOUT.grid.cols2}>
         {ABOUT_CERTS.map((cert) => (

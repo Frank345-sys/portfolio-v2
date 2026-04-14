@@ -1,4 +1,5 @@
 import type { SyntheticEvent } from 'react'
+import { ANIMATION } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
 const AVATAR_SIZES = {
@@ -41,19 +42,23 @@ export function Avatar({
       role="img"
       aria-label={ariaLabel}
     >
-      <div className="u-avatar-feature-ring absolute inset-0 animate-spin rounded-full [animation-duration:20s]" />
+      <div
+        className={cn(
+          ANIMATION.spin.continuous,
+          'u-avatar-feature-ring absolute inset-0 rounded-full [animation-duration:20s]'
+        )}
+      />
 
       <div
         className={cn(
-          'text-text-white relative flex h-full w-full items-center justify-center rounded-full font-bold',
-          'shadow-elevation-lg',
+          'text-text-white shadow-elevation-lg relative flex h-full w-full items-center justify-center rounded-full font-bold',
           !src && 'u-avatar-feature-gradient'
         )}
       >
         {src ? (
           <img
             src={src}
-            alt={name ? `Foto de ${name}` : initials}
+            alt=""
             aria-hidden="true"
             className="h-full w-full rounded-full object-cover"
             onError={handleImageError}

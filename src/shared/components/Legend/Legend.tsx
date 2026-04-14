@@ -59,7 +59,11 @@ export function Legend({ items, ariaLabel, className }: LegendProps) {
       {items.map(({ id, label, dotClassName }) => (
         <li key={id} className="flex items-center gap-2">
           <span
-            className={cn(BADGE.special.dot, 'shrink-0', dotClassName)}
+            className={cn(
+              BADGE.special.dot,
+              BADGE.special.dotSize.md,
+              dotClassName
+            )}
             aria-hidden="true"
           />
           {label}

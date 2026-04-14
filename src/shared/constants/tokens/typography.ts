@@ -10,7 +10,8 @@ const BASE = {
 const SIZE = {
   '4xl+': 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl',
   '3xl+': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl',
-  'xl+': 'text-xl md:text-2xl lg:text-3xl',
+  'xl+': 'text-xl sm:text-2xl md:text-3xl',
+  'lg+': 'text-lg sm:text-xl md:text-2xl',
   'base+': 'text-base sm:text-lg md:text-xl',
   'sm+': 'text-sm sm:text-base lg:text-lg',
   'xs+': 'text-xs sm:text-sm',
@@ -64,7 +65,7 @@ export const TYPOGRAPHY = {
 
   paragraph: {
     /** @use Texto intro o lead — inmediatamente debajo del hero. */
-    lead: `text-lg sm:text-xl md:text-2xl text-text-strong font-normal ${BASE.paragraph}`,
+    lead: `${SIZE['lg+']} text-text-strong font-normal ${BASE.paragraph}`,
 
     /** @use Texto grande destacado — citas, bloques de intro en secciones. */
     large: `${SIZE.xl} text-text-strong ${BASE.paragraph}`,
@@ -75,11 +76,11 @@ export const TYPOGRAPHY = {
     /** @use Texto secundario — descripciones, metadatos, contenido de apoyo. */
     secondary: `${SIZE.sm} ${BASE.paragraph}`,
 
+    /** @use Texto muy pequeño — timestamps, versiones, metadata auxiliar. */
+    small: `${SIZE.xs} ${BASE.paragraph}`,
+
     /** @use Texto muted — notas al pie, aclaraciones, contenido de muy bajo énfasis. */
     muted: `${SIZE.sm} text-text-soft ${BASE.paragraph}`,
-
-    /** @use Texto muy pequeño — timestamps, versiones, metadata auxiliar. */
-    small: `${SIZE.xs} text-text-soft ${BASE.paragraph}`,
   },
 
   // Labels genéricos de UI. Para labels de formulario usar INPUT.label.*
@@ -145,7 +146,6 @@ export const TYPOGRAPHY = {
 export type TypographyCategory = keyof typeof TYPOGRAPHY
 export type TypographyVariant<C extends TypographyCategory> =
   keyof (typeof TYPOGRAPHY)[C]
-
 export type TitleVariant = TypographyVariant<'title'>
 export type ParagraphVariant = TypographyVariant<'paragraph'>
 export type LabelVariant = TypographyVariant<'label'>

@@ -16,10 +16,10 @@ export interface SectionLabelProps {
   /**
    * Variante visual:
    * - `prefix` → // Titulo ————  (por defecto)
-   * - `rule`   → ——— Titulo
+   * - `rule`   → − Titulo
    */
   variant?: SectionLabelVariant
-  /** Si se muestra la línea decorativa al final. Solo aplica en variante `prefix`. Por defecto true. */
+  /** Solo aplica en variante `prefix`. Por defecto `true`. */
   showLine?: boolean
   /**
    * Etiqueta HTML a renderizar (cualquier intrínseca). Ej.: `h2` título de sección,
@@ -27,6 +27,11 @@ export interface SectionLabelProps {
    */
   as?: SectionLabelAs
 }
+
+const VARIANT_CONFIG = {
+  prefix: { symbol: '//', shrink: true },
+  rule: { symbol: '−', shrink: false },
+} satisfies Record<SectionLabelVariant, { symbol: string; shrink: boolean }>
 
 /**
  * Etiqueta de sección con dos variantes visuales.
@@ -44,21 +49,7 @@ export function SectionLabel({
   showLine = true,
   as: Tag = 'p',
 }: SectionLabelProps) {
-  if (variant === 'rule') {
-    return (
-      <Tag
-        className={cn(
-          TYPOGRAPHY.title.subsection,
-          'flex items-center gap-2 font-bold tracking-widest'
-        )}
-      >
-        <span className="font-bold" aria-hidden="true">
-          −
-        </span>
-        <span>{children}</span>
-      </Tag>
-    )
-  }
+  const { symbol, shrink } = VARIANT_CONFIG[variant]
 
   return (
     <Tag
@@ -68,10 +59,10 @@ export function SectionLabel({
       )}
     >
       <span className="font-bold" aria-hidden="true">
-        //
+        {symbol}
       </span>
-      <span className="shrink-0">{children}</span>
-      {showLine && (
+      <span className={cn(shrink && 'shrink-0')}>{children}</span>
+      {variant === 'prefix' && showLine && (
         <span className={LAYOUT.divider.horizontal} aria-hidden="true" />
       )}
     </Tag>

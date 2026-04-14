@@ -1,8 +1,9 @@
 /**
- * AboutSection: sección "Sobre mí" del portfolio.
+ * Sección **Sobre mí** del portfolio.
  *
- * Refactorización: el contenido se repartió en subcomponentes (`./subcomponents`),
- * datos estáticos en `./constants`, tipos en `./types`. SectionLabel y Divider se
- * movieron a `@/shared/components/SectionLabel` y `@/shared/components/Divider` por ser reutilizables.
+ * Contenido en subcomponentes (`./subcomponents`), datos en `./constants`, tipos en
+ * `./types`, utilidades de sección en `./utils`. `SectionLabel` está en `@/shared/components/SectionLabel`.
+ *
+ * @module components/AboutSection
  */
 export { AboutSection } from './AboutSection'

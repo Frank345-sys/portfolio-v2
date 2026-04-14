@@ -1,6 +1,6 @@
 # Sistema de Design Tokens
 
-Tokens de diseño para el portfolio: tipografía, layout, botones, badges, animaciones, inputs, cards y z-index. Los colores semánticos y la escala de sombras `shadow-elevation-*` se definen en `src/index.css` (Tailwind v4 `@theme`); los archivos en esta carpeta exponen clases y composiciones para usar en componentes.
+Tokens de diseño para el portfolio: tipografía, layout, botones, badges, animaciones, cards y z-index. Los colores semánticos y la escala de sombras `shadow-elevation-*` se definen en `src/index.css` (Tailwind v4 `@theme`); los archivos en esta carpeta exponen clases y composiciones para usar en componentes.
 
 ## Estructura
 
@@ -13,10 +13,9 @@ src/
         badge.ts       # Badges, pills, chips, estado
         button.ts      # Contained / outlined / text + special (CTA, icon, link)
         card.ts        # Superficies de card (surface, interactive, overlay, layout)
-        input.ts       # Inputs, labels, helper (default / error / success), grupos
-        layout.ts      # Secciones, contenedores, grids, flex, header, footer, divider
+        layout.ts      # px, container, section, spacing, grid, prose, divider
         typography.ts  # Títulos, párrafos, labels, links, special
-        z.ts           # Z.base | raised | dropdown | drawer | modal | header | toast
+        z.ts           # Z.base … toast (backdrop, modal, header, drawerElevated, etc.)
         index.ts       # Re-export de todo
 ```
 
@@ -38,8 +37,11 @@ export function Hero() {
       <div className={cn(LAYOUT.container.narrow, LAYOUT.px)}>
         <h1 className={TYPOGRAPHY.title.hero}>Tu nombre</h1>
         <p className={TYPOGRAPHY.paragraph.lead}>Descripción</p>
-        <div className={LAYOUT.flex.rowResponsive}>
-          <a href="/cv.pdf" className={BUTTON.special.cta}>
+        <div className={BUTTON.group.horizontal}>
+          <a
+            href="/Francisco_Gonzalez_Frontend_Developer_2026.pdf"
+            className={BUTTON.special.cta}
+          >
             Descargar CV
           </a>
           <button
@@ -67,9 +69,11 @@ Las cards se gestionan exclusivamente en `card.ts`. **No existen tokens de card 
 | `CARD.surface.*`     | Contenedores estáticos: info, stats, grupos, paneles         |
 | `CARD.interactive.*` | Solo en `<a>` o `<button>` — tienen `cursor-pointer` y hover |
 | `CARD.overlay.*`     | Drawers, tooltips con cuerpo, modales pequeños, sidebars     |
-| `CARD.layout.*`      | Partes internas reutilizables: header, title, body, footer   |
+| `CARD.layout.*`      | Partes internas reutilizables: header, body, footer          |
 
 ### Variantes de superficie (`CARD.surface`)
+
+Regla en código (`card.ts`): **PAD.md** (`p-6 sm:p-8`) en `default` y `elevated`; **PAD.sm** (`p-4`) en `compact`, `subtle`, `weak`, `white`. **Sombra:** solo `elevated` (`shadow-elevation-md`), `weak` y `white` (`shadow-elevation-xs`). `compact` y `subtle` no llevan sombra (superficies de apoyo, no de elevación).
 
 | Token                   | Fondo    | Padding | Sombra | Uso típico                                          |
 | ----------------------- | -------- | ------- | ------ | --------------------------------------------------- |
@@ -82,7 +86,7 @@ Las cards se gestionan exclusivamente en `card.ts`. **No existen tokens de card 
 
 ### Variantes interactivas (`CARD.interactive`)
 
-⚠️ Usar **solo** en `<a>`, `<button>` o `[role="button"]`.
+⚠️ Usar **solo** en `<a>`, `<button>` o `[role="button"]`. Los `hover:shadow-*` van literales en el string del token (sin componer con otro token de sombra) para variantes de hover explícitas.
 
 | Token                      | Hover                            | Uso típico                   |
 | -------------------------- | -------------------------------- | ---------------------------- |
@@ -96,6 +100,8 @@ Las cards se gestionan exclusivamente en `card.ts`. **No existen tokens de card 
 | -------------------- | ------------------- | -------------------------------------- |
 | `CARD.overlay.panel` | `Z.drawer`          | Drawers, tooltips con cuerpo, sidebars |
 | `CARD.overlay.modal` | `Z.modal`           | Modales pequeños, popovers, previews   |
+
+El backdrop semitransparente bajo un modal usa **`Z.backdrop`** (`z-40`), no una clase suelta. Ver sección **Z**.
 
 ### Estructura interna (`CARD.layout`)
 
@@ -128,73 +134,56 @@ Los containers **no incluyen `px` por defecto**. Añadir `LAYOUT.px` con `cn()` 
 
 ### Contenedores
 
-| Token                           | Uso                                              |
-| ------------------------------- | ------------------------------------------------ |
-| `LAYOUT.container.wide`         | Hero, features (max-w-[1400px])                  |
-| `LAYOUT.container.full`         | Contenedor principal (max-w-7xl)                 |
-| `LAYOUT.container.narrow`       | Timelines, textos largos (max-w-4xl)             |
-| `LAYOUT.container.tight`        | Formularios, CTAs aislados (max-w-2xl)           |
-| `LAYOUT.container.headerNarrow` | Cabeceras de sección — sin `mx-auto` (max-w-3xl) |
-| `LAYOUT.container.reading`      | Artículos, posts (max-w-[65ch])                  |
+| Token                     | Uso                                    |
+| ------------------------- | -------------------------------------- |
+| `LAYOUT.container.wide`   | Hero, features (max-w-[1400px])        |
+| `LAYOUT.container.full`   | Contenedor principal (max-w-7xl)       |
+| `LAYOUT.container.narrow` | Timelines, textos largos (max-w-5xl)   |
+| `LAYOUT.container.tight`  | Formularios, CTAs aislados (max-w-2xl) |
+
+### Prose (ancho máximo de texto inline, sin `mx-auto`)
+
+| Token             | Uso                                        |
+| ----------------- | ------------------------------------------ |
+| `LAYOUT.prose.sm` | Párrafos cortos, subtítulos (max-w-xl)     |
+| `LAYOUT.prose.md` | Bios, descripciones (max-w-2xl)            |
+| `LAYOUT.prose.lg` | Taglines, cabeceras de sección (max-w-3xl) |
+| `LAYOUT.prose.xl` | Bloques anchos (max-w-4xl)                 |
 
 ### Secciones
 
-| Token                    | py            |
-| ------------------------ | ------------- |
-| `LAYOUT.section.hero`    | py-24 → py-48 |
-| `LAYOUT.section.default` | py-20 → py-40 |
-| `LAYOUT.section.compact` | py-16 → py-24 |
-| `LAYOUT.section.small`   | py-12 → py-20 |
-| `LAYOUT.section.footer`  | py-16 → py-24 |
+| Token                    | Uso (resumen)                                  |
+| ------------------------ | ---------------------------------------------- |
+| `LAYOUT.section.hero`    | Respiro vertical amplio — `py-24` → `lg:py-48` |
+| `LAYOUT.section.default` | Sección estándar — `py-20 md:py-22 lg:py-24`   |
 
 ### Spacing
 
-| Token                    | Cuándo usar                                                       |
-| ------------------------ | ----------------------------------------------------------------- |
-| `LAYOUT.spacing.section` | Separación entre secciones de página. ⚠️ Solo en flujo de columna |
-| `LAYOUT.spacing.large`   | Separación entre sub-bloques dentro de una misma sección          |
-| `LAYOUT.spacing.default` | Gap estándar entre elementos                                      |
-| `LAYOUT.spacing.compact` | Gap compacto entre elementos muy relacionados                     |
-| `LAYOUT.spacing.small`   | Gap mínimo — listas, grupos de chips                              |
+Tokens de **separación vertical** (`space-y-*`) en flujo de columna (`flex-col` o bloque).
 
-### Header, Footer, Divider
+| Token                    | Cuándo usar                               |
+| ------------------------ | ----------------------------------------- |
+| `LAYOUT.spacing.large`   | Entre sub-bloques de una misma sección    |
+| `LAYOUT.spacing.default` | Entre elementos relacionados              |
+| `LAYOUT.spacing.compact` | Entre elementos muy relacionados          |
+| `LAYOUT.spacing.small`   | Listas densas, chips, items de formulario |
 
-| Token                       | Uso                                        |
-| --------------------------- | ------------------------------------------ |
-| `LAYOUT.header.bar`         | Header fixed — usar con `Z.header`         |
-| `LAYOUT.header.sticky`      | Header sticky — usar con `Z.header`        |
-| `LAYOUT.header.wrapper`     | Wrapper con padding interno                |
-| `LAYOUT.header.nav`         | Nav links — solo desktop, oculto en mobile |
-| `LAYOUT.footer.wrapper`     | Footer (bg-weak, border-top)               |
-| `LAYOUT.footer.grid`        | Grid de columnas (2 → 4 cols)              |
-| `LAYOUT.footer.bottom`      | Barra inferior copyright + links           |
-| `LAYOUT.divider.horizontal` | Línea horizontal (bg-stroke-soft)          |
-| `LAYOUT.divider.vertical`   | Línea vertical                             |
-| `LAYOUT.divider.section`    | Divider con margen vertical (my-8 → my-12) |
+### Divider
+
+| Token                       | Uso                                 |
+| --------------------------- | ----------------------------------- |
+| `LAYOUT.divider.horizontal` | Línea horizontal (`bg-stroke-soft`) |
+| `LAYOUT.divider.vertical`   | Línea vertical                      |
+
+> No hay tokens `LAYOUT.header.*`, `LAYOUT.footer.*` ni `LAYOUT.flex.*` en esta carpeta: header/footer y filas responsive se componen en el componente con utilidades semánticas y, para el z-index del header, **`Z.header`** vía `cn()`.
 
 ### Grids
 
-| Token                 | Cuándo usar                                                                   |
-| --------------------- | ----------------------------------------------------------------------------- |
-| `LAYOUT.grid.cols2`   | Testimonios, pricing                                                          |
-| `LAYOUT.grid.cols3`   | Features, cards                                                               |
-| `LAYOUT.grid.cols4`   | Logos, iconos                                                                 |
-| `LAYOUT.grid.split`   | Hero split / about (2 cols centradas)                                         |
-| `LAYOUT.grid.autoFit` | Grid responsive auto-fit                                                      |
-| `LAYOUT.grid.masonry` | Columnas altura variable. ⚠️ Orden visual ≠ orden DOM — revisar accesibilidad |
-
-### Flex
-
-| Token                       | Uso                                                     |
-| --------------------------- | ------------------------------------------------------- |
-| `LAYOUT.flex.between`       | Navbar, headers — extremos opuestos                     |
-| `LAYOUT.flex.center`        | Centrar contenido — spinners, estados vacíos            |
-| `LAYOUT.flex.row`           | Fila de CTAs o botones con wrap en mobile               |
-| `LAYOUT.flex.stack`         | Stack vertical de elementos relacionados                |
-| `LAYOUT.flex.start`         | Elementos con ícono a la izquierda                      |
-| `LAYOUT.flex.wrap`          | Grupos de chips, tags o badges                          |
-| `LAYOUT.flex.inlineToggle`  | ThemeToggle, switches con label — incluye `select-none` |
-| `LAYOUT.flex.rowResponsive` | Stack en mobile, fila en desktop                        |
+| Token               | Cuándo usar          |
+| ------------------- | -------------------- |
+| `LAYOUT.grid.cols2` | Testimonios, pricing |
+| `LAYOUT.grid.cols3` | Features, cards      |
+| `LAYOUT.grid.cols4` | Logos, iconos        |
 
 ---
 
@@ -202,13 +191,15 @@ Los containers **no incluyen `px` por defecto**. Añadir `LAYOUT.px` con `cn()` 
 
 Usar siempre tokens de tipografía — incluyen color semántico. No usar clases `text-*` sueltas en cuerpo de texto.
 
-| Categoría | Tokens                                                                                   |
-| --------- | ---------------------------------------------------------------------------------------- |
-| Títulos   | `title.hero`, `section`, `subsection`, `small`, `xsmall`, `xxsmall`                      |
-| Párrafos  | `paragraph.lead`, `large`, `primary`, `secondary`, `muted`, `small`                      |
-| Labels    | `label.default`, `large`, `small`, `overline` — ⚠️ para formularios usar `INPUT.label.*` |
-| Links     | `link.default`, `plain`, `nav`, `footer`                                                 |
-| Special   | `special.stat`, `emphasis`, `caption`, `code`, `quote`                                   |
+`paragraph.lead` usa la escala interna `SIZE['lg+']` (`text-lg sm:text-xl md:text-2xl`) más color y `leading-relaxed`, alineado con el resto de párrafos basados en `SIZE.*`.
+
+| Categoría | Tokens                                                                                                                         |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Títulos   | `title.hero`, `section`, `subsection`, `small`, `xsmall`, `xxsmall`                                                            |
+| Párrafos  | `paragraph.lead`, `large`, `primary`, `secondary`, `muted`, `small`                                                            |
+| Labels    | `label.default`, `large`, `small`, `overline` — en formularios reales, añadir `htmlFor`/`id` y estados de error acordes a WCAG |
+| Links     | `link.default`, `plain`, `nav`, `footer`                                                                                       |
+| Special   | `special.stat`, `emphasis`, `caption`, `code`, `quote`                                                                         |
 
 ### TYPOGRAPHY.link vs BUTTON.special.link
 
@@ -277,13 +268,13 @@ El base está embebido en cada variante. Combinar **variante + tamaño** con `cn
 - **Hover:** `hover.lift`, `scale`, `glow`, `underline`
 - **Fade:** `fade.in`, `inFromTop`, `inFromBottom`, `inFromLeft`, `inFromRight`, `out`
 - **Slide:** `slide.fromTop`, `fromBottom`, `fromLeft`, `fromRight`
-- **Stagger:** `stagger.child1`…`child5` — requiere clase `group` en el padre. Escala lineal de 75ms: `0 / 75 / 150 / 225 / 300ms`.
+- **Stagger:** `stagger.child1`…`child5` — aplicar a hijos consecutivos en orden DOM. Escala lineal: `0 / 75 / 150 / 225 / 300ms`. ⚠️ **Máximo 5 hijos**; en listas más largas aplicar retraso por índice en JS (p. ej. `transitionDelay` en ms = índice × 75). El `delay-*` solo tiene efecto si el elemento tiene transición o animación activa.
 - **Scroll:** `scroll.reveal` + `scroll.visible` — requieren Intersection Observer
-- **Loading:** `loading.skeleton` (combinar con dimensiones explícitas), `loading.spinner`
+- **Loading:** `loading.skeleton` (clase global `.u-skeleton-shimmer` + `rounded`; combinar con dimensiones explícitas), `loading.spinner`
 
 ```tsx
-// Stagger — clase `group` obligatoria en el padre
-<ul className="group">
+// Stagger — delays escalonados en hijos (cada uno ya incluye transition-all)
+<ul>
   <li className={ANIMATION.stagger.child1}>Item 1</li>
   <li className={ANIMATION.stagger.child2}>Item 2</li>
 </ul>
@@ -300,32 +291,7 @@ El base está embebido en cada variante. Combinar **variante + tamaño** con `cn
 
 ## INPUT
 
-```tsx
-<div className={INPUT.group.vertical}>
-  <label className={INPUT.label.required}>Email</label>
-  <input className={INPUT.base.default} aria-invalid={hasError} />
-  {hasError ? (
-    <span className={INPUT.helper.error}>El email no es válido.</span>
-  ) : (
-    <span className={INPUT.helper.default}>
-      Te notificaremos solo cuando sea necesario.
-    </span>
-  )}
-</div>
-```
-
-| Token                  | Uso                                               |
-| ---------------------- | ------------------------------------------------- |
-| `INPUT.base.default`   | Input estándar de una línea                       |
-| `INPUT.base.textarea`  | Textarea (min-h-[120px])                          |
-| `INPUT.label.default`  | Label sin requerido                               |
-| `INPUT.label.required` | Label con asterisco automático via CSS            |
-| `INPUT.helper.default` | Texto de ayuda neutro                             |
-| `INPUT.helper.error`   | Mensaje de error — usar con `aria-invalid="true"` |
-| `INPUT.helper.success` | Confirmación de campo válido                      |
-| `INPUT.group.vertical` | Stack label + input + helper                      |
-
-⚠️ `helper.error` y `helper.success` son mutuamente excluyentes — no mostrar ambos a la vez.
+En esta versión del repo **no** hay módulo `input.ts` ni export `INPUT` en `index.ts` (el portfolio actual no incluye formularios con ese sistema). Para etiquetas de UI que no son campos de formulario, usar **`TYPOGRAPHY.label.*`**. Si más adelante se añade un módulo de formularios, conviene recrear tokens tipo `INPUT.base.*`, `INPUT.label.*`, `INPUT.helper.*` y `INPUT.group.*` siguiendo el mismo patrón que `BUTTON`/`CARD`, y documentarlos aquí.
 
 ---
 
@@ -348,31 +314,41 @@ Usar siempre clases semánticas `shadow-elevation-*`. No inventar sombras con `s
 
 ## Z
 
-Usar siempre `Z.*`. No usar clases `z-*` sueltas en componentes.
+Usar siempre `Z.*`. No usar clases `z-*` sueltas en componentes. Los valores `z-40` … `z-80` de la escala semántica están declarados en `@theme` en `index.css` y se referencian solo vía `z.ts`.
 
-| Token        | z-index | Uso                                                               |
-| ------------ | ------- | ----------------------------------------------------------------- |
-| `Z.base`     | 0       | Elementos sin apilamiento especial                                |
-| `Z.raised`   | 10      | Cards en hover, elementos que se elevan al interactuar            |
-| `Z.dropdown` | 20      | Dropdowns, tooltips, menús contextuales                           |
-| `Z.drawer`   | 30      | Drawers, sidebars deslizables — combinar con `CARD.overlay.panel` |
-| `Z.modal`    | 40      | Modales, diálogos — combinar con `CARD.overlay.modal`             |
-| `Z.header`   | 50      | Navbar fija — combinar con `LAYOUT.header.bar`                    |
-| `Z.toast`    | 60      | Notificaciones toast — nivel máximo, siempre visible              |
+Orden de la escala: **base → raised → dropdown → drawer → backdrop → modal → header → drawerElevated → toast**.
+
+| Token              | Valor (Tailwind) | Uso                                                                                             |
+| ------------------ | ---------------- | ----------------------------------------------------------------------------------------------- |
+| `Z.base`           | `z-0`            | Sin apilamiento especial                                                                        |
+| `Z.raised`         | `z-10`           | Cards en hover                                                                                  |
+| `Z.dropdown`       | `z-20`           | Dropdowns, tooltips, menús contextuales                                                         |
+| `Z.drawer`         | `z-30`           | Drawers genéricos, sidebars — con `CARD.overlay.panel`                                          |
+| `Z.backdrop`       | `z-40`           | Backdrop de modales — justo debajo de `Z.modal`                                                 |
+| `Z.modal`          | `z-50`           | Modales, diálogos — con `CARD.overlay.modal`                                                    |
+| `Z.header`         | `z-60`           | Navbar/header fijo — combinar con las clases de posicionamiento del `<header>` en el componente |
+| `Z.drawerElevated` | `z-70`           | Drawer de navegación mobile (`MobileDrawer`) — cubre el header                                  |
+| `Z.toast`          | `z-80`           | Toasts y snackbars — nivel máximo del sistema                                                   |
 
 ```tsx
-// Modal con backdrop
-<div className={cn(CARD.overlay.modal, Z.modal)}>...</div>
-<div className="fixed inset-0 bg-black/40 z-[39]" /> {/* backdrop justo debajo */}
+// Header fijo — `Z.header` suele ir con clases propias del componente (p. ej. fixed + fondo)
+<header className={cn('fixed top-0 w-full bg-bg-white', Z.header)}>...</header>
 
-// Drawer
+// Modal + backdrop
+<div className={cn(CARD.overlay.modal, Z.modal)}>...</div>
+<div className={cn('fixed inset-0 bg-black/40', Z.backdrop)} aria-hidden />
+
+// Drawer genérico
 <aside className={cn(CARD.overlay.panel, Z.drawer)}>...</aside>
+
+// Menú mobile (overlay y panel): ambos con Z.drawerElevated
+<div className={cn('fixed inset-0 …', Z.drawerElevated)} />
 
 // Toast
 <div className={cn('fixed bottom-4 right-4', Z.toast)}>...</div>
 ```
 
-⚠️ `Z.toast` es el nivel máximo del sistema — no añadir elementos por encima. El backdrop de un modal siempre va en `z-[39]` (un nivel por debajo de `Z.modal`).
+⚠️ `Z.toast` es el nivel máximo del sistema. Por debajo del header, el menú mobile usa exclusivamente `Z.drawerElevated` (no reutilizar `Z.header` en ese overlay). El backdrop de modal usa siempre `Z.backdrop`, no un `z-40` suelto en el componente.
 
 ---
 

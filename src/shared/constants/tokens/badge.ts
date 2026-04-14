@@ -1,4 +1,5 @@
 import { ANIMATION } from './animation'
+import { Z } from './z'
 
 const base =
   'inline-flex items-center gap-2 font-semibold rounded-full' as const
@@ -94,17 +95,28 @@ export const BADGE = {
   special: {
     /**
      * @use Indicador circular de color — presencia, disponibilidad, estado.
-     * @combine Color de fondo con cn(): `cn(BADGE.special.dot, 'bg-success-base')`
-     * @nocombine BADGE.size.* (es un dot de tamaño fijo, no un badge de texto)
+     * @combine Componer tamaño + color con cn():
+     *          `cn(BADGE.special.dot, BADGE.special.dotSize.md, 'bg-success-base')`
+     * @nocombine BADGE.size.* (es un dot, no un badge de texto)
      */
-    dot: 'w-2.5 h-2.5 rounded-full shrink-0',
+    dot: 'rounded-full shrink-0',
+    dotSize: {
+      /** @use Dot compacto en layouts densos. */
+      sm: 'w-2 h-2',
+      /** @use Dot estándar (equivalente al tamaño anterior). */
+      md: 'w-2.5 h-2.5',
+      /** @use Dot destacado para métricas/estado principal. */
+      lg: 'w-3 h-3',
+      /** @use Dot extra grande para uso en hero o cabeceras de sección. */
+      xl: 'w-4 h-4',
+    },
 
     /**
      * @use Notificación de novedad sobre un elemento — posición absoluta esquina superior derecha.
      * @warning El padre debe tener `position: relative` para que el posicionamiento funcione.
      * @nocombine BADGE.size.* (ya tiene padding propio)
      */
-    new: 'absolute -top-2 -right-2 z-10 bg-error-base text-text-white px-2 py-0.5 text-xs font-bold rounded-full',
+    new: `absolute -top-2 -right-2 ${Z.raised} bg-error-base text-text-white px-2 py-0.5 text-xs font-bold rounded-full`,
 
     /**
      * @use Contador de notificaciones o items — número dentro de un círculo pequeño.

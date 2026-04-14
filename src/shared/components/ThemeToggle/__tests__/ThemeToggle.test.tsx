@@ -13,7 +13,7 @@ vi.mock('@/shared/components/ThemeToggle/hooks/useTheme', () => ({
 const mockedUseTheme = useTheme as unknown as Mock
 
 describe('ThemeToggle', () => {
-  it("muestra el texto 'Dark mode' cuando isDark es true", () => {
+  it("muestra el texto 'Modo oscuro' cuando isDark es true", () => {
     mockedUseTheme.mockReturnValue({
       isDark: true,
       setTheme: vi.fn(),
@@ -21,10 +21,10 @@ describe('ThemeToggle', () => {
 
     renderWithMotion(<ThemeToggle />)
 
-    expect(screen.getByText(/dark mode/i)).toBeInTheDocument()
+    expect(screen.getByText(/modo oscuro/i)).toBeInTheDocument()
   })
 
-  it("muestra el texto 'Light mode' cuando isDark es false", () => {
+  it("muestra el texto 'Modo claro' cuando isDark es false", () => {
     mockedUseTheme.mockReturnValue({
       isDark: false,
       setTheme: vi.fn(),
@@ -32,7 +32,7 @@ describe('ThemeToggle', () => {
 
     renderWithMotion(<ThemeToggle />)
 
-    expect(screen.getByText(/light mode/i)).toBeInTheDocument()
+    expect(screen.getByText(/modo claro/i)).toBeInTheDocument()
   })
 
   it('llama a setTheme con light cuando estaba en dark', async () => {

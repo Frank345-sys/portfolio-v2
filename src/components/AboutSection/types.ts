@@ -51,7 +51,7 @@ export interface SkillGroup {
  */
 export interface ExpItem {
   period: string
-  role: string
+  heading: string
   company: string
   description: string
   chips?: TimelineChip[]
