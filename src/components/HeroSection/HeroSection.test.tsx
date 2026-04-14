@@ -9,10 +9,13 @@ describe('HeroSection', () => {
     expect(h1).toHaveTextContent('Frank González')
   })
 
-  it('el botón de CV es un link a /cv.pdf', () => {
+  it('el CTA de CV enlaza al PDF en public/', () => {
     renderWithMotion(<HeroSection />)
     const cta = screen.getByText('Descargar CV').closest('a')
     expect(cta).toBeTruthy()
-    expect(cta).toHaveAttribute('href', '/cv.pdf')
+    expect(cta).toHaveAttribute(
+      'href',
+      '/Francisco_Gonzalez_Frontend_Developer_2026.pdf'
+    )
   })
 })
