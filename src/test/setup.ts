@@ -7,28 +7,26 @@ import '@testing-library/jest-dom'
 import { vi } from 'vitest'
 
 /**
- * JSDOM no define `matchMedia`. Cualquier test que monte `BackgroundBoxes`, `useMediaQuery`,
- * `useProjectsScrollSync`, etc. necesita un mock mínimo con `addEventListener`/`removeEventListener`.
+ * Mock de `matchMedia` para tests.
  *
- * Por defecto `matches: false` (viewport &lt; consultas típicas de `lg`). Los archivos de test
- * pueden sustituir `window.matchMedia` en `beforeEach` cuando necesiten `matches: true`.
+ * - JSDOM puede no implementar `matchMedia`, o hacerlo de forma que no coincida con lo que
+ *   esperan los tests (p. ej. breakpoints `lg`).
+ * - **motion-dom** (Motion) llama a `matchMedia("(prefers-reduced-motion)")` al inicializar;
+ *   si la implementación nativa de jsdom devuelve `matches: true`, Framer Motion muestra en
+ *   consola un aviso engañoso (“Reduced Motion enabled…”). Forzamos `matches: false` para
+ *   cualquier consulta de movimiento reducido.
+ *
+ * Los archivos de test pueden asignar `window.matchMedia` en `beforeEach` cuando necesiten
+ * `matches: true` (p. ej. viewport ancho).
  */
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  configurable: true,
-  value: vi.fn((query: string) => {
-    // JSDOM: sin preferencia de movimiento reducido para Motion y otros hooks
-    // (`matches: false` también para `(prefers-reduced-motion: reduce)`).
-    const matches = false
-    return {
-      matches,
-      media: query,
-      onchange: null,
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    }
-  }),
-})
+window.matchMedia = vi.fn((query: string) => ({
+  // Siempre false: evita aviso de Motion si jsdom devolviera prefers-reduced-motion: reduce.
+  matches: false,
+  media: query,
+  onchange: null,
+  addListener: vi.fn(),
+  removeListener: vi.fn(),
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+  dispatchEvent: vi.fn(),
+}))
