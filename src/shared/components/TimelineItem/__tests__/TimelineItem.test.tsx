@@ -15,7 +15,7 @@ describe('TimelineItem', () => {
       <ol aria-label="Timeline de prueba">
         <TimelineItem
           period="Sep 2024 - Feb 2026"
-          role="Frontend Developer"
+          heading="Frontend Developer"
           company="B Life"
           description="Trabajo en productos web"
         />
@@ -37,7 +37,7 @@ describe('TimelineItem', () => {
       <ol>
         <TimelineItem
           period="2025"
-          role="Rol"
+          heading="Rol"
           company="Compañía"
           description="Descripción"
           chips={[
@@ -60,7 +60,7 @@ describe('TimelineItem', () => {
       <ol>
         <TimelineItem
           period="2025"
-          role="Rol"
+          heading="Rol"
           company="Institución"
           description="Descripción"
           accent="feature"
@@ -76,7 +76,7 @@ describe('TimelineItem', () => {
       <ol>
         <TimelineItem
           period="2026"
-          role="Role"
+          heading="Role"
           company="Company"
           description="Desc"
         />
