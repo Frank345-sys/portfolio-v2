@@ -1,7 +1,10 @@
 import { BUTTON, LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 import { BackgroundBoxes } from '@/shared/components/BackgroundBoxes'
-import DownloadIcon from '@/shared/icons/DownloadIcon'
+import { DownloadIcon } from '@/shared/icons'
+
+/** CV en `public/` — mantener sincronizado con el archivo desplegado. */
+const CV_HREF = '/Francisco_Gonzalez_Frontend_Developer_2026.pdf'
 
 const HERO_STATS = [
   { value: '+2 años', label: 'Experiencia laboral' },
@@ -14,8 +17,6 @@ const HERO_STATS = [
  * Muestra nombre, rol, descripción, CTA de CV y stats de impacto.
  * Envuelve el contenido en `BackgroundBoxes` (parallax de iconos).
  *
- * @returns {JSX.Element} Bloque hero principal con título, CTA y métricas.
- *
  * @example
  * ```tsx
  * <HeroSection />
@@ -26,16 +27,14 @@ export function HeroSection() {
     <BackgroundBoxes>
       <section
         id="inicio"
-        className={cn(LAYOUT.section.hero, 'h-full w-full md:h-auto md:w-auto')}
+        className={cn(
+          LAYOUT.section.hero,
+          'flex h-full w-full items-center justify-center'
+        )}
         aria-labelledby="hero-heading"
       >
         <div className={cn(LAYOUT.container.narrow, LAYOUT.px)}>
-          <div
-            className={cn(
-              LAYOUT.flex.center,
-              'flex-col gap-6 text-center sm:gap-8'
-            )}
-          >
+          <div className="flex flex-col items-center justify-center gap-6 text-center sm:gap-8">
             {/* Título: nombre + rol del desarrollador */}
             <div className="flex flex-col gap-1 sm:gap-2">
               <h1 id="hero-heading" className={TYPOGRAPHY.title.hero}>
@@ -52,18 +51,18 @@ export function HeroSection() {
             </div>
 
             {/* Descripción del rol */}
-            <p className={cn(TYPOGRAPHY.paragraph.lead, 'max-w-2xl')}>
+            <p className={cn(TYPOGRAPHY.paragraph.lead, LAYOUT.prose.lg)}>
               Especializado en construir interfaces modernas y accesibles con
               React, TypeScript y las mejores herramientas del ecosistema web.
             </p>
 
             {/* CTA de descarga de CV */}
             <a
-              href="/cv.pdf"
+              href={CV_HREF}
               target="_blank"
               rel="noopener noreferrer"
               className={BUTTON.special.cta}
-              aria-label="Abrir CV de Frank González en nueva pestaña"
+              aria-label="Descargar CV de Frank González (se abre en una pestaña nueva)"
             >
               Descargar CV
               <DownloadIcon aria-hidden="true" />
@@ -71,10 +70,7 @@ export function HeroSection() {
 
             {/* Stats de impacto */}
             <ul
-              className={cn(
-                LAYOUT.flex.center,
-                'list-none flex-wrap gap-4 sm:gap-6 md:gap-8'
-              )}
+              className="flex list-none flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8"
               aria-label="Estadísticas de impacto"
             >
               {HERO_STATS.map(({ value, label }) => (
