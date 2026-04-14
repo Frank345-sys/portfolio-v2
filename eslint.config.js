@@ -21,7 +21,7 @@ const testFiles = [
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'coverage/**'],
+    ignores: ['dist/**', 'build/**', 'coverage/**'],
   },
   {
     files: ['**/*.{js,jsx}'],
