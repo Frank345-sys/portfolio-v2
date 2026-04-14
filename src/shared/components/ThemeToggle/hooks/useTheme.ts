@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 const STORAGE_KEY = 'theme'
 
 export type Theme = 'light' | 'dark'
 
 export interface UseThemeReturn {
+  /** True si el tema aplicado es oscuro (`html` tiene clase `dark`). */
   isDark: boolean
+  /** Fija el tema, persiste en `localStorage` y actualiza la clase en `document.documentElement`. */
   setTheme: (theme: Theme) => void
 }
 
@@ -31,10 +33,8 @@ function applyTheme(theme: Theme) {
 }
 
 /**
- * Lee y persiste el tema (claro/oscuro) en `localStorage`, aplica la clase `dark`
- * en `<html>` y escucha cambios de `prefers-color-scheme` si no hay valor guardado.
- *
- * @returns Estado `isDark` y `setTheme` para alternar o fijar el tema.
+ * Tema claro/oscuro: `localStorage`, clase `dark` en `<html>` y sincronización con
+ * `prefers-color-scheme` cuando no hay valor guardado. Ver `UseThemeReturn`.
  */
 export function useTheme(): UseThemeReturn {
   const [theme, setThemeState] = useState<Theme>(() => {
@@ -60,7 +60,7 @@ export function useTheme(): UseThemeReturn {
     return () => media.removeEventListener('change', handleChange)
   }, [])
 
-  const setTheme = (next: Theme) => {
+  const setTheme = useCallback((next: Theme) => {
     const root = document.documentElement
     root.classList.add('theme-transitioning')
     applyTheme(next)
@@ -68,7 +68,7 @@ export function useTheme(): UseThemeReturn {
     window.setTimeout(() => {
       root.classList.remove('theme-transitioning')
     }, 300)
-  }
+  }, [])
 
   return {
     isDark: theme === 'dark',
