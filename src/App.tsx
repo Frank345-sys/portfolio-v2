@@ -1,4 +1,4 @@
-import { LazyMotion, domMax, MotionConfig } from 'motion/react'
+import { LazyMotion, domAnimation, MotionConfig } from 'motion/react'
 import { HeroSection } from '@/components/HeroSection'
 import { Header } from '@/components/Header'
 import { AboutSection } from '@/components/AboutSection'
@@ -8,12 +8,12 @@ import { Z } from '@/shared/constants/tokens'
 
 /**
  * Raíz de la SPA: skip link, textura, cabecera y contenido principal.
- * Motion en modo lazy (`domMax`: animaciones + **layout** + drag; `m.*` con `layout` lo necesita).
+ * Motion en modo lazy (`domAnimation`: el subconjunto DOM habitual; sin layout/drag extra).
  * `MotionConfig` respeta `prefers-reduced-motion`.
  */
 export function App() {
   return (
-    <LazyMotion features={domMax}>
+    <LazyMotion features={domAnimation}>
       <MotionConfig reducedMotion="user">
         <SmoothScrollRoot>
           <a href="#contenido-principal" className="u-skip-link">
