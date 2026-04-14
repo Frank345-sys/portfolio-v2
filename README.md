@@ -80,8 +80,10 @@ Definidos en `package.json`. Uso: `npm run <script>`.
 | Script            | Comando                                              | Descripción                                               |
 | ----------------- | ---------------------------------------------------- | --------------------------------------------------------- |
 | **dev**           | `vite`                                               | Servidor de desarrollo con HMR.                           |
-| **build**         | `tsc -b && vite build`                               | Type-check y build de producción.                         |
+| **build**         | `tsc -b && vite build`                               | Type-check y build de producción (salida en `build/`).     |
 | **preview**       | `vite preview`                                       | Sirve el build en local.                                  |
+| **preview:build** | `vite preview --outDir build`                      | Preview del artefacto generado en `build/`.               |
+| **deploy**        | `npm run build && gh-pages -d build`               | Sube el sitio a la rama `gh-pages` (GitHub Pages).        |
 | **lint**          | `eslint .`                                           | Lint de todo el proyecto.                                 |
 | **format**        | `prettier --write .`                                 | Formateo con Prettier.                                    |
 | **prepare**       | `husky`                                              | Instala hooks de Husky (post-`npm install`).              |
@@ -91,6 +93,21 @@ Definidos en `package.json`. Uso: `npm run <script>`.
 | **test:ui**       | `vitest --ui --open`                                 | UI de Vitest en el navegador.                             |
 | **test:coverage** | `vitest run --coverage && start coverage/index.html` | Cobertura y apertura del informe HTML (Windows: `start`). |
 | **typecheck**     | `tsc --noEmit`                                       | Comprobación de tipos sin emitir archivos.                |
+
+### GitHub Pages (`gh-pages`)
+
+1. En el repo: **Settings → Pages** → Source: rama `gh-pages`, carpeta `/ (root)`.
+2. Sitio en subruta (`https://usuario.github.io/portfolio-v2/`): antes del build, define la base de Vite:
+
+   ```bash
+   set VITE_BASE_PATH=/portfolio-v2/
+   npm run deploy
+   ```
+
+   (En PowerShell: `$env:VITE_BASE_PATH="/portfolio-v2/"; npm run deploy`.) Ajusta `/portfolio-v2/` al nombre real del repositorio.
+
+3. Dominio propio o `username.github.io` con sitio en la raíz: usa `VITE_BASE_PATH=/` (por defecto) y `npm run deploy`.
+4. La primera vez, `gh-pages` crea/actualiza la rama `gh-pages` con el contenido de `build/`. Requiere permisos de push al remoto.
 
 **test:coverage:** El comando actual usa `start`, que es **solo para Windows**. En otros sistemas, tras ejecutar `vitest run --coverage`:
 
