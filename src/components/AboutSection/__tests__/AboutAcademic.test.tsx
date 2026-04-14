@@ -13,7 +13,7 @@ describe('AboutAcademic', () => {
     it('renderiza todos los items de ABOUT_ACADEMIC', () => {
       render(<AboutAcademic />)
       ABOUT_ACADEMIC.forEach((item) => {
-        expect(screen.getByText(item.role)).toBeInTheDocument()
+        expect(screen.getByText(item.heading)).toBeInTheDocument()
         expect(screen.getByText(item.company)).toBeInTheDocument()
         expect(screen.getAllByText(item.period).length).toBeGreaterThan(0)
       })
