@@ -10,21 +10,15 @@ import type { ValueItem } from '../types'
  */
 function ValueCard({ name, desc, detail }: ValueItem) {
   return (
-    <div
-      className={cn(
-        'flex flex-col items-center space-y-1 p-5 text-center md:items-start md:text-left',
-        CARD.surface.weak
-      )}
-    >
-      <p className={TYPOGRAPHY.title.small}>{name}</p>
-      <p
-        className={cn(
-          TYPOGRAPHY.title.xsmall,
-          'text-information-base font-mono'
-        )}
-      >
-        {desc}
-      </p>
+    <div className={cn('text-center md:text-left', CARD.surface.weak)}>
+      <div className={CARD.layout.header}>
+        <div className="w-full space-y-1">
+          <h4 className={TYPOGRAPHY.title.small}>{name}</h4>
+          <p className={cn(TYPOGRAPHY.title.xsmall, 'text-information-base')}>
+            {desc}
+          </p>
+        </div>
+      </div>
       <p className={TYPOGRAPHY.paragraph.secondary}>{detail}</p>
     </div>
   )
@@ -36,7 +30,7 @@ function ValueCard({ name, desc, detail }: ValueItem) {
  */
 export function AboutValues() {
   return (
-    <div className={LAYOUT.spacing.compact}>
+    <div className={LAYOUT.spacing.default}>
       <SectionLabel as="h3">Cómo trabajo</SectionLabel>
       <div className={LAYOUT.grid.cols3}>
         {ABOUT_VALUES.map((item) => (

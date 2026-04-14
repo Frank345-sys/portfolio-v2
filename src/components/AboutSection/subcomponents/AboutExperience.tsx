@@ -29,21 +29,23 @@ const EXPERIENCE_LEGEND_ITEMS = [
  */
 export function AboutExperience() {
   return (
-    <div className={LAYOUT.spacing.compact}>
+    <div className={LAYOUT.spacing.default}>
       <SectionLabel as="h3">Experiencia</SectionLabel>
-      <Legend
-        items={[...EXPERIENCE_LEGEND_ITEMS]}
-        ariaLabel="Significado de los chips de experiencia"
-      />
-      <ol aria-label="Experiencia profesional">
-        {ABOUT_EXPERIENCE.map((item) => (
-          <TimelineItem
-            key={`${item.role}-${item.company}`}
-            {...item}
-            accent="information"
-          />
-        ))}
-      </ol>
+      <div className={LAYOUT.spacing.compact}>
+        <Legend
+          items={[...EXPERIENCE_LEGEND_ITEMS]}
+          ariaLabel="Significado de los chips de experiencia"
+        />
+        <ol aria-label="Experiencia profesional">
+          {ABOUT_EXPERIENCE.map((item) => (
+            <TimelineItem
+              key={`${item.heading}-${item.company}`}
+              {...item}
+              accent="information"
+            />
+          ))}
+        </ol>
+      </div>
     </div>
   )
 }
