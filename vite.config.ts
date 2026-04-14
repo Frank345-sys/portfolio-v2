@@ -5,7 +5,12 @@ import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
 // https://vite.dev/config/
+// GitHub Pages (subruta del repo): `VITE_BASE_PATH=/nombre-repo/` npm run build
 export default defineConfig({
+  base: process.env.VITE_BASE_PATH ?? '/',
+  build: {
+    outDir: 'build',
+  },
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -33,6 +38,6 @@ export default defineConfig({
         statements: 80,
       },
     },
-    exclude: ['node_modules', 'dist'],
+    exclude: ['node_modules', 'dist', 'build'],
   },
 })
