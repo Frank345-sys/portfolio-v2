@@ -4,7 +4,7 @@ import { BackgroundBoxes } from '@/shared/components/BackgroundBoxes'
 import { DownloadIcon } from '@/shared/icons'
 
 /** CV en `public/` — mantener sincronizado con el archivo desplegado. */
-const CV_HREF = '/Francisco_Gonzalez_Frontend_Developer_2026.pdf'
+const CV_HREF = `${import.meta.env.BASE_URL}Francisco_Gonzalez_Frontend_Developer_2026.pdf`
 
 const HERO_STATS = [
   { value: '+2 años', label: 'Experiencia laboral' },
