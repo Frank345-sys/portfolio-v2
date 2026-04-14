@@ -1,25 +1,35 @@
-import { useEffect, useState } from 'react'
-import { LAYOUT, TYPOGRAPHY, ANIMATION } from '@/shared/constants/tokens'
+import { m } from 'motion/react'
+import { MOTION_ANIMATION } from '@/shared/constants/motion'
+import { ANIMATION, Z, LAYOUT } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 import { ThemeToggle } from '@/shared/components/ThemeToggle'
-import { CodeIcon } from '@/shared/icons'
-import { HamburgerButton, MobileDrawer } from './subcomponents'
+import { useHeader } from './hooks'
+import { HamburgerButton, MobileDrawer, SiteLogo } from './subcomponents'
 import { DEFAULT_NAV_ITEMS } from './constants'
 import type { NavItem } from './types'
+import {
+  desktopNavLinkClassName,
+  desktopNavUnderline,
+  headerContainer,
+} from './styles'
 
 export interface HeaderProps {
+  /** Texto junto al logo; por defecto `"Mi Portfolio"`. */
   siteName?: string
+  /** Enlaces de navegación; por defecto anclas a inicio, sobre mí y proyectos. */
   navItems?: ReadonlyArray<NavItem>
+  /** Contenido a la derecha en desktop; si se omite, `<ThemeToggle />`. */
   rightSlot?: React.ReactNode
+  /** Clases extra del `<header>`. */
   className?: string
 }
 
 /**
- * Cabecera reutilizable con logo/nombre, navegación central y slot derecho.
- * En mobile muestra un HamburgerButton que abre el MobileDrawer.
+ * Cabecera con logo, navegación central y slot derecho.
  *
- * @param props - `siteName`, `navItems`, `rightSlot` y `className` opcionales.
- * @returns {JSX.Element} Fragmento con `<header>` y `MobileDrawer` asociado.
+ * - **Scroll-spy:** la sección visible se infiere con `IntersectionObserver` y se refleja
+ *   en estilos, `aria-current` y subrayado animado en desktop.
+ * - **Móvil:** `HamburgerButton` abre `MobileDrawer` (diálogo modal con trampa de foco).
  *
  * @example
  * ```tsx
@@ -29,61 +39,81 @@ export interface HeaderProps {
 export function Header({
   siteName = 'Mi Portfolio',
   navItems = DEFAULT_NAV_ITEMS,
-  rightSlot = <ThemeToggle />,
+  rightSlot,
   className,
 }: HeaderProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [isAtTop, setIsAtTop] = useState(true)
+  const resolvedRightSlot = rightSlot ?? <ThemeToggle />
 
-  useEffect(() => {
-    const updateScrollState = () => {
-      setIsAtTop(window.scrollY <= 0)
-    }
-
-    updateScrollState()
-    window.addEventListener('scroll', updateScrollState, { passive: true })
-
-    return () => window.removeEventListener('scroll', updateScrollState)
-  }, [])
+  const {
+    isOpen,
+    setIsOpen,
+    isAtTop,
+    activeNavHref,
+    prefersReducedMotion,
+    rowRef,
+    registerLink,
+    underline,
+  } = useHeader(navItems)
 
   return (
     <>
       <header
         className={cn(
-          LAYOUT.header.bar,
+          'bg-bg-white fixed top-0 w-full',
           isAtTop ? 'bg-transparent' : 'shadow-elevation-md',
+          Z.header,
           ANIMATION.transition.shadow,
           className
         )}
         aria-label="Cabecera"
       >
-        <div
-          className={cn(LAYOUT.header.wrapper, LAYOUT.flex.between, 'gap-4')}
-        >
-          {/* Logo */}
-          <div className="flex shrink-0 items-center gap-2">
-            <CodeIcon aria-hidden="true" className="h-7 w-7 md:h-10 md:w-10" />
-            <span className={cn(TYPOGRAPHY.label.default, 'tracking-tight')}>
-              {siteName}
-            </span>
-          </div>
+        <div className={cn(headerContainer, LAYOUT.container.full)}>
+          <SiteLogo siteName={siteName} />
 
-          {/* Nav desktop */}
-          <nav className={LAYOUT.header.nav} aria-label="Navegación principal">
-            {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className={cn(TYPOGRAPHY.link.nav, TYPOGRAPHY.paragraph.small)}
-              >
-                {item.label}
-              </a>
-            ))}
+          {/* Nav desktop: scroll-spy + línea inferior animada */}
+          <nav className="hidden md:block" aria-label="Navegación principal">
+            <div
+              ref={rowRef}
+              className="relative flex items-center gap-6 lg:gap-8"
+            >
+              {navItems.map((item) => {
+                const isActive = item.href === activeNavHref
+                return (
+                  <a
+                    key={item.href}
+                    ref={registerLink(item.href)}
+                    href={item.href}
+                    className={desktopNavLinkClassName(isActive)}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
+                    {item.label}
+                  </a>
+                )
+              })}
+              <m.span
+                aria-hidden
+                className={cn(
+                  'pointer-events-none absolute bottom-0 left-0 h-0.5',
+                  desktopNavUnderline
+                )}
+                initial={false}
+                animate={{
+                  left: underline.left,
+                  width: underline.width,
+                  opacity: underline.visible ? 1 : 0,
+                }}
+                transition={
+                  prefersReducedMotion === true
+                    ? { duration: 0 }
+                    : MOTION_ANIMATION.spring.control
+                }
+              />
+            </div>
           </nav>
 
           {/* Right slot + hamburguesa */}
           <div className="flex shrink-0 items-center gap-3">
-            <div className="hidden md:block">{rightSlot}</div>
+            <div className="hidden md:block">{resolvedRightSlot}</div>
             <HamburgerButton
               isOpen={isOpen}
               onClick={() => setIsOpen((prev) => !prev)}
@@ -98,6 +128,7 @@ export function Header({
         onClose={() => setIsOpen(false)}
         siteName={siteName}
         navItems={navItems}
+        activeNavHref={activeNavHref}
       />
     </>
   )
