@@ -10,6 +10,12 @@
 import { SKILL_LABEL } from '@/shared/constants/skills'
 import type { Project } from './types'
 
+const PUBLIC_BASE_URL = import.meta.env.BASE_URL
+
+function withBaseUrl(path: string): string {
+  return `${PUBLIC_BASE_URL}${path.replace(/^\/+/, '')}`
+}
+
 /** Listado ordenado de proyectos mostrados en el portfolio. */
 export const PROJECTS: Project[] = [
   {
@@ -34,10 +40,10 @@ export const PROJECTS: Project[] = [
       SKILL_LABEL.GITFLOW,
     ],
     images: [
-      '/images/projects/blife-ecommerce.png',
-      '/images/projects/blife-ecommerce-cart.png',
-      '/images/projects/blife-ecommerce-products.png',
-      '/images/projects/blife-ecommerce-checkout.png',
+      withBaseUrl('images/projects/blife-ecommerce.png'),
+      withBaseUrl('images/projects/blife-ecommerce-cart.png'),
+      withBaseUrl('images/projects/blife-ecommerce-products.png'),
+      withBaseUrl('images/projects/blife-ecommerce-checkout.png'),
     ],
     link: 'https://blife.mx/',
   },
@@ -62,7 +68,7 @@ export const PROJECTS: Project[] = [
       SKILL_LABEL.GIT_GITHUB,
       SKILL_LABEL.GITFLOW,
     ],
-    images: ['/images/projects/blife-app-landing.png'],
+    images: [withBaseUrl('images/projects/blife-app-landing.png')],
     link: 'https://blife.app/',
   },
   {
@@ -87,9 +93,9 @@ export const PROJECTS: Project[] = [
       SKILL_LABEL.GITFLOW,
     ],
     images: [
-      '/images/projects/blife-b2b-mayoreo.png',
-      '/images/projects/blife-b2b-mayoreo-products.png',
-      '/images/projects/blife-b2b-mayoreo-search.png',
+      withBaseUrl('images/projects/blife-b2b-mayoreo.png'),
+      withBaseUrl('images/projects/blife-b2b-mayoreo-products.png'),
+      withBaseUrl('images/projects/blife-b2b-mayoreo-search.png'),
     ],
     link: 'https://www.mayoreo.blife.mx/',
   },
@@ -114,7 +120,7 @@ export const PROJECTS: Project[] = [
       SKILL_LABEL.GIT_GITHUB,
       SKILL_LABEL.GITFLOW,
     ],
-    images: ['/images/projects/berp-erp.png'],
+    images: [withBaseUrl('images/projects/berp-erp.png')],
     link: 'https://erp.blife.mx/login',
   },
   {
@@ -136,7 +142,7 @@ export const PROJECTS: Project[] = [
       SKILL_LABEL.CSS3,
       SKILL_LABEL.GIT_GITHUB,
     ],
-    images: ['/images/projects/portfolio-legacy.png'],
+    images: [withBaseUrl('images/projects/portfolio-legacy.png')],
     link: 'https://frank345-sys.github.io/portfolio_web/',
     githubLink: 'https://github.com/Frank345-sys/portfolio_web',
   },
