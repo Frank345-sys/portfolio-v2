@@ -1,5 +1,5 @@
 import { render, type RenderOptions } from '@testing-library/react'
-import { LazyMotion, domMax } from 'motion/react'
+import { LazyMotion, domAnimation } from 'motion/react'
 import type { ReactElement, ReactNode } from 'react'
 
 /**
@@ -12,7 +12,7 @@ export function renderWithMotion(
   return render(ui, {
     ...options,
     wrapper: ({ children }: { children: ReactNode }) => (
-      <LazyMotion features={domMax}>{children}</LazyMotion>
+      <LazyMotion features={domAnimation}>{children}</LazyMotion>
     ),
   })
 }
