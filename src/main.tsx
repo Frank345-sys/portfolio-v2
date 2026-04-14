@@ -1,5 +1,11 @@
+/**
+ * Punto de entrada de la SPA: monta `App` en `#root` con `StrictMode`.
+ *
+ * @module main
+ */
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import 'lenis/dist/lenis.css'
 import './index.css'
 import { App } from './App'
 
