@@ -311,12 +311,12 @@ Este proyecto sigue el modelo **Gitflow** con las siguientes ramas:
    ```bash
    git checkout develop
    git pull origin develop
-   git checkout -b release/1.0.0
+   git checkout -b release/v1.0.0
    ```
 
    En la rama `release/*`: versión, changelog y solo fixes menores de cierre.
 
-8. Abrir PR **release/1.0.0** → **main**. Tras el merge, etiquetar en `main`:
+8. Abrir PR **release/v1.0.0** → **main**. Tras el merge, etiquetar en `main`:
 
    ```bash
    git checkout main
@@ -325,7 +325,7 @@ Este proyecto sigue el modelo **Gitflow** con las siguientes ramas:
    git push origin v1.0.0
    ```
 
-9. Integrar la release en `develop` (PR **release/1.0.0** → **develop** o merge de `main` en `develop`) para alinear ramas.
+9. Integrar la release en `develop` (PR **release/v1.0.0** → **develop** o merge de `main` en `develop`) para alinear ramas.
 
 ### Hotfix
 
