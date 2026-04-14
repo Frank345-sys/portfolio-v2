@@ -43,7 +43,7 @@ export const BUTTON = {
 
     /** @use Botones que deben adaptarse automáticamente al breakpoint del viewport. */
     responsive:
-      'px-[10px] sm:px-4 md:px-[22px] py-[6px] sm:py-2 md:py-[10px] text-[0.8125rem] sm:text-[0.875rem] md:text-[0.9375rem]',
+      'px-2.5 sm:px-4 md:px-[22px] py-1.5 sm:py-2 md:py-2.5 text-[0.8125rem] sm:text-[0.875rem] md:text-[0.9375rem]',
   },
 
   // ── Variantes ─────────────────────────────────────────────────────────────
@@ -161,7 +161,7 @@ export const BUTTON = {
      * @nocombine BUTTON.size.* (usa padding circular propio `p-2`)
      * @warning Sin texto visible — requiere `aria-label` para accesibilidad.
      */
-    icon: `p-2 rounded-full hover:bg-bg-soft active:bg-bg-subtle ${ANIMATION.transition.colors} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-information-base disabled:opacity-40 disabled:pointer-events-none cursor-pointer`,
+    icon: `p-1 rounded-full hover:bg-bg-soft active:bg-bg-subtle ${ANIMATION.transition.colors} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-information-base disabled:opacity-40 disabled:pointer-events-none cursor-pointer`,
 
     /**
      * @use Link autónomo con ícono — CTAs de texto con flecha, "Ver más", "Descargar".
@@ -190,7 +190,6 @@ export const BUTTON = {
 
 export type ButtonCategory = keyof typeof BUTTON
 export type ButtonVariant<C extends ButtonCategory> = keyof (typeof BUTTON)[C]
-
 export type ButtonSizeKey = ButtonVariant<'size'>
 export type ButtonVariantKey = ButtonVariant<'variant'>
 export type ButtonSpecialKey = ButtonVariant<'special'>
