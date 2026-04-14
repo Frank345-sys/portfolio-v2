@@ -26,7 +26,7 @@ describe('Header', () => {
 
   it('los links por defecto apuntan bien (inicio y sobre mí)', () => {
     renderWithMotion(<Header />)
-    expect(screen.getByRole('link', { name: /inicio/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /^inicio$/i })).toHaveAttribute(
       'href',
       '#inicio'
     )
@@ -34,6 +34,14 @@ describe('Header', () => {
       'href',
       '#sobre-mi'
     )
+  })
+
+  it('el logo enlaza al inicio con etiqueta accesible', () => {
+    renderWithMotion(<Header siteName="Test Portfolio" />)
+    const logo = screen.getByRole('link', {
+      name: /ir al inicio: test portfolio/i,
+    })
+    expect(logo).toHaveAttribute('href', '#inicio')
   })
 
   it('si pasas navItems custom, esos links se ven', () => {
