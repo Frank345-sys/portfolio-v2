@@ -1,63 +1,59 @@
-import { useEffect, useState } from 'react'
-import type { BoxData } from './types'
-import { generateBoxes } from './utils'
-import { useParallaxMouse } from './hooks/useParallaxMouse'
+import type { ReactNode } from 'react'
+import { useBackgroundBoxes } from './hooks/useBackgroundBoxes'
 import { FloatingBox } from './subcomponents/FloatingBox'
 import { LAYOUT } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
-export interface BackgroundBoxesProps {
-  /** Contenido a renderizar centrado sobre el fondo de cajas flotantes */
-  children?: React.ReactNode
+
+interface BackgroundBoxesProps {
+  /** Contenido colocado en la capa superior, centrado sobre el fondo decorativo. */
+  children: ReactNode
+  /**
+   * Clases Tailwind adicionales para el contenedor raíz (`relative`, altura máxima, `overflow`, etc.).
+   * Se fusionan con las clases base mediante `cn()`.
+   */
+  className?: string
 }
 
 /**
- * Fondo animado con cajas flotantes distribuidas simétricamente
- * a los laterales del viewport. Reacciona al movimiento del mouse
- * con efecto parallax y se adapta a cambios de tamaño de pantalla.
+ * Fondo decorativo a pantalla completa: íconos dentro de cajas flotantes animadas y parallax
+ * ligado al movimiento del puntero cuando el viewport cumple el breakpoint `lg` (ver `useBackgroundBoxes`).
  *
- * @param props - `children` opcional centrado sobre el fondo.
- * @returns {JSX.Element} Contenedor a pantalla completa con lista de `FloatingBox` y slot de contenido.
+ * En cada redimensionamiento de ventana se vuelven a generar posiciones y tamaños de las cajas.
+ * Las cajas viven en una lista absoluta detrás; `children` se renderiza en un panel relativo
+ * centrado con un leve desenfoque de fondo (`backdrop-blur`).
+ *
  * @example
  * ```tsx
- * <BackgroundBoxes>
+ * <BackgroundBoxes className="max-h-[720px]">
  *   <HeroSection />
  * </BackgroundBoxes>
  * ```
  */
-export function BackgroundBoxes({ children }: BackgroundBoxesProps) {
-  const { mouseX, mouseY } = useParallaxMouse()
-  const [boxes, setBoxes] = useState<BoxData[]>(() =>
-    typeof window !== 'undefined'
-      ? generateBoxes(window.innerWidth)
-      : generateBoxes(1440)
-  )
-
-  useEffect(() => {
-    const onResize = () => {
-      setBoxes(generateBoxes(window.innerWidth))
-    }
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  }, [])
+export function BackgroundBoxes({ children, className }: BackgroundBoxesProps) {
+  const { boxes, isLg, mouseX, mouseY } = useBackgroundBoxes()
 
   return (
     <div
-      className={
-        'bg-bg-white relative h-screen max-h-[680px] min-h-[640px] w-full overflow-hidden'
-      }
+      className={cn(
+        'relative h-screen max-h-[680px] min-h-[640px] w-full overflow-hidden',
+        className
+      )}
     >
       {/* Cajas flotantes */}
       <ul className={cn(LAYOUT.container.wide, 'absolute inset-0 list-none')}>
         {boxes.map((box) => (
-          <FloatingBox key={box.id} box={box} mouseX={mouseX} mouseY={mouseY} />
+          <FloatingBox
+            key={box.id}
+            box={box}
+            mouseX={mouseX}
+            mouseY={mouseY}
+            parallaxEnabled={isLg}
+          />
         ))}
       </ul>
       {/* Contenido del fondo */}
       <div
-        className={cn(
-          LAYOUT.flex.center,
-          'relative h-full flex-col backdrop-blur-[1.5px]'
-        )}
+        className="relative flex h-full w-full flex-col items-center justify-center backdrop-blur-[1.5px]"
         data-testid="background-boxes-content"
       >
         {children}
