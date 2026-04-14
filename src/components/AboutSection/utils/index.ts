@@ -1,0 +1,1 @@
+export { compareSkillTagsByVariant } from './compareSkillTagsByVariant'

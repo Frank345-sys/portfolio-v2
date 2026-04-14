@@ -1,21 +1,38 @@
+import type { Variants } from 'motion/react'
 import { m } from 'motion/react'
 import { cn } from '@/shared/utils/cn'
-import { BUTTON, LAYOUT } from '@/shared/constants/tokens'
+import { BUTTON } from '@/shared/constants/tokens'
 import { HAMBURGER_SPRING } from '../constants'
 
 interface HamburgerButtonProps {
+  /** Si el menú móvil está abierto (afecta `aria-expanded` y la animación). */
   isOpen: boolean
+  /** Alterna el estado del drawer; lo invoca el contenedor (p. ej. `Header`). */
   onClick: () => void
+  /** Clases adicionales del `<button>`. */
   className?: string
 }
 
+const HAMBURGER_LINE_BASE_CLASS = 'bg-bg-strong block h-0.5 w-4.5 rounded-full'
+
+const hamburgerBarTopVariants: Variants = {
+  open: { rotate: 45, y: 6 },
+  closed: { rotate: 0, y: 0 },
+}
+
+const hamburgerBarMidVariants: Variants = {
+  open: { opacity: 0, scaleX: 0 },
+  closed: { opacity: 1, scaleX: 1 },
+}
+
+const hamburgerBarBottomVariants: Variants = {
+  open: { rotate: -45, y: -6 },
+  closed: { rotate: 0, y: 0 },
+}
+
 /**
- * Botón hamburguesa animado con Motion (`m`).
- * Las tres líneas se transforman en X al abrirse.
- * Controlado externamente mediante `isOpen` y `onClick`.
- *
- * @param props - `isOpen`, `onClick` y `className` opcional.
- * @returns {JSX.Element} Botón accesible con tres barras animadas.
+ * Botón hamburguesa con Motion: tres líneas que forman una X cuando `isOpen` es true.
+ * Debe controlarse desde fuera con `isOpen` y `onClick`.
  *
  * @example
  * ```tsx
@@ -27,6 +44,8 @@ export function HamburgerButton({
   onClick,
   className,
 }: HamburgerButtonProps) {
+  const toggleState = isOpen ? 'open' : 'closed'
+
   return (
     <button
       type="button"
@@ -36,25 +55,27 @@ export function HamburgerButton({
       aria-controls="mobile-menu"
       className={cn(
         BUTTON.special.icon,
-        LAYOUT.flex.center,
-        'h-11 w-11 flex-col gap-1.5 rounded-full p-0 md:hidden',
+        'flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full p-0 md:hidden',
         className
       )}
     >
       <m.span
-        animate={isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+        animate={toggleState}
+        variants={hamburgerBarTopVariants}
         transition={HAMBURGER_SPRING}
-        className="bg-bg-strong block h-0.5 w-4.5 origin-center rounded-full"
+        className={cn(HAMBURGER_LINE_BASE_CLASS, 'origin-center')}
       />
       <m.span
-        animate={isOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+        animate={toggleState}
+        variants={hamburgerBarMidVariants}
         transition={{ duration: 0.15 }}
-        className="bg-bg-strong block h-0.5 w-4.5 rounded-full"
+        className={HAMBURGER_LINE_BASE_CLASS}
       />
       <m.span
-        animate={isOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+        animate={toggleState}
+        variants={hamburgerBarBottomVariants}
         transition={HAMBURGER_SPRING}
-        className="bg-bg-strong block h-0.5 w-4.5 origin-center rounded-full"
+        className={cn(HAMBURGER_LINE_BASE_CLASS, 'origin-center')}
       />
     </button>
   )

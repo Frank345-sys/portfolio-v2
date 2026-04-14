@@ -11,22 +11,31 @@ export interface BadgeRowItem {
 export interface BadgeRowProps {
   /** Lista de elementos a renderizar como chips/badges. */
   items: BadgeRowItem[]
+  /** Clases del contenedor (p. ej. max-width, márgenes). */
+  className?: string
 }
 
 /**
- * Fila reutilizable de chips/badges pequeños.
- * Recibe una lista de etiquetas y la clase de variante ya resuelta
- * (mapeada desde el dominio del componente: nivel de skill, tipo de chip, etc.).
+ * Fila horizontal de chips con `BADGE.size.sm` y la variante ya resuelta en cada ítem.
+ * Si `items` está vacío, no renderiza nada.
  *
- * Se encarga de aplicar el layout horizontal y el tamaño pequeño consistente.
+ * @example
+ * ```tsx
+ * <BadgeRow
+ *   items={[
+ *     { label: 'React', variantClassName: BADGE.variant.primary },
+ *     { label: 'TypeScript', variantClassName: BADGE.variant.neutral },
+ *   ]}
+ * />
+ * ```
  */
-export function BadgeRow({ items }: BadgeRowProps) {
+export function BadgeRow({ items, className }: BadgeRowProps) {
   if (items.length === 0) {
     return null
   }
 
   return (
-    <div className={BADGE.group.horizontal}>
+    <div className={cn(BADGE.group.horizontal, className)}>
       {items.map(({ label, variantClassName }) => (
         <span key={label} className={cn(BADGE.size.sm, variantClassName)}>
           {label}

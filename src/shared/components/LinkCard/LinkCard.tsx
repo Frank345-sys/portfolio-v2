@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { cn } from '@/shared/utils/cn'
-import { TYPOGRAPHY, LAYOUT, CARD, ANIMATION } from '@/shared/constants/tokens'
+import { TYPOGRAPHY, CARD, ANIMATION } from '@/shared/constants/tokens'
 
 export interface LinkCardProps {
   /** URL de destino. */
@@ -68,18 +68,15 @@ export function LinkCard({
       {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
       {...(resolvedAriaLabel ? { 'aria-label': resolvedAriaLabel } : {})}
       className={cn(
-        LAYOUT.flex.between,
+        'group hover:border-information-base hover:bg-information-lighter flex items-center justify-between',
         CARD.interactive.weak,
-        'group hover:border-information-base hover:bg-information-lighter gap-2',
         className
       )}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 md:gap-3">
         <div
           className={cn(
-            LAYOUT.flex.center,
-            'h-10 w-10 shrink-0 rounded-lg',
-            'bg-information-light group-hover:bg-information-base',
+            'bg-information-light group-hover:bg-information-base flex h-9 w-9 shrink-0 items-center justify-center rounded-lg',
             ANIMATION.transition.colors,
             // Normaliza SVG dentro del slot (emojis y texto no se ven afectados)
             '[&_svg]:pointer-events-none [&_svg]:block [&_svg]:size-6 [&_svg]:max-h-full [&_svg]:max-w-full'

@@ -19,6 +19,7 @@ module.exports = {
         'layout',
         'theme',
         'seo',
+        'assets',
         'test',
         'workflow',
         'config',

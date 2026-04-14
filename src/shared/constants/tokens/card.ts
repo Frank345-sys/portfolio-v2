@@ -29,6 +29,11 @@ export const CARD = {
   // ── Superficies estáticas ──────────────────────────────────────────────────
   // Para contenedores de información que no se clickean.
   // Aplicar en <div>, <section>, <article> — nunca en <button> o <a>.
+  // Regla de padding y sombra en surface.*:
+  // PAD.md (p-6 sm:p-8): default y elevated — contenido rico con varios bloques internos.
+  // PAD.sm (p-4): compact, subtle, weak, white — contextos densos o de apoyo.
+  // Sombra: solo en `elevated` (shadow-elevation-md) y en `weak`/`white` (shadow-elevation-xs).
+  // `compact` y `subtle` no tienen sombra — son superficies de fondo, no de elevación.
   surface: {
     /**
      * @use Contenido principal, secciones destacadas — fondo blanco sin sombra.
@@ -70,6 +75,8 @@ export const CARD = {
   },
 
   // ── Superficies interactivas ───────────────────────────────────────────────
+  // Los valores hover:shadow-* se escriben literales (no via token) para mantener
+  // variantes explícitas de hover sin depender de composición externa.
   // SOLO para elementos clickeables: <a>, <button>, [role="button"].
   // Incluyen cursor, hover y transición — no tienen sentido en <div>.
   interactive: {
@@ -77,7 +84,6 @@ export const CARD = {
      * @use Cards navegables sobre fondo blanco — padding generoso para contenido rico.
      *      Usar en `<a>` o `<button>`.
      * @nocombine CARD.surface.* (son mutuamente excluyentes por semántica)
-     * @note hover:shadow-elevation-xs escrito literal para mantener una variante explícita de hover.
      */
     default: `${BASE} bg-bg-white ${PAD.md} cursor-pointer ${ANIMATION.transition.default} hover:border-stroke-subtle hover:shadow-elevation-xs`,
 
@@ -92,7 +98,6 @@ export const CARD = {
      * @use Cards de producto, items navegables sobre fondos tenues.
      *      Usar en `<a>` — eleva la sombra al hover.
      * @nocombine CARD.surface.* (son mutuamente excluyentes por semántica)
-     * @note hover:shadow-elevation-xs escrito literal para mantener una variante explícita de hover.
      */
     white: `${BASE} bg-bg-white ${PAD.sm} shadow-elevation-xs cursor-pointer ${ANIMATION.transition.default} hover:border-stroke-subtle hover:shadow-elevation-sm`,
   },
@@ -102,13 +107,14 @@ export const CARD = {
      * @use Drawers, tooltips con cuerpo, bandejas laterales — flotantes de nivel medio.
      * @warning Usar solo dentro de un portal o contexto con z-index gestionado (Z.drawer).
      */
-    panel: 'rounded-lg border border-stroke-medium bg-bg-medium p-4',
+    panel:
+      'rounded-lg border border-stroke-subtle bg-bg-white shadow-elevation-xl p-4',
 
     /**
      * @use Modales pequeños, popovers, previews flotantes — mayor elevación que panel.
      * @warning Usar solo dentro de un portal o contexto con z-index gestionado (Z.modal).
      */
-    modal: `rounded-lg border border-stroke-medium bg-bg-surface ${PAD.md} shadow-elevation-lg`,
+    modal: `rounded-lg bg-bg-weak ${PAD.md} shadow-elevation-lg`,
   },
 
   // ── Estructura interna ─────────────────────────────────────────────────────
@@ -137,7 +143,6 @@ export const CARD = {
 
 export type CardCategory = keyof typeof CARD
 export type CardVariant<C extends CardCategory> = keyof (typeof CARD)[C]
-
 export type CardSurfaceKey = CardVariant<'surface'>
 export type CardInteractiveKey = CardVariant<'interactive'>
 export type CardOverlayKey = CardVariant<'overlay'>

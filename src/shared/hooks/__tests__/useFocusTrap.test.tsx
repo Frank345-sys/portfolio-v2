@@ -1,7 +1,7 @@
 import type { RefObject } from 'react'
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 import { render, fireEvent } from '@testing-library/react'
-import { useFocusTrap } from './useFocusTrap'
+import { useFocusTrap } from '../useFocusTrap'
 
 function TrapHarness({ isActive }: { isActive: boolean }) {
   const ref = useFocusTrap(isActive)

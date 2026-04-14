@@ -7,7 +7,9 @@ import {
 import { BadgeRow } from '@/shared/components/BadgeRow'
 
 export interface TimelineChip {
+  /** Texto del chip (tecnología, métrica, etc.). */
   label: string
+  /** Variante semántica que define color del badge. */
   variant: TimelineChipVariant
 }
 
@@ -17,8 +19,8 @@ export interface TimelineChip {
 export interface TimelineItemProps {
   /** Rango de fechas (ej. "Sep 2024 → Feb 2026") */
   period: string
-  /** Título del rol o formación */
-  role: string
+  /** Título del puesto o formación (se muestra en el encabezado del ítem) */
+  heading: string
   /** Empresa o institución; se muestra con el color de acento */
   company: string
   /** Descripción del puesto o formación */
@@ -52,7 +54,7 @@ const CHIP_VARIANT_MAP = {
  * // Experiencia laboral (acento azul)
  * <TimelineItem
  *   period="Sep 2024 → Feb 2026"
- *   role="Frontend Developer"
+ *   heading="Frontend Developer"
  *   company="B Life · Puebla, MX"
  *   description="..."
  *   chips={[
@@ -66,7 +68,7 @@ const CHIP_VARIANT_MAP = {
  * // Formación académica (acento violeta)
  * <TimelineItem
  *   period="Ago 2018 → Ene 2022"
- *   role="Ingeniería en Sistemas"
+ *   heading="Ingeniería en Sistemas"
  *   company="ITSX"
  *   description="..."
  *   chips={[{ label: 'Java', variant: 'academic' }, ...]}
@@ -76,7 +78,7 @@ const CHIP_VARIANT_MAP = {
  */
 export function TimelineItem({
   period,
-  role,
+  heading,
   company,
   description,
   chips,
@@ -84,14 +86,15 @@ export function TimelineItem({
   className,
 }: TimelineItemProps) {
   const accentLine = cn(
-    'relative hidden sm:block',
+    'relative',
     LAYOUT.divider.vertical,
     accent === 'information' && 'bg-information-base',
     accent === 'feature' && 'bg-feature-base'
   )
   const accentDot = cn(
-    'absolute top-5.5 left-1/2 -translate-x-1/2 -translate-y-1/2 md:top-5.5',
+    'absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 sm:top-5.5 md:top-5.5',
     BADGE.special.dot,
+    BADGE.special.dotSize.md,
     accent === 'information' ? 'bg-information-base' : 'bg-feature-base'
   )
   const accentCompany =
@@ -100,7 +103,7 @@ export function TimelineItem({
   return (
     <li
       className={cn(
-        'grid grid-cols-1 gap-4 sm:grid-cols-[80px_auto_1fr] md:gap-5',
+        'grid grid-cols-[auto_1fr] gap-4 sm:grid-cols-[80px_auto_1fr] md:gap-5',
         className
       )}
     >
@@ -116,7 +119,7 @@ export function TimelineItem({
         <span className={accentDot} aria-hidden />
       </div>
       <div className="pt-2 pb-4">
-        <p className={cn(TYPOGRAPHY.title.small, 'mb-1.5')}>{role}</p>
+        <h4 className={cn(TYPOGRAPHY.title.small, 'mb-1.5')}>{heading}</h4>
         <p
           className={cn(
             TYPOGRAPHY.title.xsmall,

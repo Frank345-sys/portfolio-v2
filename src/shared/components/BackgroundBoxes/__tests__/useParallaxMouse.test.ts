@@ -44,6 +44,27 @@ describe('useParallaxMouse', () => {
     expect(removeSpy).toHaveBeenCalledWith('mousemove', expect.any(Function))
   })
 
+  it('con enabled false no registra mousemove y mantiene valores en 0', () => {
+    const addSpy = vi.spyOn(window, 'addEventListener')
+    const { result } = renderHook(() => useParallaxMouse({ enabled: false }))
+
+    expect(addSpy.mock.calls.filter((c) => c[0] === 'mousemove')).toHaveLength(
+      0
+    )
+    expect(result.current.mouseX.get()).toBe(0)
+    expect(result.current.mouseY.get()).toBe(0)
+
+    act(() => {
+      window.dispatchEvent(
+        new MouseEvent('mousemove', { clientX: 500, clientY: 400 })
+      )
+    })
+    expect(result.current.mouseX.get()).toBe(0)
+    expect(result.current.mouseY.get()).toBe(0)
+
+    addSpy.mockRestore()
+  })
+
   it('no lanza al desmontar', () => {
     expect(() => {
       const { unmount } = renderHook(() => useParallaxMouse())

@@ -40,60 +40,36 @@
 
 ```
 src/
-├── App.css
 ├── App.tsx
 ├── index.css
 ├── main.tsx
 ├── components/
-│   ├── AboutSection/
-│   │   ├── AboutSection.tsx
-│   │   ├── AboutSection.test.tsx
-│   │   └── index.ts
-│   ├── Button/
-│   │   ├── Button.tsx
-│   │   └── Button.test.tsx
-│   ├── ContactSection/
-│   │   ├── ContactSection.tsx
-│   │   ├── ContactSection.test.tsx
-│   │   └── index.ts
+│   ├── AboutSection/       # sección “Sobre mí” + __tests__
+│   ├── Footer/             # pie de página (copyright + enlaces)
+│   ├── Header/             # barra + __tests__ (subcomponents, constants)
 │   ├── HeroSection/
-│   │   ├── HeroSection.tsx
-│   │   ├── HeroSection.test.tsx
-│   │   └── index.ts
-│   └── ProjectsSection/
-│       ├── ProjectsSection.tsx
-│       ├── ProjectsSection.test.tsx
-│       └── index.ts
+│   ├── ProjectsSection/    # hooks/, subcomponents/, ProjectsSection.test.tsx
+│   └── ...
 ├── shared/
-│   ├── components/
-│   │   ├── ThemeToggle.tsx
-│   │   └── ThemeToggle.test.tsx
-│   ├── constants/
-│   │   ├── animation.ts
-│   │   ├── badge.ts
-│   │   ├── button.ts
-│   │   ├── index.ts
-│   │   ├── input.ts
-│   │   ├── layout.ts
-│   │   ├── readme.md
-│   │   ├── typography.ts
+│   ├── components/         # Avatar, BadgeRow, ThemeToggle/, etc. + __tests__
+│   ├── constants/          # tokens/, skills/, enums/
 │   ├── hooks/
-│   │   ├── useTheme.ts
-│   │   └── useTheme.test.ts
 │   └── utils/
-│       └── cn.ts
 └── test/
-    └── setup.ts
+    ├── setup.ts                 # jest-dom + mock de matchMedia (Motion / breakpoints)
+    ├── renderWithMotion.tsx     # render con LazyMotion para tests de animación
+    ├── stackSkillLabelSet.ts    # helper solo para tests de sincronía de skills
+    └── stackSkillLabelSet.test.ts
 ```
 
-- **`src/main.tsx`** — Punto de entrada; monta la app con React StrictMode y comprobación segura del elemento `#root`.
-- **`src/App.tsx`** — Componente raíz: header con ThemeToggle y main con las cuatro secciones (Hero, About, Projects, Contact).
-- **`src/components/`** — Secciones de la página: HeroSection, AboutSection, ProjectsSection, ContactSection y el componente reutilizable Button. Cada sección tiene su `.tsx`, `.test.tsx` e `index.ts`.
-- **`src/shared/components/`** — Componentes compartidos (ThemeToggle) y sus tests.
-- **`src/shared/constants/`** — Design tokens (tipografía, layout, botones, badges, animación, input) y documentación interna.
-- **`src/shared/hooks/`** — Hooks reutilizables (useTheme) y sus tests.
-- **`src/shared/utils/`** — Utilidades (cn para combinar clases).
-- **`src/test/setup.ts`** — Setup global de Vitest (importa `@testing-library/jest-dom`).
+- **`src/main.tsx`** — Punto de entrada; monta la app con React StrictMode, estilos globales (incl. Lenis) y comprobación segura del elemento `#root`.
+- **`src/App.tsx`** — Raíz de la SPA: `SmoothScrollRoot` (Lenis si no hay `prefers-reduced-motion`), skip link, `Header` y `main` con Hero, About y Projects.
+- **`src/components/`** — Secciones y piezas de dominio: p. ej. `Header/`, `HeroSection/`, `AboutSection/`, `ProjectsSection/` (cada una con tests y `index.ts` donde aplica).
+- **`src/shared/components/`** — Componentes compartidos (ThemeToggle, SmoothScrollRoot, carruseles, etc.) y sus tests.
+- **`src/shared/constants/`** — Design tokens (`tokens/`), skills y enums.
+- **`src/shared/hooks/`** — Hooks reutilizables (p. ej. useFocusTrap) y tests.
+- **`src/shared/utils/`** — Utilidades de producción (p. ej. `cn`).
+- **`src/test/`** — Setup de Vitest, helpers de render y utilidades usadas solo en tests.
 
 ---
 

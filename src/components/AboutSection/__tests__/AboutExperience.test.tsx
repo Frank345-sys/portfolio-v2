@@ -13,7 +13,7 @@ describe('AboutExperience', () => {
     it('renderiza todos los items de ABOUT_EXPERIENCE', () => {
       render(<AboutExperience />)
       ABOUT_EXPERIENCE.forEach((item) => {
-        expect(screen.getByText(item.role)).toBeInTheDocument()
+        expect(screen.getByText(item.heading)).toBeInTheDocument()
         expect(screen.getByText(item.company)).toBeInTheDocument()
         expect(screen.getAllByText(item.period).length).toBeGreaterThan(0)
       })

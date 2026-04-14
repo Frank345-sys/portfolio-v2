@@ -1,25 +1,34 @@
-import { useEffect, type ComponentType, type SVGProps } from 'react'
+import { useEffect } from 'react'
 import { m, useMotionValue, useSpring } from 'motion/react'
 import type { MotionValue } from 'motion/react'
 import type { BoxData } from '../types'
-import { cn } from '@/shared/utils/cn'
-import { LAYOUT } from '@/shared/constants/tokens'
+import { MOTION_ANIMATION } from '@/shared/constants'
 
-/** Props del componente FloatingBox: datos de la caja y valores de mouse para parallax */
 interface FloatingBoxProps {
+  /** Posición, profundidad e ícono SVG de esta caja (generado por `generateBoxes`). */
   box: BoxData
+  /** Posición X normalizada del puntero para parallax. */
   mouseX: MotionValue<number>
+  /** Posición Y normalizada del puntero para parallax. */
   mouseY: MotionValue<number>
+  /**
+   * Si es `false`, no se enlazan `mouseX`/`mouseY` al offset (viewport &lt; `lg` en `BackgroundBoxes`).
+   * La animación de flotación vertical sigue activa.
+   * @defaultValue true
+   */
+  parallaxEnabled?: boolean
 }
 
 /**
- * Una caja flotante con icono: posición en %, animación de entrada, flotación
- * infinita y desplazamiento parallax según la posición del mouse.
- *
- * @param props - box (BoxData), mouseX y mouseY (MotionValue)
- * @returns {JSX.Element} Ítem de lista animado con icono centrado.
+ * Un ítem `<m.li>` con ícono: entrada, flotación continua y parallax según `mouseX`/`mouseY`.
+ * Marcado `aria-hidden` (decorativo dentro de `BackgroundBoxes`).
  */
-export function FloatingBox({ box, mouseX, mouseY }: FloatingBoxProps) {
+export function FloatingBox({
+  box,
+  mouseX,
+  mouseY,
+  parallaxEnabled = true,
+}: FloatingBoxProps) {
   const stiffness = 50 + Math.abs(box.depth) * 30
   const pxVal = useMotionValue(0)
   const pyVal = useMotionValue(0)
@@ -27,6 +36,11 @@ export function FloatingBox({ box, mouseX, mouseY }: FloatingBoxProps) {
   const py = useSpring(pyVal, { stiffness, damping: 22 })
 
   useEffect(() => {
+    if (!parallaxEnabled) {
+      pxVal.set(0)
+      pyVal.set(0)
+      return
+    }
     const strength = 22 * box.depth
     const u1 = mouseX.on('change', (v: number) => pxVal.set(v * strength))
     const u2 = mouseY.on('change', (v: number) => pyVal.set(v * strength))
@@ -34,9 +48,9 @@ export function FloatingBox({ box, mouseX, mouseY }: FloatingBoxProps) {
       u1()
       u2()
     }
-  }, [mouseX, mouseY, box.depth, pxVal, pyVal])
+  }, [mouseX, mouseY, box.depth, pxVal, pyVal, parallaxEnabled])
 
-  const Icon = box.Icon as ComponentType<SVGProps<SVGSVGElement>>
+  const Icon = box.Icon
 
   return (
     <m.li
@@ -56,7 +70,7 @@ export function FloatingBox({ box, mouseX, mouseY }: FloatingBoxProps) {
         opacity: { duration: 0.5, delay: 0.1 + box.id * 0.035 },
         translateX: {
           duration: 1,
-          ease: [0.23, 1, 0.32, 1],
+          ease: MOTION_ANIMATION.easing.smoothOut,
           delay: 0.1 + box.id * 0.035,
         },
       }}
@@ -71,17 +85,10 @@ export function FloatingBox({ box, mouseX, mouseY }: FloatingBoxProps) {
           delay: 2 + box.floatDelay,
         }}
       >
-        <div
-          className={cn(
-            'bg-bg-weak',
-            LAYOUT.flex.center,
-            'h-full w-full rounded-xl select-none md:rounded-2xl',
-            'shadow-elevation-lg'
-          )}
-        >
+        <div className="bg-bg-weak shadow-elevation-lg flex h-full w-full items-center justify-center rounded-xl select-none md:rounded-2xl">
           <Icon
             aria-hidden="true"
-            className="h-[60%] w-[60%] shrink-0 sm:h-[55%] sm:w-[55%] md:h-[50%] md:w-[50%]"
+            className="h-[50%] w-[50%] shrink-0 sm:h-[55%] sm:w-[55%] md:h-[50%] md:w-[50%] lg:h-[60%] lg:w-[60%]"
           />
         </div>
       </m.div>

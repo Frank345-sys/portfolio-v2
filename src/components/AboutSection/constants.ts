@@ -7,9 +7,10 @@ import type {
 } from './types'
 import { SKILL_TAG_VARIANT } from './types'
 import { TIMELINE_CHIP_VARIANT } from '@/shared/constants/enums'
+import { SKILL_LABEL } from '@/shared/constants/skills'
 
-/** Hero + bio: nombre, badge, ubicación, tagline y avatar usados en `AboutBio`. */
-export interface AboutHero {
+/** Datos del hero (nombre, badge, ubicación, tagline, avatar) — consumidos en `AboutHero`. */
+export interface AboutHeroData {
   firstName: string
   lastName: string
   badge: string
@@ -20,7 +21,7 @@ export interface AboutHero {
   avatarPhotoSrc?: string
 }
 
-export const ABOUT_HERO: AboutHero = {
+export const ABOUT_HERO: AboutHeroData = {
   firstName: 'Frank',
   lastName: 'González',
   badge: 'Frontend Developer',
@@ -30,14 +31,29 @@ export const ABOUT_HERO: AboutHero = {
   avatarInitials: 'FG',
 }
 
+/** Un párrafo de la bio (quién soy) con clave estable para listas React. */
+export interface AboutBioParagraph {
+  id: string
+  text: string
+}
+
 /**
  * Párrafos de presentación personal (quién soy).
- * Consumidos bajo el bloque hero dentro de `AboutBio`. Usar **texto** para resaltar en blanco.
+ * Consumidos en `AboutBio`. Usar **texto** para resaltar en blanco.
  */
-export const ABOUT_BIO: string[] = [
-  'Soy **Francisco Omar Habib González Utrera**, Ingeniero en Sistemas Computacionales, con más de 1 año de experiencia como **Frontend Developer** desarrollando landing pages, soluciones e-commerce y plataformas web de alto impacto.',
-  'Me especializo en **React.js**, **optimización de performance** y **diseño de componentes escalables**. Disfruto mejorar flujos de usuario, refactorizar código legado y elevar la calidad del producto.',
-  'He trabajado colaborativamente con equipos de **Back-End**, tengo fidelidad a los diseños en **Figma** y una obsesión por los detalles que marcan la diferencia entre una UI funcional y una UI memorable.',
+export const ABOUT_BIO: readonly AboutBioParagraph[] = [
+  {
+    id: 'about-bio-intro',
+    text: 'Soy **Francisco Omar Habib González Utrera**, Ingeniero en Sistemas Computacionales, con más de 1 año de experiencia como **Frontend Developer** desarrollando landing pages, soluciones e-commerce y plataformas web de alto impacto.',
+  },
+  {
+    id: 'about-bio-specialization',
+    text: 'Me especializo en **React.js**, **optimización de performance** y **diseño de componentes escalables**. Disfruto mejorar flujos de usuario, refactorizar código legado y elevar la calidad del producto.',
+  },
+  {
+    id: 'about-bio-collaboration',
+    text: 'He trabajado colaborativamente con equipos de **Back-End**, tengo fidelidad a los diseños en **Figma** y una obsesión por los detalles que marcan la diferencia entre una UI funcional y una UI memorable.',
+  },
 ]
 
 /** Valores / cómo trabajo (3 tarjetas) */
@@ -50,8 +66,7 @@ export const ABOUT_VALUES: ValueItem[] = [
   {
     name: 'Performance',
     desc: 'Experiencia rápida y fluida',
-    detail:
-      'Optimizo tiempos de carga y elimino renders innecesarios para lograr interfaces más ágiles.',
+    detail: 'Optimizo tiempos de carga y elimino renders innecesarios.',
   },
   {
     name: 'Fidelidad al diseño',
@@ -61,47 +76,94 @@ export const ABOUT_VALUES: ValueItem[] = [
   },
 ]
 
-/** Grupos de skills (stack técnico) — dominio / proficiente / familiar */
+/**
+ * Grupos de skills (stack técnico) — dominio / proficiente / familiar.
+ * Las etiquetas deben coincidir con chips `academic` / `learned` en timelines (`ABOUT_ACADEMIC`, `ABOUT_EXPERIENCE`)
+ * y con `skills` de cada entrada en `PROJECTS` (ProjectsSection).
+ * Los tests de sincronía usan `stackSkillLabelSet` (`@/test/stackSkillLabelSet`).
+ * El orden visual por grupo es Dominio → Proficiente → Familiar (`compareSkillTagsByVariant` en `./utils`).
+ */
 export const ABOUT_SKILLS: SkillGroup[] = [
   {
     title: 'Lenguajes',
     tags: [
-      { label: 'JavaScript ES6+', variant: SKILL_TAG_VARIANT.DOMINIO },
-      { label: 'TypeScript', variant: SKILL_TAG_VARIANT.DOMINIO },
-      { label: 'HTML5', variant: SKILL_TAG_VARIANT.DOMINIO },
-      { label: 'CSS3', variant: SKILL_TAG_VARIANT.DOMINIO },
+      {
+        label: SKILL_LABEL.JAVASCRIPT_ES6_PLUS,
+        variant: SKILL_TAG_VARIANT.DOMINIO,
+      },
+      { label: SKILL_LABEL.TYPESCRIPT, variant: SKILL_TAG_VARIANT.DOMINIO },
+      { label: SKILL_LABEL.HTML5, variant: SKILL_TAG_VARIANT.DOMINIO },
+      { label: SKILL_LABEL.CSS3, variant: SKILL_TAG_VARIANT.DOMINIO },
+      { label: SKILL_LABEL.CPP, variant: SKILL_TAG_VARIANT.FAMILIAR },
+      { label: SKILL_LABEL.JAVA, variant: SKILL_TAG_VARIANT.FAMILIAR },
     ],
   },
   {
     title: 'Frameworks & Libs',
     tags: [
-      { label: 'React.js', variant: SKILL_TAG_VARIANT.DOMINIO },
-      { label: 'Next.js', variant: SKILL_TAG_VARIANT.DOMINIO },
-      { label: 'Tailwind CSS', variant: SKILL_TAG_VARIANT.DOMINIO },
-      { label: 'Astro.js', variant: SKILL_TAG_VARIANT.PROFICIENTE },
-      { label: 'Framer Motion', variant: SKILL_TAG_VARIANT.PROFICIENTE },
-      { label: 'Bootstrap', variant: SKILL_TAG_VARIANT.FAMILIAR },
+      { label: SKILL_LABEL.REACT, variant: SKILL_TAG_VARIANT.DOMINIO },
+      { label: SKILL_LABEL.NEXT, variant: SKILL_TAG_VARIANT.DOMINIO },
+      { label: SKILL_LABEL.TAILWIND, variant: SKILL_TAG_VARIANT.DOMINIO },
+      { label: SKILL_LABEL.PANDA_CSS, variant: SKILL_TAG_VARIANT.FAMILIAR },
+      {
+        label: SKILL_LABEL.FRAMER_MOTION,
+        variant: SKILL_TAG_VARIANT.PROFICIENTE,
+      },
+      { label: SKILL_LABEL.ASTRO, variant: SKILL_TAG_VARIANT.FAMILIAR },
+      { label: SKILL_LABEL.BOOTSTRAP, variant: SKILL_TAG_VARIANT.FAMILIAR },
+      { label: SKILL_LABEL.NODE, variant: SKILL_TAG_VARIANT.FAMILIAR },
+      { label: SKILL_LABEL.EXPRESS, variant: SKILL_TAG_VARIANT.FAMILIAR },
+      { label: SKILL_LABEL.MONGODB, variant: SKILL_TAG_VARIANT.FAMILIAR },
+    ],
+  },
+  {
+    title: 'Fundamentos y bases de datos',
+    tags: [
+      { label: SKILL_LABEL.POO, variant: SKILL_TAG_VARIANT.PROFICIENTE },
+      { label: SKILL_LABEL.SQL, variant: SKILL_TAG_VARIANT.FAMILIAR },
+      { label: SKILL_LABEL.MYSQL, variant: SKILL_TAG_VARIANT.FAMILIAR },
+      {
+        label: SKILL_LABEL.ALGORITMOS,
+        variant: SKILL_TAG_VARIANT.FAMILIAR,
+      },
+      {
+        label: SKILL_LABEL.ESTRUCTURAS_DATOS,
+        variant: SKILL_TAG_VARIANT.FAMILIAR,
+      },
+      { label: SKILL_LABEL.REDES, variant: SKILL_TAG_VARIANT.FAMILIAR },
     ],
   },
   {
     title: 'Herramientas',
     tags: [
-      { label: 'Git / GitHub', variant: SKILL_TAG_VARIANT.DOMINIO },
-      { label: 'VS Code', variant: SKILL_TAG_VARIANT.DOMINIO },
-      { label: 'Figma', variant: SKILL_TAG_VARIANT.DOMINIO },
-      { label: 'Cursor', variant: SKILL_TAG_VARIANT.DOMINIO },
-      { label: 'GitFlow', variant: SKILL_TAG_VARIANT.PROFICIENTE },
-      { label: 'RESTful APIs', variant: SKILL_TAG_VARIANT.PROFICIENTE },
+      { label: SKILL_LABEL.GIT_GITHUB, variant: SKILL_TAG_VARIANT.DOMINIO },
+      { label: SKILL_LABEL.VS_CODE, variant: SKILL_TAG_VARIANT.DOMINIO },
+      { label: SKILL_LABEL.FIGMA, variant: SKILL_TAG_VARIANT.PROFICIENTE },
+      { label: SKILL_LABEL.CURSOR, variant: SKILL_TAG_VARIANT.DOMINIO },
+      { label: SKILL_LABEL.GITFLOW, variant: SKILL_TAG_VARIANT.PROFICIENTE },
+      {
+        label: SKILL_LABEL.RESTFUL_APIS,
+        variant: SKILL_TAG_VARIANT.PROFICIENTE,
+      },
     ],
   },
   {
     title: 'Prácticas',
     tags: [
-      { label: 'Responsive Design', variant: SKILL_TAG_VARIANT.DOMINIO },
-      { label: 'Mobile-first', variant: SKILL_TAG_VARIANT.DOMINIO },
-      { label: 'Code Review', variant: SKILL_TAG_VARIANT.PROFICIENTE },
-      { label: 'Refactoring', variant: SKILL_TAG_VARIANT.PROFICIENTE },
-      { label: 'UI/UX', variant: SKILL_TAG_VARIANT.PROFICIENTE },
+      {
+        label: SKILL_LABEL.RESPONSIVE_DESIGN,
+        variant: SKILL_TAG_VARIANT.DOMINIO,
+      },
+      { label: SKILL_LABEL.MOBILE_FIRST, variant: SKILL_TAG_VARIANT.DOMINIO },
+      {
+        label: SKILL_LABEL.CODE_REVIEW,
+        variant: SKILL_TAG_VARIANT.PROFICIENTE,
+      },
+      {
+        label: SKILL_LABEL.REFACTORING,
+        variant: SKILL_TAG_VARIANT.PROFICIENTE,
+      },
+      { label: SKILL_LABEL.UI_UX, variant: SKILL_TAG_VARIANT.PROFICIENTE },
     ],
   },
 ]
@@ -110,7 +172,7 @@ export const ABOUT_SKILLS: SkillGroup[] = [
 export const ABOUT_EXPERIENCE: ExpItem[] = [
   {
     period: 'Sep 2024 — Feb 2026',
-    role: 'Frontend Developer',
+    heading: 'Frontend Developer',
     company: 'B Life Suplementos Fitness · Puebla, MX',
     description:
       'Desarrollo en e-commerce, plataforma B2B, ERP interno y landing pages. Creación de componentes reutilizables con React, refactorización de código legacy, optimización de performance y mejora de UI/UX colaborando con equipos de Back-End.',
@@ -128,12 +190,16 @@ export const ABOUT_EXPERIENCE: ExpItem[] = [
         variant: TIMELINE_CHIP_VARIANT.IMPACT_METRIC,
       },
       { label: '−30% bugs', variant: TIMELINE_CHIP_VARIANT.IMPACT_METRIC },
-      { label: 'Astro', variant: TIMELINE_CHIP_VARIANT.LEARNED },
-      { label: 'React.js', variant: TIMELINE_CHIP_VARIANT.LEARNED },
-      { label: 'Framer Motion', variant: TIMELINE_CHIP_VARIANT.LEARNED },
-      { label: 'TypeScript', variant: TIMELINE_CHIP_VARIANT.LEARNED },
-      { label: 'UI/UX', variant: TIMELINE_CHIP_VARIANT.LEARNED },
-      { label: 'Tailwind', variant: TIMELINE_CHIP_VARIANT.LEARNED },
+      { label: SKILL_LABEL.ASTRO, variant: TIMELINE_CHIP_VARIANT.LEARNED },
+      { label: SKILL_LABEL.REACT, variant: TIMELINE_CHIP_VARIANT.LEARNED },
+      {
+        label: SKILL_LABEL.FRAMER_MOTION,
+        variant: TIMELINE_CHIP_VARIANT.LEARNED,
+      },
+      { label: SKILL_LABEL.TYPESCRIPT, variant: TIMELINE_CHIP_VARIANT.LEARNED },
+      { label: SKILL_LABEL.UI_UX, variant: TIMELINE_CHIP_VARIANT.LEARNED },
+      { label: SKILL_LABEL.TAILWIND, variant: TIMELINE_CHIP_VARIANT.LEARNED },
+      { label: SKILL_LABEL.PANDA_CSS, variant: TIMELINE_CHIP_VARIANT.LEARNED },
     ],
   },
 ]
@@ -142,42 +208,49 @@ export const ABOUT_EXPERIENCE: ExpItem[] = [
 export const ABOUT_ACADEMIC: AcademicItem[] = [
   {
     period: 'Ago 2016 — Ene 2022',
-    role: 'Ingeniería en Sistemas Computacionales',
+    heading: 'Ingeniería en Sistemas Computacionales',
     company: 'Instituto Tecnológico Superior de Xalapa (ITSX)',
     description:
       'Formación en desarrollo de software, estructuras de datos, bases de datos y con especialidad en ingeniería de software.',
     chips: [
-      { label: 'C', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'C++', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'Java', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'SQL', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'MySQL', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'Algoritmos', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      { label: SKILL_LABEL.CPP, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      { label: SKILL_LABEL.JAVA, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      { label: SKILL_LABEL.SQL, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      { label: SKILL_LABEL.MYSQL, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
       {
-        label: 'Estructuras de datos',
+        label: SKILL_LABEL.ALGORITMOS,
         variant: TIMELINE_CHIP_VARIANT.ACADEMIC,
       },
-      { label: 'Redes', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'POO', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      {
+        label: SKILL_LABEL.ESTRUCTURAS_DATOS,
+        variant: TIMELINE_CHIP_VARIANT.ACADEMIC,
+      },
+      { label: SKILL_LABEL.REDES, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      { label: SKILL_LABEL.POO, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
     ],
   },
   {
     period: 'Dic 2022 — Abr 2024',
-    role: 'Desarrollador Web',
+    heading: 'Desarrollador Web',
     company: 'TripleTen Latam',
     description:
       'Programa de Desarrollo Web, es un curso de diez meses que abarca HTML, CSS, JS, React.js, Node.js, MongoDB y otros aspectos clave para la creación de sitios web front-end y back-end que implica proyectos basados en desafíos del mundo real.',
     chips: [
-      { label: 'HTML5', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'CSS3', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'JS', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'React.js', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'Node.js', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'MongoDB', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'Express.js', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'Git', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'GitHub', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
-      { label: 'Figma', variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      { label: SKILL_LABEL.HTML5, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      { label: SKILL_LABEL.CSS3, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      {
+        label: SKILL_LABEL.JAVASCRIPT_ES6_PLUS,
+        variant: TIMELINE_CHIP_VARIANT.ACADEMIC,
+      },
+      { label: SKILL_LABEL.REACT, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      { label: SKILL_LABEL.NODE, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      { label: SKILL_LABEL.MONGODB, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      { label: SKILL_LABEL.EXPRESS, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
+      {
+        label: SKILL_LABEL.GIT_GITHUB,
+        variant: TIMELINE_CHIP_VARIANT.ACADEMIC,
+      },
+      { label: SKILL_LABEL.FIGMA, variant: TIMELINE_CHIP_VARIANT.ACADEMIC },
     ],
   },
 ]

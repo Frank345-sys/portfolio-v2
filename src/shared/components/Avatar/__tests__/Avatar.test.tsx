@@ -21,5 +21,6 @@ describe('Avatar', () => {
     expect(avatar).toBeInTheDocument()
     const photo = container.querySelector('img')
     expect(photo).toHaveAttribute('src', 'https://example.com/a.png')
+    expect(photo).toHaveAttribute('alt', '')
   })
 })

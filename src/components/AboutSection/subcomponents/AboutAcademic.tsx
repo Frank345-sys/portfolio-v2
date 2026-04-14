@@ -19,21 +19,23 @@ const ACADEMIC_LEGEND_ITEMS = [
  */
 export function AboutAcademic() {
   return (
-    <div className={LAYOUT.spacing.compact}>
+    <div className={LAYOUT.spacing.default}>
       <SectionLabel as="h3">Formación académica</SectionLabel>
-      <Legend
-        items={[...ACADEMIC_LEGEND_ITEMS]}
-        ariaLabel="Chips de formación académica"
-      />
-      <ol aria-label="Formación académica">
-        {ABOUT_ACADEMIC.map((item) => (
-          <TimelineItem
-            key={`${item.role}-${item.company}`}
-            {...item}
-            accent="feature"
-          />
-        ))}
-      </ol>
+      <div className={LAYOUT.spacing.compact}>
+        <Legend
+          items={[...ACADEMIC_LEGEND_ITEMS]}
+          ariaLabel="Chips de formación académica"
+        />
+        <ol aria-label="Formación académica">
+          {ABOUT_ACADEMIC.map((item) => (
+            <TimelineItem
+              key={`${item.heading}-${item.company}`}
+              {...item}
+              accent="feature"
+            />
+          ))}
+        </ol>
+      </div>
     </div>
   )
 }

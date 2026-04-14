@@ -1,8 +1,8 @@
 /**
- * Escala de z-index semántica — 7 niveles de apilamiento.
+ * Escala de z-index semántica — niveles de apilamiento ordenados.
  *
  * Centraliza todos los valores de z-index del sistema. No usar clases
- * `z-*` arbitrarias en componentes — referenciar siempre este token.
+ * `z-*` sueltas en componentes — referenciar siempre este token.
  *
  * La escala es incremental y no deja huecos entre niveles adyacentes
  * con propósito semántico distinto, para que la jerarquía visual sea
@@ -43,27 +43,44 @@ export const Z = {
   drawer: 'z-30',
 
   /**
-   * @use Modales, diálogos, overlays de pantalla completa.
+   * @use Backdrop de modales — overlay semitransparente que queda justo debajo del modal.
    *      Equivale a `z-index: 40`.
-   * @combine CARD.overlay.modal — siempre gestionar z-index desde aquí.
-   * @warning El backdrop del modal debe ir en `z-[39]` para quedar justo debajo.
+   * @combine Z.modal — siempre usar junto al modal que cubre.
    */
-  modal: 'z-40',
+  backdrop: 'z-40',
 
   /**
-   * @use Navbar fija — siempre visible sobre todo el contenido de página.
+   * @use Modales, diálogos, overlays de pantalla completa.
    *      Equivale a `z-index: 50`.
-   * @combine LAYOUT.header.bar y LAYOUT.header.sticky — ya usan z-50 internamente.
-   * @warning No superar este nivel salvo para toasts — el header es el techo de la UI estática.
+   * @combine CARD.overlay.modal — siempre gestionar z-index desde aquí.
+   * @combine Z.backdrop — usar para el overlay semitransparente debajo del modal.
    */
-  header: 'z-50',
+  modal: 'z-50',
+
+  /**
+   * @use Navbar u header fijo — siempre visible sobre el contenido de página.
+   *      Equivale a `z-index: 60`.
+   * @combine Clases de layout del `<header>` en el componente — no hay token `LAYOUT.header.*`.
+   * @warning No superar este nivel salvo para drawerElevated y toasts.
+   */
+  header: 'z-60',
+
+  /**
+   * @use Drawer que debe cubrir el header fijo — exclusivo para navegación mobile.
+   *      Equivale a `z-index: 70`.
+   * @warning Usar exclusivamente para drawers de navegación que deben superar el header.
+   *          Para overlays genéricos usar Z.modal. Para toasts usar Z.toast.
+   * @combine Overlay + panel del drawer — ambos deben usar este token.
+   */
+  drawerElevated: 'z-70',
 
   /**
    * @use Notificaciones toast y snackbars — deben aparecer sobre cualquier overlay activo.
-   *      Equivale a `z-index: 60`.
+   *      Equivale a `z-index: 80`.
    * @warning Nivel máximo del sistema — no añadir elementos por encima de este valor.
    */
-  toast: 'z-[60]',
+  toast: 'z-80',
 } as const
 
 export type ZKey = keyof typeof Z
+export type ZValue = (typeof Z)[ZKey]
