@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { ABOUT_SKILLS } from '../constants'
 import { PROJECTS } from '@/components/ProjectsSection/constants'
-import { stackSkillLabelSet } from '@/shared/utils/stackSkillLabelSet'
+import { stackSkillLabelSet } from '@/test/stackSkillLabelSet'
 
 function projectSkillLabels(): string[] {
   return [...new Set(PROJECTS.flatMap((p) => p.skills))]

@@ -80,7 +80,7 @@ export const ABOUT_VALUES: ValueItem[] = [
  * Grupos de skills (stack técnico) — dominio / proficiente / familiar.
  * Las etiquetas deben coincidir con chips `academic` / `learned` en timelines (`ABOUT_ACADEMIC`, `ABOUT_EXPERIENCE`)
  * y con `skills` de cada entrada en `PROJECTS` (ProjectsSection).
- * Los tests de sincronía usan `stackSkillLabelSet` (`@/shared/utils/stackSkillLabelSet`).
+ * Los tests de sincronía usan `stackSkillLabelSet` (`@/test/stackSkillLabelSet`).
  * El orden visual por grupo es Dominio → Proficiente → Familiar (`compareSkillTagsByVariant` en `./utils`).
  */
 export const ABOUT_SKILLS: SkillGroup[] = [

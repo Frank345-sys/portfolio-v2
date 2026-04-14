@@ -3,7 +3,7 @@
  *
  * Cada valor de `PROJECTS[].skills` debe existir como etiqueta en `ABOUT_SKILLS` (AboutSection),
  * para alinear el stack técnico con lo mostrado en tarjetas de proyecto.
- * Comprobación: test `aboutSkillsProjectsSync` (`stackSkillLabelSet` en `@/shared/utils/stackSkillLabelSet`).
+ * Comprobación: test `aboutSkillsProjectsSync` (`stackSkillLabelSet` en `@/test/stackSkillLabelSet`).
  *
  * @module components/ProjectsSection/constants
  */

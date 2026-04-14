@@ -4,7 +4,7 @@ import {
   TIMELINE_CHIP_VARIANT,
   type TimelineChipVariant,
 } from '@/shared/constants/enums'
-import { stackSkillLabelSet } from '@/shared/utils/stackSkillLabelSet'
+import { stackSkillLabelSet } from '@/test/stackSkillLabelSet'
 
 function timelineSkillChipLabels(): string[] {
   const variants = new Set<TimelineChipVariant>([

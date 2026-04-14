@@ -1,6 +1,6 @@
 /**
  * Construye el conjunto de etiquetas de badges a partir de grupos tipo `SkillGroup` (AboutSection).
- * Útil para tests de sincronía entre stack, timelines y `PROJECTS`.
+ * Solo para tests de sincronía (Vitest) entre stack, timelines y `PROJECTS`.
  */
 export function stackSkillLabelSet(
   groups: readonly { tags: readonly { label: string }[] }[]

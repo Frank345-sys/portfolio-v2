@@ -18,7 +18,7 @@ import { LAYOUT, ANIMATION } from '@/shared/constants/tokens'
  * @see useProjectsScrollSync — índice activo por scroll / intersección.
  * @see useProjectsSection — orquestación lightbox + derivados.
  * @see `PROJECTS` en `./constants` — las `skills` de cada proyecto deben figurar en el stack (`ABOUT_SKILLS`, AboutSection).
- * @see stackSkillLabelSet — `@/shared/utils/stackSkillLabelSet` (aplanado de grupos para asserts de sincronía).
+ * @see stackSkillLabelSet — `@/test/stackSkillLabelSet` (aplanado de grupos para asserts de sincronía en Vitest).
  *
  * @example
  * ```tsx

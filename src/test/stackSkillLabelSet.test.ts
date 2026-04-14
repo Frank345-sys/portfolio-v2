@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { stackSkillLabelSet } from '../stackSkillLabelSet'
+import { stackSkillLabelSet } from './stackSkillLabelSet'
 
 describe('stackSkillLabelSet', () => {
   it('aplana etiquetas de todos los grupos sin duplicar', () => {
