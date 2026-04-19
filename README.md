@@ -30,7 +30,7 @@
 | **Linting**       | ESLint 9.39.1 (flat config), typescript-eslint 8.46.4, eslint-plugin-react-hooks, eslint-plugin-react-refresh, eslint-config-prettier |
 | **Formateo**      | Prettier 3.8.1, prettier-plugin-tailwindcss 0.7.2                                                                                     |
 | **Git hooks**     | Husky 9.1.7, lint-staged 16.3.0                                                                                                       |
-| **CI**            | GitHub Actions: workflow `ci.yml` (lint, typecheck, test, build) y workflow `commitlint.yml` (validación de mensajes)                 |
+| **CI**            | GitHub Actions: workflow `ci.yml` (formato, lint, typecheck, cobertura, build), `commitlint.yml` y Dependabot semanal                 |
 
 **Alias:** `@` → `src` en `vite.config.ts` y `tsconfig.app.json`.
 
@@ -86,6 +86,9 @@ Definidos en `package.json`. Uso: `npm run <script>`.
 | **deploy**        | `npm run build && gh-pages -d build`                 | Sube el sitio a la rama `gh-pages` (GitHub Pages).        |
 | **lint**          | `eslint .`                                           | Lint de todo el proyecto.                                 |
 | **format**        | `prettier --write .`                                 | Formateo con Prettier.                                    |
+| **format:check**  | `prettier --check .`                                 | Comprueba formato sin modificar archivos (como en CI).    |
+| **check**         | `typecheck` → `format:check` → `lint` → `test`       | Comprobación local rápida antes de commitear.             |
+| **check:ci**      | Mismo orden que `ci.yml` en GitHub Actions           | Cobertura con umbrales y `build`; ideal antes de PR/push. |
 | **prepare**       | `husky`                                              | Instala hooks de Husky (post-`npm install`).              |
 | **test**          | `vitest run`                                         | Tests una vez.                                            |
 | **test:watch**    | `vitest`                                             | Tests en watch.                                           |
