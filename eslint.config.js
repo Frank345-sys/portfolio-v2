@@ -1,5 +1,6 @@
 import js from '@eslint/js'
 import globals from 'globals'
+import reactPlugin from 'eslint-plugin-react'
 import reactCompiler from 'eslint-plugin-react-compiler'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
@@ -36,6 +37,8 @@ export default tseslint.config(
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
+      reactPlugin.configs.flat.recommended,
+      reactPlugin.configs.flat['jsx-runtime'],
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
       jsxA11y.flatConfigs.recommended,
@@ -51,8 +54,14 @@ export default tseslint.config(
     plugins: {
       tsdoc,
     },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
     rules: {
       'tsdoc/syntax': 'error',
+      'react/prop-types': 'off',
     },
   },
   /** React Compiler (ESLint): alinea el código con las “Rules of React” que el compilador espera. */
