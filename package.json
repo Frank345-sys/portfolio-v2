@@ -22,6 +22,7 @@
     "test:coverage:ci": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck && npm run format:check && npm run lint && npm run test",
+    "check:ci": "npm run format:check && npm run lint && npm run typecheck && npm run test:coverage:ci && npm run build",
     "deploy": "npm run build && gh-pages -d build",
     "preview:build": "vite preview --outDir build"
   },
