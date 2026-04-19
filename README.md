@@ -12,7 +12,7 @@
 
 ## 📌 Descripción del proyecto
 
-**portfolio-v2** es una SPA (Single Page Application) que sirve como mi portfolio personal. Está construida con React 19, Vite 7 y TypeScript en modo estricto, utiliza Tailwind CSS 4 para estilos y un sistema de design tokens con colores semánticos. Incluye una pipeline de calidad completa: ESLint, Prettier, Husky (pre-commit y commit-msg), lint-staged, Commitlint (local y en CI) y workflows de GitHub Actions (CI, validación de mensajes, React Doctor en PRs y Dependabot). Para asistentes de IA y convenciones del repositorio, ver [AGENTS.md](./AGENTS.md).
+**portfolio-v2** es una SPA (Single Page Application) que sirve como mi portfolio personal. Está construida con React 19, Vite 7 y TypeScript en modo estricto, utiliza Tailwind CSS 4 para estilos y un sistema de design tokens con colores semánticos. Incluye una pipeline de calidad completa: ESLint, Prettier, Husky (pre-commit y commit-msg), lint-staged, Commitlint (local y en CI) y workflows de GitHub Actions (CI, validación de mensajes, React Doctor en PRs y Dependabot). Para asistentes de IA en local: guías en `.agents/AGENTS.md` (índice) y `.agents/react-doctor/AGENTS.md` (React Doctor). Esa carpeta **no se versiona** (ver `.gitignore`); en GitHub el código y la CI siguen siendo la referencia pública.
 
 ---
 
