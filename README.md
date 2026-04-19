@@ -80,10 +80,10 @@ Definidos en `package.json`. Uso: `npm run <script>`.
 | Script            | Comando                                              | Descripción                                               |
 | ----------------- | ---------------------------------------------------- | --------------------------------------------------------- |
 | **dev**           | `vite`                                               | Servidor de desarrollo con HMR.                           |
-| **build**         | `tsc -b && vite build`                               | Type-check y build de producción (salida en `build/`).     |
+| **build**         | `tsc -b && vite build`                               | Type-check y build de producción (salida en `build/`).    |
 | **preview**       | `vite preview`                                       | Sirve el build en local.                                  |
-| **preview:build** | `vite preview --outDir build`                      | Preview del artefacto generado en `build/`.               |
-| **deploy**        | `npm run build && gh-pages -d build`               | Sube el sitio a la rama `gh-pages` (GitHub Pages).        |
+| **preview:build** | `vite preview --outDir build`                        | Preview del artefacto generado en `build/`.               |
+| **deploy**        | `npm run build && gh-pages -d build`                 | Sube el sitio a la rama `gh-pages` (GitHub Pages).        |
 | **lint**          | `eslint .`                                           | Lint de todo el proyecto.                                 |
 | **format**        | `prettier --write .`                                 | Formateo con Prettier.                                    |
 | **prepare**       | `husky`                                              | Instala hooks de Husky (post-`npm install`).              |
