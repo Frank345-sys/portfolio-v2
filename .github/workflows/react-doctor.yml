@@ -30,7 +30,7 @@ jobs:
           npx react-doctor . --verbose > react-doctor-report.txt 2>&1 || true
 
       - name: Comment PR with report
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs');
