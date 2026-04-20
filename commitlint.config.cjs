@@ -24,6 +24,8 @@ module.exports = {
         'workflow',
         'config',
         'deps',
+        // Dependabot legacy (dev-deps); nuevos PRs usan chore(deps): vía .github/dependabot.yml
+        'deps-dev',
         'readme',
         'gitflow',
         'build',

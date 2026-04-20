@@ -2,6 +2,19 @@
 
 Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y el versionado en [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.2.0] - 2026-04-19
+
+### Añadido
+
+- Workflow de GitHub Actions que publica una GitHub Release al crear o pushear un tag semver con prefijo `v`, usando el bloque `## [X.Y.Z]` de este changelog como cuerpo de la nota.
+
+### Cambiado
+
+- CI: permisos explícitos de solo lectura donde aplica, concurrencia por workflow, Commitlint solo en `pull_request`, React Doctor alineado con la versión declarada en `package.json`.
+- Dependabot: prefijo de commit `chore(deps):` para npm y GitHub Actions; los pull requests de actualización se abren contra la rama `develop`.
+- Commitlint: se admite el scope `deps-dev` para mensajes legacy de Dependabot.
+- Lockfile y pin de `react-doctor` en desarrollo para coincidir con el workflow de React Doctor.
+
 ## [1.1.0] - 2026-04-19
 
 ### Añadido
