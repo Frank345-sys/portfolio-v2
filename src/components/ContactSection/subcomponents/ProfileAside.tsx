@@ -3,7 +3,7 @@ import { Legend } from '@/shared/components/Legend'
 import { BADGE, CARD, LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 import { CONTACT_TIMEZONE_LINE } from '../constants'
-import { ContactOwnerLocalTime } from '../ContactOwnerLocalTime'
+import { ContactOwnerLocalTime } from './ContactOwnerLocalTime'
 import {
   CONTACT_STATUS_MEANINGS,
   CONTACT_STATUS_ROW_ITEMS,
