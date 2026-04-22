@@ -24,7 +24,7 @@ describe('Header', () => {
     expect(screen.getByText('Mi Sitio')).toBeInTheDocument()
   })
 
-  it('los links por defecto apuntan bien (inicio y sobre mí)', () => {
+  it('los links por defecto apuntan a las secciones del portfolio', () => {
     renderWithMotion(<Header />)
     expect(screen.getByRole('link', { name: /^inicio$/i })).toHaveAttribute(
       'href',
@@ -33,6 +33,14 @@ describe('Header', () => {
     expect(screen.getByRole('link', { name: /sobre mí/i })).toHaveAttribute(
       'href',
       '#sobre-mi'
+    )
+    expect(screen.getByRole('link', { name: /proyectos/i })).toHaveAttribute(
+      'href',
+      '#proyectos'
+    )
+    expect(screen.getByRole('link', { name: /contacto/i })).toHaveAttribute(
+      'href',
+      '#contacto'
     )
   })
 
