@@ -25,12 +25,13 @@ export const NAV_SCROLL_SPY_OBSERVER_OPTIONS: IntersectionObserverInit = {
 
 /**
  * Ítems de navegación por defecto del portfolio. Cada `href` `#…` debe coincidir con el
- * `id` de la sección en la página (p. ej. `#inicio` en `HeroSection`, `#proyectos` en `ProjectsSection`).
+ * `id` de la sección en la página (p. ej. `#inicio`, `#sobre-mi`, `#proyectos`, `#contacto`).
  */
 export const DEFAULT_NAV_ITEMS: ReadonlyArray<NavItem> = [
   { href: '#inicio', label: 'Inicio' },
   { href: '#sobre-mi', label: 'Sobre mí' },
   { href: '#proyectos', label: 'Proyectos' },
+  { href: '#contacto', label: 'Contacto' },
 ]
 
 /** Spring compartido para las líneas del botón hamburguesa */
