@@ -77,6 +77,15 @@ export const LAYOUT = {
 
   grid: {
     /**
+     * @use Hero sections, formularios centrados, contenido de lectura larga,
+     *      layouts de una sola columna en móvil y desktop.
+     * @remarks
+     * Útil como base explícita cuando se necesita un grid de una columna
+     * con gap consistente, en lugar de un simple `flex-col`.
+     */
+    cols1: 'grid grid-cols-1 gap-4',
+
+    /**
      * @use Testimonios, pricing, comparativas de dos columnas.
      * @warning El gap aumenta a `gap-5` en md — intencional para evitar que
      *          cards con contenido denso queden demasiado juntas.

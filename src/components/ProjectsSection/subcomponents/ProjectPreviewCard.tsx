@@ -76,7 +76,7 @@ export function ProjectPreviewCard({
   })
 
   function handleCardClick(e: MouseEvent<HTMLDivElement>) {
-    if (!canExpand) return
+    if (!canExpand || !isActive) return
     if ((e.target as HTMLElement).closest('button')) return
     onRequestLightbox?.(slideIndex)
   }
@@ -112,6 +112,7 @@ export function ProjectPreviewCard({
           )}
           aria-label={`Ver ${title} a pantalla completa`}
           onClick={(e) => {
+            if (!isActive) return
             e.stopPropagation()
             onRequestLightbox?.(slideIndex)
           }}

@@ -250,6 +250,11 @@
   --z-index-60: 60;
   --z-index-70: 70;
   --z-index-80: 80;
+
+  /* ── Breakpoint extra: xs (móvil ancho, antes de `sm` 640px) ──
+     Genera el prefijo `xs:` en clases. Valor y nombre en
+     `src/shared/constants/breakpoints.ts` (`BREAKPOINT_MIN_PX.xs`). */
+  --breakpoint-xs: 375px;
 }
 
 /* ═══════════════════════════════════════════════════════════════

@@ -9,7 +9,7 @@ export function GithubIcon({
   return (
     <svg
       viewBox="0 0 24 24"
-      fill="#ccc"
+      fill="currentColor"
       aria-hidden={ariaHidden}
       className={cn('h-7 w-7', className)}
       {...props}

@@ -3,6 +3,7 @@ import { HeroSection } from '@/components/HeroSection'
 import { Header } from '@/components/Header'
 import { AboutSection } from '@/components/AboutSection'
 import { ProjectsSection } from '@/components/ProjectsSection'
+import { ContactSection } from '@/components/ContactSection'
 import { SmoothScrollRoot } from '@/shared/components/SmoothScrollRoot'
 import { Z } from '@/shared/constants/tokens'
 
@@ -25,6 +26,7 @@ export function App() {
             <HeroSection />
             <AboutSection />
             <ProjectsSection />
+            <ContactSection />
           </main>
         </SmoothScrollRoot>
       </MotionConfig>

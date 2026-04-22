@@ -1,7 +1,7 @@
 import { ANIMATION } from './animation'
 
 const BASE = 'rounded-lg border border-stroke-soft' as const
-const PAD = { sm: 'p-4', md: 'p-6 sm:p-8' } as const
+const PAD = { sm: 'p-4', md: 'p-4 sm:p-6', lg: 'p-6 sm:p-8' } as const
 
 /**
  * Tokens de card: superficies estáticas, interactivas, overlays y layout interno.
@@ -59,7 +59,7 @@ export const CARD = {
      * @use Áreas de apoyo, contexto adicional, secciones secundarias.
      * @nocombine CARD.interactive.* (son mutuamente excluyentes por semántica)
      */
-    subtle: `${BASE} bg-bg-soft ${PAD.sm}`,
+    subtle: `${BASE} bg-bg-weak ${PAD.md}`,
 
     /**
      * @use SkillGroup, ValueCard, contenedores de información sobre fondos neutros.

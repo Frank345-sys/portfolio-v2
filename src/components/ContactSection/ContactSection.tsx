@@ -1,0 +1,55 @@
+import { AnimatedSectionHeading } from '@/shared/components/AnimatedSectionHeading'
+import { LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
+import { ContactLinkCards } from './subcomponents/ContactLinkCards'
+import { ProfileAside } from './subcomponents/ProfileAside'
+import { CONTACT_EMAIL_HREF } from './constants'
+
+/**
+ * Sección de contacto: copy, `nav` de enlaces y `aside` con disponibilidad y metadatos.
+ *
+ * @example
+ * ```tsx
+ * <ContactSection />
+ * ```
+ */
+export function ContactSection() {
+  return (
+    <section
+      id="contacto"
+      aria-labelledby="contact-section-heading"
+      className={cn(LAYOUT.container.full, LAYOUT.section.default)}
+    >
+      <div
+        className={cn(LAYOUT.container.narrow, LAYOUT.spacing.large, LAYOUT.px)}
+      >
+        <AnimatedSectionHeading
+          overline="Hablemos"
+          title="Sobre tu"
+          titleHighlight="próximo proyecto"
+          titleId="contact-section-heading"
+        />
+
+        <div className="grid min-h-0 items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_400px] xl:gap-8">
+          <div
+            className={cn(
+              'flex h-full min-h-0 flex-col',
+              LAYOUT.spacing.default
+            )}
+          >
+            <p className={cn(TYPOGRAPHY.paragraph.lead, LAYOUT.prose.lg)}>
+              Si buscas un perfil frontend con enfoque en React, TypeScript y
+              interfaces accesibles, puedes revisar mi trabajo en GitHub o
+              escribirme por LinkedIn, WhatsApp
+              {CONTACT_EMAIL_HREF ? ' o correo' : ''}.
+            </p>
+
+            <ContactLinkCards />
+          </div>
+
+          <ProfileAside />
+        </div>
+      </div>
+    </section>
+  )
+}
