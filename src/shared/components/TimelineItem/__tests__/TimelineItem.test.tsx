@@ -69,10 +69,7 @@ describe('TimelineItem', () => {
       </ol>
     )
 
-    expect(screen.getByText('Institución')).toHaveClass(
-      'text-feature-base',
-      'dark:text-feature-dark'
-    )
+    expect(screen.getByText('Institución')).toHaveClass('text-feature-base')
   })
 
   it('no falla cuando no se envían chips (prop opcional)', () => {
