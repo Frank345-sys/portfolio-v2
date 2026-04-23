@@ -8,6 +8,7 @@ import type {
 import { SKILL_TAG_VARIANT } from './types'
 import { TIMELINE_CHIP_VARIANT } from '@/shared/constants/enums'
 import { SKILL_LABEL } from '@/shared/constants/skills'
+import { SITE_PROFILE, SITE_TAGLINE } from '@/shared/constants/siteProfile'
 
 /** Datos del hero (nombre, badge, ubicación, tagline, avatar) — consumidos en `AboutHero`. */
 export interface AboutHeroData {
@@ -22,13 +23,12 @@ export interface AboutHeroData {
 }
 
 export const ABOUT_HERO: AboutHeroData = {
-  firstName: 'Frank',
-  lastName: 'González',
-  badge: 'Frontend Developer',
+  firstName: SITE_PROFILE.firstName,
+  lastName: SITE_PROFILE.lastName,
+  badge: SITE_PROFILE.role,
   location: '📍Puebla, México',
-  tagline:
-    'Construyo interfaces que no solo se ven bien — se sienten bien. Especializado en **React.js**, **TypeScript** y **Next.js**, con enfoque en componentes escalables, performance y UI/UX de calidad.',
-  avatarInitials: 'FG',
+  tagline: `${SITE_TAGLINE} Especializado en **React.js**, **TypeScript** y **Next.js**, con enfoque en componentes escalables, performance y UI/UX de calidad.`,
+  avatarInitials: SITE_PROFILE.initials,
 }
 
 /** Un párrafo de la bio (quién soy) con clave estable para listas React. */
@@ -43,8 +43,12 @@ export interface AboutBioParagraph {
  */
 export const ABOUT_BIO: readonly AboutBioParagraph[] = [
   {
+    id: 'about-bio-tagline',
+    text: SITE_TAGLINE,
+  },
+  {
     id: 'about-bio-intro',
-    text: 'Soy **Francisco Omar Habib González Utrera**, Ingeniero en Sistemas Computacionales, con más de 1 año de experiencia como **Frontend Developer** desarrollando landing pages, soluciones e-commerce y plataformas web de alto impacto.',
+    text: `Soy **Francisco Omar Habib González Utrera**, Ingeniero en Sistemas Computacionales, con más de 1 año de experiencia como **${SITE_PROFILE.role}** desarrollando landing pages, soluciones e-commerce y plataformas web de alto impacto.`,
   },
   {
     id: 'about-bio-specialization',
@@ -172,7 +176,7 @@ export const ABOUT_SKILLS: SkillGroup[] = [
 export const ABOUT_EXPERIENCE: ExpItem[] = [
   {
     period: 'Sep 2024 — Feb 2026',
-    heading: 'Frontend Developer',
+    heading: SITE_PROFILE.role,
     company: 'B Life Suplementos Fitness · Puebla, MX',
     description:
       'Desarrollo en e-commerce, plataforma B2B, ERP interno y landing pages. Creación de componentes reutilizables con React, refactorización de código legacy, optimización de performance y mejora de UI/UX colaborando con equipos de Back-End.',
