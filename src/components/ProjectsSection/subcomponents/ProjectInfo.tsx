@@ -29,7 +29,7 @@ function ProjectLink({ href, label }: ProjectLinkProps) {
       whileHover={{ x: 4 }}
       className={cn(
         TYPOGRAPHY.link.plain,
-        'group inline-flex w-fit items-center gap-2 text-sm font-semibold'
+        'group dark:text-information-dark inline-flex w-fit items-center gap-2 text-sm font-semibold'
       )}
     >
       {label}
@@ -118,7 +118,7 @@ export function ProjectInfo({
           <span
             className={cn(
               TYPOGRAPHY.paragraph.small,
-              'text-information-base font-mono tracking-[0.3em] uppercase'
+              'text-information-base dark:text-information-dark font-mono tracking-[0.3em] uppercase'
             )}
           >
             {String(project.id).padStart(2, '0')} /{' '}
@@ -139,7 +139,7 @@ export function ProjectInfo({
             <p
               className={cn(
                 TYPOGRAPHY.title.small,
-                'text-information-base mb-2.5 font-mono tracking-widest'
+                'text-information-base dark:text-information-dark mb-2.5 font-mono tracking-widest'
               )}
             >
               {project.subtitle}
@@ -148,7 +148,7 @@ export function ProjectInfo({
           </div>
 
           {/* Descripción */}
-          <p className={TYPOGRAPHY.paragraph.secondary}>
+          <p className={cn(TYPOGRAPHY.paragraph.secondary, 'text-text-strong')}>
             {project.description}
           </p>
 
@@ -162,7 +162,7 @@ export function ProjectInfo({
                 transition={{ delay: 0.1 + i * 0.06, duration: 0.35 }}
                 className={cn(
                   TYPOGRAPHY.paragraph.small,
-                  'flex items-center gap-3'
+                  'text-text-strong flex items-center gap-3'
                 )}
               >
                 <span
