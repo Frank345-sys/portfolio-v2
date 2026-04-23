@@ -6,7 +6,10 @@ import type { Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import { CONTACT_PROFILE } from './src/components/ContactSection/constants'
+import {
+  CONTACT_EMAIL_TRIMMED,
+  CONTACT_PROFILE,
+} from './src/components/ContactSection/constants'
 import {
   SITE_DISPLAY_NAME,
   SITE_JSONLD_DESCRIPTION,
@@ -16,6 +19,12 @@ import {
   SITE_PROFILE,
 } from './src/shared/constants/siteProfile'
 
+/**
+ * robots.txt, sitemap.xml y security.txt en el artefacto de build.
+ * GitHub Pages no expone cabeceras HTTP propias del repo (CSP, X-Frame-Options, etc.);
+ * herramientas que solo miran la respuesta HTTP seguirán en rojo salvo CDN/proxy
+ * (p. ej. dominio propio + Cloudflare) o otro hosting con `_headers` / edge config.
+ */
 function writeSeoFilesPlugin(siteUrl: string): Plugin {
   const origin = siteUrl.replace(/\/$/, '')
   let outDir = 'build'
@@ -43,6 +52,18 @@ function writeSeoFilesPlugin(siteUrl: string): Plugin {
 </urlset>
 `
       fs.writeFileSync(path.join(dir, 'sitemap.xml'), sitemap, 'utf8')
+
+      const wellKnown = path.join(dir, '.well-known')
+      fs.mkdirSync(wellKnown, { recursive: true })
+      const contactLine = CONTACT_EMAIL_TRIMMED
+        ? `Contact: mailto:${CONTACT_EMAIL_TRIMMED}\n`
+        : `Contact: ${CONTACT_PROFILE.githubHref}\n`
+      const securityTxt = `${contactLine}Expires: 2027-04-22T23:59:00.000Z\nPreferred-Languages: es, en\nCanonical: ${origin}/.well-known/security.txt\n`
+      fs.writeFileSync(
+        path.join(wellKnown, 'security.txt'),
+        securityTxt,
+        'utf8'
+      )
     },
   }
 }
@@ -72,7 +93,17 @@ function injectSiteProfileHtmlPlugin(siteUrl: string): Plugin {
         ],
         description: SITE_JSONLD_DESCRIPTION,
       }
+      const securityMeta = `    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta
+      http-equiv="Permissions-Policy"
+      content="camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    />
+`
       return html
+        .replace(
+          '<meta name="viewport" content="width=device-width, initial-scale=1.0" />',
+          `<meta name="viewport" content="width=device-width, initial-scale=1.0" />\n\n${securityMeta}`
+        )
         .replaceAll('@@SITE_PAGE_TITLE@@', SITE_PAGE_TITLE)
         .replaceAll('@@SITE_META_DESCRIPTION@@', SITE_META_DESCRIPTION)
         .replaceAll(

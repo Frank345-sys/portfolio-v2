@@ -33,3 +33,7 @@ dist-ssr
 
 # Test coverage
 coverage/
+
+# Lighthouse CLI (npm run lighthouse:pages)
+lighthouse-report.html
+.lighthouse-tmp/

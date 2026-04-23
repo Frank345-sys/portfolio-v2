@@ -82,7 +82,7 @@ export const TYPOGRAPHY = {
     small: `${SIZE.xs} ${BASE.paragraph}`,
 
     /** @use Texto muted — notas al pie, aclaraciones, contenido de muy bajo énfasis. */
-    muted: `${SIZE.sm} text-text-soft ${BASE.paragraph}`,
+    muted: `${SIZE.sm} text-text-subtle ${BASE.paragraph}`,
   },
 
   // Labels genéricos de UI. Para labels de formulario usar INPUT.label.*
@@ -97,7 +97,8 @@ export const TYPOGRAPHY = {
     small: `text-xs ${BASE.label}`,
 
     /** @use Overline — categoría en mayúsculas sobre un título, etiqueta de sección. */
-    overline: 'text-xs font-semibold uppercase tracking-widest text-text-soft',
+    overline:
+      'text-xs font-semibold uppercase tracking-widest text-text-subtle',
   },
 
   // Links inline. Para links autónomos con ícono usar BUTTON.special.link
@@ -124,7 +125,7 @@ export const TYPOGRAPHY = {
      * @use Links del footer — tamaño reducido, color muy sutil.
      * @nocombine BUTTON.special.link (son para contextos distintos)
      */
-    footer: `text-text-soft hover:text-text-subtle text-sm ${BASE.link}`,
+    footer: `text-text-subtle hover:text-text-strong text-sm ${BASE.link}`,
   },
 
   special: {
@@ -132,7 +133,7 @@ export const TYPOGRAPHY = {
     emphasis: 'text-text-strong font-medium',
 
     /** @use `<figcaption>` o `<caption>` — descripción de imágenes, gráficos y tablas. */
-    caption: `${SIZE.xs} text-text-soft italic`,
+    caption: `${SIZE.xs} text-text-subtle italic`,
 
     /** @use Código inline dentro de texto — variables, nombres de función, comandos cortos. */
     code: 'text-sm font-mono bg-bg-soft text-text-strong px-1.5 py-0.5 rounded',

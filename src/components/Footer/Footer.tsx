@@ -59,7 +59,7 @@ export function Footer() {
             <p
               className={cn(
                 TYPOGRAPHY.paragraph.small,
-                'text-text-soft font-medium'
+                'text-text-subtle font-medium'
               )}
             >
               {FOOTER_BRAND.role}

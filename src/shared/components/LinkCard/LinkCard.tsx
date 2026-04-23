@@ -22,8 +22,9 @@ export interface LinkCardProps {
    */
   external?: boolean
   /**
-   * Anula el `aria-label` del enlace. Si `external` es true y no se pasa,
-   * se usa: `{title} (abre en nueva pestaña)`.
+   * Anula el nombre accesible del enlace. Si no se pasa, el nombre se calcula
+   * del título, subtítulo y (si `external`) un aviso de nueva pestaña en
+   * `sr-only` para cumplir 2.5.3 (etiqueta en el nombre accesible).
    */
   ariaLabel?: string
   className?: string
@@ -59,14 +60,14 @@ export function LinkCard({
   ariaLabel,
   className,
 }: LinkCardProps) {
-  const resolvedAriaLabel =
-    ariaLabel ?? (external ? `${title} (abre en nueva pestaña)` : undefined)
+  const hasExplicitAria =
+    ariaLabel != null && String(ariaLabel).trim().length > 0
 
   return (
     <a
       href={href}
       {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-      {...(resolvedAriaLabel ? { 'aria-label': resolvedAriaLabel } : {})}
+      {...(hasExplicitAria ? { 'aria-label': ariaLabel } : {})}
       className={cn(
         'group hover:border-information-base hover:bg-information-lighter flex items-center justify-between',
         CARD.interactive.weak,
@@ -87,7 +88,12 @@ export function LinkCard({
         <div>
           <p className={TYPOGRAPHY.title.xxsmall}>{title}</p>
           {subtitle ? (
-            <p className={cn(TYPOGRAPHY.paragraph.small, 'font-mono')}>
+            <p
+              className={cn(
+                TYPOGRAPHY.paragraph.small,
+                'text-text-subtle font-mono'
+              )}
+            >
               {subtitle}
             </p>
           ) : null}
@@ -102,6 +108,9 @@ export function LinkCard({
       >
         🔗
       </span>
+      {external && !hasExplicitAria ? (
+        <span className="sr-only">, abre en una nueva pestaña</span>
+      ) : null}
     </a>
   )
 }

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://frankgonzalez.dev/sitemap.xml
+Sitemap: https://frank345-sys.github.io/portfolio-v2/sitemap.xml

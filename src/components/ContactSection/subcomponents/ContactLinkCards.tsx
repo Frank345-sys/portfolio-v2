@@ -7,11 +7,7 @@ import {
   WhatsappIcon,
 } from '@/shared/icons'
 import { LAYOUT } from '@/shared/constants/tokens'
-import {
-  CONTACT_EMAIL_HREF,
-  CONTACT_EMAIL_TRIMMED,
-  CONTACT_PROFILE,
-} from '../constants'
+import { CONTACT_EMAIL_HREF, CONTACT_PROFILE } from '../constants'
 
 const CONTACT_LINK_ICON_CLASS = 'text-text-strong group-hover:text-text-white'
 
@@ -73,7 +69,6 @@ export function ContactLinkCards() {
           subtitle="Correo electrónico"
           icon={<MailIcon className={CONTACT_LINK_ICON_CLASS} aria-hidden />}
           external={false}
-          ariaLabel={`Enviar correo a ${CONTACT_EMAIL_TRIMMED}`}
         />
       ) : null}
     </nav>
