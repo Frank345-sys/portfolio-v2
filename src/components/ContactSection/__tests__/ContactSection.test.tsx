@@ -4,7 +4,6 @@ import { screen, within } from '@testing-library/react'
 import { ContactSection } from '../ContactSection'
 import {
   CONTACT_EMAIL_HREF,
-  CONTACT_EMAIL_TRIMMED,
   CONTACT_PROFILE,
   CONTACT_STATUS_ROWS,
   CONTACT_TIMEZONE_LINE,
@@ -68,12 +67,13 @@ describe('ContactSection', () => {
     expect(whatsapp).toHaveAttribute('href', CONTACT_PROFILE.whatsAppHref)
   })
 
-  it('muestra tarjeta de correo con mailto y etiqueta accesible', () => {
+  it('muestra tarjeta de correo con mailto y nombre accesible alineado al texto visible', () => {
     renderWithMotion(<ContactSection />)
 
-    const mail = screen.getByRole('link', {
-      name: `Enviar correo a ${CONTACT_EMAIL_TRIMMED}`,
+    const contactNav = screen.getByRole('navigation', {
+      name: /enlaces de contacto y perfiles en redes/i,
     })
+    const mail = within(contactNav).getByRole('link', { name: /correo/i })
     expect(mail).toHaveAttribute('href', CONTACT_EMAIL_HREF)
     expect(mail).not.toHaveAttribute('target', '_blank')
   })

@@ -70,7 +70,7 @@ export function ContactOwnerLocalTime({
 
   return (
     <p className={cn(TYPOGRAPHY.paragraph.small, 'mt-1', className)}>
-      <span className="text-text-soft">Hora en mi localidad: </span>
+      <span className="text-text-subtle">Hora en mi localidad: </span>
       {timeEl}
     </p>
   )

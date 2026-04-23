@@ -4,15 +4,18 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-04-23
+
 ### Añadido
 
 - Generación de `.well-known/security.txt` en el build (contacto y URL canónica según `VITE_PUBLIC_SITE_URL`).
 - Metas de política en documento: `referrer` y `Permissions-Policy` (complemento a cabeceras HTTP; no sustituyen CSP ni X-Frame-Options en el servidor).
-- Script `lighthouse:pages` para auditar rendimiento, SEO, accesibilidad y buenas prácticas contra la URL publicada en GitHub Pages; `lighthouse-report.html` ignorado por git.
+- Script `lighthouse:pages` (Node) para auditar rendimiento, SEO, accesibilidad y buenas prácticas contra la URL publicada en GitHub Pages; resuelve Chrome/Edge con `CHROME_PATH`, directorio temporal bajo `.lighthouse-tmp/`, `--headless=new` y, si el HTML se generó pero `chrome-launcher` falla al borrar (EPERM en Windows), el proceso sale 0 con aviso. `lighthouse-report.html` y `.lighthouse-tmp/` ignorados por git.
 
 ### Cambiado
 
 - `public/robots.txt` y `public/sitemap.xml` alineados con la URL actual de GitHub Pages (el build sigue sobrescribiendo ambos según el modo y `.env`).
+- Accesibilidad: `LinkCard` alinea el nombre accesible con título, subtítulo y aviso de nueva pestaña vía `sr-only` (WCAG 2.5.3); subtítulos con `text-text-subtle`; reemplazo de `text-text-soft` por `text-text-subtle` en tokens (p. ej. overline, muted, caption) y en pie, prefijo de hora local y tarjeta de correo (sin `aria-label` de mailto duplicado).
 
 ## [1.3.0] - 2026-04-21
 

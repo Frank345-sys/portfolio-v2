@@ -1,7 +1,7 @@
 {
   "name": "portfolio-v2",
   "private": true,
-  "version": "1.3.0",
+  "version": "1.4.0",
   "type": "module",
   "engines": {
     "node": ">=20.0.0"
@@ -27,7 +27,7 @@
     "deploy:pages": "npm run build:github && gh-pages -d build",
     "deploy": "npm run build && gh-pages -d build",
     "preview:build": "vite preview --outDir build",
-    "lighthouse:pages": "npx --yes lighthouse@12.8.2 https://frank345-sys.github.io/portfolio-v2/ --preset=desktop --only-categories=performance,seo,best-practices,accessibility --quiet --output=html --output-path=lighthouse-report.html"
+    "lighthouse:pages": "node scripts/lighthouse-pages.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

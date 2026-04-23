@@ -14,7 +14,7 @@ describe('LinkCard', () => {
     )
 
     const link = screen.getByRole('link', {
-      name: /mi certificado \(abre en nueva pestaña\)/i,
+      name: /mi certificado.*abre en una nueva pestaña/i,
     })
     expect(link).toHaveAttribute('href', 'https://example.com/cert')
     expect(link).toHaveAttribute('target', '_blank')
