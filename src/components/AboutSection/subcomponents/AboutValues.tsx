@@ -19,7 +19,9 @@ function ValueCard({ name, desc, detail }: ValueItem) {
           </p>
         </div>
       </div>
-      <p className={TYPOGRAPHY.paragraph.secondary}>{detail}</p>
+      <p className={cn(TYPOGRAPHY.paragraph.secondary, 'text-text-strong')}>
+        {detail}
+      </p>
     </div>
   )
 }
