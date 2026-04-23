@@ -4,7 +4,12 @@
  *
  * @module components/Header/styles
  */
-import { TYPOGRAPHY, LAYOUT } from '@/shared/constants/tokens'
+import {
+  BRAND,
+  TYPOGRAPHY,
+  LAYOUT,
+  PRIMARY_NAV_LINK,
+} from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
 /** Fila principal del header: distribución, padding vertical y {@link LAYOUT.px}. */
@@ -20,13 +25,13 @@ export const logoLink = cn(
 )
 
 /** Tamaño del icono junto al nombre del sitio. */
-export const logoIcon = 'h-7 w-7 md:h-10 md:w-10'
+export const logoIcon = BRAND.logoIcon
 
 /** Texto del nombre del sitio junto al icono. */
 export const logoText = cn(TYPOGRAPHY.label.default, 'tracking-tight')
 
-/** Enlaces de navegación desktop (tipografía nav + cuerpo pequeño). */
-export const navLink = cn(TYPOGRAPHY.link.nav, TYPOGRAPHY.paragraph.small)
+/** Enlaces de navegación desktop (misma base que {@link PRIMARY_NAV_LINK}). */
+export const navLink = PRIMARY_NAV_LINK
 
 /** Estado activo del scroll-spy (misma base que {@link navLink}). */
 export const navLinkActive = 'text-information-base font-medium'

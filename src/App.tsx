@@ -4,6 +4,7 @@ import { Header } from '@/components/Header'
 import { AboutSection } from '@/components/AboutSection'
 import { ProjectsSection } from '@/components/ProjectsSection'
 import { ContactSection } from '@/components/ContactSection'
+import { Footer } from '@/components/Footer'
 import { SmoothScrollRoot } from '@/shared/components/SmoothScrollRoot'
 import { Z } from '@/shared/constants/tokens'
 
@@ -28,6 +29,7 @@ export function App() {
             <ProjectsSection />
             <ContactSection />
           </main>
+          <Footer />
         </SmoothScrollRoot>
       </MotionConfig>
     </LazyMotion>

@@ -1,4 +1,5 @@
 import { ANIMATION } from './animation'
+import { cn } from '@/shared/utils/cn'
 
 const BASE = {
   title: 'text-text-strong leading-tight tracking-tight',
@@ -26,6 +27,7 @@ const SIZE = {
  *
  * Links:
  * - Texto inline con estilo de enlace (párrafos, nav) → `TYPOGRAPHY.link.*`
+ * - Ítems de nav principal (header, drawer, pie)       → `PRIMARY_NAV_LINK`
  * - Link autónomo con ícono (`inline-flex`, `gap`)    → `BUTTON.special.link`
  *
  * Labels:
@@ -142,6 +144,16 @@ export const TYPOGRAPHY = {
     stat: 'text-xl sm:text-2xl md:text-3xl font-bold text-text-strong tabular-nums leading-tight',
   },
 } as const
+
+/**
+ * Enlace de ítems de navegación principal — misma base en cabecera (desktop + drawer) y pie.
+ *
+ * @combine `FOOTER_FOCUS_VISIBLE` u otras utilidades de foco según el fondo del bloque.
+ */
+export const PRIMARY_NAV_LINK = cn(
+  TYPOGRAPHY.link.nav,
+  TYPOGRAPHY.paragraph.small
+)
 
 export type TypographyCategory = keyof typeof TYPOGRAPHY
 export type TypographyVariant<C extends TypographyCategory> =

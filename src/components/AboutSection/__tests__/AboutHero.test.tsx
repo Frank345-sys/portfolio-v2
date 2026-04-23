@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, it, expect } from 'vitest'
 import { screen } from '@testing-library/react'
 import { renderWithMotion } from '@/test/renderWithMotion'
 import { AboutHero } from '../subcomponents/AboutHero'
+import { SITE_PROFILE } from '@/shared/constants/siteProfile'
 import { ABOUT_HERO } from '../constants'
 
 const IOReserve = globalThis.IntersectionObserver
@@ -27,15 +28,20 @@ describe('AboutHero', () => {
       renderWithMotion(<AboutHero />)
       expect(screen.getByText(/sobre mí/i)).toBeInTheDocument()
       expect(
-        screen.getByRole('heading', { name: /Frank González/i })
+        screen.getByRole('heading', {
+          name: new RegExp(
+            `^${ABOUT_HERO.firstName}\\s+${ABOUT_HERO.lastName}$`,
+            'i'
+          ),
+        })
       ).toBeInTheDocument()
     })
 
     it('renderiza badge, ubicación y tagline con términos resaltados', () => {
       renderWithMotion(<AboutHero />)
-      expect(screen.getAllByText(/Frontend Developer/i).length).toBeGreaterThan(
-        0
-      )
+      expect(
+        screen.getAllByText(SITE_PROFILE.role, { exact: true }).length
+      ).toBeGreaterThan(0)
       expect(screen.getByText(/Puebla, México/i)).toBeInTheDocument()
       expect(screen.getByText('TypeScript').tagName).toBe('STRONG')
       expect(screen.getByText('Next.js').tagName).toBe('STRONG')
