@@ -4,9 +4,10 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ## [Unreleased]
 
-### Arreglado
+### Añadido
 
-- Accesibilidad: en modo oscuro, acentos informativo y _feature_ legibles en superficies oscuras — `AboutValues` (código `desc` con `dark:text-information-dark`) y `TimelineItem` (empresa: `dark:text-information-dark` / `dark:text-feature-dark` según acento) evitando `text-*-base` sin variante en oscuro (Lighthouse `color-contrast`).
+- Build: `@vheemstra/vite-plugin-imagemin` para comprimir PNG en `public/images/projects/`; plugin interno con **sharp** que genera `*-600.webp` y `*-1200.webp` en el directorio de salida. `getProjectImageAttributes` + `ImageCarousel` / `ProgressiveImage` con `srcSet` y `sizes` en producción; `sizes` distinto para card vs lightbox (layout real bajo `max-w-7xl` y tope 1080px del modal).
+- Code-splitting: secciones bajo el pliegue (`About`, `Proyectos`, `Contacto`, `Footer`) con `React.lazy` y `Suspense`.
 
 ## [1.4.1] - 2026-04-24
 
