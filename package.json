@@ -26,7 +26,8 @@
     "build:github": "tsc -b && vite build --mode github",
     "deploy:pages": "npm run build:github && gh-pages -d build",
     "deploy": "npm run build && gh-pages -d build",
-    "preview:build": "vite preview --outDir build"
+    "preview:build": "vite preview --outDir build",
+    "lighthouse:pages": "npx --yes lighthouse@12.8.2 https://frank345-sys.github.io/portfolio-v2/ --preset=desktop --only-categories=performance,seo,best-practices,accessibility --quiet --output=html --output-path=lighthouse-report.html"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
