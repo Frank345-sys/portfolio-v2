@@ -1,401 +1,221 @@
-# Sistema de Design Tokens
+# Sistema de design tokens
 
-Tokens de diseño para el portfolio: tipografía, layout, botones, badges, animaciones, cards y z-index. Los colores semánticos y la escala de sombras `shadow-elevation-*` se definen en `src/index.css` (Tailwind v4 `@theme`); los archivos en esta carpeta exponen clases y composiciones para usar en componentes.
+Tokens de diseño del portfolio: tipografía, layout, botones, badges, animaciones, cards, marca y z-index. Los **colores semánticos** y la escala **`shadow-elevation-*`** se definen en `src/index.css` (Tailwind v4: `@import 'tailwindcss'`, `@theme`, bloque **`.dark`**). Esta carpeta exporta **strings de clases** para componer en componentes.
 
-## Estructura
-
-```
-src/
-  shared/
-    constants/
-      tokens/
-        animation.ts   # Transiciones, hover, fade, scroll, loading, stagger
-        badge.ts       # Badges, pills, chips, estado
-        button.ts      # Contained / outlined / text + special (CTA, icon, link)
-        card.ts        # Superficies de card (surface, interactive, overlay, layout)
-        layout.ts      # px, container, section, spacing, grid, prose, divider
-        typography.ts  # Títulos, párrafos, labels, links, special
-        z.ts           # Z.base … toast (backdrop, modal, header, drawerElevated, etc.)
-        index.ts       # Re-export de todo
-```
-
-La **fuente de verdad de colores** está en `src/index.css`: `:root` (primitivos), `@theme` (semánticos light) y `.dark` (override dark mode). No usar tokens base (`--color-gray-*`) en componentes; usar siempre las clases semánticas (`text-text-*`, `bg-bg-*`, `border-stroke-*`).
+**Re-export:** solo desde `@/shared/constants/tokens` (vía `index.ts`), no importar archivos sueltos salvo mantenimiento.
 
 ---
 
-## Instalación / Uso
+## Estructura de archivos
 
-Importar desde `@/shared/constants/tokens`. Combinar tokens con `cn()` (tailwind-merge + clsx):
+```
+tokens/
+  animation.ts    # Transiciones, hover, fade, scroll, loading, stagger
+  badge.ts        # Badges, pills, chips, estado, dots
+  brand.ts        # BRAND.logoIcon (cabecera / pie)
+  button.ts       # Contained / outlined / text + special (CTA, icon, link)
+  card.ts         # Superficies (surface, interactive, overlay, layout)
+  layout.ts       # Container, section, spacing, grid, prose, divider
+  typography.ts   # TYPOGRAPHY + PRIMARY_NAV_LINK (nav principal)
+  z.ts            # Z.base … Z.toast (capas del UI)
+  index.ts        # export * de los anteriores (no hay módulo INPUT)
+```
+
+No existe `input.ts`: el portfolio no usa formularios con tokens de campo; para etiquetas de UI genéricas usar **`TYPOGRAPHY.label.*`**.
+
+La **fuente de verdad de color** sigue siendo **`src/index.css`**: primitivos en `:root`, semánticos en `@theme`, overrides en el bloque **`.dark`**. **En componentes** no usar primitivos (`gray-*`, `blue-*` sueltos); usar clases semánticas (`text-text-*`, `bg-bg-*`, …).
+
+---
+
+## Uso con `cn()`
 
 ```tsx
-import { TYPOGRAPHY, LAYOUT, BUTTON, CARD } from '@/shared/constants/tokens'
+import { TYPOGRAPHY, LAYOUT, BUTTON } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
-export function Hero() {
+export function Bloque() {
   return (
-    <section className={LAYOUT.section.hero}>
-      <div className={cn(LAYOUT.container.narrow, LAYOUT.px)}>
-        <h1 className={TYPOGRAPHY.title.hero}>Tu nombre</h1>
-        <p className={TYPOGRAPHY.paragraph.lead}>Descripción</p>
-        <div className={BUTTON.group.horizontal}>
-          <a
-            href="/Francisco_Gonzalez_Frontend_Developer_2026.pdf"
-            className={BUTTON.special.cta}
-          >
-            Descargar CV
-          </a>
-          <button
-            className={cn(BUTTON.variant.outlined.primary, BUTTON.size.lg)}
-          >
-            Ver más
-          </button>
-        </div>
+    <section className={LAYOUT.section.default}>
+      <div className={cn(LAYOUT.container.full, LAYOUT.px)}>
+        <h2 className={TYPOGRAPHY.title.section}>Título</h2>
+        <p className={cn(TYPOGRAPHY.paragraph.secondary, 'text-text-strong')}>
+          Cuerpo con contraste reforzado (p. ej. auditoría a11y / fondos bajos).
+        </p>
+        <a href="#contacto" className={BUTTON.special.cta}>
+          Contacto
+        </a>
       </div>
     </section>
   )
 }
 ```
 
+Los tokens de **párrafo** (`paragraph.secondary`, `paragraph.small`, …) aportan tamaño y `leading-relaxed`; el color del texto a menudo **se hereda** del contexto. Si el contraste no alcanza WCAG (p. ej. texto secundario sobre `bg-bg-weak`), añade **`text-text-strong`** o **`text-text-subtle`** con `cn()` según el diseño, o variantes informativas en oscuro (p. ej. **`dark:text-information-dark`**) para enlaces/acentos azules.
+
+---
+
+## BRAND
+
+| Token            | Uso                                                                   |
+| ---------------- | --------------------------------------------------------------------- |
+| `BRAND.logoIcon` | Tamaño del icono junto al nombre (header y enlace de marca en footer) |
+
 ---
 
 ## CARD
 
-Las cards se gestionan exclusivamente en `card.ts`. **No existen tokens de card en `LAYOUT`.**
+Gestionado en `card.ts` únicamente. **No** hay tokens de card dentro de `LAYOUT`.
 
 ### Categorías
 
-| Token                | Cuándo usar                                                  |
-| -------------------- | ------------------------------------------------------------ |
-| `CARD.surface.*`     | Contenedores estáticos: info, stats, grupos, paneles         |
-| `CARD.interactive.*` | Solo en `<a>` o `<button>` — tienen `cursor-pointer` y hover |
-| `CARD.overlay.*`     | Drawers, tooltips con cuerpo, modales pequeños, sidebars     |
-| `CARD.layout.*`      | Partes internas reutilizables: header, body, footer          |
+| Token                | Uso                                                       |
+| -------------------- | --------------------------------------------------------- |
+| `CARD.surface.*`     | Contenedores estáticos                                    |
+| `CARD.interactive.*` | Solo en `<a>`, `<button>` o con rol botón (hover, cursor) |
+| `CARD.overlay.*`     | Drawers, modales, paneles flotantes                       |
+| `CARD.layout.*`      | header / body / footer internos                           |
 
-### Variantes de superficie (`CARD.surface`)
+### `CARD.surface` (resumen)
 
-Regla en código (`card.ts`): **PAD.md** (`p-6 sm:p-8`) en `default` y `elevated`; **PAD.sm** (`p-4`) en `compact`, `subtle`, `weak`, `white`. **Sombra:** solo `elevated` (`shadow-elevation-md`), `weak` y `white` (`shadow-elevation-xs`). `compact` y `subtle` no llevan sombra (superficies de apoyo, no de elevación).
+Regla: **padding amplio** (`p-6 sm:p-8`) en `default` y `elevated`; **padding pequeño** en `compact`, `subtle`, `weak`, `white`. **Sombra:** `elevated` (md), `weak` y `white` (xs); `compact` y `subtle` sin sombra de elevación.
 
-| Token                   | Fondo    | Padding | Sombra | Uso típico                                          |
-| ----------------------- | -------- | ------- | ------ | --------------------------------------------------- |
-| `CARD.surface.default`  | bg-white | md      | —      | Contenido principal — padding generoso (p-6 sm:p-8) |
-| `CARD.surface.elevated` | bg-white | md      | md     | Paneles flotantes, contenido prioritario            |
-| `CARD.surface.compact`  | bg-white | sm      | —      | Listas densas, sidebars, widgets compactos          |
-| `CARD.surface.subtle`   | bg-soft  | sm      | —      | Áreas de apoyo, contexto adicional                  |
-| `CARD.surface.weak`     | bg-weak  | sm      | xs     | SkillGroup, ValueCard, info estática                |
-| `CARD.surface.white`    | bg-white | sm      | xs     | Formularios, listados sobre fondos tenues           |
+| Token                  | Notas                                    |
+| ---------------------- | ---------------------------------------- |
+| `default` / `elevated` | Contenido principal / paneles con sombra |
+| `compact` / `subtle`   | Densos / apoyo                           |
+| `weak` / `white`       | P. ej. skills, valores, formularios      |
 
-### Variantes interactivas (`CARD.interactive`)
+### `CARD.interactive`
 
-⚠️ Usar **solo** en `<a>`, `<button>` o `[role="button"]`. Los `hover:shadow-*` van literales en el string del token (sin componer con otro token de sombra) para variantes de hover explícitas.
+Solo en elementos interactivos. Variantes: `default`, `weak`, `white` (ver `card.ts` para hovers).
 
-| Token                      | Hover                            | Uso típico                   |
-| -------------------------- | -------------------------------- | ---------------------------- |
-| `CARD.interactive.default` | `border-subtle` + sombra xs      | Cards navegables, padding md |
-| `CARD.interactive.weak`    | `border-information` + `bg-soft` | Selección, skill cards       |
-| `CARD.interactive.white`   | `border-subtle` + sombra sm      | Cards de producto, listas    |
+### `CARD.overlay` + **Z**
 
-### Variantes overlay (`CARD.overlay`)
-
-| Token                | Z-index recomendado | Uso                                    |
-| -------------------- | ------------------- | -------------------------------------- |
-| `CARD.overlay.panel` | `Z.drawer`          | Drawers, tooltips con cuerpo, sidebars |
-| `CARD.overlay.modal` | `Z.modal`           | Modales pequeños, popovers, previews   |
-
-El backdrop semitransparente bajo un modal usa **`Z.backdrop`** (`z-40`), no una clase suelta. Ver sección **Z**.
-
-### Estructura interna (`CARD.layout`)
-
-```tsx
-<div className={CARD.surface.weak}>
-  <div className={CARD.layout.header}>
-    <p className={TYPOGRAPHY.title.small}>Título</p>
-    <button>Acción</button>
-  </div>
-  <div className={CARD.layout.body}>...</div>
-  <div className={CARD.layout.footer}>...</div>
-</div>
-```
+Combinar con **`Z.drawer`**, **`Z.modal`**, etc. (ver sección Z). El backdrop de modal usa **`Z.backdrop`**.
 
 ### Dark mode
 
-Automático. Los tokens semánticos (`bg-bg-*`, `stroke-*`) se reasignan solos con la clase `.dark` en el ancestro.
+Automático vía clases semánticas y `.dark` en ancestros; no hace falta lógica por componente.
 
 ---
 
 ## LAYOUT
 
-### Padding horizontal
+- **Containers:** `LAYOUT.px` se combina con `cn()`; los `container.*` no incluyen `px` por defecto.
+- **Contenedores:** `container.wide` | `full` | `narrow` | `tight`.
+- **Prose:** `prose.sm` … `prose.xl` — ancho de lectura.
+- **Secciones:** `section.hero`, `section.default`, …
+- **Spacing:** `spacing.large`, `default`, `compact`, `small` — eje vertical en columnas.
+- **Divider:** `divider.horizontal` / `vertical`.
+- **Grid:** `grid.cols2` | `cols3` | `cols4`.
 
-Los containers **no incluyen `px` por defecto**. Añadir `LAYOUT.px` con `cn()` cuando el contenedor necesita margen lateral. Usar el mismo valor en todos los containers de una misma sección para mantener la alineación.
-
-```tsx
-<div className={cn(LAYOUT.container.full, LAYOUT.px)}>...</div>
-```
-
-### Contenedores
-
-| Token                     | Uso                                    |
-| ------------------------- | -------------------------------------- |
-| `LAYOUT.container.wide`   | Hero, features (max-w-[1400px])        |
-| `LAYOUT.container.full`   | Contenedor principal (max-w-7xl)       |
-| `LAYOUT.container.narrow` | Timelines, textos largos (max-w-5xl)   |
-| `LAYOUT.container.tight`  | Formularios, CTAs aislados (max-w-2xl) |
-
-### Prose (ancho máximo de texto inline, sin `mx-auto`)
-
-| Token             | Uso                                        |
-| ----------------- | ------------------------------------------ |
-| `LAYOUT.prose.sm` | Párrafos cortos, subtítulos (max-w-xl)     |
-| `LAYOUT.prose.md` | Bios, descripciones (max-w-2xl)            |
-| `LAYOUT.prose.lg` | Taglines, cabeceras de sección (max-w-3xl) |
-| `LAYOUT.prose.xl` | Bloques anchos (max-w-4xl)                 |
-
-### Secciones
-
-| Token                    | Uso (resumen)                                  |
-| ------------------------ | ---------------------------------------------- |
-| `LAYOUT.section.hero`    | Respiro vertical amplio — `py-24` → `lg:py-48` |
-| `LAYOUT.section.default` | Sección estándar — `py-20 md:py-22 lg:py-24`   |
-
-### Spacing
-
-Tokens de **separación vertical** (`space-y-*`) en flujo de columna (`flex-col` o bloque).
-
-| Token                    | Cuándo usar                               |
-| ------------------------ | ----------------------------------------- |
-| `LAYOUT.spacing.large`   | Entre sub-bloques de una misma sección    |
-| `LAYOUT.spacing.default` | Entre elementos relacionados              |
-| `LAYOUT.spacing.compact` | Entre elementos muy relacionados          |
-| `LAYOUT.spacing.small`   | Listas densas, chips, items de formulario |
-
-### Divider
-
-| Token                       | Uso                                 |
-| --------------------------- | ----------------------------------- |
-| `LAYOUT.divider.horizontal` | Línea horizontal (`bg-stroke-soft`) |
-| `LAYOUT.divider.vertical`   | Línea vertical                      |
-
-> No hay tokens `LAYOUT.header.*`, `LAYOUT.footer.*` ni `LAYOUT.flex.*` en esta carpeta: header/footer y filas responsive se componen en el componente con utilidades semánticas y, para el z-index del header, **`Z.header`** vía `cn()`.
-
-### Grids
-
-| Token               | Cuándo usar          |
-| ------------------- | -------------------- |
-| `LAYOUT.grid.cols2` | Testimonios, pricing |
-| `LAYOUT.grid.cols3` | Features, cards      |
-| `LAYOUT.grid.cols4` | Logos, iconos        |
+Header, footer y filas responsive se componen en el componente; el **z-index** del header usa **`Z.header`**.
 
 ---
 
 ## TYPOGRAPHY
 
-Usar siempre tokens de tipografía — incluyen color semántico. No usar clases `text-*` sueltas en cuerpo de texto.
+Preferir **siempre** tokens de tipografía en lugar de clases de tamaño sueltas. Los **títulos** incorporan `text-text-strong` vía el `BASE` interno; los **párrafos** base no fijan color: componer con tokens de texto del tema si hace falta.
 
-`paragraph.lead` usa la escala interna `SIZE['lg+']` (`text-lg sm:text-xl md:text-2xl`) más color y `leading-relaxed`, alineado con el resto de párrafos basados en `SIZE.*`.
+| Categoría | Tokens                                                              |
+| --------- | ------------------------------------------------------------------- |
+| Títulos   | `title.hero` … `xxsmall`                                            |
+| Párrafos  | `paragraph.lead`, `large`, `primary`, `secondary`, `muted`, `small` |
+| Labels    | `label.default`, `large`, `small`, `overline`                       |
+| Links     | `link.default`, `plain`, `nav`, `footer`                            |
+| Special   | `special.stat`, `emphasis`, `caption`, `code`, `quote`              |
 
-| Categoría | Tokens                                                                                                                         |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Títulos   | `title.hero`, `section`, `subsection`, `small`, `xsmall`, `xxsmall`                                                            |
-| Párrafos  | `paragraph.lead`, `large`, `primary`, `secondary`, `muted`, `small`                                                            |
-| Labels    | `label.default`, `large`, `small`, `overline` — en formularios reales, añadir `htmlFor`/`id` y estados de error acordes a WCAG |
-| Links     | `link.default`, `plain`, `nav`, `footer`                                                                                       |
-| Special   | `special.stat`, `emphasis`, `caption`, `code`, `quote`                                                                         |
+**`PRIMARY_NAV_LINK`:** encadena `link.nav` + `paragraph.small` — misma base para enlaces de navegación en **desktop**, **drawer móvil** y pie (más utilidades de foco en el componente).
 
-### TYPOGRAPHY.link vs BUTTON.special.link
+### Links: `TYPOGRAPHY.link` vs `BUTTON.special.link`
 
-| Token                 | Estructura    | Cuándo usar                                     |
-| --------------------- | ------------- | ----------------------------------------------- |
-| `TYPOGRAPHY.link.*`   | texto inline  | Enlace dentro de párrafos, nav, footer          |
-| `BUTTON.special.link` | `inline-flex` | Link autónomo con ícono, fuera de texto corrido |
+| Token                 | Estructura          | Uso                                   |
+| --------------------- | ------------------- | ------------------------------------- |
+| `link.*`              | texto inline        | Párrafos, pie, `PRIMARY_NAV_LINK`     |
+| `BUTTON.special.link` | `inline-flex` + gap | CTA con ícono, fuera de texto corrido |
 
 ---
 
 ## BUTTON
 
-El base está embebido en cada variante. Combinar **variante + tamaño** con `cn()`.
-
-```tsx
-<button className={cn(BUTTON.variant.contained.primary, BUTTON.size.md)}>
-  Enviar
-</button>
-```
-
-- **Contained:** `contained.primary`, `success`, `danger`, `warning`, `dark`
-- **Outlined:** `outlined.primary`, `success`, `danger`, `warning`, `neutral`
-- **Text:** `text.primary`, `success`, `danger`, `warning`, `neutral`
-- **Tamaños:** `size.sm`, `md`, `lg`, `xl`, `responsive`
-- **Special:** `special.cta` ⚠️ no combinar con `size.*` — tamaño propio; `special.icon`; `special.link`
-- **Grupos:** `group.horizontal`, `vertical`, `attached`
+Variantes `contained` / `outlined` / `text`, tamaños `sm`…`xl` / `responsive`, especiales `cta` (no mezclar con `size`), `icon`, `link`, y grupos `group.horizontal` / `vertical` / `attached`. Ver `button.ts` para el mapa completo.
 
 ---
 
 ## BADGE
 
-### Composición con size
-
-| Token                      | Combina con `BADGE.size.*` |
-| -------------------------- | -------------------------- |
-| `BADGE.variant.*`          | ✅ Sí                      |
-| `BADGE.status.*`           | ✅ Sí                      |
-| `BADGE.special.pill`       | ❌ No — tamaño propio      |
-| `BADGE.special.chip`       | ❌ No — tamaño propio      |
-| `BADGE.special.chipActive` | ❌ No — tamaño propio      |
-| `BADGE.special.dot`        | ❌ No — tamaño fijo        |
-| `BADGE.special.new`        | ❌ No — posición absoluta  |
-| `BADGE.special.counter`    | ❌ No — dimensión mínima   |
-
-```tsx
-// ✅ Correcto
-<span className={cn(BADGE.variant.primary, BADGE.size.sm)}>Nuevo</span>
-<button className={BADGE.special.chip}>React</button>
-
-// ❌ Incorrecto — conflicto de padding
-<span className={cn(BADGE.special.pill, BADGE.size.lg)}>Tag</span>
-```
-
-- **Variantes:** `primary`, `success`, `error`, `warning`, `feature`, `neutral`, `dark`, `outline`
-- **Status:** `status.online`, `offline`, `busy`, `away`
-- **Special:** `special.pill`, `chip`, `chipActive`, `dot`, `new`, `counter`
-- **Grupos:** `group.horizontal`, `vertical`
-
-⚠️ `BADGE.status.online` usar solo sobre `bg-bg-white`.
+`variant` y `status` combinan con `BADGE.size.*`; `special.pill`, `chip`, `dot`, etc. tienen reglas propias (no mezclar con tamaño salvo `variant`/`status`). `BADGE.status.online` sobre `bg-bg-white`. Ver comentarios en `badge.ts`.
 
 ---
 
 ## ANIMATION
 
-- **Transiciones:** `transition.default`, `fast`, `slow`, `colors`, `opacity`, `transform`, `shadow`
-- **Hover:** `hover.lift`, `scale`, `glow`, `underline`
-- **Fade:** `fade.in`, `inFromTop`, `inFromBottom`, `inFromLeft`, `inFromRight`, `out`
-- **Slide:** `slide.fromTop`, `fromBottom`, `fromLeft`, `fromRight`
-- **Stagger:** `stagger.child1`…`child5` — aplicar a hijos consecutivos en orden DOM. Escala lineal: `0 / 75 / 150 / 225 / 300ms`. ⚠️ **Máximo 5 hijos**; en listas más largas aplicar retraso por índice en JS (p. ej. `transitionDelay` en ms = índice × 75). El `delay-*` solo tiene efecto si el elemento tiene transición o animación activa.
-- **Scroll:** `scroll.reveal` + `scroll.visible` — requieren Intersection Observer
-- **Loading:** `loading.skeleton` (clase global `.u-skeleton-shimmer` + `rounded`; combinar con dimensiones explícitas), `loading.spinner`
-
-```tsx
-// Stagger — delays escalonados en hijos (cada uno ya incluye transition-all)
-<ul>
-  <li className={ANIMATION.stagger.child1}>Item 1</li>
-  <li className={ANIMATION.stagger.child2}>Item 2</li>
-</ul>
-
-// Scroll reveal — requiere Intersection Observer
-<div ref={ref} className={ANIMATION.scroll.reveal}>...</div>
-// En el observer: entry.target.classList.add(...ANIMATION.scroll.visible.split(' '))
-
-// Skeleton con dimensiones
-<div className={cn(ANIMATION.loading.skeleton, 'h-4 w-32')} />
-```
+Transiciones, hover, fade, slide, **stagger** (`child1`…`child5` — máximo cinco en serie; en listas largas, retraso por índice en JS), scroll reveal, loading/skeleton. Clase global de skeleton: `.u-skeleton-shimmer`.
 
 ---
 
-## INPUT
+## Sombreado (`shadow-elevation-*`)
 
-En esta versión del repo **no** hay módulo `input.ts` ni export `INPUT` en `index.ts` (el portfolio actual no incluye formularios con ese sistema). Para etiquetas de UI que no son campos de formulario, usar **`TYPOGRAPHY.label.*`**. Si más adelante se añade un módulo de formularios, conviene recrear tokens tipo `INPUT.base.*`, `INPUT.label.*`, `INPUT.helper.*` y `INPUT.group.*` siguiendo el mismo patrón que `BUTTON`/`CARD`, y documentarlos aquí.
+Definido en `index.css` bajo `@theme`. Usar solo clases semánticas `shadow-elevation-xs` … `2xl`; no `shadow-[arbitrary]`.
 
----
-
-## SHADOW ELEVATION
-
-Usar siempre clases semánticas `shadow-elevation-*`. No inventar sombras con `shadow-[...]`.
-
-| Clase                  | Uso                                 |
-| ---------------------- | ----------------------------------- |
-| `shadow-elevation-xs`  | Inputs en focus, cards compactas    |
-| `shadow-elevation-sm`  | Headers, barras de navegación       |
-| `shadow-elevation-md`  | Cards elevated, dropdowns           |
-| `shadow-elevation-lg`  | Modales pequeños, paneles flotantes |
-| `shadow-elevation-xl`  | Popovers, drawers, overlays         |
-| `shadow-elevation-2xl` | Dialogs, modales grandes            |
-
-⚠️ Reservar `shadow-elevation-2xl` para el nivel más alto de la jerarquía visual — dos elementos con `2xl` en la misma pantalla eliminan la noción de profundidad.
+| Clase      | Uso típico                                                        |
+| ---------- | ----------------------------------------------------------------- |
+| `xs`       | Inputs en foco, cards compactas                                   |
+| `sm`       | Cabeceras, barras                                                 |
+| `md`       | Cards elevadas                                                    |
+| `lg`–`2xl` | De modales a overlays — `2xl` solo para el nivel más alto visible |
 
 ---
 
 ## Z
 
-Usar siempre `Z.*`. No usar clases `z-*` sueltas en componentes. Los valores `z-40` … `z-80` de la escala semántica están declarados en `@theme` en `index.css` y se referencian solo vía `z.ts`.
-
-Orden de la escala: **base → raised → dropdown → drawer → backdrop → modal → header → drawerElevated → toast**.
-
-| Token              | Valor (Tailwind) | Uso                                                                                             |
-| ------------------ | ---------------- | ----------------------------------------------------------------------------------------------- |
-| `Z.base`           | `z-0`            | Sin apilamiento especial                                                                        |
-| `Z.raised`         | `z-10`           | Cards en hover                                                                                  |
-| `Z.dropdown`       | `z-20`           | Dropdowns, tooltips, menús contextuales                                                         |
-| `Z.drawer`         | `z-30`           | Drawers genéricos, sidebars — con `CARD.overlay.panel`                                          |
-| `Z.backdrop`       | `z-40`           | Backdrop de modales — justo debajo de `Z.modal`                                                 |
-| `Z.modal`          | `z-50`           | Modales, diálogos — con `CARD.overlay.modal`                                                    |
-| `Z.header`         | `z-60`           | Navbar/header fijo — combinar con las clases de posicionamiento del `<header>` en el componente |
-| `Z.drawerElevated` | `z-70`           | Drawer de navegación mobile (`MobileDrawer`) — cubre el header                                  |
-| `Z.toast`          | `z-80`           | Toasts y snackbars — nivel máximo del sistema                                                   |
-
-```tsx
-// Header fijo — `Z.header` suele ir con clases propias del componente (p. ej. fixed + fondo)
-<header className={cn('fixed top-0 w-full bg-bg-white', Z.header)}>...</header>
-
-// Modal + backdrop
-<div className={cn(CARD.overlay.modal, Z.modal)}>...</div>
-<div className={cn('fixed inset-0 bg-black/40', Z.backdrop)} aria-hidden />
-
-// Drawer genérico
-<aside className={cn(CARD.overlay.panel, Z.drawer)}>...</aside>
-
-// Menú mobile (overlay y panel): ambos con Z.drawerElevated
-<div className={cn('fixed inset-0 …', Z.drawerElevated)} />
-
-// Toast
-<div className={cn('fixed bottom-4 right-4', Z.toast)}>...</div>
-```
-
-⚠️ `Z.toast` es el nivel máximo del sistema. Por debajo del header, el menú mobile usa exclusivamente `Z.drawerElevated` (no reutilizar `Z.header` en ese overlay). El backdrop de modal usa siempre `Z.backdrop`, no un `z-40` suelto en el componente.
+Usar **`Z.*`** vía `z.ts` (mapea a clases en `@theme`); evitar `z-30` sueltos en componentes. Orden lógico: `base` → `raised` → `dropdown` → `drawer` → `backdrop` → `modal` → `header` → `drawerElevated` → `toast`. El **drawer móvil** y su overlay usan **`Z.drawerElevated`**. Detalle en comentarios de `z.ts` y usos reales en `Header` / `MobileDrawer`.
 
 ---
 
-## Tokens semánticos de color
-
-En componentes usar **siempre** las clases semánticas. Nunca los primitivos (`gray-*`, `blue-*`, etc.).
+## Colores semánticos (resumen)
 
 ```tsx
-// ❌ Evitar
+// Evitar
 <p className="text-gray-600">Texto</p>
 
-// ✅ Correcto
-<p className="text-text-subtle">Texto</p>
-<div className="bg-bg-white shadow-elevation-lg">Card</div>
+// Preferir
+<p className="text-text-subtle">Texto secundario</p>
+<p className="text-text-strong">Máxima jerarquía de texto</p>
+<div className="bg-bg-weak border border-stroke-soft">Contenedor</div>
 ```
 
 **Texto:** `text-text-strong` · `text-text-subtle` · `text-text-soft` · `text-text-disabled` · `text-text-white`
 
-**Fondos:** `bg-bg-white` · `bg-bg-weak` · `bg-bg-soft` · `bg-bg-subtle` · `bg-bg-medium` · `bg-bg-surface` · `bg-bg-strong`
+**Fondos:** `bg-bg-white` · `bg-bg-weak` · `bg-bg-soft` · … (ver `index.css`).
 
-**Bordes:** `border-stroke-soft` · `border-stroke-subtle` · `border-stroke-medium` · `border-stroke-strong`
+**Bordes:** `border-stroke-soft` · `subtle` · `medium` · `strong`
 
-**Estados:** `bg-information-light`, `text-information-dark`, `bg-success-light`, `text-feature-dark`, etc. En dark mode los tokens `*-light` resuelven a capas semi-transparentes (`*-alpha-24`).
-
----
-
-## Dark mode
-
-Los colores semánticos se redefinen en `.dark` en `src/index.css`. Al usar solo clases semánticas la interfaz se adapta sin lógica extra en los componentes.
+**Estado / marca:** `information`, `success`, `warning`, `error`, `feature` — variantes `*-base`, `*-dark`, `*-light`, `*-lighter` según el token. En **`.dark`**, muchos `*-light` se expresan como mezclas alfa; los azules informativos sobre fondos oscuros a veces requieren **`dark:text-information-dark`** en clases puntuales para contraste (p. ej. panel lateral de proyectos).
 
 ---
 
 ## Composición con `cn()`
 
 ```tsx
-// Combinación simple
-<button className={cn(BUTTON.variant.contained.primary, BUTTON.size.md)} />
+<button
+  className={cn(
+    BUTTON.variant.contained.primary,
+    BUTTON.size.md,
+    isDisabled && 'pointer-events-none opacity-50'
+  )}
+/>
 
-// Condicional
-<div className={cn(CARD.surface.weak, isActive && 'ring-2 ring-information-base')} />
-
-// Variantes en componentes
-function Card({ interactive = false }) {
-  return (
-    <div className={interactive ? CARD.interactive.weak : CARD.surface.weak}>
-      ...
-    </div>
-  )
-}
+<div
+  className={cn(
+    CARD.surface.weak,
+    highlight && 'ring-2 ring-information-base'
+  )}
+/>
 ```
+
+---
+
+## Dark mode
+
+Redefinición en `src/index.css` bajo el selector **`.dark`**. Con solo utilidades semánticas, la UI responde sin `if` de tema en cada componente (el `ThemeToggle` aplica la clase al `document`).
