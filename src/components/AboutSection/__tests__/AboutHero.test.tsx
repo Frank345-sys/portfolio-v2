@@ -46,7 +46,7 @@ describe('AboutHero', () => {
       expect(screen.getByText('TypeScript').tagName).toBe('STRONG')
       expect(screen.getByText('Next.js').tagName).toBe('STRONG')
       const reactStrong = screen
-        .getAllByText('React.js')
+        .getAllByText('React')
         .filter((el) => el.tagName === 'STRONG')
       expect(reactStrong.length).toBeGreaterThanOrEqual(1)
     })

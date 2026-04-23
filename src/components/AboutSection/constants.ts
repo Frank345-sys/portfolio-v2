@@ -27,7 +27,7 @@ export const ABOUT_HERO: AboutHeroData = {
   lastName: SITE_PROFILE.lastName,
   badge: SITE_PROFILE.role,
   location: '📍Puebla, México',
-  tagline: `${SITE_TAGLINE} Especializado en **React.js**, **TypeScript** y **Next.js**, con enfoque en componentes escalables, performance y UI/UX de calidad.`,
+  tagline: `${SITE_TAGLINE} Stack principal: **React**, **TypeScript** y **Next.js** en e-commerce, B2B y herramientas internas.`,
   avatarInitials: SITE_PROFILE.initials,
 }
 
@@ -43,40 +43,42 @@ export interface AboutBioParagraph {
  */
 export const ABOUT_BIO: readonly AboutBioParagraph[] = [
   {
-    id: 'about-bio-tagline',
-    text: SITE_TAGLINE,
+    id: 'about-bio-positioning',
+    text: 'Diseño e implemento interfaces de producto con **React** y **TypeScript**: de landings a plataformas con **APIs**, priorizando rendimiento, accesibilidad y consistencia con diseño.',
   },
   {
     id: 'about-bio-intro',
-    text: `Soy **Francisco Omar Habib González Utrera**, Ingeniero en Sistemas Computacionales, con más de 1 año de experiencia como **${SITE_PROFILE.role}** desarrollando landing pages, soluciones e-commerce y plataformas web de alto impacto.`,
+    text: `Soy **Francisco Omar Habib González Utrera**, ingeniero en sistemas. Llevo **más de dos años** de recorrido en frontend (formación intensiva y entrega en producción). En **B Life** cubrí e-commerce, B2B, ERP y landings, cerca de producto y de back-end.`,
   },
   {
-    id: 'about-bio-specialization',
-    text: 'Me especializo en **React.js**, **optimización de performance** y **diseño de componentes escalables**. Disfruto mejorar flujos de usuario, refactorizar código legado y elevar la calidad del producto.',
+    id: 'about-bio-proof',
+    text: 'Refactorizaciones con impacto medible: **~40% menos** código de frontend y **carga aproximadamente a la mitad** (de ~3s a **~1,4–1,6s**) en un núcleo B2B, además de **homogeneizar la UI** con el ecosistema de producto.',
   },
   {
     id: 'about-bio-collaboration',
-    text: 'He trabajado colaborativamente con equipos de **Back-End**, tengo fidelidad a los diseños en **Figma** y una obsesión por los detalles que marcan la diferencia entre una UI funcional y una UI memorable.',
+    text: 'Cierro el ciclo con **Figma** y equipos de **back-end**: el detalle cuenta para negocio y mantenimiento — **componentes y patrones** listos para extender, no parches aislados.',
   },
 ]
 
 /** Valores / cómo trabajo (3 tarjetas) */
 export const ABOUT_VALUES: ValueItem[] = [
   {
-    name: 'Componentes escalables',
-    desc: 'Reutilizables y mantenibles',
-    detail: 'Diseño sistemas de componentes pensados para crecer sin romper.',
-  },
-  {
-    name: 'Performance',
-    desc: 'Experiencia rápida y fluida',
-    detail: 'Optimizo tiempos de carga y elimino renders innecesarios.',
-  },
-  {
-    name: 'Fidelidad al diseño',
-    desc: 'De Figma a código con precisión',
+    name: 'Sistemas de UI',
+    desc: 'Componentes y tokens',
     detail:
-      'El pixel importa. Traduzco diseños a código con atención al detalle.',
+      'Piezas reutilizables y coherentes: escalan sin reescribir la base en cada release.',
+  },
+  {
+    name: 'Rendimiento medible',
+    desc: 'Menos fricción al cargar',
+    detail:
+      'Optimizo la percepción de velocidad y el camino crítico; menos JS superfluo.',
+  },
+  {
+    name: 'Figma → producción',
+    desc: 'Especificación respetada',
+    detail:
+      'Estados e interacciones alineados al diseño; el código sostiene el producto.',
   },
 ]
 
@@ -179,7 +181,7 @@ export const ABOUT_EXPERIENCE: ExpItem[] = [
     heading: SITE_PROFILE.role,
     company: 'B Life Suplementos Fitness · Puebla, MX',
     description:
-      'Desarrollo en e-commerce, plataforma B2B, ERP interno y landing pages. Creación de componentes reutilizables con React, refactorización de código legacy, optimización de performance y mejora de UI/UX colaborando con equipos de Back-End.',
+      'E-commerce, B2B, ERP y landings: componentes reutilizables, refactor de legacy, performance y alineación de UI/UX con coordinación a back-end.',
     chips: [
       { label: 'E-commerce', variant: TIMELINE_CHIP_VARIANT.TECHNOLOGY },
       { label: 'B2B Platform', variant: TIMELINE_CHIP_VARIANT.TECHNOLOGY },

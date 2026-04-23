@@ -22,9 +22,7 @@ describe('AboutSection', () => {
 
   it('muestra texto de la bio (parte del primer párrafo)', () => {
     render(<AboutSection />)
-    expect(
-      screen.getByText(/Ingeniero en Sistemas Computacionales/)
-    ).toBeInTheDocument()
+    expect(screen.getByText(/ingeniero en sistemas/i)).toBeInTheDocument()
   })
 
   it('muestra los tres valores de "cómo trabajo"', () => {
