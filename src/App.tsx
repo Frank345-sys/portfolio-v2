@@ -1,12 +1,26 @@
+import { lazy, Suspense } from 'react'
 import { LazyMotion, domAnimation, MotionConfig } from 'motion/react'
 import { HeroSection } from '@/components/HeroSection'
 import { Header } from '@/components/Header'
-import { AboutSection } from '@/components/AboutSection'
-import { ProjectsSection } from '@/components/ProjectsSection'
-import { ContactSection } from '@/components/ContactSection'
-import { Footer } from '@/components/Footer'
 import { SmoothScrollRoot } from '@/shared/components/SmoothScrollRoot'
 import { Z } from '@/shared/constants/tokens'
+
+const AboutSection = lazy(async () => {
+  const m = await import('@/components/AboutSection')
+  return { default: m.AboutSection }
+})
+const ProjectsSection = lazy(async () => {
+  const m = await import('@/components/ProjectsSection')
+  return { default: m.ProjectsSection }
+})
+const ContactSection = lazy(async () => {
+  const m = await import('@/components/ContactSection')
+  return { default: m.ContactSection }
+})
+const Footer = lazy(async () => {
+  const m = await import('@/components/Footer')
+  return { default: m.Footer }
+})
 
 /**
  * Raíz de la SPA: skip link, textura, cabecera y contenido principal.
@@ -25,11 +39,19 @@ export function App() {
           <Header />
           <main id="contenido-principal" className={Z.base} tabIndex={-1}>
             <HeroSection />
-            <AboutSection />
-            <ProjectsSection />
-            <ContactSection />
+            <Suspense fallback={null}>
+              <AboutSection />
+            </Suspense>
+            <Suspense fallback={null}>
+              <ProjectsSection />
+            </Suspense>
+            <Suspense fallback={null}>
+              <ContactSection />
+            </Suspense>
           </main>
-          <Footer />
+          <Suspense fallback={null}>
+            <Footer />
+          </Suspense>
         </SmoothScrollRoot>
       </MotionConfig>
     </LazyMotion>
