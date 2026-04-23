@@ -14,12 +14,7 @@ function ValueCard({ name, desc, detail }: ValueItem) {
       <div className={CARD.layout.header}>
         <div className="w-full space-y-1">
           <h4 className={TYPOGRAPHY.title.small}>{name}</h4>
-          <p
-            className={cn(
-              TYPOGRAPHY.title.xsmall,
-              'text-information-base dark:text-information-dark'
-            )}
-          >
+          <p className={cn(TYPOGRAPHY.title.xsmall, 'text-information-base')}>
             {desc}
           </p>
         </div>
