@@ -12,7 +12,7 @@ describe('HeroSection', () => {
 
   it('el CTA de CV enlaza al PDF en public/', () => {
     renderWithMotion(<HeroSection />)
-    const cta = screen.getByText('Descargar CV').closest('a')
+    const cta = screen.getByText('Ver CV (PDF)').closest('a')
     expect(cta).toBeTruthy()
     expect(cta).toHaveAttribute(
       'href',

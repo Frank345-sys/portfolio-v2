@@ -8,9 +8,9 @@ import { DownloadIcon } from '@/shared/icons'
 const CV_HREF = `${import.meta.env.BASE_URL}Francisco_Gonzalez_Frontend_Developer_2026.pdf`
 
 const HERO_STATS = [
-  { value: '+2 años', label: 'Experiencia laboral' },
-  { value: '+5', label: 'Proyectos realizados' },
-  { value: '+14', label: 'Tecnologías dominadas' },
+  { value: '2+', label: 'Años en frontend' },
+  { value: '5+', label: 'Casos en portfolio' },
+  { value: '+14', label: 'Herramientas y prácticas' },
 ] as const
 
 /**
@@ -47,14 +47,15 @@ export function HeroSection() {
                   'text-information-base'
                 )}
               >
-                {SITE_PROFILE.role}
+                {SITE_PROFILE.role} · {SITE_PROFILE.focusLine}
               </p>
             </div>
 
             {/* Descripción del rol */}
             <p className={cn(TYPOGRAPHY.paragraph.lead, LAYOUT.prose.lg)}>
-              Especializado en construir interfaces modernas y accesibles con
-              React, TypeScript y las mejores herramientas del ecosistema web.
+              Refactorizo y entrego UIs con impacto: integración a APIs, tiempos
+              de carga, consistencia (tokens) y accesibilidad, en equipos con
+              producto y back-end.
             </p>
 
             {/* CTA de descarga de CV */}
@@ -63,9 +64,9 @@ export function HeroSection() {
               target="_blank"
               rel="noopener noreferrer"
               className={BUTTON.special.cta}
-              aria-label={`Descargar CV de ${SITE_DISPLAY_NAME} (se abre en una pestaña nueva)`}
+              aria-label={`Ver CV de ${SITE_DISPLAY_NAME} (PDF, se abre en una pestaña nueva)`}
             >
-              Descargar CV
+              Ver CV (PDF)
               <DownloadIcon aria-hidden="true" />
             </a>
 
