@@ -7,7 +7,12 @@
 export const SITE_PROFILE = {
   firstName: 'Frank',
   lastName: 'González',
-  role: 'Frontend Developer',
+  role: 'Frontend engineer',
+  /**
+   * Línea de enfoque bajo el rol (hero, pie): especialización en una frase;
+   * no duplica el rol completo.
+   */
+  focusLine: 'UI de producto, rendimiento y accesibilidad',
   /** Iniciales del avatar; alinear con `firstName` y `lastName`. */
   initials: 'FG',
 } as const
@@ -25,7 +30,7 @@ export const SITE_DISPLAY_NAME =
  * `AboutSection/constants`.
  */
 export const SITE_TAGLINE =
-  'Construyo interfaces que no solo se ven bien — se sienten bien.' as const
+  'Interfaces de producto en React/TypeScript: performance medible, patrones reutilizables y UI fiel a diseño.' as const
 
 /** Sufijo alineado con el título de `index.html` y OG/Twitter. */
 const PAGE_TITLE_STACK = 'React & TypeScript' as const
@@ -40,16 +45,16 @@ export const SITE_PAGE_TITLE =
  * Meta `description` principal (larga).
  */
 export const SITE_META_DESCRIPTION =
-  `Portfolio de ${SITE_DISPLAY_NAME}, ${SITE_PROFILE.role} especializado en React, TypeScript, Vite y Tailwind CSS. Diseño interfaces modernas, accesibles y de alto rendimiento.` as const
+  `Portfolio de ${SITE_DISPLAY_NAME}, ${SITE_PROFILE.role}: e-commerce, B2B y ERP en React/TypeScript, con foco en rendimiento, a11y y fidelidad a Figma.` as const
 
 /**
  * Meta `description` para OG y Twitter (más breve, sin cierre con “Diseño…”).
  */
 export const SITE_META_DESCRIPTION_SHORT =
-  `Portfolio de ${SITE_DISPLAY_NAME}, ${SITE_PROFILE.role} especializado en React, TypeScript, Vite y Tailwind CSS.` as const
+  `Portfolio de ${SITE_DISPLAY_NAME}, ${SITE_PROFILE.role} — e-commerce, B2B y producto con React/TypeScript.` as const
 
 /**
  * `description` en JSON-LD `Person` (frase con rol).
  */
 export const SITE_JSONLD_DESCRIPTION =
-  `${SITE_PROFILE.role} especializado en React, TypeScript, Vite y Tailwind CSS` as const
+  `${SITE_PROFILE.role} — React, TypeScript, interfaces accesibles y de alto rendimiento` as const
