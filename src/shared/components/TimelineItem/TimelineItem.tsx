@@ -54,7 +54,7 @@ const CHIP_VARIANT_MAP = {
  * // Experiencia laboral (acento azul)
  * <TimelineItem
  *   period="Sep 2024 → Feb 2026"
- *   heading="Frontend Developer"
+ *   heading={puestoEnEmpresa} (p. ej. el rol en `SITE_PROFILE` si coincide)
  *   company="B Life · Puebla, MX"
  *   description="..."
  *   chips={[
