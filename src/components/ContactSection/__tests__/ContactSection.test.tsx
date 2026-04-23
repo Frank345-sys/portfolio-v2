@@ -39,7 +39,7 @@ describe('ContactSection', () => {
 
     const heading = screen.getByRole('heading', {
       level: 2,
-      name: /sobre tu próximo proyecto/i,
+      name: /hablemos de tu próximo paso/i,
     })
     expect(heading).toHaveAttribute('id', 'contact-section-heading')
   })
