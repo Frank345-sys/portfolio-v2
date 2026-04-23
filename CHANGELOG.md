@@ -2,6 +2,23 @@
 
 Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y el versionado en [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.3.0] - 2026-04-21
+
+### Añadido
+
+- Pie de página (`Footer`): marca con enlace a inicio, tagline compartido, bloque “Antes de irte” con enlace a contacto, CTA “Volver al inicio”, copyright y línea “Construido con…”.
+- `siteProfile` como fuente única de nombre, rol, tagline y textos SEO; reexport desde `shared/constants`.
+- Plugin de Vite que inyecta título, metas y JSON-LD en `index.html` en build a partir de `siteProfile` y placeholders.
+- Tokens `BRAND.logoIcon` y `PRIMARY_NAV_LINK` (nav principal alineada entre header y pie); icono `ArrowUpIcon`.
+- Tests del `Footer` y ajustes de tests en About, Hero y `TimelineItem`.
+
+### Cambiado
+
+- Hero y sección About usan `SITE_TAGLINE` desde `siteProfile`; copy de bio alineado al tagline compartido.
+- `TimelineItem`: `aria-label` del hito académico usa `SITE_DISPLAY_NAME`.
+- `README`: referencia a `siteProfile` como origen de nombre y rol visibles.
+- `navLink` del header basado en `PRIMARY_NAV_LINK` (misma composición tipográfica que el enlace rápido del pie).
+
 ## [1.2.0] - 2026-04-19
 
 ### Añadido

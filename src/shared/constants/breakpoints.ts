@@ -1,16 +1,17 @@
 /**
- * Breakpoints alineados con Tailwind (`@theme` / prefijos `sm`, `md`, `lg`, …).
+ * Breakpoints alineados con Tailwind (`@theme` / prefijos `xs`, `sm`, `md`, `lg`, …).
  *
- * Valores por defecto de Tailwind v4 en píxeles. Si añades `--breakpoint-sm`, etc.
+ * Valores por defecto de Tailwind v4 en píxeles. Si añades `--breakpoint-xs`, `--breakpoint-sm`, etc.
  * en `src/index.css` (`@theme`), actualiza {@link BREAKPOINT_MIN_PX} para que coincidan.
  *
  * @module shared/constants/breakpoints
  */
 
 /**
- * Anchos mínimos (px) por prefijo Tailwind: clase `sm:` → viewport ≥ `sm`, etc.
+ * Anchos mínimos (px) por prefijo Tailwind: clase `xs:` → viewport ≥ `xs`, etc.
  */
 export const BREAKPOINT_MIN_PX = {
+  xs: 375,
   sm: 640,
   md: 768,
   lg: 1024,
@@ -19,6 +20,9 @@ export const BREAKPOINT_MIN_PX = {
 } as const
 
 export type BreakpointMinToken = keyof typeof BREAKPOINT_MIN_PX
+
+/** Ancho mínimo del breakpoint Tailwind `xs` (375px). */
+export const BREAKPOINT_XS_MIN_PX = BREAKPOINT_MIN_PX.xs
 
 /** Ancho mínimo del breakpoint Tailwind `sm` (640px). */
 export const BREAKPOINT_SM_MIN_PX = BREAKPOINT_MIN_PX.sm
@@ -34,6 +38,9 @@ export const BREAKPOINT_XL_MIN_PX = BREAKPOINT_MIN_PX.xl
 
 /** Ancho mínimo del breakpoint Tailwind `2xl` (1536px). */
 export const BREAKPOINT_2XL_MIN_PX = BREAKPOINT_MIN_PX['2xl']
+
+/** Media query para viewport ≥ `xs`. */
+export const MEDIA_QUERY_XS_MIN = `(min-width: ${BREAKPOINT_XS_MIN_PX}px)`
 
 /** Media query para viewport ≥ `sm`. */
 export const MEDIA_QUERY_SM_MIN = `(min-width: ${BREAKPOINT_SM_MIN_PX}px)`

@@ -13,6 +13,7 @@
 
 export * from './animation'
 export * from './badge'
+export * from './brand'
 export * from './button'
 export * from './card'
 export * from './layout'

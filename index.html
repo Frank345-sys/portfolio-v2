@@ -7,75 +7,41 @@
     <!-- code icon -->
     <link rel="icon" type="image/svg+xml" href="/code-icon.svg" />
 
-    <!-- Primary SEO -->
-    <title>Frank González — Frontend Developer | React & TypeScript</title>
-    <meta
-      name="description"
-      content="Portfolio de Frank González, Frontend Developer especializado en React, TypeScript, Vite y Tailwind CSS. Diseño interfaces modernas, accesibles y de alto rendimiento."
-    />
+    <!-- Primary SEO (sustituido en build desde shared/constants/siteProfile) -->
+    <title>@@SITE_PAGE_TITLE@@</title>
+    <meta name="description" content="@@SITE_META_DESCRIPTION@@" />
     <meta
       name="keywords"
       content="frontend developer, desarrollador frontend, React, TypeScript, Vite, Tailwind CSS, JavaScript, portfolio, México"
     />
-    <meta name="author" content="Frank González" />
+    <meta name="author" content="@@SITE_DISPLAY_NAME@@" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="%VITE_PUBLIC_SITE_URL%/" />
 
     <!-- Open Graph (LinkedIn, WhatsApp) -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="%VITE_PUBLIC_SITE_URL%/" />
-    <meta
-      property="og:title"
-      content="Frank González — Frontend Developer | React & TypeScript"
-    />
-    <meta
-      property="og:description"
-      content="Portfolio de Frank González, Frontend Developer especializado en React, TypeScript, Vite y Tailwind CSS."
-    />
+    <meta property="og:title" content="@@SITE_PAGE_TITLE@@" />
+    <meta property="og:description" content="@@SITE_META_DESCRIPTION_SHORT@@" />
     <meta property="og:image" content="%VITE_PUBLIC_SITE_URL%/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="es_MX" />
-    <meta property="og:site_name" content="Frank González" />
+    <meta property="og:site_name" content="@@SITE_DISPLAY_NAME@@" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="%VITE_PUBLIC_SITE_URL%/" />
-    <meta
-      name="twitter:title"
-      content="Frank González — Frontend Developer | React & TypeScript"
-    />
+    <meta name="twitter:title" content="@@SITE_PAGE_TITLE@@" />
     <meta
       name="twitter:description"
-      content="Portfolio de Frank González, Frontend Developer especializado en React, TypeScript, Vite y Tailwind CSS."
+      content="@@SITE_META_DESCRIPTION_SHORT@@"
     />
     <meta name="twitter:image" content="%VITE_PUBLIC_SITE_URL%/og-image.png" />
 
     <!-- JSON-LD: Structured Data para Google -->
     <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Frank González",
-        "jobTitle": "Frontend Developer",
-        "url": "%VITE_PUBLIC_SITE_URL%/",
-        "sameAs": [
-          "https://github.com/Frank345-sys",
-          "https://www.linkedin.com/in/francisco-omar-h-glez-utrera/"
-        ],
-        "knowsAbout": [
-          "React",
-          "TypeScript",
-          "Vite",
-          "Tailwind CSS",
-          "JavaScript",
-          "HTML5",
-          "CSS3",
-          "Next.js",
-          "Frontend Development"
-        ],
-        "description": "Frontend Developer especializado en React, TypeScript, Vite y Tailwind CSS"
-      }
+      @@SITE_JSONLD@@
     </script>
   </head>
   <body>

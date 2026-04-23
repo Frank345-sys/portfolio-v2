@@ -1,3 +1,4 @@
+import { SITE_DISPLAY_NAME, SITE_PROFILE } from '@/shared/constants/siteProfile'
 import { BUTTON, LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 import { BackgroundBoxes } from '@/shared/components/BackgroundBoxes'
@@ -38,7 +39,7 @@ export function HeroSection() {
             {/* Título: nombre + rol del desarrollador */}
             <div className="flex flex-col gap-1 sm:gap-2">
               <h1 id="hero-heading" className={TYPOGRAPHY.title.hero}>
-                Frank González
+                {SITE_DISPLAY_NAME}
               </h1>
               <p
                 className={cn(
@@ -46,7 +47,7 @@ export function HeroSection() {
                   'text-information-base'
                 )}
               >
-                Frontend Developer
+                {SITE_PROFILE.role}
               </p>
             </div>
 
@@ -62,7 +63,7 @@ export function HeroSection() {
               target="_blank"
               rel="noopener noreferrer"
               className={BUTTON.special.cta}
-              aria-label="Descargar CV de Frank González (se abre en una pestaña nueva)"
+              aria-label={`Descargar CV de ${SITE_DISPLAY_NAME} (se abre en una pestaña nueva)`}
             >
               Descargar CV
               <DownloadIcon aria-hidden="true" />

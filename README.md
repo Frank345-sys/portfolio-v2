@@ -1,4 +1,6 @@
-# Frank González — Frontend Developer
+# portfolio-v2
+
+El **nombre y el rol** visibles (hero, metadatos, Sobre mí, pie, `index.html`) se definen en un solo módulo: [`src/shared/constants/siteProfile.ts`](src/shared/constants/siteProfile.ts).
 
 [![Vite](https://img.shields.io/badge/Vite-7.2.4-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-19.2.0-61DAFB?logo=react&logoColor=black)](https://react.dev/)

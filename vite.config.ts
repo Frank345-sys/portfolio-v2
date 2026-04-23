@@ -6,6 +6,15 @@ import type { Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import { CONTACT_PROFILE } from './src/components/ContactSection/constants'
+import {
+  SITE_DISPLAY_NAME,
+  SITE_JSONLD_DESCRIPTION,
+  SITE_META_DESCRIPTION,
+  SITE_META_DESCRIPTION_SHORT,
+  SITE_PAGE_TITLE,
+  SITE_PROFILE,
+} from './src/shared/constants/siteProfile'
 
 function writeSeoFilesPlugin(siteUrl: string): Plugin {
   const origin = siteUrl.replace(/\/$/, '')
@@ -38,6 +47,44 @@ function writeSeoFilesPlugin(siteUrl: string): Plugin {
   }
 }
 
+function injectSiteProfileHtmlPlugin(siteUrl: string): Plugin {
+  const origin = siteUrl.replace(/\/$/, '')
+  return {
+    name: 'inject-site-profile-html',
+    transformIndexHtml(html) {
+      const personJson = {
+        '@context': 'https://schema.org',
+        '@type': 'Person' as const,
+        name: SITE_DISPLAY_NAME,
+        jobTitle: SITE_PROFILE.role,
+        url: `${origin}/`,
+        sameAs: [CONTACT_PROFILE.githubHref, CONTACT_PROFILE.linkedinHref],
+        knowsAbout: [
+          'React',
+          'TypeScript',
+          'Vite',
+          'Tailwind CSS',
+          'JavaScript',
+          'HTML5',
+          'CSS3',
+          'Next.js',
+          'Frontend Development',
+        ],
+        description: SITE_JSONLD_DESCRIPTION,
+      }
+      return html
+        .replaceAll('@@SITE_PAGE_TITLE@@', SITE_PAGE_TITLE)
+        .replaceAll('@@SITE_META_DESCRIPTION@@', SITE_META_DESCRIPTION)
+        .replaceAll(
+          '@@SITE_META_DESCRIPTION_SHORT@@',
+          SITE_META_DESCRIPTION_SHORT
+        )
+        .replaceAll('@@SITE_DISPLAY_NAME@@', SITE_DISPLAY_NAME)
+        .replace('@@SITE_JSONLD@@', JSON.stringify(personJson, null, 2))
+    },
+  }
+}
+
 // https://vite.dev/config/
 // URLs: `.env.production` (build por defecto), `.env.github` (`build:github`), `.env.development` (dev).
 export default defineConfig(({ mode }) => {
@@ -52,7 +99,12 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'build',
     },
-    plugins: [react(), tailwindcss(), writeSeoFilesPlugin(siteUrl)],
+    plugins: [
+      injectSiteProfileHtmlPlugin(siteUrl),
+      react(),
+      tailwindcss(),
+      writeSeoFilesPlugin(siteUrl),
+    ],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src'),
