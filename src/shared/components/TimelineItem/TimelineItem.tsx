@@ -110,7 +110,7 @@ export function TimelineItem({
       <time
         className={cn(
           TYPOGRAPHY.paragraph.small,
-          'hidden pt-2.5 font-mono sm:block'
+          'text-text-strong hidden pt-2.5 font-mono sm:block'
         )}
       >
         {period}
@@ -129,11 +129,19 @@ export function TimelineItem({
         >
           {company}
         </p>
-        <time className={cn(TYPOGRAPHY.paragraph.small, 'font-mono sm:hidden')}>
+        <time
+          className={cn(
+            TYPOGRAPHY.paragraph.small,
+            'text-text-strong font-mono sm:hidden'
+          )}
+        >
           {period}
         </time>
         <p
-          className={cn(TYPOGRAPHY.paragraph.secondary, 'mt-2 mb-2.5 sm:mt-0')}
+          className={cn(
+            TYPOGRAPHY.paragraph.secondary,
+            'text-text-strong mt-2 mb-2.5 sm:mt-0'
+          )}
         >
           {description}
         </p>

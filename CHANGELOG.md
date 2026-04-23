@@ -4,6 +4,14 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ## [Unreleased]
 
+### Cambiado
+
+- Documentación: `README.md` y `src/shared/constants/tokens/readme.md` alineados con el stack, scripts, despliegue, módulos de tokens (incl. `BRAND`, `Z`, a11y) y convenciones actuales.
+
+### Arreglado
+
+- Accesibilidad: contraste en tarjetas de valores (`AboutValues`), fechas y descripciones de `TimelineItem`, y panel lateral de proyectos (`ProjectInfo` / `ProjectLink`) — textos con `text-text-strong` o `dark:text-information-dark` donde aplica (Lighthouse `color-contrast`).
+
 ## [1.4.0] - 2026-04-23
 
 ### Añadido
