@@ -156,7 +156,7 @@ export function ProjectInfo({
           <ul className="flex flex-col gap-2">
             {project.bullets.map((b, i) => (
               <m.li
-                key={`${i}-${b}`}
+                key={`project-${project.id}-bullet-${b}`}
                 initial={{ opacity: 0, x: -12 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 + i * 0.06, duration: 0.35 }}
