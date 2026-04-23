@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { SITE_TAGLINE } from '@/shared/constants/siteProfile'
 import { AboutBio } from '../subcomponents/AboutBio'
 
 describe('AboutBio', () => {
@@ -13,6 +14,7 @@ describe('AboutBio', () => {
 
     it('renderiza todos los párrafos de ABOUT_BIO', () => {
       render(<AboutBio />)
+      expect(screen.getByText(SITE_TAGLINE)).toBeInTheDocument()
       expect(
         screen.getByText(/Francisco Omar Habib González Utrera/)
       ).toBeInTheDocument()
