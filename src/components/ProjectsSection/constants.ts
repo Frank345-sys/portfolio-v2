@@ -151,7 +151,7 @@ export const PROJECTS: Project[] = [
 // ── Scroll sync (viewport ≥ `lg`, `useProjectsScrollSync`) ───────────────
 
 /** Espera antes de actualizar `activeIndex` tras cambiar el bloque más visible (transición en panel lateral). */
-export const PROJECTS_SCROLL_ACTIVE_INDEX_TRANSITION_MS = 200
+export const PROJECTS_SCROLL_ACTIVE_INDEX_TRANSITION_MS = 150
 
 /** Umbrales del `IntersectionObserver` para muestrear `intersectionRatio` por bloque de proyecto. */
 export const PROJECTS_SCROLL_INTERSECTION_THRESHOLDS = [
