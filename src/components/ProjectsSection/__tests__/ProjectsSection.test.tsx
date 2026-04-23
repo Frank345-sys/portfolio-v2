@@ -89,7 +89,7 @@ describe('ProjectsSection', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /proyectos desarrollados/i,
+        name: /proyectos en producción/i,
       })
     ).toBeInTheDocument()
   })

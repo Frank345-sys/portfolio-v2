@@ -53,9 +53,9 @@ export function ProjectsSection() {
       <div className={cn(LAYOUT.spacing.large, LAYOUT.px)}>
         {/* Titulo de la sección */}
         <AnimatedSectionHeading
-          overline="Mis"
+          overline="Selección de"
           title="Proyectos"
-          titleHighlight="desarrollados"
+          titleHighlight="en producción"
           titleId="projects-section-heading"
         />
 

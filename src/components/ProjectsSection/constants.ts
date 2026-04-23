@@ -23,12 +23,11 @@ export const PROJECTS: Project[] = [
     title: 'E-commerce Blife',
     subtitle: 'App Web',
     description:
-      'Plataforma e-commerce de suplementos deportivos, donde desarrollé interfaces escalables y optimizadas, mejorando la experiencia de usuario y flujos de conversión.',
+      'El catálogo y el checkout debían escalar sin fragmentar la UI ni disparar el coste de mantenimiento. Organicé la tienda en componentes reutilizables (Next.js, TypeScript) y tokens con Panda CSS; integré catálogo, carrito y checkout con la API. Base compartida para iterar en conversión y consistencia de marca.',
     bullets: [
-      'Desarrollo de componentes reutilizables en Next.js + TypeScript.',
-      'Maquetación pixel-perfect basada en diseños de Figma.',
-      'Implementación de estilos con Panda CSS utilizando design tokens.',
-      'Integración con APIs para productos, carrito y checkout.',
+      'Problema: crecer catálogo y flujo de compra sin multiplicar deuda de estilos.',
+      'Solución: sistema de UI tipado, design tokens y maquetación alineada a Figma.',
+      'Impacto: menos retrabajo visual entre páginas y flujos más coherentes para el equipo.',
     ],
     skills: [
       SKILL_LABEL.NEXT,
@@ -52,12 +51,11 @@ export const PROJECTS: Project[] = [
     title: 'Blife App Landing',
     subtitle: 'Landing Page',
     description:
-      'Landing page para la promoción de la app de Blife, diseñada para maximizar la conversión de usuarios mediante una experiencia visual atractiva y una estructura clara de contenido.',
+      'La app necesitaba descargas cualificadas: la landing tenía que cargar bien en móvil y llevar a un CTA claro. Implementé Astro con React donde aporta interactividad, Tailwind y enfoque mobile-first; prioridad a performance y jerarquía de contenido hacia la descarga.',
     bullets: [
-      'Implementación de diseño responsive y mobile-first.',
-      'Fidelidad pixel-perfect a diseños de Figma.',
-      'Optimización de performance para mejorar tiempos de carga y retención.',
-      'Aplicación de buenas prácticas de UI/UX para guiar al usuario hacia la descarga de la app.',
+      'Problema: convertir visitas en descargas sin sacrificar el primer render en redes móviles.',
+      'Solución: menos JS en el cliente con Astro; UI fiel a Figma y responsive.',
+      'Impacto: recorrido explícito hacia el CTA y criterios de performance para retención.',
     ],
     skills: [
       SKILL_LABEL.ASTRO,
@@ -76,12 +74,12 @@ export const PROJECTS: Project[] = [
     title: 'Plataforma B2B Mayoreo',
     subtitle: 'App Web',
     description:
-      'Plataforma B2B para gestión de clientes mayoristas, donde participé en la refactorización completa del frontend, mejorando la mantenibilidad, escalabilidad y rendimiento del sistema.',
+      'El frontend B2B arrastraba deuda, tiempos de carga altos y UX desalineada con otros productos. Participé en una refactorización orientada a mantenibilidad: menos superficie de código, componentes más predecibles y carga mucho más rápida, alineando patrones de UI con el resto de la compañía.',
     bullets: [
-      'Refactorización del frontend eliminando ~40% de código legacy.',
-      'Optimización de performance reduciendo tiempos de carga ~50% (3s → 1.4–1.6s).',
-      'Mejora de arquitectura de componentes para mayor escalabilidad.',
-      'Homologación de UI/UX con otros productos de la empresa.',
+      'Problema: legacy difícil de extender y percepción de lentitud en uso real.',
+      'Solución: arquitectura de componentes con Next.js/React/Tailwind; limpieza sistemática de deuda.',
+      'Impacto: ~40% menos código de frontend; carga ≈50% más rápida (≈3s → ≈1,4–1,6s) en el refactor clave.',
+      'Resultado: UI homogénea con el ecosistema de producto; menos riesgo en cada entrega.',
     ],
     skills: [
       SKILL_LABEL.NEXT,
@@ -104,12 +102,11 @@ export const PROJECTS: Project[] = [
     title: 'BERP (Sistema ERP Interno)',
     subtitle: 'App Web',
     description:
-      'Sistema ERP interno utilizado para la gestión operativa de la empresa, donde participé en el desarrollo, mantenimiento y mejora de distintos módulos, contribuyendo a la estabilidad del sistema y a la productividad del equipo.',
+      'El ERP soporta operación diaria: fallos o ambigüedad cuestan tiempo al negocio. Trabajé en módulos críticos combinando mantenimiento, nuevas piezas de UI y refactors puntuales para bajar riesgo y facilitar extensiones. Entorno interno; detalle bajo NDA en entrevista.',
     bullets: [
-      'Resolución de bugs y mantenimiento continuo en distintos módulos del sistema.',
-      'Desarrollo de módulos desde cero para optimizar procesos internos.',
-      'Refactorización de funcionalidades existentes aplicando buenas prácticas.',
-      'Mejoras en la mantenibilidad del código facilitando el desarrollo de nuevos módulos.',
+      'Problema: software interno donde errores afectan productividad de equipos completos.',
+      'Solución: ciclos de estabilidad, flujos nuevos donde desbloquean procesos, código más mantenible.',
+      'Impacto: base más segura para sumar módulos sin paralizar operación.',
     ],
     skills: [
       SKILL_LABEL.NEXT,
@@ -121,19 +118,17 @@ export const PROJECTS: Project[] = [
       SKILL_LABEL.GITFLOW,
     ],
     images: [withBaseUrl('images/projects/berp-erp.png')],
-    link: 'https://erp.blife.mx/login',
   },
   {
     id: 5,
-    title: 'Portfolio Web (Legacy)',
+    title: 'Portfolio v1 (histórico)',
     subtitle: 'App Web',
     description:
-      'Versión inicial de mi portafolio personal, donde desarrollé mis primeras interfaces web aplicando fundamentos de desarrollo frontend y responsive design. Este proyecto representa mi evolución hacia mejores prácticas y arquitecturas modernas.',
+      'Primera versión pública de mi sitio: práctica con React, layout responsive, animaciones y estructura por secciones. Base de aprendizaje; el portfolio actual reemplaza este enfoque con un stack y estándar al día.',
     bullets: [
-      'Desarrollo de interfaces responsivas y componentes reutilizables utilizando React.js',
-      'Implementación de animaciones para mejorar la experiencia visual.',
-      'Estructuración de secciones como proyectos, habilidades y contacto.',
-      'Implementación de arquitectura de componentes, diseño responsive y metodología BEM para una mejor organización y mantenibilidad del código.',
+      'Contexto: presencia en línea y ejercicio de componentes, routing y BEM.',
+      'Enfoque: secciones de proyectos, skills y contacto; animaciones ligeras.',
+      'Cierre: referencia de evolución, no de producto en misma categoría que el trabajo en Blife.',
     ],
     skills: [
       SKILL_LABEL.REACT,

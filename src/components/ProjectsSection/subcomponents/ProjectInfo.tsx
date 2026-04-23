@@ -18,7 +18,7 @@ interface ProjectLinkProps {
 
 /**
  * Enlace de acción con animación de deslizamiento horizontal en hover.
- * Usado para "Ver proyecto" y "Ver código fuente" dentro de `ProjectInfo`.
+ * Usado para "Abrir sitio en vivo" y "Código en GitHub" dentro de `ProjectInfo`.
  */
 function ProjectLink({ href, label }: ProjectLinkProps) {
   return (
@@ -189,12 +189,12 @@ export function ProjectInfo({
           {(project.link ?? project.githubLink) && (
             <div className={BUTTON.group.horizontal}>
               {project.link && (
-                <ProjectLink href={project.link} label="Ver proyecto" />
+                <ProjectLink href={project.link} label="Abrir sitio en vivo" />
               )}
               {project.githubLink && (
                 <ProjectLink
                   href={project.githubLink}
-                  label="Ver código fuente"
+                  label="Código en GitHub"
                 />
               )}
             </div>
