@@ -1,390 +1,210 @@
 # portfolio-v2
 
-El **nombre y el rol** visibles (hero, metadatos, Sobre mí, pie, `index.html`) se definen en un solo módulo: [`src/shared/constants/siteProfile.ts`](src/shared/constants/siteProfile.ts).
+SPA de portfolio personal. El **perfil unificado** (nombre, rol, títulos de página, metadatos, JSON-LD) vive en [`src/shared/constants/siteProfile.ts`](src/shared/constants/siteProfile.ts).
 
-[![Vite](https://img.shields.io/badge/Vite-7.2.4-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![React](https://img.shields.io/badge/React-19.2.0-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vitest](https://img.shields.io/badge/Vitest-4.0.18-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev/)
-[![CI](https://github.com/OWNER/portfolio-v2/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/portfolio-v2/actions/workflows/ci.yml)
-
-> Reemplaza `OWNER` por tu usuario u organización de GitHub para que el badge de CI apunte a tu repositorio.
+[![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vitest](https://img.shields.io/badge/Vitest-4-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev/)
+[![CI](https://github.com/Frank345-sys/portfolio-v2/actions/workflows/ci.yml/badge.svg)](https://github.com/Frank345-sys/portfolio-v2/actions/workflows/ci.yml)
 
 ---
 
-## 📌 Descripción del proyecto
+## Descripción
 
-**portfolio-v2** es una SPA (Single Page Application) que sirve como mi portfolio personal. Está construida con React 19, Vite 7 y TypeScript en modo estricto, utiliza Tailwind CSS 4 para estilos y un sistema de design tokens con colores semánticos. Incluye una pipeline de calidad completa: ESLint, Prettier, Husky (pre-commit y commit-msg), lint-staged, Commitlint (local y en CI) y workflows de GitHub Actions (CI, validación de mensajes, React Doctor en PRs y Dependabot). Para asistentes de IA en local: guías en `.agents/AGENTS.md` (índice) y `.agents/react-doctor/AGENTS.md` (React Doctor). Esa carpeta **no se versiona** (ver `.gitignore`); en GitHub el código y la CI siguen siendo la referencia pública.
+**portfolio-v2** es una **SPA** (React 19, Vite 7, TypeScript estricto) con **Tailwind CSS 4** y un sistema de **design tokens** (tipografía, layout, colores semánticos en `index.css`).
 
----
+Incluye: **Header** (nav + menú móvil), **Hero**, **Sobre mí** (bio, experiencia, formación, skills, certificaciones, valores), **Proyectos** (scroll sync + panel sticky), **Contacto** (tarjetas de enlaces) y **Footer**; desplazamiento suave con **Lenis** (respetando `prefers-reduced-motion`); animaciones con **Motion**; tema claro/oscuro.
 
-## 🚀 Stack tecnológico
+**Build:** el artefacto va a `build/`. Vite aplica un plugin que inyecta título, metas, JSON-LD, `robots.txt`, `sitemap.xml` y `.well-known/security.txt` según `VITE_PUBLIC_SITE_URL` (ver [Variables de entorno](#variables-de-entorno)). **GitHub Pages** no añade cabeceras HTTP del repo; metas de `referrer` y `Permissions-Policy` complementan (no sustituyen CSP en servidor).
 
-| Categoría         | Tecnología                                                                                                                            |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| **Runtime**       | Node (npm)                                                                                                                            |
-| **Build**         | Vite 7.2.4                                                                                                                            |
-| **Framework**     | React 19.2.0                                                                                                                          |
-| **Lenguaje**      | TypeScript 5.9.3 (strict)                                                                                                             |
-| **Estilos**       | Tailwind CSS 4.1.18 (`@tailwindcss/vite`)                                                                                             |
-| **Design System** | Tokens en `src/shared/constants/` (TYPOGRAPHY, LAYOUT, BUTTON, BADGE, ANIMATION, INPUT) + tokens semánticos en `index.css`            |
-| **Testing**       | Vitest 4.0.18, @testing-library/react 16.3.2, @testing-library/user-event 14.6.1, @testing-library/jest-dom 6.9.1, jsdom 28.1.0       |
-| **Linting**       | ESLint 9.39.1 (flat config), typescript-eslint 8.46.4, eslint-plugin-react-hooks, eslint-plugin-react-refresh, eslint-config-prettier |
-| **Formateo**      | Prettier 3.8.1, prettier-plugin-tailwindcss 0.7.2                                                                                     |
-| **Git hooks**     | Husky 9.1.7, lint-staged 16.3.0                                                                                                       |
-| **CI**            | GitHub Actions: workflow `ci.yml` (formato, lint, typecheck, cobertura, build), `commitlint.yml` y Dependabot semanal                 |
-
-**Alias:** `@` → `src` en `vite.config.ts` y `tsconfig.app.json`.
+**Calidad en repo:** ESLint (incl. `jsx-a11y`, React Compiler, testing-library), Prettier, Husky (pre-commit, commit-msg), **Commitlint** con scopes enumerados, CI en GitHub Actions, workflow opcional de **React Doctor** en PRs, Dependabot. Documentación viva de tokens: [`src/shared/constants/tokens/readme.md`](src/shared/constants/tokens/readme.md).
 
 ---
 
-## 📂 Estructura del proyecto
+## Stack
+
+| Categoría   | Tecnología                                                                                                                  |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Build**   | Vite 7, `tsc -b` antes del bundle                                                                                           |
+| **UI**      | React 19, **Motion** (`motion/react`), class-variance-authority, `cn` (clsx + tailwind-merge)                               |
+| **Estilos** | Tailwind CSS 4 (`@tailwindcss/vite`), tokens en `src/shared/constants/tokens/`, primitivos y modo oscuro en `src/index.css` |
+| **Scroll**  | Lenis bajo `SmoothScrollRoot`                                                                                               |
+| **Tests**   | Vitest 4, Testing Library, jsdom, umbrales de cobertura en `vite.config.ts`                                                 |
+| **Deploy**  | `gh-pages` → rama `gh-pages` (script `deploy:pages` con modo `github`)                                                      |
+
+**Alias:** `@` → `src` (`vite.config.ts`, `tsconfig`).
+
+---
+
+## Estructura del código
 
 ```
 src/
-├── App.tsx
-├── index.css
-├── main.tsx
+├── main.tsx, App.tsx, index.css
 ├── components/
-│   ├── AboutSection/       # sección “Sobre mí” + __tests__
-│   ├── Footer/             # pie de página (copyright + enlaces)
-│   ├── Header/             # barra + __tests__ (subcomponents, constants)
+│   ├── AboutSection/       # subcomponents, __tests__, constants, types
+│   ├── ContactSection/
+│   ├── Footer/
+│   ├── Header/
 │   ├── HeroSection/
-│   ├── ProjectsSection/    # hooks/, subcomponents/, ProjectsSection.test.tsx
+│   ├── ProjectsSection/    # hooks, subcomponents, tests
 │   └── ...
 ├── shared/
-│   ├── components/         # Avatar, BadgeRow, ThemeToggle/, etc. + __tests__
-│   ├── constants/          # tokens/, skills/, enums/
+│   ├── components/         # carrusel, LinkCard, ThemeToggle, TimelineItem, etc.
+│   ├── constants/          # siteProfile, tokens/, skills/, enums/
 │   ├── hooks/
-│   └── utils/
-└── test/
-    ├── setup.ts                 # jest-dom + mock de matchMedia (Motion / breakpoints)
-    ├── renderWithMotion.tsx     # render con LazyMotion para tests de animación
-    ├── stackSkillLabelSet.ts    # helper solo para tests de sincronía de skills
-    └── stackSkillLabelSet.test.ts
+│   └── utils/              # cn, parseEmphasis, …
+└── test/                   # setup, renderWithMotion, helpers solo-test
 ```
 
-- **`src/main.tsx`** — Punto de entrada; monta la app con React StrictMode, estilos globales (incl. Lenis) y comprobación segura del elemento `#root`.
-- **`src/App.tsx`** — Raíz de la SPA: `SmoothScrollRoot` (Lenis si no hay `prefers-reduced-motion`), skip link, `Header` y `main` con Hero, About y Projects.
-- **`src/components/`** — Secciones y piezas de dominio: p. ej. `Header/`, `HeroSection/`, `AboutSection/`, `ProjectsSection/` (cada una con tests y `index.ts` donde aplica).
-- **`src/shared/components/`** — Componentes compartidos (ThemeToggle, SmoothScrollRoot, carruseles, etc.) y sus tests.
-- **`src/shared/constants/`** — Design tokens (`tokens/`), skills y enums.
-- **`src/shared/hooks/`** — Hooks reutilizables (p. ej. useFocusTrap) y tests.
-- **`src/shared/utils/`** — Utilidades de producción (p. ej. `cn`).
-- **`src/test/`** — Setup de Vitest, helpers de render y utilidades usadas solo en tests.
+- **`App.tsx`:** skip link, grano de fondo, `Header`, `main` (Hero, About, Projects, Contact), `Footer`, todo bajo `SmoothScrollRoot` + `LazyMotion` / `MotionConfig`.
+- **`src/shared/constants/siteProfile.ts`:** nombre visible, rol, textos SEO y JSON-LD; consumido por Vite, secciones y tests afines.
 
 ---
 
-## ⚙️ Scripts disponibles
+## Scripts (`npm run …`)
 
-Definidos en `package.json`. Uso: `npm run <script>`.
+| Script                                             | Descripción                                                                                                                                                                          |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `dev`                                              | Servidor de desarrollo (HMR).                                                                                                                                                        |
+| `build`                                            | `tsc -b && vite build` → salida en **`build/`**.                                                                                                                                     |
+| `build:github`                                     | Build con modo `github` (usa `.env.github` si existe) para publicar bajo `VITE_BASE_PATH` del repo.                                                                                  |
+| `preview` / `preview:build`                        | Previsualizar el build local.                                                                                                                                                        |
+| `deploy`                                           | `build` + `gh-pages` a rama `gh-pages` (flujo base `VITE_BASE_PATH=/` si no se define otra).                                                                                         |
+| `deploy:pages`                                     | `build:github` + `gh-pages` (recomendado para el subpath de GitHub Pages).                                                                                                           |
+| `lint`                                             | ESLint en todo el proyecto.                                                                                                                                                          |
+| `format` / `format:check`                          | Prettier.                                                                                                                                                                            |
+| `typecheck`                                        | `tsc --noEmit`.                                                                                                                                                                      |
+| `test` / `test:watch` / `test:changed` / `test:ui` | Vitest.                                                                                                                                                                              |
+| `test:coverage` / `test:coverage:ci`               | Cobertura (local: en Windows abre el HTML; en macOS/Linux abrir `coverage/index.html` manualmente o con `open`/`xdg-open`).                                                          |
+| `check`                                            | `typecheck` → `format:check` → `lint` → `test` (rápido).                                                                                                                             |
+| `check:ci`                                         | Igual que la CI: `format:check` → `lint` → `typecheck` → `test:coverage:ci` → `build`.                                                                                               |
+| `lighthouse:pages`                                 | Audita en headless la URL pública (por defecto GitHub Pages); genera `lighthouse-report.html` (ignorada por git). Requiere Chromium; en Windows a veces `CHROME_PATH` a Edge/Chrome. |
+| `prepare`                                          | Instala hooks de Husky.                                                                                                                                                              |
 
-| Script            | Comando                                              | Descripción                                               |
-| ----------------- | ---------------------------------------------------- | --------------------------------------------------------- |
-| **dev**           | `vite`                                               | Servidor de desarrollo con HMR.                           |
-| **build**         | `tsc -b && vite build`                               | Type-check y build de producción (salida en `build/`).    |
-| **preview**       | `vite preview`                                       | Sirve el build en local.                                  |
-| **preview:build** | `vite preview --outDir build`                        | Preview del artefacto generado en `build/`.               |
-| **deploy**        | `npm run build && gh-pages -d build`                 | Sube el sitio a la rama `gh-pages` (GitHub Pages).        |
-| **lint**          | `eslint .`                                           | Lint de todo el proyecto.                                 |
-| **format**        | `prettier --write .`                                 | Formateo con Prettier.                                    |
-| **format:check**  | `prettier --check .`                                 | Comprueba formato sin modificar archivos (como en CI).    |
-| **check**         | `typecheck` → `format:check` → `lint` → `test`       | Comprobación local rápida antes de commitear.             |
-| **check:ci**      | Mismo orden que `ci.yml` en GitHub Actions           | Cobertura con umbrales y `build`; ideal antes de PR/push. |
-| **prepare**       | `husky`                                              | Instala hooks de Husky (post-`npm install`).              |
-| **test**          | `vitest run`                                         | Tests una vez.                                            |
-| **test:watch**    | `vitest`                                             | Tests en watch.                                           |
-| **test:changed**  | `vitest --changed --run`                             | Solo tests de archivos modificados vs. último commit.     |
-| **test:ui**       | `vitest --ui --open`                                 | UI de Vitest en el navegador.                             |
-| **test:coverage** | `vitest run --coverage && start coverage/index.html` | Cobertura y apertura del informe HTML (Windows: `start`). |
-| **typecheck**     | `tsc --noEmit`                                       | Comprobación de tipos sin emitir archivos.                |
+### GitHub Pages (subruta `…/repo/`)
 
-### GitHub Pages (`gh-pages`)
-
-1. En el repo: **Settings → Pages** → Source: rama `gh-pages`, carpeta `/ (root)`.
-2. Sitio en subruta (`https://usuario.github.io/portfolio-v2/`): antes del build, define la base de Vite:
+1. **Settings → Pages:** rama `gh-pages`, carpeta `/ (root)`.
+2. Definir **base** y **URL canónica** antes de build, p. ej. en `.env.github` o en la sesión:
 
    ```bash
-   set VITE_BASE_PATH=/portfolio-v2/
-   npm run deploy
+   # Windows PowerShell
+   $env:VITE_BASE_PATH="/portfolio-v2/"; $env:VITE_PUBLIC_SITE_URL="https://frank345-sys.github.io/portfolio-v2/"; npm run deploy:pages
    ```
 
-   (En PowerShell: `$env:VITE_BASE_PATH="/portfolio-v2/"; npm run deploy`.) Ajusta `/portfolio-v2/` al nombre real del repositorio.
+3. Ajusta `/portfolio-v2/` y la URL a tu usuario y nombre de repo. La primera publicación crea/actualiza `gh-pages` con el contenido de `build/`.
 
-3. Dominio propio o `username.github.io` con sitio en la raíz: usa `VITE_BASE_PATH=/` (por defecto) y `npm run deploy`.
-4. La primera vez, `gh-pages` crea/actualiza la rama `gh-pages` con el contenido de `build/`. Requiere permisos de push al remoto.
-
-**test:coverage:** El comando actual usa `start`, que es **solo para Windows**. En otros sistemas, tras ejecutar `vitest run --coverage`:
-
-- **macOS:** `open coverage/index.html`
-- **Linux:** `xdg-open coverage/index.html` o abrir manualmente `coverage/index.html` en el navegador.
+**Detalle de salida de build:** no es `dist/`, sino **`build/`** (fijado en `vite.config.ts` para alinear con `gh-pages`).
 
 ---
 
-## 🎨 Design System
+## Design system (resumen)
 
-El proyecto usa un sistema de design tokens en `src/shared/constants/` para mantener tipografía, layout, componentes y colores de forma consistente.
+Convención: colores y espaciado semánticos vía clases `text-text-*`, `bg-bg-*`, `border-stroke-*`, `shadow-elevation-*`, etc. — ver [`src/index.css`](src/index.css) y [tokens/readme](src/shared/constants/tokens/readme.md).
 
-### Archivos de tokens y qué exporta cada uno
+| Módulo (TS)     | Export                           | Rol                                                      |
+| --------------- | -------------------------------- | -------------------------------------------------------- |
+| `typography.ts` | `TYPOGRAPHY`, `PRIMARY_NAV_LINK` | Títulos, párrafos, links, special                        |
+| `layout.ts`     | `LAYOUT`                         | Secciones, grids, prose, dividers, spacing               |
+| `button.ts`     | `BUTTON`                         | Variantes, tamaños, CTA, grupos                          |
+| `card.ts`       | `CARD`                           | Superficies, interactivo, overlay, layout interno        |
+| `badge.ts`      | `BADGE`                          | Badges, chips, dots, grupos                              |
+| `animation.ts`  | `ANIMATION`                      | Transiciones, stagger, scroll, loading                   |
+| `brand.ts`      | `BRAND`                          | Tamaño de icono de marca (header/footer)                 |
+| `z.ts`          | `Z`                              | Capas (header, modal, drawer móvil, …)                   |
+| `index.ts`      | Re-export                        | No hay módulo `INPUT` (sin formularios con ese sistema). |
 
-| Archivo         | Export principal | Contenido                                                                                        |
-| --------------- | ---------------- | ------------------------------------------------------------------------------------------------ |
-| `typography.ts` | `TYPOGRAPHY`     | Títulos, headings, párrafos, labels, links, variantes especiales y base.                         |
-| `layout.ts`     | `LAYOUT`         | Contenedores, secciones, espaciado, grid, flex, cards, hero, CTA, header, footer, divider.       |
-| `button.ts`     | `BUTTON`         | Base, tamaños, variantes, especiales (CTA, link, icon), grupos.                                  |
-| `badge.ts`      | `BADGE`          | Base, tamaños, variantes, especiales (dot, pill, chip), estados, grupos.                         |
-| `animation.ts`  | `ANIMATION`      | Transiciones, hover, fade, slide, bounce, spin, pulse, stagger, scroll, loading.                 |
-| `input.ts`      | `INPUT`          | Base (input y textarea), label (default y required), helper, group vertical.                     |
-| `index.ts`      | —                | Re-exporta todo (`export *` y `export { TYPOGRAPHY, LAYOUT, BUTTON, BADGE, ANIMATION, INPUT }`). |
+`import { … } from '@/shared/constants/tokens'`.
 
-`INPUT` se importa como `import { INPUT } from '@/shared/constants'` (vía `export * from './input'`).
-
-### Tokens semánticos de color en `src/index.css`
-
-En `index.css` se definen variables CSS en `:root` (grises, azul, naranja, rojo, verde, amarillo, morado) y en el bloque `@theme` de Tailwind 4 los **tokens semánticos** usados en los componentes:
-
-- **Texto:** `text-strong`, `text-subtle`, `text-soft`, `text-disabled`, `text-white`
-- **Fondos:** `bg-weak`, `bg-soft`, `bg-subtle`, `bg-surface`, `bg-strong`, `bg-white`
-- **Bordes:** `border-stroke-soft`, `border-stroke-subtle`, `border-stroke-strong`
-- **Estados:** information, warning, error, success, idle, feature (base, dark, light, lighter)
-
-El bloque `.dark` redefine estos tokens para modo oscuro. No se usan colores crudos (p. ej. `text-gray-600`) en componentes; se usan estos tokens.
-
-### Utilidad `cn()`
-
-En `src/shared/utils/cn.ts`, `cn` combina **clsx** y **tailwind-merge**: une y normaliza clases condicionales y evita conflictos entre clases de Tailwind.
-
-```ts
-import { clsx, type ClassValue } from 'clsx'
-import { twMerge } from 'tailwind-merge'
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
-```
-
-### Ejemplo de uso
-
-```ts
-import { TYPOGRAPHY, LAYOUT, BUTTON } from '@/shared/constants'
-import { cn } from '@/shared/utils/cn'
-
-// En un componente
-<section className={LAYOUT.section.hero}>
-  <h1 className={TYPOGRAPHY.title.hero}>Título</h1>
-  <button className={cn(BUTTON.base.default, BUTTON.variant.primary, BUTTON.size.lg)}>
-    Acción
-  </button>
-</section>
-```
+Utilidad: **`cn()`** en `src/shared/utils/cn.ts` (clsx + tailwind-merge).
 
 ---
 
-## 🧠 Filosofía del Setup
+## Filosofía del pipeline (pre-commit y CI)
 
-Esta sección documenta el razonamiento detrás de las decisiones del pipeline de pre-commit y su relación con la calidad de código.
+- **lint-staged** (`--no-stash`): Prettier y ESLint solo en archivos en staging; evita el fallo de `git apply` al restaurar.
+- **test:changed:** Vitest solo sobre cambios respecto al commit anterior — rápido; la suite completa y cobertura corren en CI o con `check:ci`.
+- **typecheck** en pre-commit: no subir tipos rotos.
+- **Commitlint** (hook `commit-msg`, no el pre-commit): valida [Conventional Commits](https://www.conventionalcommits.org/) con **scopes en lista cerrada** y **kebab-case**; **longitud mínima del scope 2**; asunto con **máximo 100 caracteres** en el encabezado. Detalle: `commitlint.config.cjs`.
 
-**Por qué `vitest --changed` en pre-commit y no la suite completa**
-Ejecutar solo los tests afectados por los archivos en staging reduce el tiempo del hook (segundos en lugar de minutos) y mantiene el feedback inmediato. La suite completa debe ejecutarse en CI o antes de merge; el pre-commit actúa como red de seguridad rápida para no subir cambios que rompan lo que se ha tocado. Así se evita que el desarrollador desactive el hook por lentitud y se controle la deuda en el código que se modifica.
-
-**Por qué `--no-stash` en lint-staged**
-lint-staged puede hacer stash de cambios no staged, ejecutar los linters y luego restaurar con `git apply`. En ciertos contextos (por ejemplo, primer commit, ramas nuevas o cambios parciales) ese flujo puede fallar con errores tipo "Needed a single revision" al pasar una referencia inválida a `git apply`. Con `--no-stash` se evita ese camino; solo se formatean/lintan los archivos staged. Si los comandos modifican el working tree, el desarrollador puede volver a hacer `git add`; no se intenta restaurar estado previo automáticamente. Es un trade-off aceptable para evitar fallos intermitentes del hook.
-
-**Por qué el typecheck forma parte del commit gate**
-TypeScript en modo estricto detecta errores de tipos y contratos antes de que lleguen a runtime o a revisión. Si el typecheck no está en el pre-commit, es fácil que se acumulen errores que solo aparecen en CI o en el build, retrasando la corrección. Incluirlo en el hook garantiza que cada commit que se sube cumple los tipos del proyecto y reduce fallos en integración.
-
-**Qué resuelve cada capa**
-
-- **lint-staged (Prettier + ESLint):** Formato consistente y reglas de estilo/calidad solo sobre lo que se commitea; evita ruido en el diff y desacopla estilo de revisión de código.
-- **test:changed:** Asegura que los cambios no rompen tests existentes en los archivos tocados.
-- **typecheck:** Asegura que el código cumple el contrato de tipos del proyecto.
-- **Commitlint (local y en CI):** Valida que los mensajes sigan una convención (p. ej. Conventional Commits), lo que permite changelogs automáticos, versionado semántico y un historial legible.
-
-**Efecto en deuda técnica y trabajo en equipo**
-El pre-commit impide introducir, en un solo commit, violaciones de formato, regresiones en tests afectados y errores de tipos. El hook commit-msg valida el mensaje antes de que el commit se complete. La validación en CI mantiene el mismo estándar sobre los commits ya subidos. En conjunto, se evita que la deuda se acumule en el tronco y se alinea a todo el equipo con las mismas comprobaciones antes de push y en cada PR.
+Efecto: formato consistente, tests afectados en verde, tipos correctos, mensajes de commit legibles y filtrables.
 
 ---
 
-## 🧪 Testing
+## Tests
 
-- **Runner:** Vitest 4.0.18, bloque `test` en `vite.config.ts`.
-- **Entorno:** `jsdom`.
-- **Setup:** `src/test/setup.ts` importa `@testing-library/jest-dom` (matchers como `toBeInTheDocument()`).
-- **Globals:** `globals: true` en Vitest; se pueden usar `describe`, `it`, `expect`, `vi` sin importarlos (en los tests del proyecto se importan por claridad).
-- **Cantidad actual:** 18 tests en 7 archivos (Button, HeroSection, AboutSection, ProjectsSection, ContactSection, ThemeToggle, useTheme).
+- **Runner:** Vitest, entorno `jsdom`, setup en `src/test/setup.ts` (jest-dom, `matchMedia` para temas y Motion).
+- **Cobertura:** umbrales en `vite.config.ts` (líneas, funciones, ramas, statements); `test:coverage:ci` en CI.
+- **Cantidad:** decenas de archivos de test bajo `**/__tests__/**` y `*.test.ts(x)`; ejecutar `npm run test` para el recuento actual.
 
-**Umbrales de cobertura** (en `vite.config.ts` → `test.coverage.thresholds`): **lines** 80%, **functions** 80%, **branches** 70%, **statements** 80%. Si algún valor queda por debajo, `vitest run --coverage` falla.
-
-**Comandos:** `npm run test` | `npm run test:watch` | `npm run test:changed` | `npm run test:ui` | `npm run test:coverage`.
-
-**Generar informe de cobertura:** `npm run test:coverage` ejecuta Vitest con cobertura y en Windows abre el HTML con `start`. En macOS/Linux usar `open coverage/index.html` o `xdg-open coverage/index.html` tras `vitest run --coverage`.
+`renderWithMotion` envuelve pruebas que usan componentes con Motion/LazyMotion.
 
 ---
 
-## 🔍 Comprobación de tipos
+## TypeScript
 
-`npm run typecheck` ejecuta `tsc --noEmit`. El proyecto usa la solución del `tsconfig.json` raíz (referencias a `tsconfig.app.json` y `tsconfig.node.json`); la app se comprueba con opciones estrictas en `tsconfig.app.json`. El build (`npm run build`) ejecuta `tsc -b` antes de `vite build`, así que la producción siempre pasa el typecheck.
-
-Opciones de rigor adicionales en `tsconfig.app.json`:
-
-- **noUncheckedIndexedAccess:** el acceso a índices en arrays/objetos indexables devuelve `T | undefined`.
-- **noImplicitOverride:** los métodos que sobrescriben deben llevar `override`.
-- **exactOptionalPropertyTypes:** las propiedades opcionales no aceptan `undefined` explícito salvo que el tipo lo incluya.
+`tsconfig.app.json`: opciones estrictas (`noUncheckedIndexedAccess`, `noImplicitOverride`, `exactOptionalPropertyTypes`, etc.). `npm run build` ejecuta `tsc -b` antes de Vite.
 
 ---
 
-## 🎨 Estilos
+## Estilos
 
-Tailwind CSS 4.x vía `@tailwindcss/vite`. Punto de entrada: `src/index.css` con `@import 'tailwindcss'` y design tokens/estilos globales (tokens base en `:root`, semánticos en `@theme`, modo oscuro en `.dark`). Prettier usa `prettier-plugin-tailwindcss` con `tailwindFunctions: ["clsx", "cn"]` para ordenar clases (compatible con `cn()`).
-
----
-
-## 🧰 Calidad de código
-
-### Husky
-
-El script `prepare` en `package.json` ejecuta `husky` tras `npm install`, instalando los hooks en `.husky`. Hay **dos hooks** configurados:
-
-1. **pre-commit** (`.husky/pre-commit`): se ejecuta antes de cada `git commit`, en este orden:
-   - `npx lint-staged --no-stash` — formateo y lint solo de archivos staged.
-   - `npm run test:changed` — tests de archivos modificados.
-   - `npm run typecheck` — comprobación de tipos.
-
-   Si cualquiera falla, el commit se aborta.
-
-2. **commit-msg** (`.husky/commit-msg`): se ejecuta tras escribir el mensaje de commit.
-   - `npx --no -- commitlint --edit "$1"` — valida el formato del mensaje (Conventional Commits).
-   - Si el mensaje no cumple la convención, el commit se aborta.
-
-### Commitlint (local y en CI)
-
-Commitlint está configurado **tanto en local como en CI**. Las siguientes restricciones se aplican automáticamente en cada commit mediante el hook **commit-msg** de Husky:
-
-- **Subject en minúsculas** (sin mayúsculas salvo acrónimos si se permitieran; en la práctica usar todo en minúsculas).
-- **Sin acentos ni caracteres especiales** en el subject (p. ej. usar "semanticas" en lugar de "semánticas").
-- **Sin guiones** en palabras del subject (p. ej. "reexports" en lugar de "re-exports").
-- **Scope mínimo 3 caracteres** (p. ej. usar `workflow` en lugar de `ci` para GitHub Actions).
-- **Scope en kebab-case** (minúsculas y guiones; p. ej. `design-tokens` o `tokens`).
-- **Header máximo 100 caracteres** (tipo + scope + descripción).
-
-- **Local:** Se usa `@commitlint/cli` y `@commitlint/config-conventional` como devDependencies. El archivo `commitlint.config.cjs` en la raíz extiende `@commitlint/config-conventional` y define las reglas anteriores. El hook **commit-msg** de Husky ejecuta `npx commitlint --edit "$1"` y valida el mensaje antes de que el commit quede registrado.
-- **CI:** El workflow `.github/workflows/commitlint.yml` se dispara en **push** y **pull_request** (todas las ramas). La validación de mensajes se ejecuta **solo en pull_request**: tras checkout con historial completo (`fetch-depth: 0`), Node 20 y `npm ci`, se ejecuta commitlint sobre el rango de commits entre la base y la cabeza del PR. Si la base no está disponible (por ejemplo, primer push a una rama nueva, SHA en ceros), se valida solo el último commit (HEAD~1..HEAD) para evitar el error "Invalid revision range".
-
-### lint-staged
-
-En `package.json`, clave `"lint-staged"`: archivos `*.{js,jsx,ts,tsx}`; comandos en orden `prettier --write` y `eslint --fix`. Solo se procesan archivos en staging en el momento del pre-commit. Prettier va primero para que ESLint (con eslint-config-prettier) no marque conflictos de formato.
+`src/index.css`: `@import 'tailwindcss'`, primitivos en `:root`, `@theme` con tokens semánticos, bloque **`.dark`**. Prettier con `prettier-plugin-tailwindcss` y `tailwindFunctions: ['clsx', 'cn']`.
 
 ---
 
-## 🔁 Gitflow
+## Calidad: Husky y CI
 
-Este proyecto sigue el modelo **Gitflow** con las siguientes ramas:
+| Evento            | Qué corre                                                        |
+| ----------------- | ---------------------------------------------------------------- |
+| **pre-commit**    | `lint-staged` → `test:changed` → `typecheck`                     |
+| **commit-msg**    | `commitlint --edit`                                              |
+| **CI** (`ci.yml`) | `format:check`, `lint`, `typecheck`, `test:coverage:ci`, `build` |
+| **PR (opcional)** | Workflow `react-doctor`                                          |
 
-| Rama        | Tipo       | Propósito                                                                                           |
-| ----------- | ---------- | --------------------------------------------------------------------------------------------------- |
-| `main`      | Permanente | Código en producción. Solo recibe merges desde `release/*` y `hotfix/*`                             |
-| `develop`   | Permanente | Rama de integración. Todas las features se integran aquí                                            |
-| `feat/*`    | Temporal   | Nueva funcionalidad. Se crea y mergea en `develop`                                                  |
-| `fix/*`     | Temporal   | Corrección de bugs. Se crea y mergea en `develop`                                                   |
-| `chore/*`   | Temporal   | Cambios de configuración. Se crea y mergea en `develop`                                             |
-| `release/*` | Temporal   | Preparación de release. Se crea desde `develop`; luego merge a `main` (tag) y de vuelta a `develop` |
-| `hotfix/*`  | Temporal   | Fix urgente en producción. Se crea desde `main`, mergea en `main` y `develop`                       |
+---
 
-### Flujo completo
+## Gitflow (resumen)
 
-1. Crear rama desde `develop`:
+Ramas `main` (producción), `develop` (integración), ramas `feat/*`, `fix/*`, `chore/*`, `release/*`, `hotfix/*` según el flujo acordado en el equipo. **No** hacer push directo a `main` sin proceso.
 
-   ```bash
-   git checkout develop
-   git pull origin develop
-   git checkout -b feat/nombre-feature
-   ```
+---
 
-2. Desarrollar con commits atómicos siguiendo Conventional Commits.
+## Instalación
 
-3. Antes de cada commit, el pre-commit ejecuta automáticamente:
-   lint-staged → test:changed → typecheck → commitlint
-
-4. Abrir PR hacia `develop` usando la plantilla del proyecto.
-
-5. CI debe pasar: lint + typecheck + test + build.
-
-6. Merge a `develop`.
-
-7. Cuando `develop` esté listo para una release:
-
-   ```bash
-   git checkout develop
-   git pull origin develop
-   git checkout -b release/v1.0.0
-   ```
-
-   En la rama `release/*`: versión, changelog y solo fixes menores de cierre.
-
-8. Abrir PR **release/v1.0.0** → **main**. Tras el merge, etiquetar en `main`:
-
-   ```bash
-   git checkout main
-   git pull origin main
-   git tag v1.0.0
-   git push origin v1.0.0
-   ```
-
-9. Integrar la release en `develop` (PR **release/v1.0.0** → **develop** o merge de `main` en `develop`) para alinear ramas.
-
-### Hotfix
-
-Para bugs críticos en producción:
+Requisito: **Node 20+**, npm.
 
 ```bash
-git checkout main
-git checkout -b hotfix/nombre-bug
-# fix the bug
-# open PR to main AND develop
-```
-
----
-
-## 🛡️ Validaciones automáticas
-
-| Ámbito                          | Ejecución                                                                                                     |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| **Pre-commit (Husky)**          | lint-staged (Prettier + ESLint en `*.{js,jsx,ts,tsx}` staged) → `npm run test:changed` → `npm run typecheck`. |
-| **Commit-msg (Husky)**          | commitlint (formato del mensaje de commit).                                                                   |
-| **GitHub Actions — CI**         | lint + typecheck + test + build en push y pull_request (`ci.yml`).                                            |
-| **GitHub Actions — Commitlint** | Validación de mensajes de commit en el rango de push/PR (`commitlint.yml`).                                   |
-
----
-
-## 📦 Instalación
-
-Requisitos: Node.js 20+, npm.
-
-```bash
-git clone <url-del-repositorio>
+git clone <url>
 cd portfolio-v2
 npm install
 ```
 
-`npm install` ejecuta `prepare` e instala los hooks de Husky. No se documentan variables de entorno ni APIs externas en este README.
+`npm install` dispara `prepare` (Husky).
 
 ---
 
-## 🏗️ Build y producción
+## Variables de entorno
 
-```bash
-npm run build
-```
+- Prefijo **`VITE_`**, lectura con `import.meta.env` (nunca `process.env` en código de app).
+- Útiles en build: **`VITE_BASE_PATH`** (p. ej. `/portfolio-v2/`), **`VITE_PUBLIC_SITE_URL`** (URL canónica del sitio desplegado, para sitemap, JSON-LD y `security.txt`).
+- Vite carga `.env`, `.env.local`, y por **modo** `.env.[mode]` (p. ej. `development`, `production`, `github`).
 
-Ejecuta `tsc -b` y luego `vite build`. Salida en `dist/`. Servir en local: `npm run preview`.
+No commitear secretos; `.env` local en `.gitignore` si aplica.
 
 ---
 
-## 🔮 Mejoras futuras
+## Mejoras futuras ( ideas )
 
-- Añadir **LICENSE** en la raíz si se define una licencia.
-- Hacer el script `test:coverage` multiplataforma (p. ej. usando `open`/`xdg-open` según el SO) o documentar los comandos por plataforma en el README.
-- Añadir **og:image** y **og:url** en `index.html` cuando el proyecto esté desplegado y se disponga de URL e imagen definitivas.
-- Sustituir el contenido placeholder de las secciones por el contenido real del portfolio (textos, proyectos, enlaces).
-- Lazy loading de secciones pesadas con `React.lazy` y `Suspense`.
-- Optimizar imágenes con formatos WebP/AVIF y tamaños responsivos.
+- Afinar **imágenes** (formatos modernos, `srcset` / tamaños) según presupuesto y CDN.
+- **Cobertura** multiplataforma en script (`open` / `xdg-open`) para el informe HTML.
+- Cualquier **CSP o cabeceras** estrictas requieren hosting con control (no solo HTML estático en Pages).
+
+Documentación de Cursor: reglas en `.cursor/rules/`, skills en `.cursor/skills/` (pueden resumirse en `.agents/` local si se usa; esa carpeta no se versiona).
+
+---
+
+## License
+
+Repositorio privado / uso personal; añade un `LICENSE` si publicas y quieres términos explícitos.
