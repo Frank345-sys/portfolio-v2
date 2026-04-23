@@ -2,6 +2,18 @@
 
 Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y el versionado en [Semantic Versioning](https://semver.org/lang/es/).
 
+## [Unreleased]
+
+### Añadido
+
+- Generación de `.well-known/security.txt` en el build (contacto y URL canónica según `VITE_PUBLIC_SITE_URL`).
+- Metas de política en documento: `referrer` y `Permissions-Policy` (complemento a cabeceras HTTP; no sustituyen CSP ni X-Frame-Options en el servidor).
+- Script `lighthouse:pages` para auditar rendimiento, SEO, accesibilidad y buenas prácticas contra la URL publicada en GitHub Pages; `lighthouse-report.html` ignorado por git.
+
+### Cambiado
+
+- `public/robots.txt` y `public/sitemap.xml` alineados con la URL actual de GitHub Pages (el build sigue sobrescribiendo ambos según el modo y `.env`).
+
 ## [1.3.0] - 2026-04-21
 
 ### Añadido
