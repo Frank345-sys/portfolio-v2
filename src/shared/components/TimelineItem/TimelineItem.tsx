@@ -98,7 +98,9 @@ export function TimelineItem({
     accent === 'information' ? 'bg-information-base' : 'bg-feature-base'
   )
   const accentCompany =
-    accent === 'information' ? 'text-information-base' : 'text-feature-base'
+    accent === 'information'
+      ? 'text-information-base dark:text-information-dark'
+      : 'text-feature-base dark:text-feature-dark'
 
   return (
     <li
