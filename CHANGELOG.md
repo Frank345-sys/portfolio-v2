@@ -4,6 +4,10 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ## [Unreleased]
 
+### Arreglado
+
+- Accesibilidad: en modo oscuro, acentos informativo y _feature_ legibles en superficies oscuras — `AboutValues` (código `desc` con `dark:text-information-dark`) y `TimelineItem` (empresa: `dark:text-information-dark` / `dark:text-feature-dark` según acento) evitando `text-*-base` sin variante en oscuro (Lighthouse `color-contrast`).
+
 ## [1.4.1] - 2026-04-24
 
 ### Cambiado
