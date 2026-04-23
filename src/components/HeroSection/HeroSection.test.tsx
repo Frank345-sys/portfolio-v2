@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react'
+import { SITE_DISPLAY_NAME } from '@/shared/constants/siteProfile'
 import { renderWithMotion } from '@/test/renderWithMotion'
 import { HeroSection } from './HeroSection'
 
@@ -6,7 +7,7 @@ describe('HeroSection', () => {
   it('el nombre va en un h1', () => {
     renderWithMotion(<HeroSection />)
     const h1 = screen.getByRole('heading', { level: 1 })
-    expect(h1).toHaveTextContent('Frank González')
+    expect(h1).toHaveTextContent(SITE_DISPLAY_NAME)
   })
 
   it('el CTA de CV enlaza al PDF en public/', () => {
