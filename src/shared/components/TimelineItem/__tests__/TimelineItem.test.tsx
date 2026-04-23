@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { TimelineItem } from '@/shared/components/TimelineItem'
 import { TIMELINE_CHIP_VARIANT } from '@/shared/constants/enums'
+import { SITE_PROFILE } from '@/shared/constants/siteProfile'
 
 /**
  * Casos mínimos:
@@ -15,7 +16,7 @@ describe('TimelineItem', () => {
       <ol aria-label="Timeline de prueba">
         <TimelineItem
           period="Sep 2024 - Feb 2026"
-          heading="Frontend Developer"
+          heading={SITE_PROFILE.role}
           company="B Life"
           description="Trabajo en productos web"
         />
@@ -27,7 +28,7 @@ describe('TimelineItem', () => {
     ).toBeInTheDocument()
     expect(screen.getByRole('listitem')).toBeInTheDocument()
     expect(screen.getAllByText('Sep 2024 - Feb 2026').length).toBeGreaterThan(0)
-    expect(screen.getByText('Frontend Developer')).toBeInTheDocument()
+    expect(screen.getByText(SITE_PROFILE.role)).toBeInTheDocument()
     expect(screen.getByText('B Life')).toBeInTheDocument()
     expect(screen.getByText('Trabajo en productos web')).toBeInTheDocument()
   })
