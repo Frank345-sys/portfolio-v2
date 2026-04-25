@@ -1,4 +1,8 @@
-import { SITE_DISPLAY_NAME, SITE_PROFILE } from '@/shared/constants/siteProfile'
+import {
+  HERO_STACK_HIGHLIGHT,
+  SITE_DISPLAY_NAME,
+  SITE_PROFILE,
+} from '@/shared/constants/siteProfile'
 import { BUTTON, LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 import { BackgroundBoxes } from '@/shared/components/BackgroundBoxes'
@@ -47,15 +51,24 @@ export function HeroSection() {
                   'text-information-base'
                 )}
               >
-                {SITE_PROFILE.role} · {SITE_PROFILE.focusLine}
+                {SITE_PROFILE.role}
+              </p>
+              <p
+                className={cn(
+                  TYPOGRAPHY.paragraph.small,
+                  'text-text-subtle max-w-xl'
+                )}
+              >
+                <span className="sr-only">Stack principal: </span>
+                {HERO_STACK_HIGHLIGHT}
               </p>
             </div>
 
             {/* Descripción del rol */}
             <p className={cn(TYPOGRAPHY.paragraph.lead, LAYOUT.prose.lg)}>
-              Refactorizo y entrego UIs con impacto: integración a APIs, tiempos
-              de carga, consistencia (tokens) y accesibilidad, en equipos con
-              producto y back-end.
+              Desarrollo interfaces web rápidas, limpias y accesibles,
+              optimizando rendimiento, integración con APIs y experiencia de
+              usuario.
             </p>
 
             {/* CTA de descarga de CV */}
