@@ -6,8 +6,8 @@ import { LAYOUT } from '@/shared/constants/tokens'
 
 const ACADEMIC_LEGEND_ITEMS = [
   {
-    id: 'conocimientos',
-    label: 'Conocimientos adquiridos en la formación',
+    id: 'conocimientos-formacion',
+    label: 'Adquiridos en formación',
     dotClassName: 'bg-feature-base',
   },
 ] as const
@@ -24,7 +24,7 @@ export function AboutAcademic() {
       <div className={LAYOUT.spacing.compact}>
         <Legend
           items={[...ACADEMIC_LEGEND_ITEMS]}
-          ariaLabel="Chips de formación académica"
+          ariaLabel="Significado de los chips de formación académica"
         />
         <ol aria-label="Formación académica">
           {ABOUT_ACADEMIC.map((item) => (

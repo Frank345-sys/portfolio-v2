@@ -11,7 +11,7 @@ import { SKILL_LABEL } from '@/shared/constants/skills'
 import { SITE_PROFILE, SITE_TAGLINE } from '@/shared/constants/siteProfile'
 
 /** Datos del hero (nombre, badge, ubicación, tagline, avatar) — consumidos en `AboutHero`. */
-export interface AboutHeroData {
+interface AboutHeroData {
   firstName: string
   lastName: string
   badge: string
@@ -27,12 +27,12 @@ export const ABOUT_HERO: AboutHeroData = {
   lastName: SITE_PROFILE.lastName,
   badge: SITE_PROFILE.role,
   location: '📍Puebla, México',
-  tagline: `${SITE_TAGLINE} Especializado en **React.js**, **TypeScript** y **Next.js**, con enfoque en componentes escalables, performance y UI/UX de calidad.`,
+  tagline: `${SITE_TAGLINE} Stack principal: **React**, **TypeScript** y **Next.js** en e-commerce, B2B y herramientas internas.`,
   avatarInitials: SITE_PROFILE.initials,
 }
 
 /** Un párrafo de la bio (quién soy) con clave estable para listas React. */
-export interface AboutBioParagraph {
+interface AboutBioParagraph {
   id: string
   text: string
 }
@@ -43,46 +43,48 @@ export interface AboutBioParagraph {
  */
 export const ABOUT_BIO: readonly AboutBioParagraph[] = [
   {
-    id: 'about-bio-tagline',
-    text: SITE_TAGLINE,
-  },
-  {
     id: 'about-bio-intro',
-    text: `Soy **Francisco Omar Habib González Utrera**, Ingeniero en Sistemas Computacionales, con más de 1 año de experiencia como **${SITE_PROFILE.role}** desarrollando landing pages, soluciones e-commerce y plataformas web de alto impacto.`,
+    text: `Soy **Francisco Omar Habib González Utrera**, ingeniero en sistemas computacionales, con especialidad en **ingeniería de software**. Llevo **más de dos años** de recorrido en frontend (formación intensiva y entrega en producción). Cubrí e-commerce, B2B, ERP y landings, cerca de producto y de back-end.`,
   },
   {
-    id: 'about-bio-specialization',
-    text: 'Me especializo en **React.js**, **optimización de performance** y **diseño de componentes escalables**. Disfruto mejorar flujos de usuario, refactorizar código legado y elevar la calidad del producto.',
+    id: 'about-bio-positioning',
+    text: 'Diseño e implemento interfaces de producto con **React** y **TypeScript**: de landings a plataformas con **APIs**, priorizando rendimiento, accesibilidad y consistencia con diseño.',
+  },
+  {
+    id: 'about-bio-proof',
+    text: 'Refactorizaciones con impacto medible donde he logrado **~40% menos** código de frontend y **carga aproximadamente a la mitad** (de ~3s a **~1,4–1,6s**) en un núcleo B2B, además de desarrollar y **homogeneizar la UI** con el ecosistema de producto completo.',
   },
   {
     id: 'about-bio-collaboration',
-    text: 'He trabajado colaborativamente con equipos de **Back-End**, tengo fidelidad a los diseños en **Figma** y una obsesión por los detalles que marcan la diferencia entre una UI funcional y una UI memorable.',
+    text: 'Trabajo junto a diseño **Figma** y equipos de **back-end**: el detalle cuenta para negocio y mantenimiento — **componentes y patrones** listos para extender, no parches aislados.',
   },
 ]
 
 /** Valores / cómo trabajo (3 tarjetas) */
 export const ABOUT_VALUES: ValueItem[] = [
   {
-    name: 'Componentes escalables',
-    desc: 'Reutilizables y mantenibles',
-    detail: 'Diseño sistemas de componentes pensados para crecer sin romper.',
-  },
-  {
-    name: 'Performance',
-    desc: 'Experiencia rápida y fluida',
-    detail: 'Optimizo tiempos de carga y elimino renders innecesarios.',
-  },
-  {
-    name: 'Fidelidad al diseño',
-    desc: 'De Figma a código con precisión',
+    name: 'Sistemas de UI',
+    desc: 'Componentes y tokens',
     detail:
-      'El pixel importa. Traduzco diseños a código con atención al detalle.',
+      'Piezas reutilizables y coherentes: escalan sin reescribir la base en cada release.',
+  },
+  {
+    name: 'Rendimiento medible',
+    desc: 'Menos fricción al cargar',
+    detail:
+      'Optimizo la percepción de velocidad y el camino crítico; menos JS superfluo.',
+  },
+  {
+    name: 'Figma → producción',
+    desc: 'Especificación respetada',
+    detail:
+      'Estados e interacciones alineados al diseño; el código sostiene el producto.',
   },
 ]
 
 /**
  * Grupos de skills (stack técnico) — dominio / proficiente / familiar.
- * Las etiquetas deben coincidir con chips `academic` / `learned` en timelines (`ABOUT_ACADEMIC`, `ABOUT_EXPERIENCE`)
+ * Las etiquetas deben coincidir con chips `academic` / `applied` / `learned` en timelines (`ABOUT_ACADEMIC`, `ABOUT_EXPERIENCE`)
  * y con `skills` de cada entrada en `PROJECTS` (ProjectsSection).
  * Los tests de sincronía usan `stackSkillLabelSet` (`@/test/stackSkillLabelSet`).
  * El orden visual por grupo es Dominio → Proficiente → Familiar (`compareSkillTagsByVariant` en `./utils`).
@@ -172,14 +174,20 @@ export const ABOUT_SKILLS: SkillGroup[] = [
   },
 ]
 
-/** Experiencia laboral — chips con variante semántica (azul/violeta/verde) */
+/**
+ * Experiencia laboral — chips con trazabilidad:
+ * - `technology`: ámbitos de producto.
+ * - `impactMetric`: impacto medible.
+ * - `applied`: stack ya visto en formación (o equivalente) y **aplicado** en el puesto.
+ * - `learned`: tecnologías **nuevas** adquiridas en esta experiencia.
+ */
 export const ABOUT_EXPERIENCE: ExpItem[] = [
   {
     period: 'Sep 2024 — Feb 2026',
     heading: SITE_PROFILE.role,
     company: 'B Life Suplementos Fitness · Puebla, MX',
     description:
-      'Desarrollo en e-commerce, plataforma B2B, ERP interno y landing pages. Creación de componentes reutilizables con React, refactorización de código legacy, optimización de performance y mejora de UI/UX colaborando con equipos de Back-End.',
+      'E-commerce, B2B, ERP y landings: componentes reutilizables, refactor de legacy, performance y alineación de UI/UX con coordinación a back-end.',
     chips: [
       { label: 'E-commerce', variant: TIMELINE_CHIP_VARIANT.TECHNOLOGY },
       { label: 'B2B Platform', variant: TIMELINE_CHIP_VARIANT.TECHNOLOGY },
@@ -194,8 +202,16 @@ export const ABOUT_EXPERIENCE: ExpItem[] = [
         variant: TIMELINE_CHIP_VARIANT.IMPACT_METRIC,
       },
       { label: '−30% bugs', variant: TIMELINE_CHIP_VARIANT.IMPACT_METRIC },
+      { label: SKILL_LABEL.HTML5, variant: TIMELINE_CHIP_VARIANT.APPLIED },
+      { label: SKILL_LABEL.CSS3, variant: TIMELINE_CHIP_VARIANT.APPLIED },
+      {
+        label: SKILL_LABEL.JAVASCRIPT_ES6_PLUS,
+        variant: TIMELINE_CHIP_VARIANT.APPLIED,
+      },
+      { label: SKILL_LABEL.REACT, variant: TIMELINE_CHIP_VARIANT.APPLIED },
+      { label: SKILL_LABEL.GIT_GITHUB, variant: TIMELINE_CHIP_VARIANT.APPLIED },
+      { label: SKILL_LABEL.FIGMA, variant: TIMELINE_CHIP_VARIANT.APPLIED },
       { label: SKILL_LABEL.ASTRO, variant: TIMELINE_CHIP_VARIANT.LEARNED },
-      { label: SKILL_LABEL.REACT, variant: TIMELINE_CHIP_VARIANT.LEARNED },
       {
         label: SKILL_LABEL.FRAMER_MOTION,
         variant: TIMELINE_CHIP_VARIANT.LEARNED,
@@ -208,7 +224,7 @@ export const ABOUT_EXPERIENCE: ExpItem[] = [
   },
 ]
 
-/** Formación académica — chips en violeta (academic), mismo tono para todos */
+/** Formación académica — chips `academic` (violeta): lo adquirido en la titulación o programas. */
 export const ABOUT_ACADEMIC: AcademicItem[] = [
   {
     period: 'Ago 2016 — Ene 2022',

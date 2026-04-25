@@ -1,17 +1,18 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { AnimatePresence, m } from 'motion/react'
 import { TYPOGRAPHY, Z } from '@/shared/constants/tokens'
 import { ProgressiveImage } from '@/shared/components/ProgressiveImage'
-import { useImageCarousel } from './hooks/useImageCarousel'
+import { useImageCarousel } from './hooks'
 import { CarouselNavButton } from './subcomponents'
 import type {
   ImageCarouselNavDirection,
   ImageCarouselSharedOptions,
 } from './types'
 import { cn } from '@/shared/utils/cn'
+import { getProjectImageAttributes } from '@/shared/utils/getProjectImageAttributes'
 
 /** Props públicas del componente `ImageCarousel`. */
-export interface ImageCarouselProps extends ImageCarouselSharedOptions {
+interface ImageCarouselProps extends ImageCarouselSharedOptions {
   /** Si se omite, se usa la etiqueta por defecto en español («Imagen anterior»). */
   previousSlideAriaLabel?: string
   /** Si se omite, se usa la etiqueta por defecto en español («Imagen siguiente»). */
@@ -22,6 +23,11 @@ export interface ImageCarouselProps extends ImageCarouselSharedOptions {
    * Clases extra para la `<img>` (p. ej. `group-hover:scale-[1.03]` si un ancestro usa `group`).
    */
   imageClassName?: string
+  /**
+   * `sizes` + WebP de proyectos: tarjeta (columna estrecha) vs vista ampliada (modal ancho).
+   * @defaultValue 'card'
+   */
+  projectImageVariant?: 'card' | 'lightbox'
 }
 
 /**
@@ -57,6 +63,7 @@ function ImageCarouselImpl({
   nextSlideAriaLabel,
   className,
   imageClassName,
+  projectImageVariant = 'card',
   slideIndex,
   onSlideChange,
 }: ImageCarouselProps) {
@@ -91,6 +98,16 @@ function ImageCarouselImpl({
     [goToSlide]
   )
 
+  const {
+    src: imageSrc,
+    srcSet: imageSrcSet,
+    sizes: imageSizes,
+  } = useMemo(
+    () =>
+      getProjectImageAttributes(currentSrc, { variant: projectImageVariant }),
+    [currentSrc, projectImageVariant]
+  )
+
   return (
     <div
       className={cn('relative aspect-video w-full overflow-hidden', className)}
@@ -111,7 +128,9 @@ function ImageCarouselImpl({
           className="absolute inset-0 h-full w-full"
         >
           <ProgressiveImage
-            src={currentSrc}
+            src={imageSrc}
+            srcSet={imageSrcSet}
+            sizes={imageSizes}
             alt={imgAlt}
             reduceMotion={reduceMotion}
             wrapperClassName="h-full w-full"

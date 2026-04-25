@@ -81,6 +81,3 @@ export const Z = {
    */
   toast: 'z-80',
 } as const
-
-export type ZKey = keyof typeof Z
-export type ZValue = (typeof Z)[ZKey]

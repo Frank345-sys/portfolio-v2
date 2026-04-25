@@ -13,7 +13,7 @@ import {
   headerContainer,
 } from './styles'
 
-export interface HeaderProps {
+interface HeaderProps {
   /** Texto junto al logo; por defecto `"Mi Portfolio"`. */
   siteName?: string
   /** Enlaces de navegación; por defecto anclas a inicio, sobre mí y proyectos. */

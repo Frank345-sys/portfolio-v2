@@ -13,13 +13,19 @@ export function parseEmphasis(
   emphasisClassName: string
 ): ReactNode[] {
   const parts = text.split(/\*\*(.+?)\*\*/g)
-  return parts.map((part, i) =>
-    i % 2 === 1 ? (
-      <strong key={i} className={emphasisClassName}>
+  let emphasisOrdinal = 0
+  return parts.map((part, segmentIndex) => {
+    if (segmentIndex % 2 === 0) {
+      return part
+    }
+    emphasisOrdinal += 1
+    return (
+      <strong
+        key={`emphasis-block-${String(part)}-${String(emphasisOrdinal)}`}
+        className={emphasisClassName}
+      >
         {part}
       </strong>
-    ) : (
-      part
     )
-  )
+  })
 }

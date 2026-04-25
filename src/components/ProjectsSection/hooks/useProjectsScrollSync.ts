@@ -6,7 +6,7 @@ import {
   PROJECTS_SCROLL_INTERSECTION_THRESHOLDS,
 } from '../constants'
 
-export interface UseProjectsScrollSyncResult {
+interface UseProjectsScrollSyncResult {
   /** Índice del proyecto cuyo bloque tiene mayor ratio de intersección visible. */
   activeIndex: number
   /** `visible` en `ProjectInfo`: breve `false` al cambiar proyecto con scroll sync (transición); `true` el resto del tiempo y en móvil tras reset. */

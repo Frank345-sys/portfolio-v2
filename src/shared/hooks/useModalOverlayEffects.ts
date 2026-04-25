@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react'
 import { useLenis } from 'lenis/react'
 
-export interface UseModalOverlayEffectsParams {
+interface UseModalOverlayEffectsParams {
   /** Si es true, se activan Escape, bloqueo de scroll y pausa de Lenis. */
   isOpen: boolean
   /** Invocado al pulsar Escape mientras el overlay está abierto. */

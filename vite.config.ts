@@ -6,6 +6,7 @@ import type { Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import sharp from 'sharp'
 import {
   CONTACT_EMAIL_TRIMMED,
   CONTACT_PROFILE,
@@ -116,6 +117,73 @@ function injectSiteProfileHtmlPlugin(siteUrl: string): Plugin {
   }
 }
 
+/**
+ * Tras el build: re-codifica PNG bajo `.../images/projects/` con sharp (sin imagemin
+ * ni binarios de pngquant; evita la cadena vulnerable de `npm audit`). Solo
+ * sustituye el PNG si el resultado es más pequeño. Luego genera `*-600.webp` y
+ * `*-1200.webp` desde el buffer final (lectura en memoria, evita bloqueos al
+ * reescribir en Windows). Las rutas de `getProjectImageAttributes` apuntan a
+ * esos WebP en producción.
+ */
+function projectImagesPipelinePlugin(): Plugin {
+  let outDir = 'build'
+  return {
+    name: 'project-images-pipeline',
+    apply: 'build',
+    configResolved(config) {
+      outDir = config.build.outDir
+    },
+    async closeBundle() {
+      const dir = path.resolve(process.cwd(), outDir, 'images', 'projects')
+      if (!fs.existsSync(dir)) {
+        return
+      }
+      const files = fs
+        .readdirSync(dir)
+        .filter((f) => f.toLowerCase().endsWith('.png'))
+      for (const file of files) {
+        const abs = path.join(dir, file)
+        const stem = file.replace(/\.png$/i, '')
+        let pngBuffer: Buffer
+        try {
+          pngBuffer = await fs.promises.readFile(abs)
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : String(e)
+          throw new Error(
+            `project-images-pipeline: no se pudo leer ${abs}: ${msg}`
+          )
+        }
+        const optimized = await sharp(pngBuffer)
+          .png({
+            quality: 80,
+            compressionLevel: 9,
+            effort: 10,
+            adaptiveFiltering: true,
+          })
+          .toBuffer()
+        if (optimized.length < pngBuffer.length) {
+          await fs.promises.writeFile(abs, optimized)
+          pngBuffer = optimized
+        }
+        for (const w of [600, 1200] as const) {
+          const out = path.join(dir, `${stem}-${w}.webp`)
+          try {
+            await sharp(pngBuffer)
+              .resize(w, null, { fit: 'inside', withoutEnlargement: true })
+              .webp({ quality: 82, effort: 4 })
+              .toFile(out)
+          } catch (e) {
+            const msg = e instanceof Error ? e.message : String(e)
+            throw new Error(
+              `project-images-pipeline: no se pudo generar ${out}: ${msg}`
+            )
+          }
+        }
+      }
+    },
+  }
+}
+
 // https://vite.dev/config/
 // URLs: `.env.production` (build por defecto), `.env.github` (`build:github`), `.env.development` (dev).
 export default defineConfig(({ mode }) => {
@@ -135,6 +203,7 @@ export default defineConfig(({ mode }) => {
       react(),
       tailwindcss(),
       writeSeoFilesPlugin(siteUrl),
+      projectImagesPipelinePlugin(),
     ],
     resolve: {
       alias: {

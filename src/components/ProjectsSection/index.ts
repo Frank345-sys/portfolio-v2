@@ -4,9 +4,3 @@
  * @module components/ProjectsSection
  */
 export { ProjectsSection } from './ProjectsSection'
-export type {
-  Project,
-  ProjectLightboxCarouselSync,
-  ProjectPreviewCopy,
-  ProjectPreviewGallery,
-} from './types'

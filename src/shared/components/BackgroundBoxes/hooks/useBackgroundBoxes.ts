@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import type { BoxData } from '../types'
 import { generateBoxes } from '../utils'
 import { useParallaxMouse } from './useParallaxMouse'
-import type { UseParallaxMouseReturn } from './useParallaxMouse'
 import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
 
@@ -11,7 +10,7 @@ import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
  */
 const FALLBACK_INNER_WIDTH_PX = 1440
 
-export interface UseBackgroundBoxesReturn extends UseParallaxMouseReturn {
+interface UseBackgroundBoxesReturn extends ReturnType<typeof useParallaxMouse> {
   /** Posiciones y metadatos de cada caja flotante (regeneradas en `resize`). */
   boxes: BoxData[]
   /** `true` cuando el viewport cumple `lg` (parallax activo). */

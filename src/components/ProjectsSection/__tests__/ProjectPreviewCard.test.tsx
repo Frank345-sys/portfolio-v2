@@ -217,6 +217,49 @@ describe('ProjectPreviewCard', () => {
     expect(imgs.length).toBeGreaterThanOrEqual(1)
   })
 
+  it('en lg, clic en la imagen invoca onRequestLightbox con el slide actual', async () => {
+    mockMatchMedia(true)
+    const onRequestLightbox = vi.fn()
+    const user = userEvent.setup()
+    renderWithMotion(
+      <ProjectPreviewCard
+        images={['/images/projects/berp-erp.png']}
+        imageAlt="BERP"
+        subtitle="App Web"
+        title="BERP ERP"
+        reduceMotion={false}
+        isActive={true}
+        autoplay={false}
+        onRequestLightbox={onRequestLightbox}
+      />
+    )
+
+    await user.click(screen.getByRole('img', { name: /^berp$/i }))
+    expect(onRequestLightbox).toHaveBeenCalledTimes(1)
+    expect(onRequestLightbox).toHaveBeenCalledWith(0)
+  })
+
+  it('en lg no invoca onRequestLightbox al pulsar la card si no está activa', async () => {
+    mockMatchMedia(true)
+    const onRequestLightbox = vi.fn()
+    const user = userEvent.setup()
+    renderWithMotion(
+      <ProjectPreviewCard
+        images={['/images/projects/berp-erp.png']}
+        imageAlt="BERP"
+        subtitle="App Web"
+        title="BERP ERP"
+        reduceMotion={false}
+        isActive={false}
+        autoplay={false}
+        onRequestLightbox={onRequestLightbox}
+      />
+    )
+
+    await user.click(screen.getByRole('img', { name: /^berp$/i }))
+    expect(onRequestLightbox).not.toHaveBeenCalled()
+  })
+
   it('en viewport lg no cierra el diálogo al pulsar el contenido del panel', async () => {
     mockMatchMedia(true)
     const user = userEvent.setup()

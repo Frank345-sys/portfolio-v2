@@ -140,10 +140,3 @@ export const CARD = {
     footer: 'flex items-center justify-between mt-3',
   },
 } as const
-
-export type CardCategory = keyof typeof CARD
-export type CardVariant<C extends CardCategory> = keyof (typeof CARD)[C]
-export type CardSurfaceKey = CardVariant<'surface'>
-export type CardInteractiveKey = CardVariant<'interactive'>
-export type CardOverlayKey = CardVariant<'overlay'>
-export type CardLayoutKey = CardVariant<'layout'>

@@ -100,12 +100,15 @@ const reportPath = join(projectRoot, 'lighthouse-report.html')
 const runStartedAt = Date.now()
 
 const r = spawnSync('npx', args, {
-  stdio: 'inherit',
+  // Capturar stderr: en Windows, chrome-launcher puede lanzar EPERM al borrar
+  // el perfil tmp y volcar un stack enorme aunque el informe HTML ya esté listo.
+  stdio: ['inherit', 'inherit', 'pipe'],
   shell: true,
+  maxBuffer: 20 * 1024 * 1024,
   env: {
     ...process.env,
     CHROME_PATH: chromePath,
-    // chrome-launcher usa os.tmpdir(); redirigir evita EPERM al borrar en %TEMP%.
+    // chrome-launcher usa os.tmpdir(); redirigir evita en parte EPERM bajo %TEMP%.
     ...(process.platform === 'win32'
       ? { TEMP: lighthouseTmp, TMP: lighthouseTmp }
       : { TMPDIR: lighthouseTmp }),
@@ -113,24 +116,41 @@ const r = spawnSync('npx', args, {
 })
 
 const code = r.status ?? 1
+const stderr = r.stderr != null ? r.stderr.toString() : ''
+
 if (code === 0) {
   process.exit(0)
 }
 
-// En Windows, chrome-launcher a veces lanza EPERM al hacer rmSync de la carpeta
-// temporal aunque el HTML ya se escribió. Si el informe es reciente, no falla CI.
+// En Windows, chrome-launcher a veces devuelve exit ≠ 0 al hacer rmSync de la carpeta
+// temporal aunque el HTML ya se escribió. Si el informe es reciente, no falla CI/terminal.
 if (existsSync(reportPath)) {
   const { mtimeMs, size } = statSync(reportPath)
   const fresh = mtimeMs >= runStartedAt - 5_000 && size > 500
   if (fresh) {
+    const likelyWinCleanupError =
+      /EPERM|Permission denied|Error:\s*EPERM|rmSync|destroyTmp/i.test(stderr)
+    if (process.env.LIGHTHOUSE_VERBOSE) {
+      console.error(stderr)
+    } else if (!likelyWinCleanupError && stderr) {
+      // Otro motivo de código de error: mostrar detalle
+      console.error(stderr)
+    }
     console.warn(
-      '\nAviso: error al limpiar archivos temporales (habitual en Windows / Edge). ' +
-        'El informe se generó correctamente:\n' +
-        reportPath +
-        '\n'
+      likelyWinCleanupError
+        ? '\nAviso: no se pudo limpiar el directorio temporal (habitual en Windows con Edge/Chrome; a veces el antivirus mantiene el bloqueo). ' +
+            'El informe se generó correctamente:\n' +
+            reportPath +
+            '\n(Usa LIGHTHOUSE_VERBOSE=1 para ver stderr completo.)\n'
+        : '\nAviso: Lighthouse devolvió código de error pero el informe reciente está en:\n' +
+            reportPath +
+            '\n'
     )
     process.exit(0)
   }
 }
 
+if (stderr) {
+  console.error(stderr)
+}
 process.exit(code)

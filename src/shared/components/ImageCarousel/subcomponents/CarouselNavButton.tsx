@@ -13,7 +13,7 @@ const CAROUSEL_NAV_BUTTON_BASE = cn(
   'hover:bg-information-light active:bg-information-light/40 absolute top-1/2 flex -translate-y-1/2 items-center justify-center focus-visible:ring-offset-0'
 )
 
-export interface CarouselNavButtonProps {
+interface CarouselNavButtonProps {
   /** Botón anterior o siguiente en el carrusel. */
   direction: ImageCarouselNavDirection
   /** Se dispara al activar el botón (clic); puede combinarse con teclado vía `onArrowNavigate`. */

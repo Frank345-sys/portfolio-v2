@@ -5,13 +5,13 @@
  * @module components/ContactSection/constants
  */
 
-/** Opcional. Si queda vacío, no se muestra la tarjeta de correo. */
-export const CONTACT_EMAIL = 'francgonzalez456@gmail.com'
+/** Opcional. Si queda vacío, no se muestra la tarjeta de correo. (Valor base; el resto del módulo deriva cadenas con trim y mailto). */
+const CONTACT_EMAIL = 'francgonzalez456@gmail.com'
 
 const _contactEmailTrimmed = CONTACT_EMAIL.trim()
 
 /**
- * Mismo {@link CONTACT_EMAIL} sin espacios; `''` si el valor está vacío.
+ * Mismo correo en crudo, sin espacios; `''` si el valor está vacío.
  * Úsalo para copy, `aria-label` y condicionales en un solo sitio.
  */
 export const CONTACT_EMAIL_TRIMMED = _contactEmailTrimmed
@@ -64,14 +64,10 @@ const MEANING_BY_ID = Object.fromEntries(
  */
 export const CONTACT_STATUS_ROWS = [
   { id: 'remote', label: 'Trabajo remoto', meaning: 'available' },
+  { id: 'hybrid', label: 'Trabajo híbrido', meaning: 'available' },
   { id: 'onsite', label: 'Trabajo presencial', meaning: 'available' },
   { id: 'freelance', label: 'Proyectos freelance', meaning: 'limited' },
   { id: 'consulting', label: 'Consultoría puntual', meaning: 'limited' },
-  {
-    id: 'mentoring',
-    label: 'Mentoría / revisión de código',
-    meaning: 'limited',
-  },
 ] as const satisfies readonly {
   id: string
   label: string

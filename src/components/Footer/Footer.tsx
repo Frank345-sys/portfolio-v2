@@ -38,7 +38,7 @@ export function Footer() {
           'py-8 md:py-10 lg:py-12'
         )}
       >
-        <div className="xs:flex-row flex flex-col justify-between gap-8 md:gap-10 lg:gap-14">
+        <div className="xs:flex-row flex flex-col justify-between gap-6">
           <section aria-labelledby="footer-brand-heading" className="space-y-2">
             <h2 id="footer-brand-heading" className="sr-only">
               {FOOTER_BRAND_LANDMARK_LABEL}
@@ -74,9 +74,9 @@ export function Footer() {
             </p>
           </section>
 
-          <div className="xs:items-end flex shrink-0 flex-col gap-5">
+          <div className="xs:items-end xs:mt-2 flex shrink-0 flex-col gap-4">
             <nav
-              className="xs:items-end flex w-full flex-col gap-2"
+              className="xs:items-end flex w-full flex-col gap-1"
               aria-labelledby="footer-quick-cta"
             >
               <h2

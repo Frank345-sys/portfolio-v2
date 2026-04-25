@@ -2,15 +2,15 @@ import type { ElementType } from 'react'
 import { cn } from '@/shared/utils/cn'
 import { TYPOGRAPHY, LAYOUT } from '@/shared/constants/tokens'
 
-export type SectionLabelVariant = 'prefix' | 'rule'
+type SectionLabelVariant = 'prefix' | 'rule'
 
 /**
  * Elemento a renderizar: cualquier etiqueta HTML (`'div'`, `'h1'`, `'header'`, …)
  * o componente React que acepte `className` y `children`.
  */
-export type SectionLabelAs = ElementType
+type SectionLabelAs = ElementType
 
-export interface SectionLabelProps {
+interface SectionLabelProps {
   /** Texto de la sección, p. ej. "about me", "stack técnico". Sin necesidad de agregar "//". */
   children: React.ReactNode
   /**

@@ -53,9 +53,9 @@ export function ProjectsSection() {
       <div className={cn(LAYOUT.spacing.large, LAYOUT.px)}>
         {/* Titulo de la sección */}
         <AnimatedSectionHeading
-          overline="Mis"
+          overline="Selección de"
           title="Proyectos"
-          titleHighlight="desarrollados"
+          titleHighlight="en producción"
           titleId="projects-section-heading"
         />
 
@@ -83,12 +83,19 @@ export function ProjectsSection() {
                   data-project-index={i}
                   className={LAYOUT.spacing.default}
                 >
+                  {/*
+                    Nombre accesible del landmark (`p` + sr-only): en `lg` el panel móvil
+                    está oculto; un `h3` oculto duplicaría el título visible en móvil en el
+                    outline. `aria-labelledby` admite cualquier nodo con texto.
+                  */}
+                  <p id={articleHeadingId} className="sr-only">
+                    {project.title}
+                  </p>
                   <div className="block lg:hidden">
                     <ProjectInfo
                       project={project}
                       visible={true}
                       totalProjects={totalProjects}
-                      headingId={articleHeadingId}
                     />
                   </div>
 
@@ -119,9 +126,9 @@ export function ProjectsSection() {
             aria-label="Navegación entre proyectos"
             className="sticky top-5/12 -ml-4 hidden h-fit shrink-0 flex-col gap-3 lg:flex"
           >
-            {PROJECTS.map((_, i) => (
+            {PROJECTS.map((project, i) => (
               <button
-                key={i}
+                key={project.id}
                 type="button"
                 data-project-dot-index={i}
                 onClick={handleProjectDotClick}

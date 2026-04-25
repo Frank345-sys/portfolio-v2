@@ -19,10 +19,10 @@ import type {
 } from '../types'
 
 /** Parámetros del hook (mismas opciones compartidas que el carrusel). */
-export type UseImageCarouselParams = ImageCarouselSharedOptions
+type UseImageCarouselParams = ImageCarouselSharedOptions
 
 /** Valor de retorno del hook `useImageCarousel`. */
-export interface UseImageCarouselReturn {
+interface UseImageCarouselReturn {
   slide: number
   count: number
   hasCarousel: boolean

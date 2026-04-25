@@ -63,12 +63,11 @@ describe('ProjectInfo', () => {
       expect(screen.getByText(skill)).toBeInTheDocument()
     })
 
-    expect(screen.getByRole('link', { name: /ver proyecto/i })).toHaveAttribute(
-      'href',
-      PROJECT_MOCK.link
-    )
     expect(
-      screen.getByRole('link', { name: /ver código fuente/i })
+      screen.getByRole('link', { name: /abrir sitio en vivo/i })
+    ).toHaveAttribute('href', PROJECT_MOCK.link)
+    expect(
+      screen.getByRole('link', { name: /código en github/i })
     ).toHaveAttribute('href', PROJECT_MOCK.githubLink)
   })
 
@@ -98,7 +97,7 @@ describe('ProjectInfo', () => {
     )
 
     expect(
-      screen.queryByRole('link', { name: /ver proyecto/i })
+      screen.queryByRole('link', { name: /abrir sitio en vivo/i })
     ).not.toBeInTheDocument()
   })
 
@@ -115,7 +114,19 @@ describe('ProjectInfo', () => {
     )
 
     expect(
-      screen.queryByRole('link', { name: /ver código fuente/i })
+      screen.queryByRole('link', { name: /código en github/i })
     ).not.toBeInTheDocument()
+  })
+
+  it('no pone id en el h3 del título cuando headingId está omitido', () => {
+    renderWithMotion(
+      <ProjectInfo project={PROJECT_MOCK} visible={true} totalProjects={5} />
+    )
+
+    const titleHeading = screen.getByRole('heading', {
+      level: 3,
+      name: PROJECT_MOCK.title,
+    })
+    expect(titleHeading).not.toHaveAttribute('id')
   })
 })

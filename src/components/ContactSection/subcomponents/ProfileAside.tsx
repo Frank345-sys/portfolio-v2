@@ -94,7 +94,7 @@ export function ProfileAside() {
         )}
       >
         <dl
-          className={cn('xs:gap-4 grid grid-cols-1 gap-6', timezoneCols)}
+          className={cn('grid grid-cols-1 gap-2', timezoneCols)}
           aria-label="Tiempo de respuesta, hora local y zona horaria de referencia"
         >
           <MetaCell term="Respuesta">

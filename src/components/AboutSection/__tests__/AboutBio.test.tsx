@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { SITE_TAGLINE } from '@/shared/constants/siteProfile'
 import { AboutBio } from '../subcomponents/AboutBio'
 
 describe('AboutBio', () => {
@@ -14,16 +13,14 @@ describe('AboutBio', () => {
 
     it('renderiza todos los párrafos de ABOUT_BIO', () => {
       render(<AboutBio />)
-      expect(screen.getByText(SITE_TAGLINE)).toBeInTheDocument()
+      expect(
+        screen.getByText(/Diseño e implemento interfaces de producto/)
+      ).toBeInTheDocument()
       expect(
         screen.getByText(/Francisco Omar Habib González Utrera/)
       ).toBeInTheDocument()
-      expect(
-        screen.getByText(/Disfruto mejorar flujos de usuario/)
-      ).toBeInTheDocument()
-      expect(
-        screen.getByText(/He trabajado colaborativamente con equipos de/i)
-      ).toBeInTheDocument()
+      expect(screen.getByText(/~40% menos/)).toBeInTheDocument()
+      expect(screen.getByText(/Figma/)).toBeInTheDocument()
     })
 
     it('no monta ningún <img> (solo párrafos de bio)', () => {

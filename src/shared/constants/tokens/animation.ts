@@ -227,14 +227,3 @@ export const ANIMATION = {
       'animate-spin rounded-full border-2 border-stroke-soft border-t-information-base',
   },
 } as const
-
-export type AnimationCategory = keyof typeof ANIMATION
-export type AnimationVariant<C extends AnimationCategory> =
-  keyof (typeof ANIMATION)[C]
-export type TransitionKey = AnimationVariant<'transition'>
-export type HoverKey = AnimationVariant<'hover'>
-export type FadeKey = AnimationVariant<'fade'>
-export type SlideKey = AnimationVariant<'slide'>
-export type StaggerKey = AnimationVariant<'stagger'>
-export type ScrollKey = AnimationVariant<'scroll'>
-export type LoadingKey = AnimationVariant<'loading'>

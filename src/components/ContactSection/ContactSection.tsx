@@ -1,8 +1,7 @@
 import { AnimatedSectionHeading } from '@/shared/components/AnimatedSectionHeading'
 import { LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
-import { ContactLinkCards } from './subcomponents/ContactLinkCards'
-import { ProfileAside } from './subcomponents/ProfileAside'
+import { ContactLinkCards, ProfileAside } from './subcomponents'
 import { CONTACT_EMAIL_HREF } from './constants'
 
 /**
@@ -24,9 +23,9 @@ export function ContactSection() {
         className={cn(LAYOUT.container.narrow, LAYOUT.spacing.large, LAYOUT.px)}
       >
         <AnimatedSectionHeading
-          overline="Hablemos"
-          title="Sobre tu"
-          titleHighlight="próximo proyecto"
+          overline="Contacto"
+          title="Hablemos de tu"
+          titleHighlight="próximo paso"
           titleId="contact-section-heading"
         />
 
@@ -38,9 +37,8 @@ export function ContactSection() {
             )}
           >
             <p className={cn(TYPOGRAPHY.paragraph.lead, LAYOUT.prose.lg)}>
-              Si buscas un perfil frontend con enfoque en React, TypeScript y
-              interfaces accesibles, puedes revisar mi trabajo en GitHub o
-              escribirme por LinkedIn, WhatsApp
+              ¿Colaboración en producto, revisión o rol React/TypeScript? Mira
+              el código y proyectos en GitHub o escríbeme por LinkedIn, WhatsApp
               {CONTACT_EMAIL_HREF ? ' o correo' : ''}.
             </p>
 
