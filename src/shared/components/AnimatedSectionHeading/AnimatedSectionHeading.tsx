@@ -8,9 +8,9 @@ const MOTION_TITLE = {
   h3: m.h3,
 } as const
 
-export type AnimatedSectionHeadingLevel = keyof typeof MOTION_TITLE
+type AnimatedSectionHeadingLevel = keyof typeof MOTION_TITLE
 
-export interface AnimatedSectionHeadingProps {
+interface AnimatedSectionHeadingProps {
   /** Texto pequeño encima del título (categoría, rótulo). */
   overline: React.ReactNode
   /** Título principal de la sección. */
