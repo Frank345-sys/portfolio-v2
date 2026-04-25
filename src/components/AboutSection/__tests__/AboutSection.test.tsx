@@ -49,11 +49,15 @@ describe('AboutSection', () => {
 
   it('muestra el texto Formación académica', () => {
     render(<AboutSection />)
-    expect(screen.getByText(/formación académica/i)).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Formación académica' })
+    ).toBeInTheDocument()
   })
 
   it('muestra el texto Certificaciones', () => {
     render(<AboutSection />)
-    expect(screen.getByText(/certificaciones/i)).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Certificaciones' })
+    ).toBeInTheDocument()
   })
 })
