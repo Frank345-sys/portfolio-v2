@@ -139,8 +139,8 @@ describe('ContactSection', () => {
     const inDl = within(dl)
     expect(inDl.getByText('Respuesta', { exact: true })).toBeInTheDocument()
     expect(inDl.getByText('Hora local', { exact: true })).toBeInTheDocument()
-    if (CONTACT_TIMEZONE_LINE.trim()) {
-      expect(within(dl).getByText('Zona', { exact: true })).toBeInTheDocument()
-    }
+    expect(!!within(dl).queryByText('Zona', { exact: true })).toBe(
+      Boolean(CONTACT_TIMEZONE_LINE.trim())
+    )
   })
 })
