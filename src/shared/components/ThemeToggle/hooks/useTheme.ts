@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 
 const STORAGE_KEY = 'theme'
 
-export type Theme = 'light' | 'dark'
+type Theme = 'light' | 'dark'
 
-export interface UseThemeReturn {
+interface UseThemeReturn {
   /** True si el tema aplicado es oscuro (`html` tiene clase `dark`). */
   isDark: boolean
   /** Fija el tema, persiste en `localStorage` y actualiza la clase en `document.documentElement`. */
