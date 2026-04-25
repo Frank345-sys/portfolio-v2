@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { LazyMotion, domAnimation, MotionConfig } from 'motion/react'
 import { HeroSection } from '@/components/HeroSection'
 import { Header } from '@/components/Header'
+import { SectionLazyFallback } from '@/shared/components/SectionLazyFallback'
 import { SmoothScrollRoot } from '@/shared/components/SmoothScrollRoot'
 import { Z } from '@/shared/constants/tokens'
 
@@ -26,6 +27,7 @@ const Footer = lazy(async () => {
  * Raíz de la SPA: skip link, textura, cabecera y contenido principal.
  * Motion en modo lazy (`domAnimation`: el subconjunto DOM habitual; sin layout/drag extra).
  * `MotionConfig` respeta `prefers-reduced-motion`.
+ * Los `Suspense` usan un fallback con altura mínima para reducir CLS y anuncian carga a lectores de pantalla.
  */
 export function App() {
   return (
@@ -39,17 +41,45 @@ export function App() {
           <Header />
           <main id="contenido-principal" className={Z.base} tabIndex={-1}>
             <HeroSection />
-            <Suspense fallback={null}>
+            <Suspense
+              fallback={
+                <SectionLazyFallback
+                  ariaLabel="Cargando sección Sobre mí"
+                  variant="about"
+                />
+              }
+            >
               <AboutSection />
             </Suspense>
-            <Suspense fallback={null}>
+            <Suspense
+              fallback={
+                <SectionLazyFallback
+                  ariaLabel="Cargando sección Proyectos"
+                  variant="projects"
+                />
+              }
+            >
               <ProjectsSection />
             </Suspense>
-            <Suspense fallback={null}>
+            <Suspense
+              fallback={
+                <SectionLazyFallback
+                  ariaLabel="Cargando sección Contacto"
+                  variant="contact"
+                />
+              }
+            >
               <ContactSection />
             </Suspense>
           </main>
-          <Suspense fallback={null}>
+          <Suspense
+            fallback={
+              <SectionLazyFallback
+                ariaLabel="Cargando pie de página"
+                variant="footer"
+              />
+            }
+          >
             <Footer />
           </Suspense>
         </SmoothScrollRoot>
