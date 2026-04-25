@@ -15,7 +15,7 @@ import type {
   ProjectPreviewGallery,
 } from '../types'
 
-export interface UseProjectPreviewCardParams
+interface UseProjectPreviewCardParams
   extends
     Pick<ProjectPreviewGallery, 'images'>,
     Pick<
@@ -27,7 +27,7 @@ export interface UseProjectPreviewCardParams
   lightboxActive: boolean
 }
 
-export interface UseProjectPreviewCardResult {
+interface UseProjectPreviewCardResult {
   cardRef: RefObject<HTMLDivElement | null>
   validImages: string[]
   hasImages: boolean

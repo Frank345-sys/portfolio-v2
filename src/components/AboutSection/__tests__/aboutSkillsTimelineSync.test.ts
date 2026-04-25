@@ -9,6 +9,7 @@ import { stackSkillLabelSet } from '@/test/stackSkillLabelSet'
 function timelineSkillChipLabels(): string[] {
   const variants = new Set<TimelineChipVariant>([
     TIMELINE_CHIP_VARIANT.ACADEMIC,
+    TIMELINE_CHIP_VARIANT.APPLIED,
     TIMELINE_CHIP_VARIANT.LEARNED,
   ])
   const out: string[] = []

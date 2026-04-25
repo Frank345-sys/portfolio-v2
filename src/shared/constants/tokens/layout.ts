@@ -147,13 +147,3 @@ export const LAYOUT = {
     vertical: 'h-full w-px bg-stroke-soft',
   },
 } as const
-
-export type LayoutCategory = keyof typeof LAYOUT
-export type LayoutVariant<C extends LayoutCategory> = keyof (typeof LAYOUT)[C]
-export type ContainerKey = LayoutVariant<'container'>
-export type SectionKey = LayoutVariant<'section'>
-export type SpacingKey = LayoutVariant<'spacing'>
-export type GridKey = LayoutVariant<'grid'>
-export type ProseKey = LayoutVariant<'prose'>
-export type OverlayKey = LayoutVariant<'overlay'>
-export type DividerKey = LayoutVariant<'divider'>

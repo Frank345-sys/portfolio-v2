@@ -89,7 +89,7 @@ describe('ProjectsSection', () => {
     expect(
       screen.getByRole('heading', {
         level: 2,
-        name: /proyectos desarrollados/i,
+        name: /proyectos en producción/i,
       })
     ).toBeInTheDocument()
   })
@@ -109,6 +109,18 @@ describe('ProjectsSection', () => {
         'aria-labelledby',
         `project-${project!.id}-title`
       )
+    })
+  })
+
+  it('expone el nombre accesible del artículo con un p.sr-only (todos los viewports)', () => {
+    renderWithMotion(<ProjectsSection />)
+
+    PROJECTS.forEach((project) => {
+      const label = document.getElementById(`project-${project.id}-title`)
+      expect(label).toBeTruthy()
+      expect(label?.tagName.toLowerCase()).toBe('p')
+      expect(label).toHaveClass('sr-only')
+      expect(label).toHaveTextContent(project.title)
     })
   })
 

@@ -1,7 +1,7 @@
 import { cn } from '@/shared/utils/cn'
 import { TYPOGRAPHY, BADGE } from '@/shared/constants/tokens'
 
-export interface LegendItem {
+interface LegendItem {
   /** Identificador único (clave de React y accesibilidad). */
   id: string
   /** Texto explicativo del ítem. */
@@ -10,7 +10,7 @@ export interface LegendItem {
   dotClassName: string
 }
 
-export interface LegendProps {
+interface LegendProps {
   /** Ítems de la leyenda (punto de color + texto). */
   items: LegendItem[]
   /** Etiqueta para lectores de pantalla (opcional). */
@@ -38,7 +38,7 @@ export interface LegendProps {
  * // Experiencia: áreas, métricas de código, impacto
  * <Legend
  *   items={[
- *     { id: 'tech', label: 'Área/tecnología', dotClassName: 'bg-information-base' },
+ *     { id: 'tech', label: 'Área o tecnología', dotClassName: 'bg-information-base' },
  *     { id: 'code', label: 'Métrica de código', dotClassName: 'bg-feature-base' },
  *     { id: 'impact', label: 'Impacto en rendimiento', dotClassName: 'bg-success-base' },
  *   ]}

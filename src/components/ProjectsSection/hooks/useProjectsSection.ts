@@ -11,7 +11,7 @@ import type { Project } from '../types'
 import { getValidUrls } from '@/shared/utils/getValidUrls'
 import { useProjectsScrollSync } from './useProjectsScrollSync'
 
-export interface UseProjectsSectionResult {
+interface UseProjectsSectionResult {
   totalProjects: number
   activeProject: Project | undefined
   activeIndex: number

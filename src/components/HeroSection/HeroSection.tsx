@@ -1,4 +1,8 @@
-import { SITE_DISPLAY_NAME, SITE_PROFILE } from '@/shared/constants/siteProfile'
+import {
+  HERO_STACK_HIGHLIGHT,
+  SITE_DISPLAY_NAME,
+  SITE_PROFILE,
+} from '@/shared/constants/siteProfile'
 import { BUTTON, LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 import { BackgroundBoxes } from '@/shared/components/BackgroundBoxes'
@@ -8,9 +12,9 @@ import { DownloadIcon } from '@/shared/icons'
 const CV_HREF = `${import.meta.env.BASE_URL}Francisco_Gonzalez_Frontend_Developer_2026.pdf`
 
 const HERO_STATS = [
-  { value: '+2 años', label: 'Experiencia laboral' },
-  { value: '+5', label: 'Proyectos realizados' },
-  { value: '+14', label: 'Tecnologías dominadas' },
+  { value: '2+', label: 'Años en frontend' },
+  { value: '5+', label: 'Casos en portfolio' },
+  { value: '+14', label: 'Herramientas y prácticas' },
 ] as const
 
 /**
@@ -49,12 +53,22 @@ export function HeroSection() {
               >
                 {SITE_PROFILE.role}
               </p>
+              <p
+                className={cn(
+                  TYPOGRAPHY.paragraph.small,
+                  'text-text-subtle max-w-xl'
+                )}
+              >
+                <span className="sr-only">Stack principal: </span>
+                {HERO_STACK_HIGHLIGHT}
+              </p>
             </div>
 
             {/* Descripción del rol */}
             <p className={cn(TYPOGRAPHY.paragraph.lead, LAYOUT.prose.lg)}>
-              Especializado en construir interfaces modernas y accesibles con
-              React, TypeScript y las mejores herramientas del ecosistema web.
+              Desarrollo interfaces web rápidas, limpias y accesibles,
+              optimizando rendimiento, integración con APIs y experiencia de
+              usuario.
             </p>
 
             {/* CTA de descarga de CV */}
@@ -63,9 +77,9 @@ export function HeroSection() {
               target="_blank"
               rel="noopener noreferrer"
               className={BUTTON.special.cta}
-              aria-label={`Descargar CV de ${SITE_DISPLAY_NAME} (se abre en una pestaña nueva)`}
+              aria-label={`Ver CV de ${SITE_DISPLAY_NAME} (PDF, se abre en una pestaña nueva)`}
             >
-              Descargar CV
+              Ver CV (PDF)
               <DownloadIcon aria-hidden="true" />
             </a>
 

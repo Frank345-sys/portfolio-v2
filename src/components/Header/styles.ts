@@ -31,10 +31,10 @@ export const logoIcon = BRAND.logoIcon
 export const logoText = cn(TYPOGRAPHY.label.default, 'tracking-tight')
 
 /** Enlaces de navegación desktop (misma base que {@link PRIMARY_NAV_LINK}). */
-export const navLink = PRIMARY_NAV_LINK
+const navLink = PRIMARY_NAV_LINK
 
 /** Estado activo del scroll-spy (misma base que {@link navLink}). */
-export const navLinkActive = 'text-information-base font-medium'
+const navLinkActive = 'text-information-base font-medium'
 
 /**
  * Clases del enlace de la nav desktop según scroll-spy (evita `cn` inline en

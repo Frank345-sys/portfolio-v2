@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { useBackgroundBoxes } from './hooks/useBackgroundBoxes'
-import { FloatingBox } from './subcomponents/FloatingBox'
+import { FloatingBox } from './subcomponents'
 import { LAYOUT } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 

@@ -22,7 +22,7 @@ const OVERLAY_INSTANT = {
   transition: { duration: 0 },
 } as const
 
-export interface ProgressiveImageProps extends Omit<
+interface ProgressiveImageProps extends Omit<
   ImgHTMLAttributes<HTMLImageElement>,
   'onLoad' | 'onError'
 > {

@@ -187,10 +187,3 @@ export const BUTTON = {
       'inline-flex [&>*:not(:first-child)]:rounded-l-none [&>*:not(:last-child)]:rounded-r-none [&>*:not(:first-child)]:border-l-0',
   },
 } as const
-
-export type ButtonCategory = keyof typeof BUTTON
-export type ButtonVariant<C extends ButtonCategory> = keyof (typeof BUTTON)[C]
-export type ButtonSizeKey = ButtonVariant<'size'>
-export type ButtonVariantKey = ButtonVariant<'variant'>
-export type ButtonSpecialKey = ButtonVariant<'special'>
-export type ButtonGroupKey = ButtonVariant<'group'>

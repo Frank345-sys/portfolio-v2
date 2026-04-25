@@ -26,7 +26,7 @@ const PANEL_VARIANTS = {
   },
 }
 
-export interface ProjectPreviewLightboxProps
+interface ProjectPreviewLightboxProps
   extends ProjectPreviewGallery, ProjectPreviewCopy {
   isOpen: boolean
   onClose: () => void
@@ -129,6 +129,7 @@ export function ProjectPreviewLightbox({
                 carouselAriaLabel={`Capturas ampliadas de ${imageAlt}`}
                 previousSlideAriaLabel="Imagen anterior (vista ampliada)"
                 nextSlideAriaLabel="Imagen siguiente (vista ampliada)"
+                projectImageVariant="lightbox"
                 slideIndex={carouselSlideIndex}
                 onSlideChange={onCarouselSlideChange}
                 className={cn(

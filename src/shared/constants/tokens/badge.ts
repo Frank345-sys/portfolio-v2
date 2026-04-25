@@ -186,12 +186,3 @@ export const BADGE = {
     vertical: 'flex flex-col gap-2',
   },
 } as const
-
-export type BadgeCategory = keyof typeof BADGE
-export type BadgeVariant<C extends BadgeCategory> = keyof (typeof BADGE)[C]
-
-export type BadgeSizeKey = BadgeVariant<'size'>
-export type BadgeVariantKey = BadgeVariant<'variant'>
-export type BadgeSpecialKey = BadgeVariant<'special'>
-export type BadgeStatusKey = BadgeVariant<'status'>
-export type BadgeGroupKey = BadgeVariant<'group'>

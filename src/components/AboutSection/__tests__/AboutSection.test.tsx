@@ -22,9 +22,7 @@ describe('AboutSection', () => {
 
   it('muestra texto de la bio (parte del primer párrafo)', () => {
     render(<AboutSection />)
-    expect(
-      screen.getByText(/Ingeniero en Sistemas Computacionales/)
-    ).toBeInTheDocument()
+    expect(screen.getByText(/ingeniero en sistemas/i)).toBeInTheDocument()
   })
 
   it('muestra los tres valores de "cómo trabajo"', () => {
@@ -51,11 +49,15 @@ describe('AboutSection', () => {
 
   it('muestra el texto Formación académica', () => {
     render(<AboutSection />)
-    expect(screen.getByText(/formación académica/i)).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Formación académica' })
+    ).toBeInTheDocument()
   })
 
   it('muestra el texto Certificaciones', () => {
     render(<AboutSection />)
-    expect(screen.getByText(/certificaciones/i)).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'Certificaciones' })
+    ).toBeInTheDocument()
   })
 })

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { cn } from '@/shared/utils/cn'
 import { TYPOGRAPHY, CARD, ANIMATION } from '@/shared/constants/tokens'
 
-export interface LinkCardProps {
+interface LinkCardProps {
   /** URL de destino. */
   href: string
   /** Título principal visible. */

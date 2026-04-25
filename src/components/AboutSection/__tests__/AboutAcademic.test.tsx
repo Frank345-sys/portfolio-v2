@@ -7,7 +7,9 @@ describe('AboutAcademic', () => {
   describe('rendering', () => {
     it('renderiza el label de sección formación académica', () => {
       render(<AboutAcademic />)
-      expect(screen.getByText(/formación académica/i)).toBeInTheDocument()
+      expect(
+        screen.getByRole('heading', { name: 'Formación académica' })
+      ).toBeInTheDocument()
     })
 
     it('renderiza todos los items de ABOUT_ACADEMIC', () => {
@@ -28,11 +30,14 @@ describe('AboutAcademic', () => {
       })
     })
 
-    it('muestra la leyenda de formación (sin jerarquía)', () => {
+    it('muestra la leyenda de conocimientos adquiridos en la formación', () => {
       render(<AboutAcademic />)
       expect(
-        screen.getByText(/conocimientos adquiridos en la formación/i)
+        screen.getByRole('list', {
+          name: /significado de los chips de formación académica/i,
+        })
       ).toBeInTheDocument()
+      expect(screen.getByText(/adquiridos en formación/i)).toBeInTheDocument()
     })
 
     it('renderiza el timeline académico como lista ordenada accesible', () => {

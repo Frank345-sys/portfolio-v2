@@ -1,7 +1,8 @@
 import { AnimatePresence, m } from 'motion/react'
-import { ANIMATION, BADGE, BUTTON, TYPOGRAPHY } from '@/shared/constants/tokens'
+import { BADGE, BUTTON, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { MOTION_ANIMATION } from '@/shared/constants'
 import { BadgeRow } from '@/shared/components/BadgeRow'
+import { parseEmphasis } from '@/shared/utils/parseEmphasis'
 import type { Project } from '../types'
 import { cn } from '@/shared/utils/cn'
 
@@ -14,34 +15,31 @@ interface ProjectLinkProps {
   href: string
   /** Texto visible del enlace. */
   label: string
+  /**
+   * `contained` — acción principal; `outlined` — secundaria junto al enlace al sitio en vivo.
+   */
+  variant: 'contained' | 'outlined'
 }
 
 /**
- * Enlace de acción con animación de deslizamiento horizontal en hover.
- * Usado para "Ver proyecto" y "Ver código fuente" dentro de `ProjectInfo`.
+ * Enlace con apariencia de botón (`BUTTON.variant` + `BUTTON.size.md`).
+ * Usado para "Abrir sitio en vivo" y "Código en GitHub" dentro de `ProjectInfo`.
  */
-function ProjectLink({ href, label }: ProjectLinkProps) {
+function ProjectLink({ href, label, variant }: ProjectLinkProps) {
   return (
-    <m.a
+    <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      whileHover={{ x: 4 }}
       className={cn(
-        TYPOGRAPHY.link.plain,
-        'group dark:text-information-dark inline-flex w-fit items-center gap-2 text-sm font-semibold'
+        variant === 'contained'
+          ? cn(BUTTON.variant.contained.primary, BUTTON.size.md)
+          : cn(BUTTON.variant.outlined.primary, BUTTON.size.md),
+        'w-fit normal-case'
       )}
     >
       {label}
-      <span
-        className={cn(
-          ANIMATION.transition.transform,
-          'group-hover:translate-x-1'
-        )}
-      >
-        →
-      </span>
-    </m.a>
+    </a>
   )
 }
 
@@ -60,9 +58,11 @@ interface ProjectInfoProps {
   /** Total de proyectos, usado para renderizar el contador `01 / 03`. */
   totalProjects: number
   /**
-   * `id` del encabezado del título; debe coincidir con `aria-labelledby` del `<article>` del bloque.
+   * `id` del `<h3>` visible del título.
+   * Si se omite, el encabezado no expone `id` (p. ej. cuando el nombre accesible del
+   * `<article>` lo aporta un `p.sr-only` en el padre).
    */
-  headingId: string
+  headingId?: string
 }
 
 /**
@@ -85,12 +85,12 @@ interface ProjectInfoProps {
  *   headingId="project-1-title-panel"
  * />
  *
- * // móvil — siempre visible, inline por proyecto
+ * // móvil — siempre visible; sin `headingId` si el artículo ya expone `aria-labelledby`
+ * // vía un `p.sr-only` en `ProjectsSection`.
  * <ProjectInfo
  *   project={project}
  *   visible={true}
  *   totalProjects={PROJECTS.length}
- *   headingId={`project-${project.id}-title`}
  * />
  * ```
  */
@@ -118,7 +118,7 @@ export function ProjectInfo({
           <span
             className={cn(
               TYPOGRAPHY.paragraph.small,
-              'text-information-base dark:text-information-dark font-mono tracking-[0.3em] uppercase'
+              'text-information-base font-mono tracking-[0.3em] uppercase'
             )}
           >
             {String(project.id).padStart(2, '0')} /{' '}
@@ -128,7 +128,7 @@ export function ProjectInfo({
           {/* Título, subtítulo y separador */}
           <div>
             <h3
-              id={headingId}
+              {...(headingId ? { id: headingId } : {})}
               className={cn(
                 TYPOGRAPHY.title.subsection,
                 'mb-1 leading-tight font-bold tracking-tight'
@@ -139,7 +139,7 @@ export function ProjectInfo({
             <p
               className={cn(
                 TYPOGRAPHY.title.small,
-                'text-information-base dark:text-information-dark mb-2.5 font-mono tracking-widest'
+                'text-information-base mb-2.5 font-mono tracking-widest'
               )}
             >
               {project.subtitle}
@@ -162,17 +162,21 @@ export function ProjectInfo({
                 transition={{ delay: 0.1 + i * 0.06, duration: 0.35 }}
                 className={cn(
                   TYPOGRAPHY.paragraph.small,
-                  'text-text-strong flex items-center gap-3'
+                  // `min-w-0` + `flex-1` en el texto: sangría francesa / hanging indent al envolver líneas
+                  'text-text-strong flex items-start gap-3'
                 )}
               >
                 <span
                   className={cn(
                     BADGE.special.dot,
                     BADGE.special.dotSize.sm,
-                    'bg-information-base'
+                    'bg-information-base mt-1.5 shrink-0 self-start sm:mt-2'
                   )}
+                  aria-hidden
                 />
-                {b}
+                <div className="min-w-0 flex-1 wrap-break-word">
+                  {parseEmphasis(b, TYPOGRAPHY.special.emphasis)}
+                </div>
               </m.li>
             ))}
           </ul>
@@ -189,12 +193,17 @@ export function ProjectInfo({
           {(project.link ?? project.githubLink) && (
             <div className={BUTTON.group.horizontal}>
               {project.link && (
-                <ProjectLink href={project.link} label="Ver proyecto" />
+                <ProjectLink
+                  href={project.link}
+                  label="Abrir sitio en vivo"
+                  variant="contained"
+                />
               )}
               {project.githubLink && (
                 <ProjectLink
                   href={project.githubLink}
-                  label="Ver código fuente"
+                  label="Código en GitHub"
+                  variant={project.link ? 'outlined' : 'contained'}
                 />
               )}
             </div>

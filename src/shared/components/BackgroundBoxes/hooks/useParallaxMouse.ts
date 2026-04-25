@@ -6,14 +6,14 @@ import type { MotionValue } from 'motion/react'
  * Valores de movimiento del mouse normalizados (-1..1) para efecto parallax.
  * Usado por `FloatingBox` para desplazar las cajas según la posición del cursor.
  */
-export interface UseParallaxMouseReturn {
+interface UseParallaxMouseReturn {
   /** Posición horizontal normalizada del cursor respecto al ancho del viewport ([-1, 1]). */
   mouseX: MotionValue<number>
   /** Posición vertical normalizada del cursor respecto al alto del viewport ([-1, 1]). */
   mouseY: MotionValue<number>
 }
 
-export interface UseParallaxMouseOptions {
+interface UseParallaxMouseOptions {
   /**
    * Si es `false`, no se registran listeners de `mousemove` y los valores permanecen en 0.
    * Útil en viewports estrechos o táctiles (`BackgroundBoxes` lo enlaza con `useMediaQuery(lg)`).

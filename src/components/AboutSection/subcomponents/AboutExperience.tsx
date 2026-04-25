@@ -7,7 +7,7 @@ import { LAYOUT } from '@/shared/constants/tokens'
 const EXPERIENCE_LEGEND_ITEMS = [
   {
     id: 'tech',
-    label: 'Área/tecnología',
+    label: 'Área o tecnología',
     dotClassName: 'bg-bg-subtle',
   },
   {
@@ -16,8 +16,13 @@ const EXPERIENCE_LEGEND_ITEMS = [
     dotClassName: 'bg-success-base',
   },
   {
+    id: 'applied',
+    label: 'Tecnologías aplicadas',
+    dotClassName: 'box-border border-2 border-stroke-medium bg-bg-white',
+  },
+  {
     id: 'learned',
-    label: 'Conocimientos/tecnologías adquiridas',
+    label: 'Adquiridos en el empleo',
     dotClassName: 'bg-information-base',
   },
 ] as const

@@ -50,9 +50,7 @@ export function Bloque() {
 }
 ```
 
-Los tokens de **párrafo** (`paragraph.secondary`, `paragraph.small`, …) aportan tamaño y `leading-relaxed`; el color del texto a menudo **se hereda** del contexto. Si el contraste no alcanza WCAG (p. ej. texto secundario sobre `bg-bg-weak`), añade **`text-text-strong`** o **`text-text-subtle`** con `cn()` según el diseño, o variantes informativas en oscuro (p. ej. **`dark:text-information-dark`**) para enlaces/acentos azules.
-
----
+## Los tokens de **párrafo** (`paragraph.secondary`, `paragraph.small`, …) aportan tamaño y `leading-relaxed`; el color del texto a menudo **se hereda** del contexto. Si el contraste no alcanza WCAG (p. ej. texto secundario sobre `bg-bg-weak`), añade **`text-text-strong`** o **`text-text-subtle`** con `cn()` según el diseño, o variantes
 
 ## BRAND
 
@@ -191,7 +189,7 @@ Usar **`Z.*`** vía `z.ts` (mapea a clases en `@theme`); evitar `z-30` sueltos e
 
 **Bordes:** `border-stroke-soft` · `subtle` · `medium` · `strong`
 
-**Estado / marca:** `information`, `success`, `warning`, `error`, `feature` — variantes `*-base`, `*-dark`, `*-light`, `*-lighter` según el token. En **`.dark`**, muchos `*-light` se expresan como mezclas alfa; los azules informativos sobre fondos oscuros a veces requieren **`dark:text-information-dark`** en clases puntuales para contraste (p. ej. panel lateral de proyectos).
+**Estado / marca:** `information`, `success`, `warning`, `error`, `feature` — variantes `*-base`, `*-dark`, `*-light`, `*-lighter` según el token. En **`.dark`**, muchos `*-light` se expresan como mezclas alfa;
 
 ---
 

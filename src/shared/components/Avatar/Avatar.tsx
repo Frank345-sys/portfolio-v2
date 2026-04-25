@@ -8,9 +8,9 @@ const AVATAR_SIZES = {
   lg: 'h-32 w-32 text-4xl md:h-36 md:w-36 md:text-5xl lg:h-40 lg:w-40 lg:text-6xl',
 } as const
 
-export type AvatarSize = keyof typeof AVATAR_SIZES
+type AvatarSize = keyof typeof AVATAR_SIZES
 
-export interface AvatarProps {
+interface AvatarProps {
   initials: string
   name?: string
   src?: string

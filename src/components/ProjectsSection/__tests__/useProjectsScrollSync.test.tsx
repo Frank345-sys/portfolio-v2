@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -17,16 +18,26 @@ function TestHarness({ itemCount }: { itemCount: number }) {
     scrollItemIntoView,
   } = useProjectsScrollSync(itemCount)
 
+  const slotKeys = useMemo(
+    () =>
+      Array.from(
+        { length: itemCount },
+        (_, position) =>
+          `scroll-sync-harness-c${String(itemCount)}-p${String(position)}`
+      ),
+    [itemCount]
+  )
+
   return (
     <div>
-      {Array.from({ length: itemCount }, (_, i) => (
+      {slotKeys.map((slotKey, refIndex) => (
         <div
-          key={i}
+          key={slotKey}
           ref={(el) => {
-            setItemRef(i, el)
+            setItemRef(refIndex, el)
           }}
-          data-project-index={i}
-          data-testid={`item-${i}`}
+          data-project-index={refIndex}
+          data-testid={`item-${String(refIndex)}`}
         />
       ))}
       <span data-testid="active-index">{activeIndex}</span>
