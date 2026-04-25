@@ -11,7 +11,7 @@ import type { NavItem } from './types'
  * Desplazamiento superior del área de intersección del scroll-spy (px), alineado con
  * la cabecera fija aproximada. Si cambia mucho la altura del header, revisar este valor.
  */
-export const HEADER_SCROLL_SPY_TOP_OFFSET_PX = 80
+const HEADER_SCROLL_SPY_TOP_OFFSET_PX = 80
 
 /**
  * Opciones de `IntersectionObserver` para scroll-spy: banda bajo la cabecera fija y
