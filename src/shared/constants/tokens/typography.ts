@@ -155,12 +155,3 @@ export const PRIMARY_NAV_LINK = cn(
   TYPOGRAPHY.link.nav,
   TYPOGRAPHY.paragraph.small
 )
-
-export type TypographyCategory = keyof typeof TYPOGRAPHY
-export type TypographyVariant<C extends TypographyCategory> =
-  keyof (typeof TYPOGRAPHY)[C]
-export type TitleVariant = TypographyVariant<'title'>
-export type ParagraphVariant = TypographyVariant<'paragraph'>
-export type LabelVariant = TypographyVariant<'label'>
-export type LinkVariant = TypographyVariant<'link'>
-export type SpecialVariant = TypographyVariant<'special'>
