@@ -4,9 +4,15 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ## [Unreleased]
 
+### Cambiado
+
+- Repo: `.gitattributes` con `* text=auto eol=lf` y Prettier con `endOfLine: "lf"` (alineado con `.editorconfig`) para reducir ruido CRLF/LF bajo Windows y avisos de Git al commitear. `.gitignore` ajustado a `.vscode/*` para que apliquen las excepciones; `.vscode/settings.json` con `files.eol` y trimming acorde a EditorConfig.
+
+- ESLint: `eslint-plugin-vitest` sustituido por `@vitest/eslint-plugin` (mantenimiento oficial, depende de `@typescript-eslint/utils` v8; desaparece el aviso de peer con ESLint 9). Test de contacto: aserción sin `expect` dentro de `if` (`vitest/no-conditional-expect`).
+
 ### Añadido
 
-- Build: `@vheemstra/vite-plugin-imagemin` para comprimir PNG en `public/images/projects/`; plugin interno con **sharp** que genera `*-600.webp` y `*-1200.webp` en el directorio de salida. `getProjectImageAttributes` + `ImageCarousel` / `ProgressiveImage` con `srcSet` y `sizes` en producción; `sizes` distinto para card vs lightbox (layout real bajo `max-w-7xl` y tope 1080px del modal).
+- Build: pipeline con **sharp** en `closeBundle` (optimizar PNG en `.../images/projects/` si reduce tamaño; luego `*-600.webp` y `*-1200.webp`). Sustituye `vite-plugin-imagemin` + `imagemin-pngquant` para alinear con `npm audit` y evitar reescrituras frágiles bajo Windows. `getProjectImageAttributes` + `ImageCarousel` / `ProgressiveImage` con `srcSet` y `sizes` en producción; `sizes` distinto para card vs lightbox (layout real bajo `max-w-7xl` y tope 1080px del modal).
 - Code-splitting: secciones bajo el pliegue (`About`, `Proyectos`, `Contacto`, `Footer`) con `React.lazy` y `Suspense`.
 
 ## [1.4.1] - 2026-04-24
