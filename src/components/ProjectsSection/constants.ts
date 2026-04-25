@@ -1,6 +1,9 @@
 /**
  * Datos estáticos y ajustes de comportamiento de la sección **Proyectos**.
  *
+ * Cada entrada usa **cuatro** viñetas en este orden: `**Problema:**` → `**Solución:**` →
+ * `**Impacto:**` → `**Resultado:**` (marcas `**` vía `parseEmphasis` en `ProjectInfo`).
+ *
  * Cada valor de `PROJECTS[].skills` debe existir como etiqueta en `ABOUT_SKILLS` (AboutSection),
  * para alinear el stack técnico con lo mostrado en tarjetas de proyecto.
  * Comprobación: test `aboutSkillsProjectsSync` (`stackSkillLabelSet` en `@/test/stackSkillLabelSet`).
@@ -23,11 +26,12 @@ export const PROJECTS: Project[] = [
     title: 'E-commerce Blife',
     subtitle: 'App Web',
     description:
-      'El catálogo y el checkout debían escalar sin fragmentar la UI ni disparar el coste de mantenimiento. Organicé la tienda en componentes reutilizables (Next.js, TypeScript) y tokens con Panda CSS; integré catálogo, carrito y checkout con la API. Base compartida para iterar en conversión y consistencia de marca.',
+      'El catálogo y el checkout debían escalar sin fragmentar la UI ni disparar el mantenimiento. Organicé la tienda en componentes reutilizables (Next.js, TypeScript) y estilicé con Panda CSS; integré catálogo, carrito y checkout con la API. Base compartida para iterar en conversión y consistencia.',
     bullets: [
-      'Problema: crecer catálogo y flujo de compra sin multiplicar deuda de estilos.',
-      'Solución: sistema de UI tipado, design tokens y maquetación alineada a Figma.',
-      'Impacto: menos retrabajo visual entre páginas y flujos más coherentes para el equipo.',
+      '**Problema:** Crecer catálogo y flujo de compra sin multiplicar deuda de estilos.',
+      '**Solución:** Sistema de UI tipado, design tokens y maquetación alineada a Figma.',
+      '**Impacto:** Menos retrabajo visual entre catálogo, carrito y checkout; criterio único de estilos.',
+      '**Resultado:** La tienda puede sumar módulos y campañas sin reescribir la base de componentes en cada entrega.',
     ],
     skills: [
       SKILL_LABEL.NEXT,
@@ -53,9 +57,10 @@ export const PROJECTS: Project[] = [
     description:
       'La app necesitaba descargas cualificadas: la landing tenía que cargar bien en móvil y llevar a un CTA claro. Implementé Astro con React donde aporta interactividad, Tailwind y enfoque mobile-first; prioridad a performance y jerarquía de contenido hacia la descarga.',
     bullets: [
-      'Problema: convertir visitas en descargas sin sacrificar el primer render en redes móviles.',
-      'Solución: menos JS en el cliente con Astro; UI fiel a Figma y responsive.',
-      'Impacto: recorrido explícito hacia el CTA y criterios de performance para retención.',
+      '**Problema:** Convertir visitas en descargas sin sacrificar el primer render en redes móviles.',
+      '**Solución:** Menos JS en el cliente con Astro; UI fiel a Figma y responsive.',
+      '**Impacto:** Jerarquía de contenido clara hacia el CTA; prioridad a performance y a la primera impresión.',
+      '**Resultado:** Landing lista para afinar copy y experimentos, sin rehacer la estructura.',
     ],
     skills: [
       SKILL_LABEL.ASTRO,
@@ -76,10 +81,10 @@ export const PROJECTS: Project[] = [
     description:
       'El frontend B2B arrastraba deuda, tiempos de carga altos y UX desalineada con otros productos. Participé en una refactorización orientada a mantenibilidad: menos superficie de código, componentes más predecibles y carga mucho más rápida, alineando patrones de UI con el resto de la compañía.',
     bullets: [
-      'Problema: legacy difícil de extender y percepción de lentitud en uso real.',
-      'Solución: arquitectura de componentes con Next.js/React/Tailwind; limpieza sistemática de deuda.',
-      'Impacto: ~40% menos código de frontend; carga ≈50% más rápida (≈3s → ≈1,4–1,6s) en el refactor clave.',
-      'Resultado: UI homogénea con el ecosistema de producto; menos riesgo en cada entrega.',
+      '**Problema:** Legacy difícil de extender y percepción de lentitud en uso real.',
+      '**Solución:** Arquitectura de componentes con Next.js/React/Tailwind; limpieza sistemática de deuda.',
+      '**Impacto:** ~40% menos código de frontend; carga ≈50% más rápida (≈3s → ≈1,4–1,6s) en el refactor clave.',
+      '**Resultado:** UI homogénea con el ecosistema de producto; menos riesgo en cada entrega.',
     ],
     skills: [
       SKILL_LABEL.NEXT,
@@ -104,9 +109,10 @@ export const PROJECTS: Project[] = [
     description:
       'El ERP soporta operación diaria: fallos o ambigüedad cuestan tiempo al negocio. Trabajé en módulos críticos combinando mantenimiento, nuevas piezas de UI y refactors puntuales para bajar riesgo y facilitar extensiones. Entorno interno; detalle bajo NDA en entrevista.',
     bullets: [
-      'Problema: software interno donde errores afectan productividad de equipos completos.',
-      'Solución: ciclos de estabilidad, flujos nuevos donde desbloquean procesos, código más mantenible.',
-      'Impacto: base más segura para sumar módulos sin paralizar operación.',
+      '**Problema:** Software interno donde errores afectan productividad de equipos completos.',
+      '**Solución:** Ciclos de estabilidad, flujos nuevos donde desbloquean procesos, código más mantenible.',
+      '**Impacto:** Menos fricción en módulos tocados; el front se entiende y extiende con menos riesgo.',
+      '**Resultado:** El ERP puede crecer en pantallas y flujos sin paralizar la operación diaria.',
     ],
     skills: [
       SKILL_LABEL.NEXT,
@@ -126,9 +132,10 @@ export const PROJECTS: Project[] = [
     description:
       'Primera versión pública de mi sitio: práctica con React, layout responsive, animaciones y estructura por secciones. Base de aprendizaje; el portfolio actual reemplaza este enfoque con un stack y estándar al día.',
     bullets: [
-      'Contexto: presencia en línea y ejercicio de componentes, routing y BEM.',
-      'Enfoque: secciones de proyectos, skills y contacto; animaciones ligeras.',
-      'Cierre: referencia de evolución, no de producto en misma categoría que el trabajo en Blife.',
+      '**Problema:** Faltaba un sitio propio y un sandbox para practicar estructura, layout y despliegue.',
+      '**Solución:** React, secciones (proyectos, skills, contacto), BEM y animaciones ligeras; hosting estático.',
+      '**Impacto:** Consolidé componentes, routing y criterios responsive sin depender de un back propio.',
+      '**Resultado:** Base de aprendizaje sustituida por este portfolio; deja trazable la evolución de stack y estándares.',
     ],
     skills: [
       SKILL_LABEL.REACT,
