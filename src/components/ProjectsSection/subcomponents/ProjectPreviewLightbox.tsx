@@ -26,7 +26,7 @@ const PANEL_VARIANTS = {
   },
 }
 
-export interface ProjectPreviewLightboxProps
+interface ProjectPreviewLightboxProps
   extends ProjectPreviewGallery, ProjectPreviewCopy {
   isOpen: boolean
   onClose: () => void
