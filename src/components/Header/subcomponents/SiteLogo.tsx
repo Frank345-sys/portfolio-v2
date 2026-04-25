@@ -1,7 +1,7 @@
 import { CodeIcon } from '@/shared/icons'
 import { logoIcon, logoLink, logoText } from '../styles'
 
-export interface SiteLogoProps {
+interface SiteLogoProps {
   /** Nombre del sitio junto al ícono. */
   siteName: string
   /**
