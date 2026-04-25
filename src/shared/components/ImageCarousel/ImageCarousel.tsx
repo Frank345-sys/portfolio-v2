@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { AnimatePresence, m } from 'motion/react'
 import { TYPOGRAPHY, Z } from '@/shared/constants/tokens'
 import { ProgressiveImage } from '@/shared/components/ProgressiveImage'
-import { useImageCarousel } from './hooks/useImageCarousel'
+import { useImageCarousel } from './hooks'
 import { CarouselNavButton } from './subcomponents'
 import type {
   ImageCarouselNavDirection,
@@ -12,7 +12,7 @@ import { cn } from '@/shared/utils/cn'
 import { getProjectImageAttributes } from '@/shared/utils/getProjectImageAttributes'
 
 /** Props públicas del componente `ImageCarousel`. */
-export interface ImageCarouselProps extends ImageCarouselSharedOptions {
+interface ImageCarouselProps extends ImageCarouselSharedOptions {
   /** Si se omite, se usa la etiqueta por defecto en español («Imagen anterior»). */
   previousSlideAriaLabel?: string
   /** Si se omite, se usa la etiqueta por defecto en español («Imagen siguiente»). */
