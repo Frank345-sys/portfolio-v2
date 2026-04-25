@@ -1,14 +1,14 @@
 import { cn } from '@/shared/utils/cn'
 import { BADGE } from '@/shared/constants/tokens'
 
-export interface BadgeRowItem {
+interface BadgeRowItem {
   /** Texto visible del chip o badge. */
   label: string
   /** Clase de variante visual (p. ej. `BADGE.variant.primary`). */
   variantClassName: string
 }
 
-export interface BadgeRowProps {
+interface BadgeRowProps {
   /** Lista de elementos a renderizar como chips/badges. */
   items: BadgeRowItem[]
   /** Clases del contenedor (p. ej. max-width, márgenes). */
