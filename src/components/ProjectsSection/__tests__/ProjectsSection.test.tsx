@@ -112,6 +112,18 @@ describe('ProjectsSection', () => {
     })
   })
 
+  it('expone el nombre accesible del artículo con un p.sr-only (todos los viewports)', () => {
+    renderWithMotion(<ProjectsSection />)
+
+    PROJECTS.forEach((project) => {
+      const label = document.getElementById(`project-${project.id}-title`)
+      expect(label).toBeTruthy()
+      expect(label?.tagName.toLowerCase()).toBe('p')
+      expect(label).toHaveClass('sr-only')
+      expect(label).toHaveTextContent(project.title)
+    })
+  })
+
   it('no duplica ids de título entre panel sticky y artículos en viewport lg', () => {
     renderWithMotion(<ProjectsSection />)
 
