@@ -13,8 +13,8 @@ build
 dist-ssr
 *.local
 
-# Editor directories and files
-.vscode/
+# Editor directories and files — `/*` + negaciones para poder versionar ajustes puntuales
+.vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 .idea
