@@ -6,6 +6,7 @@ import {
 } from '@/shared/constants/enums'
 import { BadgeRow } from '@/shared/components/BadgeRow'
 
+/** Chip de timeline: etiqueta + variante semántica (color de badge). */
 export interface TimelineChip {
   /** Texto del chip (tecnología, métrica, etc.). */
   label: string
@@ -16,7 +17,7 @@ export interface TimelineChip {
 /**
  * Props para renderizar un ítem de experiencia o formación en formato timeline.
  */
-export interface TimelineItemProps {
+interface TimelineItemProps {
   /** Rango de fechas (ej. "Sep 2024 → Feb 2026") */
   period: string
   /** Título del puesto o formación (se muestra en el encabezado del ítem) */
@@ -40,6 +41,7 @@ export interface TimelineItemProps {
 const CHIP_VARIANT_MAP = {
   [TIMELINE_CHIP_VARIANT.TECHNOLOGY]: BADGE.variant.neutral,
   [TIMELINE_CHIP_VARIANT.IMPACT_METRIC]: BADGE.variant.success,
+  [TIMELINE_CHIP_VARIANT.APPLIED]: BADGE.variant.outline,
   [TIMELINE_CHIP_VARIANT.LEARNED]: BADGE.variant.primary,
   [TIMELINE_CHIP_VARIANT.ACADEMIC]: BADGE.variant.feature,
 } as const
@@ -60,7 +62,8 @@ const CHIP_VARIANT_MAP = {
  *   chips={[
  *     { label: 'E-commerce', variant: 'technology' },
  *     { label: '−50% tiempo de carga', variant: 'impactMetric' },
- *     { label: 'React.js', variant: 'learned' },
+ *     { label: 'React.js', variant: 'applied' },
+ *     { label: 'TypeScript', variant: 'learned' },
  *   ]}
  *   accent="information"
  * />
@@ -92,7 +95,7 @@ export function TimelineItem({
     accent === 'feature' && 'bg-feature-base'
   )
   const accentDot = cn(
-    'absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 sm:top-5.5 md:top-5.5',
+    'absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 sm:top-5 md:top-5.5',
     BADGE.special.dot,
     BADGE.special.dotSize.md,
     accent === 'information' ? 'bg-information-base' : 'bg-feature-base'
