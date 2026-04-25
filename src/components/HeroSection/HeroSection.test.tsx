@@ -19,4 +19,9 @@ describe('HeroSection', () => {
       '/Francisco_Gonzalez_Frontend_Developer_2026.pdf'
     )
   })
+
+  it('muestra el stack principal en el hero (escáner de keywords)', () => {
+    renderWithMotion(<HeroSection />)
+    expect(screen.getByText('React · TypeScript · Next.js')).toBeInTheDocument()
+  })
 })
