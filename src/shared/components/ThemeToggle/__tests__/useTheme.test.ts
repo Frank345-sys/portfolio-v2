@@ -36,6 +36,7 @@ describe('useTheme', () => {
     })
 
     document.documentElement.classList.remove('dark', 'theme-transitioning')
+    document.getElementById('meta-theme-color')?.remove()
   })
 
   afterEach(() => {
@@ -59,6 +60,9 @@ describe('useTheme', () => {
 
     expect(result.current.isDark).toBe(false)
     expect(document.documentElement.classList.contains('dark')).toBe(false)
+    expect(
+      document.getElementById('meta-theme-color')?.getAttribute('content')
+    ).toBe('#ffffff')
   })
 
   it('inicializa en dark cuando localStorage tiene "dark"', () => {
@@ -68,6 +72,9 @@ describe('useTheme', () => {
 
     expect(result.current.isDark).toBe(true)
     expect(document.documentElement.classList.contains('dark')).toBe(true)
+    expect(
+      document.getElementById('meta-theme-color')?.getAttribute('content')
+    ).toBe('#111111')
   })
 
   it('inicializa en light cuando localStorage tiene "light"', () => {
@@ -89,6 +96,9 @@ describe('useTheme', () => {
     expect(result.current.isDark).toBe(true)
     expect(document.documentElement.classList.contains('dark')).toBe(true)
     expect(localStorage.setItem).toHaveBeenCalledWith(STORAGE_KEY, 'dark')
+    expect(
+      document.getElementById('meta-theme-color')?.getAttribute('content')
+    ).toBe('#111111')
   })
 
   it('setTheme("light") actualiza isDark a false, quita clase y persiste', () => {
@@ -102,6 +112,18 @@ describe('useTheme', () => {
     expect(result.current.isDark).toBe(false)
     expect(document.documentElement.classList.contains('dark')).toBe(false)
     expect(localStorage.setItem).toHaveBeenCalledWith(STORAGE_KEY, 'light')
+    expect(
+      document.getElementById('meta-theme-color')?.getAttribute('content')
+    ).toBe('#ffffff')
+  })
+
+  it('crea meta theme-color si no existe en el DOM', () => {
+    const { result } = renderHook(() => useTheme())
+
+    expect(result.current.isDark).toBe(false)
+    const meta = document.getElementById('meta-theme-color')
+    expect(meta).not.toBeNull()
+    expect(meta?.getAttribute('name')).toBe('theme-color')
   })
 
   it('no lanza al desmontar', () => {
@@ -142,6 +164,7 @@ describe('useTheme', () => {
       })
 
       document.documentElement.classList.remove('dark', 'theme-transitioning')
+      document.getElementById('meta-theme-color')?.remove()
     })
 
     it('sin tema legible en storage registra listener change en matchMedia', () => {

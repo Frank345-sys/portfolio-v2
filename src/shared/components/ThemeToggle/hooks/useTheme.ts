@@ -4,6 +4,12 @@ const STORAGE_KEY = 'theme'
 
 type Theme = 'light' | 'dark'
 
+/** Alineado a fondo base: `--color-white` (light) y `.dark` `--color-bg-white` (dark). */
+const THEME_COLOR_HEX: Record<Theme, string> = {
+  light: '#ffffff',
+  dark: '#111111',
+}
+
 interface UseThemeReturn {
   /** True si el tema aplicado es oscuro (`html` tiene clase `dark`). */
   isDark: boolean
@@ -32,6 +38,18 @@ function applyTheme(theme: Theme) {
   }
 }
 
+function syncThemeColorMeta(theme: Theme) {
+  if (typeof document === 'undefined') return
+  let el = document.getElementById('meta-theme-color') as HTMLMetaElement | null
+  if (!el) {
+    el = document.createElement('meta')
+    el.id = 'meta-theme-color'
+    el.setAttribute('name', 'theme-color')
+    document.head.appendChild(el)
+  }
+  el.setAttribute('content', THEME_COLOR_HEX[theme])
+}
+
 /**
  * Tema claro/oscuro: `localStorage`, clase `dark` en `<html>` y sincronización con
  * `prefers-color-scheme` cuando no hay valor guardado. Ver `UseThemeReturn`.
@@ -45,6 +63,7 @@ export function useTheme(): UseThemeReturn {
 
   useEffect(() => {
     applyTheme(theme)
+    syncThemeColorMeta(theme)
     window.localStorage.setItem(STORAGE_KEY, theme)
   }, [theme])
 
