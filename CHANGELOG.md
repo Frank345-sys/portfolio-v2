@@ -4,11 +4,14 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-04-24
+
 ### Cambiado
 
 - Repo: `.gitattributes` con `* text=auto eol=lf` y Prettier con `endOfLine: "lf"` (alineado con `.editorconfig`) para reducir ruido CRLF/LF bajo Windows y avisos de Git al commitear. `.gitignore` ajustado a `.vscode/*` para que apliquen las excepciones; `.vscode/settings.json` con `files.eol` y trimming acorde a EditorConfig.
-
 - ESLint: `eslint-plugin-vitest` sustituido por `@vitest/eslint-plugin` (mantenimiento oficial, depende de `@typescript-eslint/utils` v8; desaparece el aviso de peer con ESLint 9). Test de contacto: aserción sin `expect` dentro de `if` (`vitest/no-conditional-expect`).
+- Tema/UX: `meta[name="theme-color"]` se sincroniza con el tema activo (light/dark) y `color-scheme` en `html`/`html.dark` para controles nativos coherentes.
+- Documentación: `README.md` actualizado para reflejar pipeline de imágenes, `theme-color` dinámico y estado real de calidad/auditoría.
 
 ### Añadido
 
