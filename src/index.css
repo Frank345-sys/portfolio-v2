@@ -257,6 +257,14 @@
   --breakpoint-xs: 375px;
 }
 
+/* Controles nativos, scrollbars y formularios coherentes con tema claro/oscuro. */
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    TOKENS SEMÁNTICOS — DARK MODE
    Solo se redefinen los tokens que cambian respecto al light.
