@@ -1,4 +1,1 @@
-export {
-  ProgressiveImage,
-  type ProgressiveImageProps,
-} from './ProgressiveImage'
+export { ProgressiveImage } from './ProgressiveImage'
