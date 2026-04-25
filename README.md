@@ -16,7 +16,7 @@ SPA de portfolio personal. El **perfil unificado** (nombre, rol, títulos de pá
 
 Incluye: **Header** (nav + menú móvil), **Hero**, **Sobre mí** (bio, experiencia, formación, skills, certificaciones, valores), **Proyectos** (scroll sync + panel sticky), **Contacto** (tarjetas de enlaces) y **Footer**; desplazamiento suave con **Lenis** (respetando `prefers-reduced-motion`); animaciones con **Motion**; tema claro/oscuro.
 
-**Build:** el artefacto va a `build/`. Vite aplica un plugin que inyecta título, metas, JSON-LD, `robots.txt`, `sitemap.xml` y `.well-known/security.txt` según `VITE_PUBLIC_SITE_URL` (ver [Variables de entorno](#variables-de-entorno)). **GitHub Pages** no añade cabeceras HTTP del repo; metas de `referrer` y `Permissions-Policy` complementan (no sustituyen CSP en servidor).
+**Build:** el artefacto va a `build/`. Vite aplica plugins que inyectan título, metas, JSON-LD, `robots.txt`, `sitemap.xml` y `.well-known/security.txt` según `VITE_PUBLIC_SITE_URL` (ver [Variables de entorno](#variables-de-entorno)). Además, en producción optimiza PNG de `images/projects/` y genera `-600.webp` / `-1200.webp` para consumo responsive en tarjetas y lightbox. **GitHub Pages** no añade cabeceras HTTP del repo; metas de `referrer` y `Permissions-Policy` complementan (no sustituyen CSP en servidor).
 
 **Calidad en repo:** ESLint (incl. `jsx-a11y`, React Compiler, testing-library), Prettier, Husky (pre-commit, commit-msg), **Commitlint** con scopes enumerados, CI en GitHub Actions, workflow opcional de **React Doctor** en PRs, Dependabot. Documentación viva de tokens: [`src/shared/constants/tokens/readme.md`](src/shared/constants/tokens/readme.md).
 
@@ -60,6 +60,7 @@ src/
 
 - **`App.tsx`:** skip link, grano de fondo, `Header`, `main` (Hero, About, Projects, Contact), `Footer`, todo bajo `SmoothScrollRoot` + `LazyMotion` / `MotionConfig`.
 - **`src/shared/constants/siteProfile.ts`:** nombre visible, rol, textos SEO y JSON-LD; consumido por Vite, secciones y tests afines.
+- **Tema visual:** `ThemeToggle` persiste en `localStorage`, sincroniza clase `dark` en `<html>`, actualiza `meta[name="theme-color"]` dinámicamente y `src/index.css` declara `color-scheme` para controles nativos en claro/oscuro.
 
 ---
 
@@ -152,6 +153,13 @@ Efecto: formato consistente, tests afectados en verde, tipos correctos, mensajes
 
 `src/index.css`: `@import 'tailwindcss'`, primitivos en `:root`, `@theme` con tokens semánticos, bloque **`.dark`**. Prettier con `prettier-plugin-tailwindcss` y `tailwindFunctions: ['clsx', 'cn']`.
 
+Incluye además:
+
+- `html { color-scheme: light; }`
+- `html.dark { color-scheme: dark; }`
+
+Esto alinea widgets nativos del navegador (inputs, scrollbars y controles del UA) con el tema activo.
+
 ---
 
 ## Calidad: Husky y CI
@@ -190,6 +198,20 @@ npm install
 - Prefijo **`VITE_`**, lectura con `import.meta.env` (nunca `process.env` en código de app).
 - Útiles en build: **`VITE_BASE_PATH`** (p. ej. `/portfolio-v2/`), **`VITE_PUBLIC_SITE_URL`** (URL canónica del sitio desplegado, para sitemap, JSON-LD y `security.txt`).
 - Vite carga `.env`, `.env.local`, y por **modo** `.env.[mode]` (p. ej. `development`, `production`, `github`).
+
+### SEO/tema: `theme-color` dinámico
+
+- `index.html` declara un `meta` base:
+
+  ```html
+  <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
+  ```
+
+- `useTheme` lo sincroniza al tema activo:
+  - `light` → `#ffffff`
+  - `dark` → `#111111`
+
+Con esto, la barra de dirección del navegador móvil refleja el tema real de la app (no solo `prefers-color-scheme` del sistema).
 
 No commitear secretos; `.env` local en `.gitignore` si aplica.
 
