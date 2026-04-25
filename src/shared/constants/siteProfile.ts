@@ -8,11 +8,6 @@ export const SITE_PROFILE = {
   firstName: 'Frank',
   lastName: 'González',
   role: 'Frontend engineer',
-  /**
-   * Línea de enfoque bajo el rol (hero, pie): especialización en una frase;
-   * no duplica el rol completo.
-   */
-  focusLine: 'UI de producto, rendimiento y accesibilidad',
   /** Iniciales del avatar; alinear con `firstName` y `lastName`. */
   initials: 'FG',
 } as const
@@ -31,6 +26,12 @@ export const SITE_DISPLAY_NAME =
  */
 export const SITE_TAGLINE =
   'Interfaces de producto en React/TypeScript: performance medible, patrones reutilizables y UI fiel a diseño.' as const
+
+/**
+ * Línea breve bajo el rol en el hero: visible para *keyword scan* (reclutamiento).
+ * Coherente con el título de página y con el stack en About.
+ */
+export const HERO_STACK_HIGHLIGHT = 'React · TypeScript · Next.js' as const
 
 /** Sufijo alineado con el título de `index.html` y OG/Twitter. */
 const PAGE_TITLE_STACK = 'React & TypeScript' as const
