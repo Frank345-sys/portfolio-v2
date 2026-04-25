@@ -1,4 +1,5 @@
 import type { ImgHTMLAttributes } from 'react'
+import { projectPngPathToWebpAttributes } from './projectImageWebp'
 
 /**
  * Card en `ProjectsSection`: columna `flex-1` junto a panel 50% / 45% + `gap-10` + rail.
@@ -13,7 +14,7 @@ const PROJECT_IMAGE_SIZES_CARD =
 const PROJECT_IMAGE_SIZES_LIGHTBOX =
   '(min-width: 640px) min(100vw - 2rem, 67.5rem), 100vw' as const
 
-export type ProjectImageVariant = 'card' | 'lightbox'
+type ProjectImageVariant = 'card' | 'lightbox'
 
 type ProjectImagePick = Pick<
   ImgHTMLAttributes<HTMLImageElement>,
@@ -43,16 +44,5 @@ export function getProjectImageAttributes(
     return withSizes
   }
 
-  const m = src.match(/^(.*\/images\/projects\/[^/]+)\.png(\?.*)?$/i)
-  if (!m) {
-    return withSizes
-  }
-
-  const base = m[1]
-  const search = m[2] ?? ''
-  return {
-    src: `${base}-1200.webp${search}`,
-    srcSet: `${base}-600.webp${search} 600w, ${base}-1200.webp${search} 1200w`,
-    sizes: sizeDesc,
-  }
+  return projectPngPathToWebpAttributes(src, sizeDesc) ?? withSizes
 }
