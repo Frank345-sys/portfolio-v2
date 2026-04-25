@@ -1,0 +1,6 @@
+# Repositorio en LF: evita mezcla CRLF/LF en Windows y diffs ruidosos al commitear.
+* text=auto eol=lf
+
+# Scripts que suelen necesitar CRLF en entornos Windows puros (por si se añaden)
+*.bat text eol=crlf
+*.cmd text eol=crlf

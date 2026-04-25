@@ -1,0 +1,5 @@
+{
+  "ignore": {
+    "rules": ["knip/exports", "knip/types", "knip/unused"]
+  }
+}
