@@ -11,7 +11,8 @@ import {
 } from './subcomponents'
 
 /**
- * Sección "Sobre mí" del portfolio: hero, bio, valores, skills, experiencia, formación académica y certificaciones.
+ * Sección "Sobre mí" del portfolio: hero, bio, valores; luego flujo de trazabilidad
+ * (formación académica → experiencia laboral → stack actual); al final, certificaciones.
  * Refactorizado en subcomponentes bajo `./subcomponents`; datos estáticos en `./constants`, tipos en `./types`.
  *
  * @example
@@ -36,12 +37,12 @@ export function AboutSection() {
         <AboutBio />
         {/* Values */}
         <AboutValues />
-        {/* Skills */}
-        <AboutSkills />
-        {/* Experience */}
-        <AboutExperience />
-        {/* Academic */}
+        {/* Formación académica */}
         <AboutAcademic />
+        {/* Experiencia */}
+        <AboutExperience />
+        {/* Stack técnico */}
+        <AboutSkills />
         {/* Certs */}
         <AboutCerts />
       </div>
