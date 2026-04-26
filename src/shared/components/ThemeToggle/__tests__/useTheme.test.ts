@@ -4,6 +4,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { useTheme } from '../hooks/useTheme'
 
 const STORAGE_KEY = 'theme'
+function noopOnPrefersColorSchemeChange() {}
 
 describe('useTheme', () => {
   const mockMatchMedia = vi.fn()
@@ -210,7 +211,8 @@ describe('useTheme', () => {
     })
 
     it('cambio de prefers-color-scheme actualiza el tema mientras no hay tema en storage', () => {
-      let onChange: (e: { matches: boolean }) => void = () => {}
+      let onChange: (e: { matches: boolean }) => void =
+        noopOnPrefersColorSchemeChange
       mockAddEventListener.mockImplementation((event, handler) => {
         if (event === 'change') {
           onChange = handler as (e: { matches: boolean }) => void

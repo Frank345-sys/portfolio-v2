@@ -170,9 +170,7 @@ export function useImageCarousel({
         } else {
           setInternalSlide(next)
         }
-        if (autoplay && !reduceMotion && hasCarousel) {
-          scheduleTick()
-        }
+        scheduleTick()
       }, waitMs)
     }
 

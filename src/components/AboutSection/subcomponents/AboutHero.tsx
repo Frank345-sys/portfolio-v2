@@ -25,7 +25,7 @@ export function AboutHero() {
   } = ABOUT_HERO
 
   const fullName = `${firstName} ${lastName}`
-  const avatarSrc = avatarPhotoSrc || ''
+  const avatarSrc = avatarPhotoSrc ?? ''
 
   return (
     <div className={LAYOUT.spacing.default}>

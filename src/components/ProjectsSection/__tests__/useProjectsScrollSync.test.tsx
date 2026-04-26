@@ -7,6 +7,9 @@ import { useProjectsScrollSync } from '../hooks/useProjectsScrollSync'
 
 /** Debe coincidir con `SCROLL_SYNC_MEDIA_QUERY` del hook. */
 const LG_MEDIA_QUERY = '(min-width: 1024px)'
+function takeNoIntersectionRecords() {
+  return []
+}
 
 let intersectionCallback: IntersectionObserverCallback | undefined
 
@@ -97,7 +100,7 @@ function setupIntersectionObserver() {
     observe = vi.fn()
     unobserve = vi.fn()
     disconnect = vi.fn()
-    takeRecords = vi.fn(() => [])
+    takeRecords = vi.fn(takeNoIntersectionRecords)
     root = null
     rootMargin = ''
     thresholds = []

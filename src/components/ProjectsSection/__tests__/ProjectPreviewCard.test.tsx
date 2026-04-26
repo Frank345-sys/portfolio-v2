@@ -16,6 +16,10 @@ type ProjectPreviewCardWithLightboxProps = Omit<
   'reduceMotion'
 >
 
+function takeNoIntersectionRecords() {
+  return []
+}
+
 /** Replica el patrón de `ProjectsSection`: card + un solo lightbox enlazado por callback. */
 function ProjectPreviewCardWithLightbox(
   props: ProjectPreviewCardWithLightboxProps
@@ -62,7 +66,7 @@ function mockIntersectionObserver() {
     observe = vi.fn()
     unobserve = vi.fn()
     disconnect = vi.fn()
-    takeRecords = vi.fn(() => [])
+    takeRecords = vi.fn(takeNoIntersectionRecords)
     root = null
     rootMargin = ''
     thresholds = []

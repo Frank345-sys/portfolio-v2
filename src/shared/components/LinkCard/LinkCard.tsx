@@ -62,7 +62,7 @@ export function LinkCard({
   className,
 }: LinkCardProps) {
   const hasExplicitAria =
-    ariaLabel != null && String(ariaLabel).trim().length > 0
+    ariaLabel !== undefined && String(ariaLabel).trim().length > 0
 
   return (
     <a

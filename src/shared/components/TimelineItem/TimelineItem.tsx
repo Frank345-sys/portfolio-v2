@@ -148,7 +148,7 @@ export function TimelineItem({
         >
           {description}
         </p>
-        {chips != null && chips.length > 0 && (
+        {chips !== undefined && chips.length > 0 && (
           <BadgeRow
             items={chips.map((chip) => ({
               label: chip.label,

@@ -108,7 +108,7 @@ export function useNavScrollSpy(
     runSetup()
 
     const schedule = () => {
-      if (rafId != null) {
+      if (rafId !== null) {
         cancelAnimationFrame(rafId)
       }
       rafId = requestAnimationFrame(() => {
@@ -126,7 +126,7 @@ export function useNavScrollSpy(
     }
 
     return () => {
-      if (rafId != null) {
+      if (rafId !== null) {
         cancelAnimationFrame(rafId)
       }
       mo?.disconnect()

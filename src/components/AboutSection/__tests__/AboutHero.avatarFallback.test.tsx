@@ -5,10 +5,12 @@ import { renderWithMotion } from '@/test/renderWithMotion'
 
 import { AboutHero } from '../subcomponents/AboutHero'
 
+import type * as AboutConstantsModule from '../constants'
+
 const IOReserve = globalThis.IntersectionObserver
 
 vi.mock('../constants', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../constants')>()
+  const actual: typeof AboutConstantsModule = await importOriginal()
   return {
     ...actual,
     ABOUT_HERO: {

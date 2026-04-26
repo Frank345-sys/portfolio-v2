@@ -61,8 +61,8 @@ describe('Legend', () => {
 
   it('aplica className adicional al contenedor', () => {
     const { container } = render(
-      <Legend items={[...SAMPLE_ITEMS]} className="custom-legend-class" />
+      <Legend items={[...SAMPLE_ITEMS]} className="test-legend-class" />
     )
-    expect(container.firstChild).toHaveClass('custom-legend-class')
+    expect(container.firstChild).toHaveClass('test-legend-class')
   })
 })

@@ -191,10 +191,14 @@ function projectImagesPipelinePlugin(): Plugin {
 // URLs: `.env.production` (build por defecto), `.env.github` (`build:github`), `.env.development` (dev).
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const base = env.VITE_BASE_PATH?.trim() || '/'
+  const base =
+    (typeof env.VITE_BASE_PATH === 'string' ? env.VITE_BASE_PATH : '').trim() ||
+    '/'
   const siteUrl =
-    env.VITE_PUBLIC_SITE_URL?.trim() ||
-    'https://frank345-sys.github.io/portfolio-v2'
+    (typeof env.VITE_PUBLIC_SITE_URL === 'string'
+      ? env.VITE_PUBLIC_SITE_URL
+      : ''
+    ).trim() || 'https://frank345-sys.github.io/portfolio-v2'
 
   return {
     base,

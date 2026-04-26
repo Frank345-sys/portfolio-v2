@@ -90,8 +90,10 @@ describe('Header', () => {
   })
 
   it('className extra llega al <header>', () => {
-    const { container } = renderWithMotion(<Header className="custom-class" />)
-    expect(container.querySelector('header')).toHaveClass('custom-class')
+    const { container } = renderWithMotion(
+      <Header className="test-custom-class" />
+    )
+    expect(container.querySelector('header')).toHaveClass('test-custom-class')
   })
 
   it('arriba del todo: fondo transparente; al hacer scroll: sombra', () => {

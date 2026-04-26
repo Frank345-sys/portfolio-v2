@@ -8,6 +8,9 @@ import { PROJECTS } from '../constants'
 import { ProjectsSection } from '../ProjectsSection'
 
 const scrollIntoViewMock = vi.fn()
+function takeNoIntersectionRecords() {
+  return []
+}
 
 /** Misma consulta que en `useProjectsScrollSync` (breakpoint `lg`). */
 const LG_MEDIA = '(min-width: 1024px)'
@@ -26,7 +29,7 @@ function mockScrollAndObservers(options?: { lgMatches?: boolean }) {
     observe = vi.fn()
     unobserve = vi.fn()
     disconnect = vi.fn()
-    takeRecords = vi.fn(() => [])
+    takeRecords = vi.fn(takeNoIntersectionRecords)
     root = null
     rootMargin = ''
     thresholds = []
