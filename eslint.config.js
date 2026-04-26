@@ -21,8 +21,14 @@ const typeAwareParserOptions = {
   tsconfigRootDir: import.meta.dirname,
 }
 
-/** Vite, flat config de ESLint y scripts Node: no globals de navegador. */
-const nodeToolingFiles = ['*.config.{js,ts}', 'scripts/**/*.mjs']
+/**
+ * Tooling ejecutado en Node.
+ * Se añaden globals de Node sobre la base compartida del resto de reglas.
+ */
+const nodeToolingFiles = [
+  '*.config.{js,ts,cjs,mjs}',
+  'scripts/**/*.{js,mjs,cjs}',
+]
 
 /** Vitest + Testing Library (React). */
 const testFiles = [
