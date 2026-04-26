@@ -1,5 +1,6 @@
 import { render, type RenderOptions } from '@testing-library/react'
 import { LazyMotion, domAnimation } from 'motion/react'
+
 import type { ReactElement, ReactNode } from 'react'
 
 /**

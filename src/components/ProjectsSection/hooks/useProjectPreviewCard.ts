@@ -1,3 +1,4 @@
+import { useInView } from 'motion/react'
 import {
   useCallback,
   useLayoutEffect,
@@ -6,10 +7,11 @@ import {
   useState,
   type RefObject,
 } from 'react'
-import { useInView } from 'motion/react'
+
 import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
 import { getValidUrls } from '@/shared/utils/getValidUrls'
+
 import type {
   ProjectLightboxCarouselSync,
   ProjectPreviewGallery,

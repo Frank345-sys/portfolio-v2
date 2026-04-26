@@ -1,6 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, screen } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { ContactOwnerLocalTime } from '../subcomponents/ContactOwnerLocalTime'
 
 describe('ContactOwnerLocalTime', () => {

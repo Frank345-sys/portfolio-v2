@@ -1,6 +1,7 @@
-import type { ReactNode } from 'react'
-import { cn } from '@/shared/utils/cn'
 import { TYPOGRAPHY, CARD, ANIMATION } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
+
+import type { ReactNode } from 'react'
 
 interface LinkCardProps {
   /** URL de destino. */
@@ -61,7 +62,7 @@ export function LinkCard({
   className,
 }: LinkCardProps) {
   const hasExplicitAria =
-    ariaLabel != null && String(ariaLabel).trim().length > 0
+    ariaLabel !== undefined && String(ariaLabel).trim().length > 0
 
   return (
     <a

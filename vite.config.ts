@@ -1,12 +1,13 @@
 /// <reference types="vitest" />
 import fs from 'node:fs'
 import path from 'node:path'
-import { loadEnv } from 'vite'
-import type { Plugin } from 'vite'
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
+
 import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react'
 import sharp from 'sharp'
+import { loadEnv } from 'vite'
+import { defineConfig } from 'vitest/config'
+
 import {
   CONTACT_EMAIL_TRIMMED,
   CONTACT_PROFILE,
@@ -19,6 +20,8 @@ import {
   SITE_PAGE_TITLE,
   SITE_PROFILE,
 } from './src/shared/constants/siteProfile'
+
+import type { Plugin } from 'vite'
 
 /**
  * robots.txt, sitemap.xml y security.txt en el artefacto de build.
@@ -188,10 +191,14 @@ function projectImagesPipelinePlugin(): Plugin {
 // URLs: `.env.production` (build por defecto), `.env.github` (`build:github`), `.env.development` (dev).
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const base = env.VITE_BASE_PATH?.trim() || '/'
+  const base =
+    (typeof env.VITE_BASE_PATH === 'string' ? env.VITE_BASE_PATH : '').trim() ||
+    '/'
   const siteUrl =
-    env.VITE_PUBLIC_SITE_URL?.trim() ||
-    'https://frank345-sys.github.io/portfolio-v2'
+    (typeof env.VITE_PUBLIC_SITE_URL === 'string'
+      ? env.VITE_PUBLIC_SITE_URL
+      : ''
+    ).trim() || 'https://frank345-sys.github.io/portfolio-v2'
 
   return {
     base,

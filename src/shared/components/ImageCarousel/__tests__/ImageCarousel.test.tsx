@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest'
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { describe, it, expect } from 'vitest'
+
 import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { ImageCarousel } from '../ImageCarousel'
 
 const slides = ['/img/a.png', '/img/b.png']

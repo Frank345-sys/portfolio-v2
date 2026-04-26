@@ -1,9 +1,12 @@
-import { describe, it, expect } from 'vitest'
 import { useMotionValue } from 'motion/react'
+import { describe, it, expect } from 'vitest'
+
 import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { FloatingBox } from '../subcomponents'
-import type { BoxData } from '../types'
 import { generateBoxes } from '../utils'
+
+import type { BoxData } from '../types'
 
 function Wrapper({ box }: { box: BoxData }) {
   const mx = useMotionValue(0)

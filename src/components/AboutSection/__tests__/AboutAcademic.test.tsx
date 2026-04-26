@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { AboutAcademic } from '../subcomponents/AboutAcademic'
+import { describe, it, expect } from 'vitest'
+
 import { ABOUT_ACADEMIC } from '../constants'
+import { AboutAcademic } from '../subcomponents/AboutAcademic'
 
 describe('AboutAcademic', () => {
   describe('rendering', () => {
@@ -14,20 +15,20 @@ describe('AboutAcademic', () => {
 
     it('renderiza todos los items de ABOUT_ACADEMIC', () => {
       render(<AboutAcademic />)
-      ABOUT_ACADEMIC.forEach((item) => {
+      for (const item of ABOUT_ACADEMIC) {
         expect(screen.getByText(item.heading)).toBeInTheDocument()
         expect(screen.getByText(item.company)).toBeInTheDocument()
         expect(screen.getAllByText(item.period).length).toBeGreaterThan(0)
-      })
+      }
     })
 
     it('los chips del primer item (con chips) se renderizan', () => {
       render(<AboutAcademic />)
       const itemWithChips = ABOUT_ACADEMIC.find((e) => e.chips?.length)
       if (!itemWithChips?.chips) return
-      itemWithChips.chips.forEach((chip) => {
+      for (const chip of itemWithChips.chips) {
         expect(screen.getByText(chip.label)).toBeInTheDocument()
-      })
+      }
     })
 
     it('muestra la leyenda de conocimientos adquiridos en la formación', () => {

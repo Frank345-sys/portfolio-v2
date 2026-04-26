@@ -1,8 +1,9 @@
 import { AnimatedSectionHeading } from '@/shared/components/AnimatedSectionHeading'
 import { LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
-import { ContactLinkCards, ProfileAside } from './subcomponents'
+
 import { CONTACT_EMAIL_HREF } from './constants'
+import { ContactLinkCards, ProfileAside } from './subcomponents'
 
 /**
  * Sección de contacto: copy, `nav` de enlaces y `aside` con disponibilidad y metadatos.

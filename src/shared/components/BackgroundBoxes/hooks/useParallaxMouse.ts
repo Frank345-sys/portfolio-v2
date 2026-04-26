@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
 import { useMotionValue } from 'motion/react'
+import { useEffect } from 'react'
+
 import type { MotionValue } from 'motion/react'
 
 /**

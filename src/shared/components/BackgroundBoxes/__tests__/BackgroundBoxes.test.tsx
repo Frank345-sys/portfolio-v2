@@ -1,6 +1,8 @@
-import { describe, expect, it } from 'vitest'
 import { act, screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+
 import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { BackgroundBoxes } from '../BackgroundBoxes'
 import { FLOATING_BOX_COUNT } from '../utils'
 

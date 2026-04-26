@@ -1,5 +1,6 @@
-import { ANIMATION } from './animation'
 import { cn } from '@/shared/utils/cn'
+
+import { ANIMATION } from './animation'
 
 const BASE = {
   title: 'text-text-strong leading-tight tracking-tight',

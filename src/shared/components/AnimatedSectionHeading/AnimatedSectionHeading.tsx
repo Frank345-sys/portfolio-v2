@@ -1,6 +1,7 @@
 import { m } from 'motion/react'
-import { TYPOGRAPHY } from '@/shared/constants/tokens'
+
 import { SectionLabel } from '@/shared/components/SectionLabel'
+import { TYPOGRAPHY } from '@/shared/constants/tokens'
 
 const MOTION_TITLE = {
   h1: m.h1,

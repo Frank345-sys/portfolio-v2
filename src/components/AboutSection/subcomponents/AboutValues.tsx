@@ -1,7 +1,9 @@
-import { cn } from '@/shared/utils/cn'
-import { TYPOGRAPHY, LAYOUT, CARD } from '@/shared/constants/tokens'
 import { SectionLabel } from '@/shared/components/SectionLabel'
+import { TYPOGRAPHY, LAYOUT, CARD } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
+
 import { ABOUT_VALUES } from '../constants'
+
 import type { ValueItem } from '../types'
 
 /**

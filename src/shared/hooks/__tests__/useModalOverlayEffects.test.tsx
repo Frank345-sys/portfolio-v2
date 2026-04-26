@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi, afterEach } from 'vitest'
+
 import { useModalOverlayEffects } from '../useModalOverlayEffects'
 
 function Harness({

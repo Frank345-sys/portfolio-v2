@@ -1,4 +1,5 @@
 import { CodeIcon } from '@/shared/icons'
+
 import { logoIcon, logoLink, logoText } from '../styles'
 
 interface SiteLogoProps {

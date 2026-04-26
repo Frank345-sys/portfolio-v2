@@ -1,4 +1,4 @@
-import { CodeIcon, ArrowUpIcon } from '@/shared/icons'
+import { SITE_TAGLINE } from '@/shared/constants/siteProfile'
 import {
   BRAND,
   BUTTON,
@@ -6,8 +6,9 @@ import {
   PRIMARY_NAV_LINK,
   TYPOGRAPHY,
 } from '@/shared/constants/tokens'
-import { SITE_TAGLINE } from '@/shared/constants/siteProfile'
+import { CodeIcon, ArrowUpIcon } from '@/shared/icons'
 import { cn } from '@/shared/utils/cn'
+
 import {
   FOOTER_BRAND,
   FOOTER_BRAND_LANDMARK_LABEL,
@@ -26,10 +27,7 @@ export function Footer() {
   return (
     <footer
       aria-label="Pie de página"
-      className={cn(
-        'border-stroke-soft bg-bg-white border-t',
-        'backdrop-blur-sm'
-      )}
+      className="border-stroke-soft bg-bg-white border-t backdrop-blur-sm"
     >
       <div
         className={cn(
@@ -105,7 +103,7 @@ export function Footer() {
               href="#inicio"
               className={cn(
                 BUTTON.variant.outlined.neutral,
-                BUTTON.size.md,
+                BUTTON.size.responsive,
                 'gap-2 normal-case',
                 FOOTER_FOCUS_VISIBLE
               )}

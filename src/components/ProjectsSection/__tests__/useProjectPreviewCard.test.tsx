@@ -1,13 +1,16 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { useProjectPreviewCard } from '../hooks/useProjectPreviewCard'
+
+import type * as MotionReactModule from 'motion/react'
 
 type ProjectPreviewCardHookResult = ReturnType<typeof useProjectPreviewCard>
 
 const useInViewMock = vi.fn(() => true)
 
 vi.mock('motion/react', async (importOriginal) => {
-  const mod = await importOriginal<typeof import('motion/react')>()
+  const mod: typeof MotionReactModule = await importOriginal()
   return {
     ...mod,
     useInView: () => useInViewMock(),

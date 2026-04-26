@@ -1,8 +1,10 @@
-import { useEffect } from 'react'
 import { m, useMotionValue, useSpring } from 'motion/react'
-import type { MotionValue } from 'motion/react'
-import type { BoxData } from '../types'
+import { useEffect } from 'react'
+
 import { MOTION_ANIMATION } from '@/shared/constants'
+
+import type { BoxData } from '../types'
+import type { MotionValue } from 'motion/react'
 
 interface FloatingBoxProps {
   /** Posición, profundidad e ícono SVG de esta caja (generado por `generateBoxes`). */

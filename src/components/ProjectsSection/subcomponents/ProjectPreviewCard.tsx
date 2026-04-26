@@ -1,17 +1,20 @@
-import { type MouseEvent } from 'react'
 import { m } from 'motion/react'
+import { type MouseEvent } from 'react'
+
 import { ImageCarousel } from '@/shared/components/ImageCarousel'
-import { useProjectPreviewCard } from '../hooks'
-import { ANIMATION, BUTTON, TYPOGRAPHY, Z } from '@/shared/constants/tokens'
 import { MOTION_ANIMATION } from '@/shared/constants'
+import { ANIMATION, BUTTON, TYPOGRAPHY, Z } from '@/shared/constants/tokens'
 import { ExpandScreenIcon } from '@/shared/icons'
 import { cn } from '@/shared/utils/cn'
+
+import { useProjectPreviewCard } from '../hooks'
+import { ProjectPreviewTitleLines } from './ProjectPreviewTitleLines'
+
 import type {
   ProjectLightboxCarouselSync,
   ProjectPreviewCopy,
   ProjectPreviewGallery,
 } from '../types'
-import { ProjectPreviewTitleLines } from './ProjectPreviewTitleLines'
 
 export interface ProjectPreviewCardProps
   extends

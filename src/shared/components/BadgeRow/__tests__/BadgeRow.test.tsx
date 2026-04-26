@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { BadgeRow } from '../BadgeRow'
+import { describe, it, expect } from 'vitest'
+
 import { BADGE } from '@/shared/constants/tokens/badge'
+
+import { BadgeRow } from '../BadgeRow'
 
 describe('BadgeRow', () => {
   /**

@@ -5,6 +5,7 @@
  */
 import { LAYOUT } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
+
 import {
   AboutSectionSkeleton,
   ContactSectionSkeleton,

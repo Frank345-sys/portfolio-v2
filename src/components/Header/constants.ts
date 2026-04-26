@@ -3,9 +3,10 @@
  *
  * @module components/Header/constants
  */
-import type { Variants } from 'motion/react'
 import { MOTION_ANIMATION } from '@/shared/constants'
+
 import type { NavItem } from './types'
+import type { Variants } from 'motion/react'
 
 /**
  * Desplazamiento superior del área de intersección del scroll-spy (px), alineado con

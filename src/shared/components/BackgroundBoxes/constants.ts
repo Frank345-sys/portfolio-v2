@@ -14,6 +14,7 @@ import {
   FigmaIcon,
   VsCodeIcon,
 } from '@/shared/icons'
+
 import type { ViewportConfig } from './types'
 
 /** Opacidades disponibles para las cajas (determinista por seededRand). */

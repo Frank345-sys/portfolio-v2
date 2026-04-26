@@ -1,8 +1,9 @@
-import { SectionLabel } from '@/shared/components/SectionLabel'
 import { Legend } from '@/shared/components/Legend'
+import { SectionLabel } from '@/shared/components/SectionLabel'
 import { TimelineItem } from '@/shared/components/TimelineItem'
-import { ABOUT_ACADEMIC } from '../constants'
 import { LAYOUT } from '@/shared/constants/tokens'
+
+import { ABOUT_ACADEMIC } from '../constants'
 
 const ACADEMIC_LEGEND_ITEMS = [
   {

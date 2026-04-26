@@ -1,6 +1,8 @@
-import { describe, it, expect, vi } from 'vitest'
 import { screen, fireEvent, waitFor } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
+
 import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { ProgressiveImage } from '../ProgressiveImage'
 
 function getImageFadeWrapper(img: HTMLElement) {

@@ -18,7 +18,7 @@ Incluye: **Header** (nav + menú móvil), **Hero**, **Sobre mí** (bio, experien
 
 **Build:** el artefacto va a `build/`. Vite aplica plugins que inyectan título, metas, JSON-LD, `robots.txt`, `sitemap.xml` y `.well-known/security.txt` según `VITE_PUBLIC_SITE_URL` (ver [Variables de entorno](#variables-de-entorno)). Además, en producción optimiza PNG de `images/projects/` y genera `-600.webp` / `-1200.webp` para consumo responsive en tarjetas y lightbox. **GitHub Pages** no añade cabeceras HTTP del repo; metas de `referrer` y `Permissions-Policy` complementan (no sustituyen CSP en servidor).
 
-**Calidad en repo:** ESLint (incl. `jsx-a11y`, React Compiler, testing-library), Prettier, Husky (pre-commit, commit-msg), **Commitlint** con scopes enumerados, CI en GitHub Actions, workflow opcional de **React Doctor** en PRs, Dependabot. Documentación viva de tokens: [`src/shared/constants/tokens/readme.md`](src/shared/constants/tokens/readme.md).
+**Calidad en repo:** ESLint (incl. `jsx-a11y`, React Compiler, testing-library), **Knip** (dependencias y exports), Prettier, Husky (pre-commit, commit-msg), **Commitlint** con scopes enumerados, CI en GitHub Actions, workflow opcional de **React Doctor** en PRs, Dependabot. Documentación viva de tokens: [`src/shared/constants/tokens/readme.md`](src/shared/constants/tokens/readme.md).
 
 ---
 
@@ -27,7 +27,7 @@ Incluye: **Header** (nav + menú móvil), **Hero**, **Sobre mí** (bio, experien
 | Categoría   | Tecnología                                                                                                                  |
 | ----------- | --------------------------------------------------------------------------------------------------------------------------- |
 | **Build**   | Vite 7, `tsc -b` antes del bundle                                                                                           |
-| **UI**      | React 19, **Motion** (`motion/react`), class-variance-authority, `cn` (clsx + tailwind-merge)                               |
+| **UI**      | React 19, **Motion** (`motion/react`), utilidad **`cn`** (clsx + tailwind-merge)                                            |
 | **Estilos** | Tailwind CSS 4 (`@tailwindcss/vite`), tokens en `src/shared/constants/tokens/`, primitivos y modo oscuro en `src/index.css` |
 | **Scroll**  | Lenis bajo `SmoothScrollRoot`                                                                                               |
 | **Tests**   | Vitest 4, Testing Library, jsdom, umbrales de cobertura en `vite.config.ts`                                                 |
@@ -75,12 +75,13 @@ src/
 | `deploy`                                           | `build` + `gh-pages` a rama `gh-pages` (flujo base `VITE_BASE_PATH=/` si no se define otra).                                                                                         |
 | `deploy:pages`                                     | `build:github` + `gh-pages` (recomendado para el subpath de GitHub Pages).                                                                                                           |
 | `lint`                                             | ESLint en todo el proyecto.                                                                                                                                                          |
+| `knip`                                             | Análisis de dependencias no usadas, exports huérfanos y archivos sueltos ([Knip](https://knip.dev/)); configuración en `knip.json`.                                                  |
 | `format` / `format:check`                          | Prettier.                                                                                                                                                                            |
 | `typecheck`                                        | `tsc --noEmit`.                                                                                                                                                                      |
 | `test` / `test:watch` / `test:changed` / `test:ui` | Vitest.                                                                                                                                                                              |
 | `test:coverage` / `test:coverage:ci`               | Cobertura (local: en Windows abre el HTML; en macOS/Linux abrir `coverage/index.html` manualmente o con `open`/`xdg-open`).                                                          |
-| `check`                                            | `typecheck` → `format:check` → `lint` → `test` (rápido).                                                                                                                             |
-| `check:ci`                                         | Igual que la CI: `format:check` → `lint` → `typecheck` → `test:coverage:ci` → `build`.                                                                                               |
+| `check`                                            | `typecheck` → `format:check` → `lint` → `knip` → `test` (rápido).                                                                                                                    |
+| `check:ci`                                         | Igual que la CI: `format:check` → `lint` → `typecheck` → `knip` → `test:coverage:ci` → `build`.                                                                                      |
 | `lighthouse:pages`                                 | Audita en headless la URL pública (por defecto GitHub Pages); genera `lighthouse-report.html` (ignorada por git). Requiere Chromium; en Windows a veces `CHROME_PATH` a Edge/Chrome. |
 | `prepare`                                          | Instala hooks de Husky.                                                                                                                                                              |
 
@@ -126,6 +127,7 @@ Utilidad: **`cn()`** en `src/shared/utils/cn.ts` (clsx + tailwind-merge).
 
 - **lint-staged** (`--no-stash`): Prettier y ESLint solo en archivos en staging; evita el fallo de `git apply` al restaurar.
 - **test:changed:** Vitest solo sobre cambios respecto al commit anterior — rápido; la suite completa y cobertura corren en CI o con `check:ci`.
+- **Knip** en `npm run check` y CI: detecta dependencias sin uso, exports muertos y archivos aislados (complementa el análisis estático del repo).
 - **typecheck** en pre-commit: no subir tipos rotos.
 - **Commitlint** (hook `commit-msg`, no el pre-commit): valida [Conventional Commits](https://www.conventionalcommits.org/) con **scopes en lista cerrada** y **kebab-case**; **longitud mínima del scope 2**; asunto con **máximo 100 caracteres** en el encabezado. Detalle: `commitlint.config.cjs`.
 
@@ -164,12 +166,12 @@ Esto alinea widgets nativos del navegador (inputs, scrollbars y controles del UA
 
 ## Calidad: Husky y CI
 
-| Evento            | Qué corre                                                        |
-| ----------------- | ---------------------------------------------------------------- |
-| **pre-commit**    | `lint-staged` → `test:changed` → `typecheck`                     |
-| **commit-msg**    | `commitlint --edit`                                              |
-| **CI** (`ci.yml`) | `format:check`, `lint`, `typecheck`, `test:coverage:ci`, `build` |
-| **PR (opcional)** | Workflow `react-doctor`                                          |
+| Evento            | Qué corre                                                                |
+| ----------------- | ------------------------------------------------------------------------ |
+| **pre-commit**    | `lint-staged` → `test:changed` → `typecheck`                             |
+| **commit-msg**    | `commitlint --edit`                                                      |
+| **CI** (`ci.yml`) | `format:check`, `lint`, `typecheck`, `knip`, `test:coverage:ci`, `build` |
+| **PR (opcional)** | Workflow `react-doctor`                                                  |
 
 ---
 

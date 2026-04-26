@@ -1,10 +1,13 @@
-import type { SVGProps } from 'react'
-import { vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
+
 import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { MobileDrawer } from '../subcomponents/MobileDrawer'
+
 import type { NavItem } from '../types'
+import type { SVGProps } from 'react'
 
 vi.mock('@/shared/components/ThemeToggle', () => ({
   ThemeToggle: () => <span data-testid="theme-toggle">ThemeToggle</span>,

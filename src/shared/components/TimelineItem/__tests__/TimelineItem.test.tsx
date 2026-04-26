@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+
 import { TimelineItem } from '@/shared/components/TimelineItem'
 import { TIMELINE_CHIP_VARIANT } from '@/shared/constants/enums'
 import { SITE_PROFILE } from '@/shared/constants/siteProfile'

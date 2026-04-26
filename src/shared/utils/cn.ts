@@ -10,7 +10,7 @@ import { twMerge } from 'tailwind-merge'
  *
  * @example
  * ```ts
- * cn('px-4 py-2', isActive && 'bg-blue-500') // → 'px-4 py-2 bg-blue-500'
+ * cn('px-4 py-2', isActive && 'bg-bg-weak') // → 'px-4 py-2 bg-bg-weak'
  * cn('p-4', 'p-2') // → 'p-2'
  * ```
  */

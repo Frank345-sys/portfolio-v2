@@ -1,10 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
-import { useProjectsSection } from '../hooks/useProjectsSection'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { PROJECTS } from '../constants'
+import { useProjectsSection } from '../hooks/useProjectsSection'
 
 /** Misma consulta que `useProjectsScrollSync` / `ProjectsSection.test`. */
 const LG_MEDIA = '(min-width: 1024px)'
+function takeNoIntersectionRecords() {
+  return []
+}
 
 function mockBrowserForProjectsHooks(options?: { lgMatches?: boolean }) {
   const lgMatches = options?.lgMatches ?? true
@@ -13,7 +17,7 @@ function mockBrowserForProjectsHooks(options?: { lgMatches?: boolean }) {
     observe = vi.fn()
     unobserve = vi.fn()
     disconnect = vi.fn()
-    takeRecords = vi.fn(() => [])
+    takeRecords = vi.fn(takeNoIntersectionRecords)
     root = null
     rootMargin = ''
     thresholds = []

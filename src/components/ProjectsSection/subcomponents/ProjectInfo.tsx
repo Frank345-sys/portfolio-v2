@@ -1,10 +1,14 @@
 import { AnimatePresence, m } from 'motion/react'
-import { BADGE, BUTTON, TYPOGRAPHY } from '@/shared/constants/tokens'
-import { MOTION_ANIMATION } from '@/shared/constants'
+
 import { BadgeRow } from '@/shared/components/BadgeRow'
-import { parseEmphasis } from '@/shared/utils/parseEmphasis'
-import type { Project } from '../types'
+import { MOTION_ANIMATION } from '@/shared/constants'
+import { BADGE, BUTTON, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
+import { parseEmphasis } from '@/shared/utils/parseEmphasis'
+
+import type { Project } from '../types'
+
+const BULLET_LEAD_LABEL_REGEX = /^(Problema|Solución|Impacto|Resultado):\s*/u
 
 // ---------------------------------------------------------------------------
 // ProjectLink
@@ -22,7 +26,7 @@ interface ProjectLinkProps {
 }
 
 /**
- * Enlace con apariencia de botón (`BUTTON.variant` + `BUTTON.size.md`).
+ * Enlace con apariencia de botón (`BUTTON.variant` + `BUTTON.size.responsive`).
  * Usado para "Abrir sitio en vivo" y "Código en GitHub" dentro de `ProjectInfo`.
  */
 function ProjectLink({ href, label, variant }: ProjectLinkProps) {
@@ -33,8 +37,8 @@ function ProjectLink({ href, label, variant }: ProjectLinkProps) {
       rel="noopener noreferrer"
       className={cn(
         variant === 'contained'
-          ? cn(BUTTON.variant.contained.primary, BUTTON.size.md)
-          : cn(BUTTON.variant.outlined.primary, BUTTON.size.md),
+          ? cn(BUTTON.variant.contained.primary, BUTTON.size.responsive)
+          : cn(BUTTON.variant.outlined.primary, BUTTON.size.responsive),
         'w-fit normal-case'
       )}
     >
@@ -175,7 +179,13 @@ export function ProjectInfo({
                   aria-hidden
                 />
                 <div className="min-w-0 flex-1 wrap-break-word">
-                  {parseEmphasis(b, TYPOGRAPHY.special.emphasis)}
+                  {parseEmphasis(
+                    b.replace(
+                      BULLET_LEAD_LABEL_REGEX,
+                      (_, label: string) => `**${label}:** `
+                    ),
+                    TYPOGRAPHY.special.emphasis
+                  )}
                 </div>
               </m.li>
             ))}

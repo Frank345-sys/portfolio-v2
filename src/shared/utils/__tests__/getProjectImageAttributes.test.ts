@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+
 import { getProjectImageAttributes } from '../getProjectImageAttributes'
 
 describe('getProjectImageAttributes', () => {

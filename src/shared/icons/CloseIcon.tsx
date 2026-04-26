@@ -1,5 +1,6 @@
-import { cn } from '@/shared/utils/cn'
 import { type SVGProps } from 'react'
+
+import { cn } from '@/shared/utils/cn'
 /** Icono de cierre. Props nativas de `<svg>`. */
 
 export function CloseIcon({

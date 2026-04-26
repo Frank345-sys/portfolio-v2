@@ -1,8 +1,11 @@
-import type { Variants } from 'motion/react'
 import { m } from 'motion/react'
-import { cn } from '@/shared/utils/cn'
+
 import { BUTTON } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
+
 import { HAMBURGER_SPRING } from '../constants'
+
+import type { Variants } from 'motion/react'
 
 interface HamburgerButtonProps {
   /** Si el menú móvil está abierto (afecta `aria-expanded` y la animación). */

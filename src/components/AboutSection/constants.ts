@@ -1,3 +1,9 @@
+import { TIMELINE_CHIP_VARIANT } from '@/shared/constants/enums'
+import { SITE_PROFILE, SITE_TAGLINE } from '@/shared/constants/siteProfile'
+import { SKILL_LABEL } from '@/shared/constants/skills'
+
+import { SKILL_TAG_VARIANT } from './types'
+
 import type {
   ValueItem,
   SkillGroup,
@@ -5,10 +11,6 @@ import type {
   AcademicItem,
   CertItem,
 } from './types'
-import { SKILL_TAG_VARIANT } from './types'
-import { TIMELINE_CHIP_VARIANT } from '@/shared/constants/enums'
-import { SKILL_LABEL } from '@/shared/constants/skills'
-import { SITE_PROFILE, SITE_TAGLINE } from '@/shared/constants/siteProfile'
 
 /** Datos del hero (nombre, badge, ubicación, tagline, avatar) — consumidos en `AboutHero`. */
 interface AboutHeroData {

@@ -1,8 +1,11 @@
-import { describe, expect, it } from 'vitest'
 import { screen } from '@testing-library/react'
-import { renderWithMotion } from '@/test/renderWithMotion'
+import { describe, expect, it } from 'vitest'
+
 import { SKILL_LABEL } from '@/shared/constants/skills'
+import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { ProjectInfo } from '../subcomponents/ProjectInfo'
+
 import type { Project } from '../types'
 
 const PROJECT_MOCK: Project = {
@@ -55,13 +58,13 @@ describe('ProjectInfo', () => {
       />
     )
 
-    PROJECT_MOCK.bullets.forEach((bullet) => {
+    for (const bullet of PROJECT_MOCK.bullets) {
       expect(screen.getByText(bullet)).toBeInTheDocument()
-    })
+    }
 
-    PROJECT_MOCK.skills.forEach((skill) => {
+    for (const skill of PROJECT_MOCK.skills) {
       expect(screen.getByText(skill)).toBeInTheDocument()
-    })
+    }
 
     expect(
       screen.getByRole('link', { name: /abrir sitio en vivo/i })

@@ -4,9 +4,10 @@
  *
  * @module shared/components/SectionLazyFallback/subcomponents/skeletonPrimitives
  */
-import type { ComponentProps } from 'react'
 import { CARD, LAYOUT, TYPOGRAPHY, ANIMATION } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
+
+import type { ComponentProps } from 'react'
 
 /**
  * Barra rectangular con pulso y tinte `information`, combinable con `className` para tamaños.

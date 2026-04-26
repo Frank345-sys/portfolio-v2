@@ -1,6 +1,7 @@
-import { LAYOUT } from '@/shared/constants/tokens'
-import { SectionLabel } from '@/shared/components/SectionLabel'
 import { LinkCard } from '@/shared/components/LinkCard'
+import { SectionLabel } from '@/shared/components/SectionLabel'
+import { LAYOUT } from '@/shared/constants/tokens'
+
 import { ABOUT_CERTS } from '../constants'
 
 /**

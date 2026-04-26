@@ -1,8 +1,10 @@
-import type { MouseEvent } from 'react'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+
 import { IMAGE_CAROUSEL_AUTOPLAY_MS } from '../constants'
 import { useImageCarousel } from '../hooks'
+
+import type { MouseEvent } from 'react'
 
 const baseSlides = ['/a.jpg', '/b.jpg', '/c.jpg']
 

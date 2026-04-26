@@ -1,7 +1,9 @@
-import { vi } from 'vitest'
 import { act, screen, within, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
+
 import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { Header } from '../Header'
 
 vi.mock('@/shared/components/ThemeToggle', () => ({
@@ -88,8 +90,10 @@ describe('Header', () => {
   })
 
   it('className extra llega al <header>', () => {
-    const { container } = renderWithMotion(<Header className="custom-class" />)
-    expect(container.querySelector('header')).toHaveClass('custom-class')
+    const { container } = renderWithMotion(
+      <Header className="test-custom-class" />
+    )
+    expect(container.querySelector('header')).toHaveClass('test-custom-class')
   })
 
   it('arriba del todo: fondo transparente; al hacer scroll: sombra', () => {

@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
-import { Legend } from '../Legend'
+import { describe, it, expect } from 'vitest'
+
 import { BADGE } from '@/shared/constants/tokens/badge'
+
+import { Legend } from '../Legend'
 
 const SAMPLE_ITEMS = [
   { id: 'a', label: 'Primera leyenda', dotClassName: 'bg-information-base' },
@@ -59,8 +61,8 @@ describe('Legend', () => {
 
   it('aplica className adicional al contenedor', () => {
     const { container } = render(
-      <Legend items={[...SAMPLE_ITEMS]} className="custom-legend-class" />
+      <Legend items={[...SAMPLE_ITEMS]} className="test-legend-class" />
     )
-    expect(container.firstChild).toHaveClass('custom-legend-class')
+    expect(container.firstChild).toHaveClass('test-legend-class')
   })
 })
