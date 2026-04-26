@@ -1,6 +1,8 @@
 import { useLenis } from 'lenis/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
+
 import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
+
 import {
   PROJECTS_SCROLL_ACTIVE_INDEX_TRANSITION_MS,
   PROJECTS_SCROLL_INTERSECTION_THRESHOLDS,

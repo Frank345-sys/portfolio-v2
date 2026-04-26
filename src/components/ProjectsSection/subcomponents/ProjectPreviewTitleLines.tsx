@@ -1,5 +1,6 @@
 import { TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
+
 import type { ProjectPreviewCopy } from '../types'
 
 interface ProjectPreviewTitleLinesProps extends ProjectPreviewCopy {

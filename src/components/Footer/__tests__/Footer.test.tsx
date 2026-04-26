@@ -1,8 +1,10 @@
-import { describe, expect, it } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+
 import { SITE_DISPLAY_NAME, SITE_TAGLINE } from '@/shared/constants/siteProfile'
-import { Footer } from '../Footer'
+
 import { FOOTER_BRAND_LANDMARK_LABEL, FOOTER_QUICK_CONTACT } from '../constants'
+import { Footer } from '../Footer'
 
 describe('Footer', () => {
   it('expone el landmark, marca, tagline y enlace al inicio', () => {

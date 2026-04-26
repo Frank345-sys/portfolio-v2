@@ -1,13 +1,15 @@
-import type { ComponentType, SVGProps } from 'react'
 import { LinkCard } from '@/shared/components/LinkCard'
+import { LAYOUT } from '@/shared/constants/tokens'
 import {
   GithubIcon,
   LinkedinIcon,
   MailIcon,
   WhatsappIcon,
 } from '@/shared/icons'
-import { LAYOUT } from '@/shared/constants/tokens'
+
 import { CONTACT_EMAIL_HREF, CONTACT_PROFILE } from '../constants'
+
+import type { ComponentType, SVGProps } from 'react'
 
 const CONTACT_LINK_ICON_CLASS = 'text-text-strong group-hover:text-text-white'
 

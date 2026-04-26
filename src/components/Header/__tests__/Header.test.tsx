@@ -1,7 +1,9 @@
-import { vi } from 'vitest'
 import { act, screen, within, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
+
 import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { Header } from '../Header'
 
 vi.mock('@/shared/components/ThemeToggle', () => ({

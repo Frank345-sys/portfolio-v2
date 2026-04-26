@@ -1,7 +1,8 @@
-import { lazy, Suspense } from 'react'
 import { LazyMotion, domAnimation, MotionConfig } from 'motion/react'
-import { HeroSection } from '@/components/HeroSection'
+import { lazy, Suspense } from 'react'
+
 import { Header } from '@/components/Header'
+import { HeroSection } from '@/components/HeroSection'
 import { SectionLazyFallback } from '@/shared/components/SectionLazyFallback'
 import { SmoothScrollRoot } from '@/shared/components/SmoothScrollRoot'
 import { Z } from '@/shared/constants/tokens'

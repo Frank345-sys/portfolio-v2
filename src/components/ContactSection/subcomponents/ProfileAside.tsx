@@ -1,13 +1,15 @@
-import type { ReactNode } from 'react'
 import { Legend } from '@/shared/components/Legend'
 import { BADGE, CARD, LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
+
 import {
   CONTACT_STATUS_MEANINGS,
   CONTACT_STATUS_ROW_ITEMS,
   CONTACT_TIMEZONE_LINE,
 } from '../constants'
 import { ContactOwnerLocalTime } from './ContactOwnerLocalTime'
+
+import type { ReactNode } from 'react'
 
 const hasTimezoneLine = Boolean(CONTACT_TIMEZONE_LINE.trim())
 const timezoneCols = hasTimezoneLine ? ' xs:grid-cols-3' : ' xs:grid-cols-2'

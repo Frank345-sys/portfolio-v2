@@ -6,17 +6,20 @@ import {
   useRef,
   useState,
 } from 'react'
-import type { MouseEvent } from 'react'
-import type { Variants } from 'motion/react'
+
 import { MOTION_ANIMATION } from '@/shared/constants/motion'
+
 import {
   IMAGE_CAROUSEL_AUTOPLAY_MS,
   IMAGE_CAROUSEL_AUTOPLAY_PAUSE_AFTER_MANUAL_MS,
 } from '../constants'
+
 import type {
   ImageCarouselNavDirection,
   ImageCarouselSharedOptions,
 } from '../types'
+import type { Variants } from 'motion/react'
+import type { MouseEvent } from 'react'
 
 /** Parámetros del hook (mismas opciones compartidas que el carrusel). */
 type UseImageCarouselParams = ImageCarouselSharedOptions

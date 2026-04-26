@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { AboutValues } from '../subcomponents/AboutValues'
+import { describe, it, expect } from 'vitest'
+
 import { ABOUT_VALUES } from '../constants'
+import { AboutValues } from '../subcomponents/AboutValues'
 
 describe('AboutValues', () => {
   describe('rendering', () => {

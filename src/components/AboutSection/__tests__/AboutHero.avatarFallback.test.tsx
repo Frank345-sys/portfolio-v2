@@ -1,6 +1,8 @@
-import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest'
 import { screen, fireEvent } from '@testing-library/react'
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest'
+
 import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { AboutHero } from '../subcomponents/AboutHero'
 
 const IOReserve = globalThis.IntersectionObserver

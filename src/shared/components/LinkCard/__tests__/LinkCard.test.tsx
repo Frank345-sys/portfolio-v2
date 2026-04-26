@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { LinkCard } from '../LinkCard'
+import { describe, it, expect } from 'vitest'
+
 import { JsIcon } from '@/shared/icons'
+
+import { LinkCard } from '../LinkCard'
 
 describe('LinkCard', () => {
   it('renderiza enlace con título e ícono', () => {

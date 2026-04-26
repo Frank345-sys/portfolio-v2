@@ -1,5 +1,6 @@
-import type { ImgHTMLAttributes } from 'react'
 import { projectPngPathToWebpAttributes } from './projectImageWebp'
+
+import type { ImgHTMLAttributes } from 'react'
 
 /**
  * Card en `ProjectsSection`: columna `flex-1` junto a panel 50% / 45% + `gap-10` + rail.

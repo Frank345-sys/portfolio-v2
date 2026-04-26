@@ -1,7 +1,9 @@
-import { vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { vi } from 'vitest'
+
 import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { HamburgerButton } from '../subcomponents/HamburgerButton'
 
 describe('HamburgerButton', () => {

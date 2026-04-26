@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest'
+
 import { generateBoxes, getViewportKey, FLOATING_BOX_COUNT } from '../utils'
 
 describe('getViewportKey', () => {

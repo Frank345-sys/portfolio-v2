@@ -1,10 +1,12 @@
 import { AnimatePresence, m } from 'motion/react'
-import { BADGE, BUTTON, TYPOGRAPHY } from '@/shared/constants/tokens'
-import { MOTION_ANIMATION } from '@/shared/constants'
+
 import { BadgeRow } from '@/shared/components/BadgeRow'
-import { parseEmphasis } from '@/shared/utils/parseEmphasis'
-import type { Project } from '../types'
+import { MOTION_ANIMATION } from '@/shared/constants'
+import { BADGE, BUTTON, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
+import { parseEmphasis } from '@/shared/utils/parseEmphasis'
+
+import type { Project } from '../types'
 
 // ---------------------------------------------------------------------------
 // ProjectLink

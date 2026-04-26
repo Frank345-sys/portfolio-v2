@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { SectionLabel } from '../SectionLabel'
+import { describe, it, expect } from 'vitest'
+
 import { LAYOUT } from '@/shared/constants/tokens'
+
+import { SectionLabel } from '../SectionLabel'
 
 describe('SectionLabel', () => {
   it('variante prefix por defecto muestra // y el texto', () => {

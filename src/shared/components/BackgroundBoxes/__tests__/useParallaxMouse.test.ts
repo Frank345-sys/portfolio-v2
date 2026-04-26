@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
+import { describe, it, expect, vi, afterEach } from 'vitest'
+
 import { useParallaxMouse } from '../hooks/useParallaxMouse'
 
 describe('useParallaxMouse', () => {

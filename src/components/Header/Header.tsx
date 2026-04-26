@@ -1,17 +1,20 @@
 import { m } from 'motion/react'
+
+import { ThemeToggle } from '@/shared/components/ThemeToggle'
 import { MOTION_ANIMATION } from '@/shared/constants/motion'
 import { ANIMATION, Z, LAYOUT } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
-import { ThemeToggle } from '@/shared/components/ThemeToggle'
-import { useHeader } from './hooks'
-import { HamburgerButton, MobileDrawer, SiteLogo } from './subcomponents'
+
 import { DEFAULT_NAV_ITEMS } from './constants'
-import type { NavItem } from './types'
+import { useHeader } from './hooks'
 import {
   desktopNavLinkClassName,
   desktopNavUnderline,
   headerContainer,
 } from './styles'
+import { HamburgerButton, MobileDrawer, SiteLogo } from './subcomponents'
+
+import type { NavItem } from './types'
 
 interface HeaderProps {
   /** Texto junto al logo; por defecto `"Mi Portfolio"`. */

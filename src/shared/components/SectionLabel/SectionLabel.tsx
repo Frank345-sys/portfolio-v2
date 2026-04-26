@@ -1,6 +1,7 @@
-import type { ElementType } from 'react'
-import { cn } from '@/shared/utils/cn'
 import { TYPOGRAPHY, LAYOUT } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
+
+import type { ElementType } from 'react'
 
 type SectionLabelVariant = 'prefix' | 'rule'
 

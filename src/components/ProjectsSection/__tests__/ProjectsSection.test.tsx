@@ -1,9 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { renderWithMotion } from '@/test/renderWithMotion'
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ProjectsSection } from '../ProjectsSection'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { PROJECTS } from '../constants'
+import { ProjectsSection } from '../ProjectsSection'
 
 const scrollIntoViewMock = vi.fn()
 

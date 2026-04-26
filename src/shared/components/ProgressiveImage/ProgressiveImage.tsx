@@ -1,3 +1,4 @@
+import { m, AnimatePresence, useReducedMotion } from 'motion/react'
 import {
   useCallback,
   useMemo,
@@ -5,11 +6,11 @@ import {
   type ImgHTMLAttributes,
   type SyntheticEvent,
 } from 'react'
+
+import { OVERLAY_FADE } from '@/shared/constants/motion'
 import { ANIMATION, Z } from '@/shared/constants/tokens'
 import { ImageBrokenIcon } from '@/shared/icons'
 import { cn } from '@/shared/utils/cn'
-import { m, AnimatePresence, useReducedMotion } from 'motion/react'
-import { OVERLAY_FADE } from '@/shared/constants/motion'
 
 /** Duración de entrada/salida del overlay (debe coincidir con `OVERLAY_FADE` variants). */
 const OVERLAY_FADE_DURATION_S = 0.3

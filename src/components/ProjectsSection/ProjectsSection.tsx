@@ -1,4 +1,7 @@
 import { AnimatedSectionHeading } from '@/shared/components/AnimatedSectionHeading'
+import { LAYOUT, ANIMATION } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
+
 import { PROJECTS } from './constants'
 import { useProjectsSection } from './hooks'
 import {
@@ -6,8 +9,6 @@ import {
   ProjectPreviewCard,
   ProjectPreviewLightbox,
 } from './subcomponents'
-import { cn } from '@/shared/utils/cn'
-import { LAYOUT, ANIMATION } from '@/shared/constants/tokens'
 
 /**
  * Sección de proyectos: composición pura. Toda la lógica de estado vive en {@link useProjectsSection}.

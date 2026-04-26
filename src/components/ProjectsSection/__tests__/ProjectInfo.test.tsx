@@ -1,8 +1,11 @@
-import { describe, expect, it } from 'vitest'
 import { screen } from '@testing-library/react'
-import { renderWithMotion } from '@/test/renderWithMotion'
+import { describe, expect, it } from 'vitest'
+
 import { SKILL_LABEL } from '@/shared/constants/skills'
+import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { ProjectInfo } from '../subcomponents/ProjectInfo'
+
 import type { Project } from '../types'
 
 const PROJECT_MOCK: Project = {

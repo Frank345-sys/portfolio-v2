@@ -1,10 +1,12 @@
-import { LAYOUT, BADGE, CARD, TYPOGRAPHY } from '@/shared/constants/tokens'
-import { SectionLabel } from '@/shared/components/SectionLabel'
-import { Legend } from '@/shared/components/Legend'
 import { BadgeRow } from '@/shared/components/BadgeRow'
+import { Legend } from '@/shared/components/Legend'
+import { SectionLabel } from '@/shared/components/SectionLabel'
+import { LAYOUT, BADGE, CARD, TYPOGRAPHY } from '@/shared/constants/tokens'
+
 import { ABOUT_SKILLS } from '../constants'
-import type { SkillGroup as SkillGroupType, SkillTagVariant } from '../types'
 import { compareSkillTagsByVariant } from '../utils'
+
+import type { SkillGroup as SkillGroupType, SkillTagVariant } from '../types'
 
 const SKILL_VARIANT_MAP: Record<SkillTagVariant, string> = {
   dominio: BADGE.variant.primary,

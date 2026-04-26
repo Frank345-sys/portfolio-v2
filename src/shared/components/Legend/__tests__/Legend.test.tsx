@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
-import { Legend } from '../Legend'
+import { describe, it, expect } from 'vitest'
+
 import { BADGE } from '@/shared/constants/tokens/badge'
+
+import { Legend } from '../Legend'
 
 const SAMPLE_ITEMS = [
   { id: 'a', label: 'Primera leyenda', dotClassName: 'bg-information-base' },

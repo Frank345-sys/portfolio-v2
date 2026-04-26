@@ -1,11 +1,14 @@
-import { useCallback, useState } from 'react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { useReducedMotion } from 'motion/react'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { renderWithMotion } from '@/test/renderWithMotion'
+import { useReducedMotion } from 'motion/react'
+import { useCallback, useState } from 'react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { getValidUrls } from '@/shared/utils/getValidUrls'
+import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { ProjectPreviewCard, ProjectPreviewLightbox } from '../subcomponents'
+
 import type { ProjectPreviewCardProps } from '../subcomponents/ProjectPreviewCard'
 
 type ProjectPreviewCardWithLightboxProps = Omit<

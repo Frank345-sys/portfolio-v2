@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { projectPngPathToWebpAttributes } from '../projectImageWebp'
 
 describe('projectPngPathToWebpAttributes', () => {

@@ -1,6 +1,7 @@
-import type { ReactNode } from 'react'
-import { cn } from '@/shared/utils/cn'
 import { TYPOGRAPHY, CARD, ANIMATION } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
+
+import type { ReactNode } from 'react'
 
 interface LinkCardProps {
   /** URL de destino. */

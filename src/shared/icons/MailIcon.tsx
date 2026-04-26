@@ -1,4 +1,5 @@
 import { type SVGProps } from 'react'
+
 import { cn } from '@/shared/utils/cn'
 
 /** Icono de correo electrónico (sobre en trazo). Props nativas de `<svg>`. */

@@ -1,8 +1,10 @@
-import type { ReactNode } from 'react'
-import { useBackgroundBoxes } from './hooks/useBackgroundBoxes'
-import { FloatingBox } from './subcomponents'
 import { LAYOUT } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
+
+import { useBackgroundBoxes } from './hooks/useBackgroundBoxes'
+import { FloatingBox } from './subcomponents'
+
+import type { ReactNode } from 'react'
 
 interface BackgroundBoxesProps {
   /** Contenido colocado en la capa superior, centrado sobre el fondo decorativo. */

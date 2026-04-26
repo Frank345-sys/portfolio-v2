@@ -1,10 +1,11 @@
-import { vi, type Mock } from 'vitest'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { vi, type Mock } from 'vitest'
 
-import { renderWithMotion } from '@/test/renderWithMotion'
-import { ThemeToggle } from '../ThemeToggle'
 import { useTheme } from '@/shared/components/ThemeToggle/hooks/useTheme'
+import { renderWithMotion } from '@/test/renderWithMotion'
+
+import { ThemeToggle } from '../ThemeToggle'
 
 vi.mock('@/shared/components/ThemeToggle/hooks/useTheme', () => ({
   useTheme: vi.fn(),

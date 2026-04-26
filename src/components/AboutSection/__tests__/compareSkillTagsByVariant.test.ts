@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { SKILL_TAG_VARIANT, type SkillTag } from '../types'
 import { compareSkillTagsByVariant } from '../utils'
 

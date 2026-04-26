@@ -1,5 +1,5 @@
-import { cn } from '@/shared/utils/cn'
 import { TYPOGRAPHY, BADGE } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
 
 interface LegendItem {
   /** Identificador único (clave de React y accesibilidad). */

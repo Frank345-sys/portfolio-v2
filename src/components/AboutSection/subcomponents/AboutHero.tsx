@@ -1,8 +1,9 @@
-import { cn } from '@/shared/utils/cn'
-import { TYPOGRAPHY, BADGE, LAYOUT } from '@/shared/constants/tokens'
 import { AnimatedSectionHeading } from '@/shared/components/AnimatedSectionHeading'
 import { Avatar } from '@/shared/components/Avatar'
+import { TYPOGRAPHY, BADGE, LAYOUT } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
 import { parseEmphasis } from '@/shared/utils/parseEmphasis'
+
 import { ABOUT_HERO } from '../constants'
 
 /**

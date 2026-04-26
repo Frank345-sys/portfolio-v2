@@ -1,4 +1,4 @@
-import { CodeIcon, ArrowUpIcon } from '@/shared/icons'
+import { SITE_TAGLINE } from '@/shared/constants/siteProfile'
 import {
   BRAND,
   BUTTON,
@@ -6,8 +6,9 @@ import {
   PRIMARY_NAV_LINK,
   TYPOGRAPHY,
 } from '@/shared/constants/tokens'
-import { SITE_TAGLINE } from '@/shared/constants/siteProfile'
+import { CodeIcon, ArrowUpIcon } from '@/shared/icons'
 import { cn } from '@/shared/utils/cn'
+
 import {
   FOOTER_BRAND,
   FOOTER_BRAND_LANDMARK_LABEL,

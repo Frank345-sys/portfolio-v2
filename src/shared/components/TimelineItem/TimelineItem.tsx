@@ -1,10 +1,10 @@
-import { cn } from '@/shared/utils/cn'
-import { TYPOGRAPHY, LAYOUT, BADGE } from '@/shared/constants/tokens'
+import { BadgeRow } from '@/shared/components/BadgeRow'
 import {
   TIMELINE_CHIP_VARIANT,
   type TimelineChipVariant,
 } from '@/shared/constants/enums'
-import { BadgeRow } from '@/shared/components/BadgeRow'
+import { TYPOGRAPHY, LAYOUT, BADGE } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
 
 /** Chip de timeline: etiqueta + variante semántica (color de badge). */
 export interface TimelineChip {

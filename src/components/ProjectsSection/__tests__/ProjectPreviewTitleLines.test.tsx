@@ -1,6 +1,8 @@
-import { describe, expect, it } from 'vitest'
 import { screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+
 import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { ProjectPreviewTitleLines } from '../subcomponents/ProjectPreviewTitleLines'
 
 describe('ProjectPreviewTitleLines', () => {

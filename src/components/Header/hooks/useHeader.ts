@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
-import type { NavItem } from '../types'
+import { useEffect, useState } from 'react'
+
 import { useNavScrollSpy } from './useNavScrollSpy'
 import { useNavUnderlinePosition } from './useNavUnderlinePosition'
+
+import type { NavItem } from '../types'
 
 /**
  * Orquesta el estado de la cabecera: drawer móvil, sombra al hacer scroll,
