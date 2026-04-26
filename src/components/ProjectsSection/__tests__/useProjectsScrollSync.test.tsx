@@ -1,11 +1,15 @@
-import { useMemo } from 'react'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useMemo } from 'react'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+
 import { useProjectsScrollSync } from '../hooks/useProjectsScrollSync'
 
 /** Debe coincidir con `SCROLL_SYNC_MEDIA_QUERY` del hook. */
 const LG_MEDIA_QUERY = '(min-width: 1024px)'
+function takeNoIntersectionRecords() {
+  return []
+}
 
 let intersectionCallback: IntersectionObserverCallback | undefined
 
@@ -80,9 +84,9 @@ function setupMatchMedia(initialMatches: boolean) {
     setMatches(next: boolean) {
       matches = next
       const evt = { matches: next } as MediaQueryListEvent
-      listeners.forEach((cb) => {
+      for (const cb of listeners) {
         cb(evt)
-      })
+      }
     },
   }
 }
@@ -96,7 +100,7 @@ function setupIntersectionObserver() {
     observe = vi.fn()
     unobserve = vi.fn()
     disconnect = vi.fn()
-    takeRecords = vi.fn(() => [])
+    takeRecords = vi.fn(takeNoIntersectionRecords)
     root = null
     rootMargin = ''
     thresholds = []

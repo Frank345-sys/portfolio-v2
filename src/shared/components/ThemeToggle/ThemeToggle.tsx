@@ -1,4 +1,5 @@
 import { m, AnimatePresence } from 'motion/react'
+
 import { useTheme } from '@/shared/components/ThemeToggle/hooks/useTheme'
 import {
   MOTION_ANIMATION,

@@ -1,16 +1,19 @@
+import { AnimatePresence, m } from 'motion/react'
 import { useId, useMemo } from 'react'
 import { createPortal } from 'react-dom'
-import { AnimatePresence, m } from 'motion/react'
+
 import { ImageCarousel } from '@/shared/components/ImageCarousel'
+import { MOTION_ANIMATION, OVERLAY_FADE } from '@/shared/constants/motion'
+import { BUTTON, CARD, LAYOUT, Z } from '@/shared/constants/tokens'
 import { useFocusTrap } from '@/shared/hooks/useFocusTrap'
 import { useModalOverlayEffects } from '@/shared/hooks/useModalOverlayEffects'
-import { BUTTON, CARD, LAYOUT, Z } from '@/shared/constants/tokens'
-import { MOTION_ANIMATION, OVERLAY_FADE } from '@/shared/constants/motion'
 import { CloseIcon } from '@/shared/icons'
 import { cn } from '@/shared/utils/cn'
 import { getValidUrls } from '@/shared/utils/getValidUrls'
-import type { ProjectPreviewCopy, ProjectPreviewGallery } from '../types'
+
 import { ProjectPreviewTitleLines } from './ProjectPreviewTitleLines'
+
+import type { ProjectPreviewCopy, ProjectPreviewGallery } from '../types'
 
 const PANEL_VARIANTS = {
   hidden: { opacity: 0, scale: 0.98 },

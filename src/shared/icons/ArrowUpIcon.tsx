@@ -1,4 +1,5 @@
 import { type SVGProps } from 'react'
+
 import { cn } from '@/shared/utils/cn'
 
 /** Icono de chevron hacia arriba (p. ej. “volver al inicio”). Props nativas de `<svg>`. */

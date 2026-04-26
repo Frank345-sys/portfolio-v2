@@ -4,6 +4,26 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-04-25
+
+### Añadido
+
+- Calidad/pipeline: integración de **Knip** en scripts (`check`, `check:ci`) y CI (`.github/workflows/ci.yml`).
+- ESLint: incorporación de `eslint-plugin-sonarjs` y `eslint-plugin-unicorn` con reglas activas para robustez y consistencia.
+
+### Cambiado
+
+- ESLint: configuración reforzada para TypeScript/React y tooling Node (ruleset más estricto, orden/duplicados de imports y reglas de calidad adicionales).
+- Lint global: normalización amplia de estilo/imports con `eslint --fix` y ajustes en tests para cumplir reglas de Unicorn sin cambiar comportamiento.
+- CSS/tests: limpieza de clases de prueba (`test-custom-class`, `test-legend-class`) y simplificación de ignores de Tailwind para clases de testing.
+- Build/config: `vite.config.ts` endurecido para manejar variables de entorno de forma segura y evitar fallos por `trim()` en valores ausentes.
+- Dependencias de desarrollo: `react-doctor` actualizado a `0.0.39`.
+
+### Arreglado
+
+- React Doctor: corregido el fallo `issues.files is not iterable`; ejecución completa y estable.
+- Validaciones locales/CI: `npm run check`, lint estricto y suite de tests en verde tras los cambios de calidad.
+
 ## [1.5.0] - 2026-04-24
 
 ### Cambiado

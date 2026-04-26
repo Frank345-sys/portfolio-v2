@@ -1,6 +1,8 @@
 import { useLenis } from 'lenis/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
+
 import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
+
 import {
   PROJECTS_SCROLL_ACTIVE_INDEX_TRANSITION_MS,
   PROJECTS_SCROLL_INTERSECTION_THRESHOLDS,
@@ -76,26 +78,26 @@ export function useProjectsScrollSync(
     visibilityRatiosRef.current = Array.from({ length: itemCount }, () => 0)
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        for (const entry of entries) {
           const index = Number(
             (entry.target as HTMLElement).dataset.projectIndex
           )
-          if (Number.isNaN(index)) return
-          if (index < 0 || index >= itemCount) return
+          if (Number.isNaN(index)) continue
+          if (index < 0 || index >= itemCount) continue
           visibilityRatiosRef.current[index] = entry.isIntersecting
             ? entry.intersectionRatio
             : 0
-        })
+        }
 
         let nextIndex = -1
         let maxRatio = 0
 
-        visibilityRatiosRef.current.forEach((ratio, index) => {
+        for (const [index, ratio] of visibilityRatiosRef.current.entries()) {
           if (ratio > maxRatio) {
             maxRatio = ratio
             nextIndex = index
           }
-        })
+        }
 
         if (nextIndex === -1 || nextIndex === activeIndexRef.current) {
           return
@@ -115,9 +117,9 @@ export function useProjectsScrollSync(
       { threshold: [...PROJECTS_SCROLL_INTERSECTION_THRESHOLDS] }
     )
 
-    itemRefs.current.forEach((el) => {
+    for (const el of itemRefs.current) {
       if (el) observer.observe(el)
-    })
+    }
 
     return () => {
       observer.disconnect()
@@ -135,10 +137,10 @@ export function useProjectsScrollSync(
       let nextIndex = 0
       let minDistance = Number.POSITIVE_INFINITY
 
-      itemRefs.current.forEach((el, index) => {
-        if (!el) return
+      for (const [index, el] of itemRefs.current.entries()) {
+        if (!el) continue
         const rect = el.getBoundingClientRect()
-        if (rect.bottom < 0 || rect.top > window.innerHeight) return
+        if (rect.bottom < 0 || rect.top > window.innerHeight) continue
 
         const itemCenter = rect.top + rect.height / 2
         const distance = Math.abs(itemCenter - viewportCenter)
@@ -146,7 +148,7 @@ export function useProjectsScrollSync(
           minDistance = distance
           nextIndex = index
         }
-      })
+      }
 
       if (nextIndex !== activeIndexRef.current) {
         activeIndexRef.current = nextIndex

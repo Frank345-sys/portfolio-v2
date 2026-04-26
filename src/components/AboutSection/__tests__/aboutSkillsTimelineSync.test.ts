@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { ABOUT_ACADEMIC, ABOUT_EXPERIENCE, ABOUT_SKILLS } from '../constants'
+
 import {
   TIMELINE_CHIP_VARIANT,
   type TimelineChipVariant,
 } from '@/shared/constants/enums'
 import { stackSkillLabelSet } from '@/test/stackSkillLabelSet'
+
+import { ABOUT_ACADEMIC, ABOUT_EXPERIENCE, ABOUT_SKILLS } from '../constants'
 
 function timelineSkillChipLabels(): string[] {
   const variants = new Set<TimelineChipVariant>([
@@ -15,11 +17,12 @@ function timelineSkillChipLabels(): string[] {
   const out: string[] = []
   for (const section of [ABOUT_ACADEMIC, ABOUT_EXPERIENCE]) {
     for (const item of section) {
-      item.chips?.forEach((chip) => {
-        if (variants.has(chip.variant)) {
-          out.push(chip.label)
+      if (item.chips)
+        for (const chip of item.chips) {
+          if (variants.has(chip.variant)) {
+            out.push(chip.label)
+          }
         }
-      })
     }
   }
   return out

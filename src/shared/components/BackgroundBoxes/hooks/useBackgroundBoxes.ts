@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
-import type { BoxData } from '../types'
-import { generateBoxes } from '../utils'
-import { useParallaxMouse } from './useParallaxMouse'
+
 import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
+
+import { generateBoxes } from '../utils'
+import { useParallaxMouse } from './useParallaxMouse'
+
+import type { BoxData } from '../types'
 
 /**
  * Ancho asumido en SSR / entornos sin `window` para el layout inicial de cajas.

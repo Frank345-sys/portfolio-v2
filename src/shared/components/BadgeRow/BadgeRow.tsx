@@ -1,5 +1,5 @@
-import { cn } from '@/shared/utils/cn'
 import { BADGE } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
 
 interface BadgeRowItem {
   /** Texto visible del chip o badge. */

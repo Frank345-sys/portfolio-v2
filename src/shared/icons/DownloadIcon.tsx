@@ -1,4 +1,5 @@
 import { type SVGProps } from 'react'
+
 import { cn } from '@/shared/utils/cn'
 /** Icono de descarga. Props nativas de `<svg>`. */
 export function DownloadIcon({

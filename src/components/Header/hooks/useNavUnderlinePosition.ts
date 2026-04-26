@@ -4,6 +4,7 @@
  * @module components/Header/hooks/useNavUnderlinePosition
  */
 import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+
 import type { NavItem } from '../types'
 
 /** Métricas en px del subrayado animado respecto al contenedor de la fila de enlaces. */

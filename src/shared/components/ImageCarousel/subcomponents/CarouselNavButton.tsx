@@ -1,7 +1,8 @@
 import { BUTTON, Z } from '@/shared/constants/tokens'
 import { ArrowNextIcon, ArrowPrevIcon } from '@/shared/icons'
-import type { ImageCarouselNavDirection } from '../types'
 import { cn } from '@/shared/utils/cn'
+
+import type { ImageCarouselNavDirection } from '../types'
 
 const CAROUSEL_NAV_ICON =
   'text-information-base h-6 w-6 shrink-0 md:h-7 md:w-7' as const

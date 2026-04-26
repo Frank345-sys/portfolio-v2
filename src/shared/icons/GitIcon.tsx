@@ -1,4 +1,5 @@
 import { type SVGProps } from 'react'
+
 import { cn } from '@/shared/utils/cn'
 /** Icono de Git. Props nativas de `<svg>`. */
 export function GitIcon({

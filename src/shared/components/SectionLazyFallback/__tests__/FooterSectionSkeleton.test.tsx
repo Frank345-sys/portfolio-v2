@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest'
 import { render } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+
 import { FooterSectionSkeleton } from '../subcomponents/FooterSectionSkeleton'
 
 describe('FooterSectionSkeleton', () => {

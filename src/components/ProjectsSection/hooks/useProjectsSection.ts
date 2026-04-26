@@ -1,3 +1,4 @@
+import { useReducedMotion } from 'motion/react'
 import {
   useCallback,
   useMemo,
@@ -6,10 +7,12 @@ import {
   type MouseEvent,
   type SetStateAction,
 } from 'react'
-import { useReducedMotion } from 'motion/react'
-import type { Project } from '../types'
+
 import { getValidUrls } from '@/shared/utils/getValidUrls'
+
 import { useProjectsScrollSync } from './useProjectsScrollSync'
+
+import type { Project } from '../types'
 
 interface UseProjectsSectionResult {
   totalProjects: number

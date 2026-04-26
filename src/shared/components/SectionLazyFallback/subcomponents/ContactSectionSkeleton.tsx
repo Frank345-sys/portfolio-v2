@@ -8,6 +8,7 @@
  */
 import { CARD, LAYOUT } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
+
 import { SectionTitleSkeleton, ShimmerBar } from './skeletonPrimitives'
 
 function ContactLinkRowSkeleton() {

@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest'
 import { act, renderHook } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+
 import { useBackgroundBoxes } from '../hooks/useBackgroundBoxes'
 import { FLOATING_BOX_COUNT } from '../utils'
 

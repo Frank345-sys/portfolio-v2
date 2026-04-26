@@ -11,6 +11,7 @@
  * @module components/ProjectsSection/constants
  */
 import { SKILL_LABEL } from '@/shared/constants/skills'
+
 import type { Project } from './types'
 
 const PUBLIC_BASE_URL = import.meta.env.BASE_URL

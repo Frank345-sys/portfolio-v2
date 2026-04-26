@@ -1,13 +1,15 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { renderWithMotion } from '@/test/renderWithMotion'
 import { screen, within } from '@testing-library/react'
-import { ContactSection } from '../ContactSection'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+
+import { renderWithMotion } from '@/test/renderWithMotion'
+
 import {
   CONTACT_EMAIL_HREF,
   CONTACT_PROFILE,
   CONTACT_STATUS_ROWS,
   CONTACT_TIMEZONE_LINE,
 } from '../constants'
+import { ContactSection } from '../ContactSection'
 
 const ioReserve = globalThis.IntersectionObserver
 

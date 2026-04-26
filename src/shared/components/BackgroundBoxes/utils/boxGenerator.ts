@@ -1,5 +1,6 @@
-import type { BoxData, ViewportConfig } from '../types'
 import { OPACITIES, ICONS, VIEWPORT_CONFIG } from '../constants'
+
+import type { BoxData, ViewportConfig } from '../types'
 
 /**
  * Número fijo de `FloatingBox` (7 a la izquierda, 7 a la derecha).

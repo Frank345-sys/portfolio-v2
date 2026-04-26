@@ -1,5 +1,5 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
 import { useLenis } from 'lenis/react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 
 interface UseModalOverlayEffectsParams {
   /** Si es true, se activan Escape, bloqueo de scroll y pausa de Lenis. */

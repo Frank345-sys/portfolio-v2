@@ -1,6 +1,8 @@
 import { screen } from '@testing-library/react'
+
 import { SITE_DISPLAY_NAME } from '@/shared/constants/siteProfile'
 import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { HeroSection } from './HeroSection'
 
 describe('HeroSection', () => {

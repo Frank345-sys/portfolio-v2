@@ -1,6 +1,7 @@
-import type { SyntheticEvent } from 'react'
 import { ANIMATION } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
+
+import type { SyntheticEvent } from 'react'
 
 const AVATAR_SIZES = {
   sm: 'h-20 w-20 text-lg lg:h-24 lg:w-24 lg:text-2xl',

@@ -1,6 +1,7 @@
-import { TYPOGRAPHY, LAYOUT } from '@/shared/constants/tokens'
 import { SectionLabel } from '@/shared/components/SectionLabel'
+import { TYPOGRAPHY, LAYOUT } from '@/shared/constants/tokens'
 import { parseEmphasis } from '@/shared/utils/parseEmphasis'
+
 import { ABOUT_BIO } from '../constants'
 
 /**

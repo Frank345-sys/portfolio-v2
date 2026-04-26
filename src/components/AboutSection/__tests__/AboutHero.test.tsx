@@ -1,9 +1,11 @@
-import { afterEach, beforeEach, describe, it, expect } from 'vitest'
 import { screen } from '@testing-library/react'
-import { renderWithMotion } from '@/test/renderWithMotion'
-import { AboutHero } from '../subcomponents/AboutHero'
+import { afterEach, beforeEach, describe, it, expect } from 'vitest'
+
 import { SITE_PROFILE } from '@/shared/constants/siteProfile'
+import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { ABOUT_HERO } from '../constants'
+import { AboutHero } from '../subcomponents/AboutHero'
 
 const IOReserve = globalThis.IntersectionObserver
 

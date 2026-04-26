@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import { AboutCerts } from '../subcomponents/AboutCerts'
+import { describe, it, expect } from 'vitest'
+
 import { ABOUT_CERTS } from '../constants'
+import { AboutCerts } from '../subcomponents/AboutCerts'
 
 describe('AboutCerts', () => {
   describe('rendering', () => {
@@ -12,29 +13,29 @@ describe('AboutCerts', () => {
 
     it('renderiza todas las certificaciones de ABOUT_CERTS', () => {
       render(<AboutCerts />)
-      ABOUT_CERTS.forEach((cert) => {
+      for (const cert of ABOUT_CERTS) {
         expect(screen.getByText(cert.name)).toBeInTheDocument()
         expect(screen.getAllByText(cert.issuer).length).toBeGreaterThanOrEqual(
           1
         )
-      })
+      }
     })
 
     it('cada cert es un link con href correcto', () => {
       render(<AboutCerts />)
-      ABOUT_CERTS.forEach((cert) => {
+      for (const cert of ABOUT_CERTS) {
         const link = screen.getByRole('link', { name: new RegExp(cert.name) })
         expect(link).toHaveAttribute('href', cert.href)
-      })
+      }
     })
 
     it('los links tienen target _blank y rel noopener noreferrer', () => {
       render(<AboutCerts />)
       const links = screen.getAllByRole('link')
-      links.forEach((link) => {
+      for (const link of links) {
         expect(link).toHaveAttribute('target', '_blank')
         expect(link).toHaveAttribute('rel', 'noopener noreferrer')
-      })
+      }
     })
   })
 })

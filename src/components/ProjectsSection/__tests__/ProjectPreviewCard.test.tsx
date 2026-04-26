@@ -1,17 +1,24 @@
-import { useCallback, useState } from 'react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { useReducedMotion } from 'motion/react'
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { renderWithMotion } from '@/test/renderWithMotion'
+import { useReducedMotion } from 'motion/react'
+import { useCallback, useState } from 'react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { getValidUrls } from '@/shared/utils/getValidUrls'
+import { renderWithMotion } from '@/test/renderWithMotion'
+
 import { ProjectPreviewCard, ProjectPreviewLightbox } from '../subcomponents'
+
 import type { ProjectPreviewCardProps } from '../subcomponents/ProjectPreviewCard'
 
 type ProjectPreviewCardWithLightboxProps = Omit<
   ProjectPreviewCardProps,
   'reduceMotion'
 >
+
+function takeNoIntersectionRecords() {
+  return []
+}
 
 /** Replica el patrón de `ProjectsSection`: card + un solo lightbox enlazado por callback. */
 function ProjectPreviewCardWithLightbox(
@@ -59,7 +66,7 @@ function mockIntersectionObserver() {
     observe = vi.fn()
     unobserve = vi.fn()
     disconnect = vi.fn()
-    takeRecords = vi.fn(() => [])
+    takeRecords = vi.fn(takeNoIntersectionRecords)
     root = null
     rootMargin = ''
     thresholds = []

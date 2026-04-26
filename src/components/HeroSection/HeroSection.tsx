@@ -1,12 +1,12 @@
+import { BackgroundBoxes } from '@/shared/components/BackgroundBoxes'
 import {
   HERO_STACK_HIGHLIGHT,
   SITE_DISPLAY_NAME,
   SITE_PROFILE,
 } from '@/shared/constants/siteProfile'
 import { BUTTON, LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
-import { cn } from '@/shared/utils/cn'
-import { BackgroundBoxes } from '@/shared/components/BackgroundBoxes'
 import { DownloadIcon } from '@/shared/icons'
+import { cn } from '@/shared/utils/cn'
 
 /** CV en `public/` — mantener sincronizado con el archivo desplegado. */
 const CV_HREF = `${import.meta.env.BASE_URL}Francisco_Gonzalez_Frontend_Developer_2026.pdf`

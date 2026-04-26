@@ -4,8 +4,11 @@
  * @module components/Header/hooks/useNavScrollSpy
  */
 import { useEffect, useRef, useState } from 'react'
+
 import { hashSectionId } from '@/shared/utils/hashSectionId'
+
 import { NAV_SCROLL_SPY_OBSERVER_OPTIONS } from '../constants'
+
 import type { NavItem } from '../types'
 
 const MAIN_LAZY_ROOT_ID = 'contenido-principal'
@@ -105,7 +108,7 @@ export function useNavScrollSpy(
     runSetup()
 
     const schedule = () => {
-      if (rafId != null) {
+      if (rafId !== null) {
         cancelAnimationFrame(rafId)
       }
       rafId = requestAnimationFrame(() => {
@@ -123,7 +126,7 @@ export function useNavScrollSpy(
     }
 
     return () => {
-      if (rafId != null) {
+      if (rafId !== null) {
         cancelAnimationFrame(rafId)
       }
       mo?.disconnect()

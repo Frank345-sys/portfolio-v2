@@ -5,12 +5,30 @@ import reactCompiler from 'eslint-plugin-react-compiler'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
+import importPlugin from 'eslint-plugin-import'
 import tsdoc from 'eslint-plugin-tsdoc'
 import vitest from '@vitest/eslint-plugin'
 import testingLibrary from 'eslint-plugin-testing-library'
 import betterTailwind from 'eslint-plugin-better-tailwindcss'
+import sonarjs from 'eslint-plugin-sonarjs'
+import unicorn from 'eslint-plugin-unicorn'
 import tseslint from 'typescript-eslint'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
+
+/** Parser type-aware compartido (app, tests y tooling TS). */
+const typeAwareParserOptions = {
+  projectService: true,
+  tsconfigRootDir: import.meta.dirname,
+}
+
+/**
+ * Tooling ejecutado en Node.
+ * Se añaden globals de Node sobre la base compartida del resto de reglas.
+ */
+const nodeToolingFiles = [
+  '*.config.{js,ts,cjs,mjs}',
+  'scripts/**/*.{js,mjs,cjs}',
+]
 
 /** Vitest + Testing Library (React). */
 const testFiles = [
@@ -46,22 +64,82 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: 2020,
       globals: { ...globals.browser },
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
+      parserOptions: typeAwareParserOptions,
     },
     plugins: {
+      import: importPlugin,
+      sonarjs,
       tsdoc,
+      unicorn,
     },
     settings: {
+      'import/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+          project: ['./tsconfig.app.json', './tsconfig.node.json'],
+        },
+      },
       react: {
         version: 'detect',
       },
     },
     rules: {
+      eqeqeq: ['error', 'always'],
+      curly: ['error', 'all'],
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'import/no-duplicates': 'error',
+      'import/order': [
+        'error',
+        {
+          alphabetize: { order: 'asc', caseInsensitive: true },
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            ['parent', 'sibling', 'index'],
+            'object',
+            'type',
+          ],
+          'newlines-between': 'always',
+          pathGroups: [
+            {
+              pattern: '@/**',
+              group: 'internal',
+              position: 'before',
+            },
+          ],
+          pathGroupsExcludedImportTypes: ['builtin'],
+        },
+      ],
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': [
+        'error',
+        {
+          checksVoidReturn: {
+            arguments: false,
+            attributes: false,
+          },
+        },
+      ],
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          prefer: 'type-imports',
+          fixStyle: 'separate-type-imports',
+        },
+      ],
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unnecessary-condition': 'error',
+      '@typescript-eslint/prefer-nullish-coalescing': 'error',
+      'sonarjs/cognitive-complexity': ['warn', 20],
+      'sonarjs/no-identical-functions': 'error',
+      'sonarjs/no-small-switch': 'warn',
       'tsdoc/syntax': 'error',
       'react/prop-types': 'off',
+      'unicorn/consistent-function-scoping': 'warn',
+      'unicorn/no-array-for-each': 'error',
+      'unicorn/prefer-array-flat-map': 'error',
+      'unicorn/prefer-string-slice': 'error',
     },
   },
   /** React Compiler (ESLint): alinea el código con las “Rules of React” que el compilador espera. */
@@ -80,24 +158,27 @@ export default tseslint.config(
       'better-tailwindcss/no-unknown-classes': [
         'error',
         {
-          ignore: [
-            '^u-',
-            '^test-',
-            '^custom-class$',
-            '^custom-legend-class$',
-            '^test-carousel-wrap$',
-          ],
+          ignore: ['^u-', '^test-'],
         },
       ],
     },
   },
   {
+    files: nodeToolingFiles,
+    plugins: {
+      unicorn,
+    },
+    languageOptions: {
+      globals: { ...globals.node },
+    },
+    rules: {
+      'unicorn/prefer-node-protocol': 'error',
+    },
+  },
+  {
     files: testFiles,
     languageOptions: {
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
+      parserOptions: typeAwareParserOptions,
       globals: {
         ...globals.browser,
         ...vitest.configs.env.languageOptions.globals,

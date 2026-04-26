@@ -1,15 +1,18 @@
-import { useCallback, useMemo } from 'react'
 import { AnimatePresence, m } from 'motion/react'
-import { TYPOGRAPHY, Z } from '@/shared/constants/tokens'
+import { useCallback, useMemo } from 'react'
+
 import { ProgressiveImage } from '@/shared/components/ProgressiveImage'
+import { TYPOGRAPHY, Z } from '@/shared/constants/tokens'
+import { cn } from '@/shared/utils/cn'
+import { getProjectImageAttributes } from '@/shared/utils/getProjectImageAttributes'
+
 import { useImageCarousel } from './hooks'
 import { CarouselNavButton } from './subcomponents'
+
 import type {
   ImageCarouselNavDirection,
   ImageCarouselSharedOptions,
 } from './types'
-import { cn } from '@/shared/utils/cn'
-import { getProjectImageAttributes } from '@/shared/utils/getProjectImageAttributes'
 
 /** Props públicas del componente `ImageCarousel`. */
 interface ImageCarouselProps extends ImageCarouselSharedOptions {
