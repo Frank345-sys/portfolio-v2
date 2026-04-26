@@ -27,10 +27,7 @@ export function Footer() {
   return (
     <footer
       aria-label="Pie de página"
-      className={cn(
-        'border-stroke-soft bg-bg-white border-t',
-        'backdrop-blur-sm'
-      )}
+      className="border-stroke-soft bg-bg-white border-t backdrop-blur-sm"
     >
       <div
         className={cn(
@@ -106,7 +103,7 @@ export function Footer() {
               href="#inicio"
               className={cn(
                 BUTTON.variant.outlined.neutral,
-                BUTTON.size.md,
+                BUTTON.size.responsive,
                 'gap-2 normal-case',
                 FOOTER_FOCUS_VISIBLE
               )}
