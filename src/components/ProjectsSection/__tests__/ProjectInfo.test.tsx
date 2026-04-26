@@ -58,13 +58,13 @@ describe('ProjectInfo', () => {
       />
     )
 
-    PROJECT_MOCK.bullets.forEach((bullet) => {
+    for (const bullet of PROJECT_MOCK.bullets) {
       expect(screen.getByText(bullet)).toBeInTheDocument()
-    })
+    }
 
-    PROJECT_MOCK.skills.forEach((skill) => {
+    for (const skill of PROJECT_MOCK.skills) {
       expect(screen.getByText(skill)).toBeInTheDocument()
-    })
+    }
 
     expect(
       screen.getByRole('link', { name: /abrir sitio en vivo/i })

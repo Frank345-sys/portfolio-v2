@@ -14,18 +14,18 @@ describe('AboutValues', () => {
     it('renderiza exactamente 3 tarjetas (longitud de ABOUT_VALUES)', () => {
       render(<AboutValues />)
       const names = ABOUT_VALUES.map((v) => v.name)
-      names.forEach((name) =>
+      for (const name of names)
         expect(screen.getByText(name)).toBeInTheDocument()
-      )
+
       expect(ABOUT_VALUES.length).toBe(3)
     })
 
     it('cada tarjeta muestra su name y desc', () => {
       render(<AboutValues />)
-      ABOUT_VALUES.forEach((item) => {
+      for (const item of ABOUT_VALUES) {
         expect(screen.getByText(item.name)).toBeInTheDocument()
         expect(screen.getByText(item.desc)).toBeInTheDocument()
-      })
+      }
     })
   })
 })

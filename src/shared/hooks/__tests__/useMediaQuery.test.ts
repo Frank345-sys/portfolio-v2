@@ -52,9 +52,9 @@ describe('useMediaQuery', () => {
 
     act(() => {
       matches = false
-      listeners.forEach((l) => {
+      for (const l of listeners) {
         l()
-      })
+      }
     })
 
     expect(result.current).toBe(false)

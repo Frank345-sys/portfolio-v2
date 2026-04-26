@@ -31,7 +31,7 @@ describe('useTheme', () => {
       }),
       removeItem: vi.fn(),
       clear: vi.fn(() => {
-        Object.keys(storage).forEach((k) => delete storage[k])
+        for (const k of Object.keys(storage)) delete storage[k]
       }),
       length: 0,
       key: vi.fn(),
@@ -152,7 +152,7 @@ describe('useTheme', () => {
         }),
         removeItem: vi.fn(),
         clear: vi.fn(() => {
-          Object.keys(storage).forEach((k) => delete storage[k])
+          for (const k of Object.keys(storage)) delete storage[k]
         }),
         length: 0,
         key: vi.fn(),

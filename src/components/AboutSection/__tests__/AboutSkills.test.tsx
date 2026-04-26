@@ -13,18 +13,18 @@ describe('AboutSkills', () => {
 
     it('renderiza todos los grupos de ABOUT_SKILLS', () => {
       render(<AboutSkills />)
-      ABOUT_SKILLS.forEach((group) => {
+      for (const group of ABOUT_SKILLS) {
         expect(screen.getByText(group.title)).toBeInTheDocument()
-      })
+      }
     })
 
     it('cada tag de cada grupo aparece en el DOM', () => {
       render(<AboutSkills />)
-      ABOUT_SKILLS.forEach((group) => {
-        group.tags.forEach((tag) => {
+      for (const group of ABOUT_SKILLS) {
+        for (const tag of group.tags) {
           expect(screen.getByText(tag.label)).toBeInTheDocument()
-        })
-      })
+        }
+      }
     })
 
     it('muestra la leyenda de niveles (dominio, proficiente, familiar)', () => {

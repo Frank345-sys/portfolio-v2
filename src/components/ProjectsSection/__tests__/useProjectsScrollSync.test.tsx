@@ -84,9 +84,9 @@ function setupMatchMedia(initialMatches: boolean) {
     setMatches(next: boolean) {
       matches = next
       const evt = { matches: next } as MediaQueryListEvent
-      listeners.forEach((cb) => {
+      for (const cb of listeners) {
         cb(evt)
-      })
+      }
     },
   }
 }

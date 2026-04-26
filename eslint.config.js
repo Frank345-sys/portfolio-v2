@@ -131,6 +131,8 @@ export default tseslint.config(
       'tsdoc/syntax': 'error',
       'react/prop-types': 'off',
       'unicorn/consistent-function-scoping': 'warn',
+      'unicorn/no-array-for-each': 'error',
+      'unicorn/prefer-array-flat-map': 'error',
       'unicorn/prefer-string-slice': 'error',
     },
   },

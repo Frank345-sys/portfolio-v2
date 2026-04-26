@@ -15,20 +15,20 @@ describe('AboutExperience', () => {
 
     it('renderiza todos los items de ABOUT_EXPERIENCE', () => {
       render(<AboutExperience />)
-      ABOUT_EXPERIENCE.forEach((item) => {
+      for (const item of ABOUT_EXPERIENCE) {
         expect(screen.getByText(item.heading)).toBeInTheDocument()
         expect(screen.getByText(item.company)).toBeInTheDocument()
         expect(screen.getAllByText(item.period).length).toBeGreaterThan(0)
-      })
+      }
     })
 
     it('los chips del primer item (con chips) se renderizan', () => {
       render(<AboutExperience />)
       const itemWithChips = ABOUT_EXPERIENCE.find((e) => e.chips?.length)
       if (!itemWithChips?.chips) return
-      itemWithChips.chips.forEach((chip) => {
+      for (const chip of itemWithChips.chips) {
         expect(screen.getByText(chip.label)).toBeInTheDocument()
-      })
+      }
     })
 
     it('muestra la leyenda de trazabilidad (área, impacto, aplicadas, adquiridas)', () => {

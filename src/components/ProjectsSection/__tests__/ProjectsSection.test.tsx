@@ -107,26 +107,26 @@ describe('ProjectsSection', () => {
   it('cada artículo usa aria-labelledby acorde al id del proyecto', () => {
     renderWithMotion(<ProjectsSection />)
     const articles = screen.getAllByRole('article')
-    articles.forEach((article, index) => {
+    for (const [index, article] of articles.entries()) {
       const project = PROJECTS[index]
       expect(project).toBeDefined()
       expect(article).toHaveAttribute(
         'aria-labelledby',
         `project-${project!.id}-title`
       )
-    })
+    }
   })
 
   it('expone el nombre accesible del artículo con un p.sr-only (todos los viewports)', () => {
     renderWithMotion(<ProjectsSection />)
 
-    PROJECTS.forEach((project) => {
+    for (const project of PROJECTS) {
       const label = document.getElementById(`project-${project.id}-title`)
       expect(label).toBeTruthy()
       expect(label?.tagName.toLowerCase()).toBe('p')
       expect(label).toHaveClass('sr-only')
       expect(label).toHaveTextContent(project.title)
-    })
+    }
   })
 
   it('no duplica ids de título entre panel sticky y artículos en viewport lg', () => {
@@ -135,12 +135,12 @@ describe('ProjectsSection', () => {
     const seen = new Set<string>()
     const duplicates: string[] = []
 
-    document.querySelectorAll('[id]').forEach((el) => {
+    for (const el of document.querySelectorAll('[id]')) {
       const id = el.id
-      if (!id) return
+      if (!id) continue
       if (seen.has(id)) duplicates.push(id)
       seen.add(id)
-    })
+    }
 
     expect(duplicates).toEqual([])
   })

@@ -17,11 +17,12 @@ function timelineSkillChipLabels(): string[] {
   const out: string[] = []
   for (const section of [ABOUT_ACADEMIC, ABOUT_EXPERIENCE]) {
     for (const item of section) {
-      item.chips?.forEach((chip) => {
-        if (variants.has(chip.variant)) {
-          out.push(chip.label)
+      if (item.chips)
+        for (const chip of item.chips) {
+          if (variants.has(chip.variant)) {
+            out.push(chip.label)
+          }
         }
-      })
     }
   }
   return out

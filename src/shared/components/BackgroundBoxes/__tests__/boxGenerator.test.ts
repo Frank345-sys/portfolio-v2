@@ -35,11 +35,11 @@ describe('generateBoxes - simétrico (FLOATING_BOX_COUNT cajas)', () => {
   })
 
   it('mitad izquierda / mitad derecha en todos los breakpoints', () => {
-    ;[375, 480, 900, 1440].forEach((width) => {
+    for (const width of [375, 480, 900, 1440]) {
       const boxes = generateBoxes(width)
       expect(boxes.filter((b) => b.fromLeft)).toHaveLength(half)
       expect(boxes.filter((b) => !b.fromLeft)).toHaveLength(half)
-    })
+    }
   })
 
   it('cada caja derecha tiene el mismo Y que su par izquierda', () => {
@@ -57,26 +57,26 @@ describe('generateBoxes - simétrico (FLOATING_BOX_COUNT cajas)', () => {
   })
 
   it('en mobile-sm y mobile las cajas están fuera de la zona central (22%–68%)', () => {
-    generateBoxes(375).forEach((b) => {
+    for (const b of generateBoxes(375)) {
       const inCenter = b.x > 22 && b.x < 68
       expect(inCenter).toBe(false)
-    })
-    generateBoxes(480).forEach((b) => {
+    }
+    for (const b of generateBoxes(480)) {
       const inCenter = b.x > 22 && b.x < 68
       expect(inCenter).toBe(false)
-    })
+    }
   })
 
   it('todas las cajas tienen opacidad entre 0 y 1', () => {
-    generateBoxes(1440).forEach((b) => {
+    for (const b of generateBoxes(1440)) {
       expect(b.opacity).toBeGreaterThan(0)
       expect(b.opacity).toBeLessThanOrEqual(1)
-    })
+    }
   })
 
   it('todas las cajas tienen Icon definido', () => {
-    generateBoxes(1440).forEach((b) => {
+    for (const b of generateBoxes(1440)) {
       expect(b.Icon).toBeDefined()
-    })
+    }
   })
 })
