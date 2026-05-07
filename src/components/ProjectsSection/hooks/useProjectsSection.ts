@@ -1,4 +1,3 @@
-import { useReducedMotion } from 'motion/react'
 import {
   useCallback,
   useMemo,
@@ -11,46 +10,93 @@ import {
 import { getValidUrls } from '@/shared/utils/getValidUrls'
 
 import { useProjectsScrollSync } from './useProjectsScrollSync'
+import { getProjectImageAttributes } from '../utils'
 
-import type { Project } from '../types'
+import type {
+  Project,
+  NonEmptySlideList,
+  ProjectImageAttributes,
+  ProjectWithSlides,
+} from '../types'
+
+export type ProjectCarouselImageAttributesResolver = (
+  src: string
+) => ProjectImageAttributes
+
+/**
+ * Obtiene lista de URLs no vacías a partir del modelo (`Project.images`).
+ *
+ * Lanza si tras `trim` no queda ninguna URL válida — el modelo de dominio garantiza ≥1 pero
+ * un error aquí anticipa configuración corrupta antes de llegar al carrusel.
+ */
+function toNonEmptySlides(urls: NonEmptySlideList): NonEmptySlideList {
+  const slides = getValidUrls(urls)
+  if (slides.length === 0) {
+    throw new Error(
+      'Se esperaba al menos una URL de captura válida (no vacía tras trim): revisa `Project.images`.'
+    )
+  }
+  return slides as unknown as NonEmptySlideList
+}
 
 interface UseProjectsSectionResult {
-  totalProjects: number
-  activeProject: Project | undefined
-  activeIndex: number
-  showInfo: boolean
+  data: {
+    projects: ProjectWithSlides[]
+    totalProjects: number
+    activeProject: ProjectWithSlides | undefined
+    activeIndex: number
+  }
   /**
-   * Viewport ≥ lg: observer + panel lateral + lightbox montado.
-   * Una sola fuente de verdad con `useProjectsScrollSync` (sin duplicar `matchMedia`).
+   * Estado UI derivado de viewport/scroll sync.
    */
-  scrollSyncEnabled: boolean
-  articleRefAssigners: Array<(el: HTMLElement | null) => void>
-  handleProjectDotClick: (event: MouseEvent<HTMLButtonElement>) => void
-  reduceMotion: boolean | null
-  lightboxProjectIndex: number | null
-  lightboxSlide: number
-  setLightboxSlide: Dispatch<SetStateAction<number>>
-  openProjectLightbox: (projectIndex: number, slideIndex: number) => void
-  closeProjectLightbox: () => void
-  lightboxProject: Project | undefined
-  lightboxValidImages: string[]
+  ui: {
+    showInfo: boolean
+    scrollSyncEnabled: boolean
+  }
+  modal: {
+    index: number | null
+    slide: number
+    project: ProjectWithSlides | undefined
+    setSlide: Dispatch<SetStateAction<number>>
+    open: (projectIndex: number, slideIndex: number) => void
+    close: () => void
+  }
+  carousel: {
+    articleRefAssigners: Array<(el: HTMLElement | null) => void>
+    handleDotClick: (event: MouseEvent<HTMLButtonElement>) => void
+    getSlideIndex: (projectIndex: number) => number
+    handleSlideChange: (projectIndex: number, index: number) => void
+    resolveImageAttributes: ProjectCarouselImageAttributesResolver
+  }
 }
 
 /**
- * Orquesta scroll sync (`useProjectsScrollSync`), estado del lightbox y derivados
- * para `ProjectsSection`. Cierra el lightbox al salir de `lg` vía `scrollSyncEnabled`.
+ * Orquesta scroll sync (`useProjectsScrollSync`), estado del modal de vista ampliada y derivados
+ * para `ProjectsSection`. Cierra el modal al salir de `lg` vía `scrollSyncEnabled`.
  */
 export function useProjectsSection(
   projects: Project[]
 ): UseProjectsSectionResult {
-  const totalProjects = projects.length
-  const [lightboxProjectIndex, setLightboxProjectIndex] = useState<
-    number | null
-  >(null)
-  const [lightboxSlide, setLightboxSlide] = useState(0)
+  const projectsWithSlides = useMemo(
+    () =>
+      projects.map((project) => ({
+        ...project,
+        slides: toNonEmptySlides(project.images),
+      })),
+    [projects]
+  )
 
-  const closeProjectLightbox = useCallback(() => {
-    setLightboxProjectIndex(null)
+  const totalProjects = projectsWithSlides.length
+  const [modalProjectIndex, setModalProjectIndex] = useState<number | null>(
+    null
+  )
+  const [modalSlide, setModalSlide] = useState(0)
+  const [cardSlideByProject, setCardSlideByProject] = useState<
+    Record<number, number>
+  >({})
+
+  const closeProjectModal = useCallback(() => {
+    setModalProjectIndex(null)
   }, [])
 
   const {
@@ -59,17 +105,23 @@ export function useProjectsSection(
     scrollSyncEnabled,
     setItemRef,
     scrollItemIntoView,
-  } = useProjectsScrollSync(totalProjects, closeProjectLightbox)
+  } = useProjectsScrollSync(totalProjects, closeProjectModal)
 
   const activeProject =
-    totalProjects > 0 ? (projects[activeIndex] ?? projects[0]) : undefined
+    totalProjects > 0
+      ? (projectsWithSlides[activeIndex] ?? projectsWithSlides[0])
+      : undefined
 
   const articleRefAssigners = useMemo(
     () =>
-      projects.map((_, i) => (el: HTMLElement | null) => {
-        setItemRef(i, el)
+      Array.from({ length: projectsWithSlides.length }, (_, i) => {
+        const index = i
+        return (el: HTMLElement | null) => {
+          setItemRef(index, el)
+        }
       }),
-    [projects, setItemRef]
+    // Solo la longitud: el índice es lo relevante para `setItemRef`; mismo N de proyectos → mismos callbacks.
+    [projectsWithSlides.length, setItemRef]
   )
 
   const handleProjectDotClick = useCallback(
@@ -82,36 +134,80 @@ export function useProjectsSection(
     [scrollItemIntoView]
   )
 
-  const reduceMotion = useReducedMotion()
-
-  const openProjectLightbox = useCallback(
+  const openProjectModal = useCallback(
     (projectIndex: number, slideIndex: number) => {
-      setLightboxProjectIndex(projectIndex)
-      setLightboxSlide(slideIndex)
+      setModalProjectIndex(projectIndex)
+      setModalSlide(slideIndex)
     },
     []
   )
 
-  const lightboxProject =
-    lightboxProjectIndex !== null ? projects[lightboxProjectIndex] : undefined
+  const selectedModalProject =
+    modalProjectIndex !== null
+      ? projectsWithSlides[modalProjectIndex]
+      : undefined
+  const modalProject =
+    scrollSyncEnabled && modalProjectIndex !== null
+      ? selectedModalProject
+      : undefined
 
-  const lightboxValidImages = getValidUrls(lightboxProject?.images ?? [])
+  const handleCloseProjectPreviewModal = useCallback(() => {
+    if (modalProjectIndex !== null) {
+      setCardSlideByProject((prev) => ({
+        ...prev,
+        [modalProjectIndex]: modalSlide,
+      }))
+    }
+    closeProjectModal()
+  }, [closeProjectModal, modalProjectIndex, modalSlide])
+
+  const getProjectPreviewSlideIndex = useCallback(
+    (projectIndex: number) =>
+      modalProjectIndex === projectIndex
+        ? modalSlide
+        : (cardSlideByProject[projectIndex] ?? 0),
+    [cardSlideByProject, modalProjectIndex, modalSlide]
+  )
+
+  const handleProjectPreviewSlideChange = useCallback(
+    (projectIndex: number, index: number) => {
+      if (modalProjectIndex === projectIndex) {
+        setModalSlide(index)
+        return
+      }
+      setCardSlideByProject((prev) => ({
+        ...prev,
+        [projectIndex]: index,
+      }))
+    },
+    [modalProjectIndex]
+  )
 
   return {
-    totalProjects,
-    activeProject,
-    activeIndex,
-    showInfo,
-    scrollSyncEnabled,
-    articleRefAssigners,
-    handleProjectDotClick,
-    reduceMotion,
-    lightboxProjectIndex,
-    lightboxSlide,
-    setLightboxSlide,
-    openProjectLightbox,
-    closeProjectLightbox,
-    lightboxProject,
-    lightboxValidImages,
+    data: {
+      projects: projectsWithSlides,
+      totalProjects,
+      activeProject,
+      activeIndex,
+    },
+    ui: {
+      showInfo,
+      scrollSyncEnabled,
+    },
+    modal: {
+      index: modalProjectIndex,
+      slide: modalSlide,
+      project: modalProject,
+      setSlide: setModalSlide,
+      open: openProjectModal,
+      close: handleCloseProjectPreviewModal,
+    },
+    carousel: {
+      articleRefAssigners,
+      handleDotClick: handleProjectDotClick,
+      getSlideIndex: getProjectPreviewSlideIndex,
+      handleSlideChange: handleProjectPreviewSlideChange,
+      resolveImageAttributes: getProjectImageAttributes,
+    },
   }
 }
