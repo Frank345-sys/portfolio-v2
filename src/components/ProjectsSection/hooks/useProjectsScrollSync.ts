@@ -3,10 +3,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
 
-import {
-  PROJECTS_SCROLL_ACTIVE_INDEX_TRANSITION_MS,
-  PROJECTS_SCROLL_INTERSECTION_THRESHOLDS,
-} from '../constants'
+/** Espera antes de actualizar `activeIndex` tras cambiar el bloque más visible (transición en panel lateral). */
+const PROJECTS_SCROLL_ACTIVE_INDEX_TRANSITION_MS = 150
+
+/** Umbrales del `IntersectionObserver` para muestrear `intersectionRatio` por bloque de proyecto. */
+const PROJECTS_SCROLL_INTERSECTION_THRESHOLDS = [
+  0.25, 0.4, 0.55, 0.7, 0.85,
+] as const
 
 interface UseProjectsScrollSyncResult {
   /** Índice del proyecto cuyo bloque tiene mayor ratio de intersección visible. */
@@ -30,7 +33,7 @@ interface UseProjectsScrollSyncResult {
  * En viewports por debajo de `lg` el observer no se registra (lista apilada con su propio texto).
  *
  * @param itemCount - Número de proyectos en la lista (debe coincidir con refs renderizados).
- * @param onExitLgLayout - Invocado en el listener `change` de `matchMedia` al pasar por debajo de `lg` (p. ej. cerrar lightbox). No es un `useEffect`.
+ * @param onExitLgLayout - Invocado en el listener `change` de `matchMedia` al pasar por debajo de `lg` (p. ej. cerrar `ProjectPreviewModal`). No es un `useEffect`.
  */
 export function useProjectsScrollSync(
   itemCount: number,
@@ -129,34 +132,37 @@ export function useProjectsScrollSync(
     }
   }, [itemCount, scrollSyncEnabled])
 
-  useEffect(() => {
-    if (scrollSyncEnabled) return
+  /** Identidad estable (`[]`): no cierra sobre `lenis`; el efecto móvil lista `lenis` y re-suscribe cuando cambia la instancia. */
+  const pickClosestToViewportCenter = useCallback(() => {
+    const viewportCenter = window.innerHeight / 2
+    let nextIndex = 0
+    let minDistance = Number.POSITIVE_INFINITY
 
-    const pickClosestToViewportCenter = () => {
-      const viewportCenter = window.innerHeight / 2
-      let nextIndex = 0
-      let minDistance = Number.POSITIVE_INFINITY
+    for (const [index, el] of itemRefs.current.entries()) {
+      if (!el) continue
+      const rect = el.getBoundingClientRect()
+      if (rect.bottom < 0 || rect.top > window.innerHeight) continue
 
-      for (const [index, el] of itemRefs.current.entries()) {
-        if (!el) continue
-        const rect = el.getBoundingClientRect()
-        if (rect.bottom < 0 || rect.top > window.innerHeight) continue
-
-        const itemCenter = rect.top + rect.height / 2
-        const distance = Math.abs(itemCenter - viewportCenter)
-        if (distance < minDistance) {
-          minDistance = distance
-          nextIndex = index
-        }
-      }
-
-      if (nextIndex !== activeIndexRef.current) {
-        activeIndexRef.current = nextIndex
-        setActiveIndex(nextIndex)
+      const itemCenter = rect.top + rect.height / 2
+      const distance = Math.abs(itemCenter - viewportCenter)
+      if (distance < minDistance) {
+        minDistance = distance
+        nextIndex = index
       }
     }
 
-    pickClosestToViewportCenter()
+    if (nextIndex !== activeIndexRef.current) {
+      activeIndexRef.current = nextIndex
+      setActiveIndex(nextIndex)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (scrollSyncEnabled) return
+
+    queueMicrotask(() => {
+      pickClosestToViewportCenter()
+    })
 
     const unsubscribeLenisScroll = lenis
       ? lenis.on('scroll', pickClosestToViewportCenter)
@@ -167,7 +173,9 @@ export function useProjectsScrollSync(
         passive: true,
       })
     }
-    window.addEventListener('resize', pickClosestToViewportCenter)
+    window.addEventListener('resize', pickClosestToViewportCenter, {
+      passive: true,
+    })
 
     return () => {
       unsubscribeLenisScroll?.()
@@ -176,7 +184,7 @@ export function useProjectsScrollSync(
       }
       window.removeEventListener('resize', pickClosestToViewportCenter)
     }
-  }, [scrollSyncEnabled, lenis])
+  }, [scrollSyncEnabled, lenis, pickClosestToViewportCenter])
 
   const setItemRef = useCallback((index: number, el: HTMLElement | null) => {
     if (index < 0) return
