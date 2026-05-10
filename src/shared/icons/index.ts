@@ -1,5 +1,7 @@
 /**
  * Exportaciones nombradas de iconos SVG (`JsIcon`, `GithubIcon`, etc.).
+ * Son componentes presentacionales sin lógica de negocio; por política del repo no tienen
+ * tests unitarios individualizados salvo que añadan ramas condicionales relevantes en el SVG.
  *
  * @example
  * ```tsx
@@ -26,8 +28,10 @@ export { LinkedinIcon } from './LinkedinIcon.tsx'
 export { MailIcon } from './MailIcon.tsx'
 export { FigmaIcon } from './FigmaIcon.tsx'
 export { VsCodeIcon } from './VsCodeIcon.tsx'
+export { TelegramIcon } from './TelegramIcon.tsx'
 export { WhatsappIcon } from './WhatsappIcon.tsx'
 export { CloseIcon } from './CloseIcon.tsx'
+export { AiIcon } from './AiIcon.tsx'
 export { CodeIcon } from './CodeIcon.tsx'
 export { DownloadIcon } from './DownloadIcon.tsx'
 export { ExpandScreenIcon } from './ExpandScreenIcon.tsx'
