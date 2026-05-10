@@ -92,8 +92,8 @@
   --color-purple-alpha-16: rgba(120, 77, 239, 0.16);
   --color-purple-alpha-24: rgba(120, 77, 239, 0.24);
 
-  /* ── Superficie global — textura (grano) ─────────────────────
-     Capa fija bajo el contenido; usar con `.u-app-grain-overlay` en el root.
+  /* ── Superficie — textura (grano) ─────────────────────────────
+     `.u-app-grain-overlay` vive dentro de `main` en `App.tsx`.
      ─────────────────────────────────────────────────────────── */
   --app-grain-noise-opacity: 0.025;
   --app-grain-noise-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
@@ -132,7 +132,7 @@
   --color-bg-surface: var(--color-gray-800);
   --color-bg-subtle: var(--color-gray-300);
   --color-bg-soft: var(--color-gray-200);
-  --color-bg-weak: var(--color-white);
+  --color-bg-weak: var(--color-gray-50);
   --color-bg-white: var(--color-white);
 
   /* ── Bordes neutrales ──────────────────────────────────────────
@@ -197,6 +197,19 @@
   --color-feature-light: var(--color-purple-200);
   --color-feature-lighter: var(--color-purple-50);
 
+  /* ── Neutral (acción / UI, sin carga de marca) ────────────────
+     Misma escala base → dark / light / lighter que el resto de paletas
+     (botones neutral, piezas que no son primary, error, etc.).
+     base    → relleno sólido, texto e icono de acento
+     dark    → hover sólido, bordes fuertes, foco
+     light   → bordes y fondos al interactuar
+     lighter → tints y fondos muy suaves
+     ─────────────────────────────────────────────────────────── */
+  --color-neutral-base: var(--color-gray-800);
+  --color-neutral-dark: var(--color-gray-950);
+  --color-neutral-light: var(--color-gray-300);
+  --color-neutral-lighter: var(--color-gray-100);
+
   /* ── Hero / BackgroundBoxes ────────────────────────────────────
      Tokens específicos del HeroSection y las cajas flotantes.
      No usar en otros contextos.
@@ -244,11 +257,9 @@
   --shadow-elevation-2xl:
     0 20px 40px rgb(0 0 0 / 0.18), 0 8px 16px rgb(0 0 0 / 0.32);
 
-  /* ── Z-index — escala Z.* (tokens/z.ts), múltiplos de 10 desde backdrop. ── */
+  /* ── Z-index — Z.header / backdrop / modal / toast (`tokens/z.ts`). z-0…z-30: Tailwind. ── */
   --z-index-40: 40;
   --z-index-50: 50;
-  --z-index-60: 60;
-  --z-index-70: 70;
   --z-index-80: 80;
 
   /* ── Breakpoint extra: xs (móvil ancho, antes de `sm` 640px) ──
@@ -277,14 +288,15 @@ html.dark {
      soft = gris más suave (notas, secundario)
      disabled = gris medio (estados deshabilitados)
      ─────────────────────────────────────────────────────────── */
-  --color-text-strong: var(--color-gray-50);
+  --color-text-strong: var(--color-white);
   --color-text-subtle: var(--color-gray-400);
   --color-text-soft: var(--color-gray-500);
   --color-text-disabled: var(--color-gray-600);
+  --color-text-white: var(--color-gray-950);
 
   /* ── Fondos neutrales ──
      Ajustados para la estética del portafolio:
-     bg-white   → #111111  fondo base de sección (el más profundo)
+     bg-white   → #171717  (`gray-950`, mismo fondo que `html`)
      bg-weak    → #1a1a1a  cards y superficies elevadas sobre el fondo
      bg-soft    → #292929  elementos sobre cards: inputs, secondary surfaces
      bg-subtle  → #5c5c5c  se mantiene
@@ -295,8 +307,8 @@ html.dark {
   --color-bg-surface: var(--color-gray-200);
   --color-bg-subtle: var(--color-gray-600);
   --color-bg-soft: var(--color-gray-700);
-  --color-bg-weak: var(--color-gray-900);
-  --color-bg-white: var(--color-gray-1000);
+  --color-bg-weak: var(--color-gray-800);
+  --color-bg-white: var(--color-gray-950);
 
   /* ── Bordes neutrales ── */
   --color-stroke-strong: var(--color-white);
@@ -304,6 +316,7 @@ html.dark {
   --color-stroke-soft: var(--color-gray-700);
 
   /* ── Information ── */
+  --color-information-base: var(--color-blue-500);
   --color-information-dark: var(--color-blue-400);
   --color-information-light: var(--color-blue-alpha-24);
   --color-information-lighter: var(--color-blue-alpha-16);
@@ -334,27 +347,16 @@ html.dark {
 
   /* ── Feature ── */
   --color-feature-base: var(--color-purple-500);
-  --color-feature-dark: var(--color-purple-200);
+  --color-feature-dark: var(--color-purple-400);
   --color-feature-light: var(--color-purple-alpha-24);
   --color-feature-lighter: var(--color-purple-alpha-16);
 
-  /* ── Hero / BackgroundBoxes ── */
-  --color-hero-bg: var(--color-bg-weak);
-  --color-hero-glow: color-mix(
-    in srgb,
-    var(--color-error-base) 7%,
-    transparent
-  );
-  --color-hero-vignette: color-mix(
-    in srgb,
-    var(--color-bg-soft) 60%,
-    transparent
-  );
-
-  --color-floating-box-bg: var(--color-gray-700);
-  --color-floating-box-bg-hover: var(--color-gray-600);
-  --color-floating-box-border: var(--color-gray-alpha-16);
-  --color-floating-box-border-hover: var(--color-gray-alpha-24);
+  /* ── Neutral (acción / UI) — oscuro: superficies claras, tintes con alfa
+     (paralelo a information/error con alpha-24/16) */
+  --color-neutral-base: var(--color-gray-300);
+  --color-neutral-dark: var(--color-gray-100);
+  --color-neutral-light: var(--color-gray-alpha-24);
+  --color-neutral-lighter: var(--color-gray-alpha-16);
 
   /* ── Sombras (más visibles en dark) ── */
   --shadow-elevation-xs: 0 1px 2px rgb(0 0 0 / 0.18);
@@ -387,9 +389,31 @@ body {
   color: var(--color-text-subtle);
 }
 
+/*
+ * Reinicio consistente ul/ol: margen y relleno a 0 sin repetir m-0/p-0 por componente.
+ * `list-style` lo aplica Preflight de Tailwind; aquí solo fijamos caja típica de listas.
+ */
+@layer base {
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  /*
+   * Tailwind `animate-spin` (`ANIMATION.spin.continuous`) no atiende `prefers-reduced-motion`
+   * por defecto; `MotionConfig` solo afecta a `motion/react`, no a clases CSS. Se anula aquí
+   * para evitar el anillo girando del avatar (`u-avatar-feature-ring`) y cualquier otro spinner
+   * decorativo.
+   */
+  .animate-spin {
+    animation: none;
   }
 }
 
@@ -397,13 +421,24 @@ body {
    UTILIDADES GLOBALES
    ═══════════════════════════════════════════════════════════════ */
 
-@keyframes u-skeleton-shimmer {
-  from {
-    background-position: -200% center;
+@keyframes u-skeleton-wave {
+  0% {
+    background-position: 200% center;
   }
 
-  to {
-    background-position: 200% center;
+  100% {
+    background-position: -100% center;
+  }
+}
+
+@keyframes u-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
   }
 }
 
@@ -419,13 +454,14 @@ body {
 
 @layer components {
   /**
-   * Textura de grano en viewport completo — debajo de header y main (`z-index: 0`).
-   * No captura eventos. Opacidad y SVG vía tokens `--app-grain-noise-*` en `:root`.
+   * Textura de grano acotada al área de `main` (primer hijo absoluto).
+   * Requiere `main.relative.isolate`; queda detrás del contenido (`z-index: -1`).
+   * Sin `pointer-events`. Opacidad e imagen via `--app-grain-*` en `:root`.
    */
   .u-app-grain-overlay {
-    position: fixed;
+    position: absolute;
     inset: 0;
-    z-index: 0;
+    z-index: -1;
     pointer-events: none;
     opacity: var(--app-grain-noise-opacity);
     background-image: var(--app-grain-noise-image);
@@ -479,27 +515,36 @@ body {
   }
 
   /**
-   * Skeleton con brillo deslizante — tokens `--color-bg-soft`, `--color-bg-subtle`,
-   * `text-white` vía mezcla (brillo en claro y oscuro). Consumir con `ANIMATION.loading.skeleton`.
+   * Skeleton — barrido en gradiente. Consumir con `ANIMATION.loading.skeleton`.
    */
-  .u-skeleton-shimmer {
+  .u-app-skeleton {
     background: linear-gradient(
-      90deg,
+      100deg,
       var(--color-bg-soft) 0%,
-      var(--color-bg-subtle) 30%,
-      color-mix(in srgb, var(--color-text-white) 22%, var(--color-bg-subtle))
-        50%,
-      var(--color-bg-subtle) 70%,
+      color-mix(in srgb, var(--color-bg-white) 50%, var(--color-bg-soft)) 50%,
       var(--color-bg-soft) 100%
     );
-    background-size: 200% 100%;
-    animation: u-skeleton-shimmer 1.5s ease-in-out infinite;
+    background-size: 300% 100%;
+    animation: u-skeleton-wave 1.9s ease-in-out infinite;
+  }
+
+  /**
+   * Skeleton — pulso suave sobre `bg-soft`. Consumir con `ANIMATION.loading.skeletonPulse`.
+   */
+  .u-app-skeleton-pulse {
+    background-color: var(--color-bg-soft);
+    animation: u-skeleton-pulse 1.6s ease-in-out infinite;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .u-skeleton-shimmer {
+    .u-app-skeleton,
+    .u-app-skeleton-pulse {
       animation: none;
-      background: var(--color-bg-subtle);
+      background: var(--color-bg-soft);
+    }
+
+    .u-app-skeleton-pulse {
+      opacity: 1;
     }
   }
 }
