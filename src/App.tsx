@@ -2,11 +2,13 @@ import { LazyMotion, domAnimation, MotionConfig } from 'motion/react'
 import { lazy, Suspense } from 'react'
 
 import { Header } from '@/components/Header'
-import { HeroSection } from '@/components/HeroSection'
+import { ErrorBoundary } from '@/shared/components'
 import { SectionLazyFallback } from '@/shared/components/SectionLazyFallback'
 import { SmoothScrollRoot } from '@/shared/components/SmoothScrollRoot'
-import { Z } from '@/shared/constants/tokens'
-
+const HeroSection = lazy(async () => {
+  const m = await import('@/components/HeroSection')
+  return { default: m.HeroSection }
+})
 const AboutSection = lazy(async () => {
   const m = await import('@/components/AboutSection')
   return { default: m.AboutSection }
@@ -25,10 +27,12 @@ const Footer = lazy(async () => {
 })
 
 /**
- * Raíz de la SPA: skip link, textura, cabecera y contenido principal.
+ * Raíz de la SPA: skip link, cabecera y contenido principal.
+ * La textura de grano se acota a `main` para no afectar header ni footer.
  * Motion en modo lazy (`domAnimation`: el subconjunto DOM habitual; sin layout/drag extra).
  * `MotionConfig` respeta `prefers-reduced-motion`.
- * Los `Suspense` usan un fallback con altura mínima para reducir CLS y anuncian carga a lectores de pantalla.
+ * `HeroSection` y el resto de secciones bajo `Suspense` usan `SectionLazyFallback` para reducir CLS
+ * y anuncian carga a lectores de pantalla (portada vs. bloques con `min-h` en secciones internas).
  */
 export function App() {
   return (
@@ -38,51 +42,74 @@ export function App() {
           <a href="#contenido-principal" className="u-skip-link">
             Saltar al contenido principal
           </a>
-          <div className="u-app-grain-overlay" aria-hidden="true" />
           <Header />
-          <main id="contenido-principal" className={Z.base} tabIndex={-1}>
-            <HeroSection />
-            <Suspense
-              fallback={
-                <SectionLazyFallback
-                  ariaLabel="Cargando sección Sobre mí"
-                  variant="about"
-                />
-              }
-            >
-              <AboutSection />
-            </Suspense>
-            <Suspense
-              fallback={
-                <SectionLazyFallback
-                  ariaLabel="Cargando sección Proyectos"
-                  variant="projects"
-                />
-              }
-            >
-              <ProjectsSection />
-            </Suspense>
-            <Suspense
-              fallback={
-                <SectionLazyFallback
-                  ariaLabel="Cargando sección Contacto"
-                  variant="contact"
-                />
-              }
-            >
-              <ContactSection />
-            </Suspense>
-          </main>
-          <Suspense
-            fallback={
-              <SectionLazyFallback
-                ariaLabel="Cargando pie de página"
-                variant="footer"
-              />
-            }
+          <main
+            id="contenido-principal"
+            className="relative isolate"
+            tabIndex={-1}
           >
-            <Footer />
-          </Suspense>
+            <div className="u-app-grain-overlay" aria-hidden="true" />
+            <ErrorBoundary>
+              <Suspense
+                fallback={
+                  <SectionLazyFallback
+                    ariaLabel="Cargando portada"
+                    variant="hero"
+                  />
+                }
+              >
+                <HeroSection />
+              </Suspense>
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <Suspense
+                fallback={
+                  <SectionLazyFallback
+                    ariaLabel="Cargando sección Sobre mí"
+                    variant="about"
+                  />
+                }
+              >
+                <AboutSection />
+              </Suspense>
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <Suspense
+                fallback={
+                  <SectionLazyFallback
+                    ariaLabel="Cargando sección Proyectos"
+                    variant="projects"
+                  />
+                }
+              >
+                <ProjectsSection />
+              </Suspense>
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <Suspense
+                fallback={
+                  <SectionLazyFallback
+                    ariaLabel="Cargando sección Contacto"
+                    variant="contact"
+                  />
+                }
+              >
+                <ContactSection />
+              </Suspense>
+            </ErrorBoundary>
+          </main>
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <SectionLazyFallback
+                  ariaLabel="Cargando pie de página"
+                  variant="footer"
+                />
+              }
+            >
+              <Footer />
+            </Suspense>
+          </ErrorBoundary>
         </SmoothScrollRoot>
       </MotionConfig>
     </LazyMotion>
