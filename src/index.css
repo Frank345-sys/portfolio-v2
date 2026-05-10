@@ -390,6 +390,15 @@ body {
 }
 
 /*
+ * Overflow horizontal ≤375px — criterio sin `overflow-x:hidden` global en html/body:
+ * revisión estática (contenedores con LAYOUT.px, hero BackgroundBoxes con overflow-hidden).
+ * Validación en navegador (DevTools, ancho 375px): en consola ejecutar p. ej.
+ * `[...document.querySelectorAll('*')].filter(e => e.scrollWidth > innerWidth).map(e => e)`
+ * y corregir el componente que corresponda si aparece lista no vacía (no enmascarar en raíz
+ * sin causa localizada).
+ */
+
+/*
  * Reinicio consistente ul/ol: margen y relleno a 0 sin repetir m-0/p-0 por componente.
  * `list-style` lo aplica Preflight de Tailwind; aquí solo fijamos caja típica de listas.
  */
