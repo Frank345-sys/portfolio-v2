@@ -9,17 +9,16 @@ import { loadEnv } from 'vite'
 import { defineConfig } from 'vitest/config'
 
 import {
-  CONTACT_EMAIL_TRIMMED,
-  CONTACT_PROFILE,
-} from './src/components/ContactSection/constants'
-import {
+  SITE_CONTACT_EMAIL_TRIMMED,
   SITE_DISPLAY_NAME,
   SITE_JSONLD_DESCRIPTION,
   SITE_META_DESCRIPTION,
   SITE_META_DESCRIPTION_SHORT,
   SITE_PAGE_TITLE,
   SITE_PROFILE,
+  SITE_SOCIAL_HREFS,
 } from './src/shared/constants/siteProfile'
+import { SKILL_LABEL } from './src/shared/constants/skills'
 
 import type { Plugin } from 'vite'
 
@@ -59,9 +58,9 @@ function writeSeoFilesPlugin(siteUrl: string): Plugin {
 
       const wellKnown = path.join(dir, '.well-known')
       fs.mkdirSync(wellKnown, { recursive: true })
-      const contactLine = CONTACT_EMAIL_TRIMMED
-        ? `Contact: mailto:${CONTACT_EMAIL_TRIMMED}\n`
-        : `Contact: ${CONTACT_PROFILE.githubHref}\n`
+      const contactLine = SITE_CONTACT_EMAIL_TRIMMED
+        ? `Contact: mailto:${SITE_CONTACT_EMAIL_TRIMMED}\n`
+        : `Contact: ${SITE_SOCIAL_HREFS.githubHref}\n`
       const securityTxt = `${contactLine}Expires: 2027-04-22T23:59:00.000Z\nPreferred-Languages: es, en\nCanonical: ${origin}/.well-known/security.txt\n`
       fs.writeFileSync(
         path.join(wellKnown, 'security.txt'),
@@ -83,17 +82,21 @@ function injectSiteProfileHtmlPlugin(siteUrl: string): Plugin {
         name: SITE_DISPLAY_NAME,
         jobTitle: SITE_PROFILE.role,
         url: `${origin}/`,
-        sameAs: [CONTACT_PROFILE.githubHref, CONTACT_PROFILE.linkedinHref],
+        sameAs: [
+          SITE_SOCIAL_HREFS.githubHref,
+          SITE_SOCIAL_HREFS.linkedinHref,
+          SITE_SOCIAL_HREFS.telegramHref,
+        ],
         knowsAbout: [
-          'React',
-          'TypeScript',
-          'Vite',
-          'Tailwind CSS',
-          'JavaScript',
-          'HTML5',
-          'CSS3',
-          'Next.js',
-          'Frontend Development',
+          SKILL_LABEL.REACT,
+          SKILL_LABEL.TYPESCRIPT,
+          SKILL_LABEL.VITE,
+          SKILL_LABEL.TAILWIND,
+          SKILL_LABEL.JAVASCRIPT_ES6_PLUS,
+          SKILL_LABEL.HTML5,
+          SKILL_LABEL.CSS3,
+          SKILL_LABEL.NEXT,
+          SITE_PROFILE.role,
         ],
         description: SITE_JSONLD_DESCRIPTION,
       }
@@ -207,7 +210,13 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       injectSiteProfileHtmlPlugin(siteUrl),
-      react(),
+      // React Compiler: misma versión que `eslint-plugin-react-compiler` para que las
+      // reglas que se aplican en lint y la transformación que llega al bundle estén alineadas.
+      react({
+        babel: {
+          plugins: [['babel-plugin-react-compiler', {}]],
+        },
+      }),
       tailwindcss(),
       writeSeoFilesPlugin(siteUrl),
       projectImagesPipelinePlugin(),
@@ -229,6 +238,7 @@ export default defineConfig(({ mode }) => {
           'src/test/**',
           '**/*.config.*',
           '**/*.d.ts',
+          // Re-export barrels: sin lógica propia; excluir evita inflar métricas de cobertura
           '**/index.ts',
         ],
         thresholds: {
