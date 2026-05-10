@@ -86,7 +86,9 @@ describe('ProjectsSection', () => {
       const label = document.getElementById(projectArticleLabelId(project.id))
       expect(label).toBeTruthy()
       expect(label?.tagName.toLowerCase()).toBe('p')
-      expect(label).toHaveClass('sr-only')
+      const rect = label?.getBoundingClientRect()
+      expect(rect).toBeDefined()
+      expect(rect!.width <= 1 && rect!.height <= 1).toBe(true)
       expect(label).toHaveTextContent(project.title)
     }
   })
@@ -137,7 +139,7 @@ describe('ProjectsSection', () => {
       name: PROJECTS_NAV_RAIL_ARIA_LABEL,
     })
     const firstButton = within(rail).getByRole('button', {
-      name: /ir al proyecto 1/i,
+      name: new RegExp(`ir al proyecto 1:\\s*${PROJECTS[0]!.title}`, 'i'),
     })
 
     await user.click(firstButton)
