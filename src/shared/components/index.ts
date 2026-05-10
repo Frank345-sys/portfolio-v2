@@ -5,4 +5,8 @@
  * @module shared/components
  */
 
+/**
+ * Límite de error por bloque con `Suspense`/`lazy`: mensaje **`role="alert"`** y botón Reintentar
+ * que restablece el subárbol.
+ */
 export { ErrorBoundary } from './ErrorBoundary'
