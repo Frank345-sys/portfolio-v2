@@ -1,4 +1,5 @@
 import { m, AnimatePresence } from 'motion/react'
+import { useId } from 'react'
 
 import { useTheme } from '@/shared/components/ThemeToggle/hooks/useTheme'
 import {
@@ -9,11 +10,13 @@ import { TYPOGRAPHY, BADGE } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
 /** Recorrido del knob: ancho útil del track (w-9 − padding) menos el dot xl (w-4). */
-const KNOB_TRAVEL_X_PX = 16
+const KNOB_TRAVEL_X_PX = 16 as const
 
 /**
  * Conmutador accesible (`role="switch"`) claro/oscuro, sincronizado con `useTheme`
- * y etiqueta de modo visible.
+ * y etiqueta de modo visible. El nombre accesible del switch coincide con el texto
+ * visible (WCAG 2.5.3) vía `aria-labelledby` y un `id` estable por instancia (`useId`,
+ * para no duplicar ids cuando el toggle aparece en cabecera y en el drawer móvil).
  *
  * @example
  * ```tsx
@@ -22,6 +25,7 @@ const KNOB_TRAVEL_X_PX = 16
  */
 export function ThemeToggle() {
   const { isDark, setTheme } = useTheme()
+  const labelId = useId()
 
   const toggle = () => setTheme(isDark ? 'light' : 'dark')
 
@@ -31,7 +35,7 @@ export function ThemeToggle() {
         type="button"
         role="switch"
         aria-checked={isDark}
-        aria-label="Alternar tema claro u oscuro"
+        aria-labelledby={labelId}
         onClick={toggle}
         className={cn(
           'flex h-5 w-9 shrink-0 items-center rounded-full p-0.5',
@@ -53,6 +57,7 @@ export function ThemeToggle() {
 
       <AnimatePresence mode="wait" initial={false}>
         <m.span
+          id={labelId}
           key={isDark ? 'dark' : 'light'}
           {...PRESENCE_FADE_EXPRESSIVE}
           className={cn(TYPOGRAPHY.paragraph.small, 'min-w-24 font-medium')}
