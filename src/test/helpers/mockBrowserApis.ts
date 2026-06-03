@@ -1,10 +1,13 @@
+/**
+ * Utilidades de test (`test/helpers/mockBrowserApis.ts`).
+ *
+ * @fileoverview Helpers compartidos por Vitest (mocks, render, setup).
+ * @remarks Importado solo desde archivos `*.test.*` o `setup.ts`; no incluir en el bundle de producción.
+ */
+
 import { vi } from 'vitest'
 
 import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
-
-export interface MockMatchMediaOptions {
-  lgMatches?: boolean
-}
 
 function takeNoIntersectionRecords() {
   return []
@@ -14,7 +17,7 @@ function takeNoIntersectionRecords() {
  * Configura window.matchMedia para tests de ProjectsSection y useProjectsScrollSync.
  * Devuelve `{ setMatches }` para simular cambios de breakpoint en tiempo de ejecución.
  */
-export function setupMatchMedia(options?: MockMatchMediaOptions) {
+export function setupMatchMedia(options?: { lgMatches?: boolean }) {
   let lgMatches = options?.lgMatches ?? true
   const listeners: Array<(e: MediaQueryListEvent) => void> = []
 
