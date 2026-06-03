@@ -1,0 +1,5 @@
+{
+  "$schema": "https://unpkg.com/react-doctor@0.2.6/schema.json",
+  "diff": "main",
+  "deadCode": false
+}

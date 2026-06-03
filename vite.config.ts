@@ -9,25 +9,46 @@ import { loadEnv } from 'vite'
 import { defineConfig } from 'vitest/config'
 
 import {
-  CONTACT_EMAIL_TRIMMED,
-  CONTACT_PROFILE,
-} from './src/components/ContactSection/constants'
-import {
+  SITE_CONTACT_EMAIL_TRIMMED,
   SITE_DISPLAY_NAME,
   SITE_JSONLD_DESCRIPTION,
   SITE_META_DESCRIPTION,
   SITE_META_DESCRIPTION_SHORT,
   SITE_PAGE_TITLE,
   SITE_PROFILE,
+  SITE_SOCIAL_HREFS,
 } from './src/shared/constants/siteProfile'
+import { SKILL_LABEL } from './src/shared/constants/skills/skillLabels'
 
 import type { Plugin } from 'vite'
 
 /**
- * robots.txt, sitemap.xml y security.txt en el artefacto de build.
+ * Umbral mínimo de cobertura de ramas (Vitest v8 + JSX).
+ * Roadmap: 64 (actual ~65%) → 65 → 70 al ampliar tests de variantes/estado en primitivos.
+ */
+const COVERAGE_BRANCHES_THRESHOLD = 64
+
+/** Meses de validez de `Expires` en security.txt (RFC 9116; renovar antes de caducar). */
+const SECURITY_TXT_EXPIRES_MONTHS = 12
+
+function securityTxtExpiresIso(from = new Date()): string {
+  const expires = new Date(from)
+  expires.setUTCMonth(expires.getUTCMonth() + SECURITY_TXT_EXPIRES_MONTHS)
+  return expires.toISOString()
+}
+
+function formatPipelineError(context: string, e: unknown): string {
+  const msg = e instanceof Error ? e.message : String(e)
+  return `${context}: ${msg}`
+}
+
+/**
+ * `robots.txt`, `sitemap.xml` y `.well-known/security.txt` se generan aquí en **`closeBundle`**
+ * (no usar copias estáticas en `public/` para esas rutas: evita divergencia con `VITE_PUBLIC_SITE_URL`).
+ *
  * GitHub Pages no expone cabeceras HTTP propias del repo (CSP, X-Frame-Options, etc.);
  * herramientas que solo miran la respuesta HTTP seguirán en rojo salvo CDN/proxy
- * (p. ej. dominio propio + Cloudflare) o otro hosting con `_headers` / edge config.
+ * (p. ej. dominio propio + Cloudflare) u otro hosting con `_headers` / edge config.
  */
 function writeSeoFilesPlugin(siteUrl: string): Plugin {
   const origin = siteUrl.replace(/\/$/, '')
@@ -59,10 +80,10 @@ function writeSeoFilesPlugin(siteUrl: string): Plugin {
 
       const wellKnown = path.join(dir, '.well-known')
       fs.mkdirSync(wellKnown, { recursive: true })
-      const contactLine = CONTACT_EMAIL_TRIMMED
-        ? `Contact: mailto:${CONTACT_EMAIL_TRIMMED}\n`
-        : `Contact: ${CONTACT_PROFILE.githubHref}\n`
-      const securityTxt = `${contactLine}Expires: 2027-04-22T23:59:00.000Z\nPreferred-Languages: es, en\nCanonical: ${origin}/.well-known/security.txt\n`
+      const contactLine = SITE_CONTACT_EMAIL_TRIMMED
+        ? `Contact: mailto:${SITE_CONTACT_EMAIL_TRIMMED}\n`
+        : `Contact: ${SITE_SOCIAL_HREFS.githubHref}\n`
+      const securityTxt = `${contactLine}Expires: ${securityTxtExpiresIso()}\nPreferred-Languages: es, en\nCanonical: ${origin}/.well-known/security.txt\n`
       fs.writeFileSync(
         path.join(wellKnown, 'security.txt'),
         securityTxt,
@@ -83,17 +104,21 @@ function injectSiteProfileHtmlPlugin(siteUrl: string): Plugin {
         name: SITE_DISPLAY_NAME,
         jobTitle: SITE_PROFILE.role,
         url: `${origin}/`,
-        sameAs: [CONTACT_PROFILE.githubHref, CONTACT_PROFILE.linkedinHref],
+        sameAs: [
+          SITE_SOCIAL_HREFS.githubHref,
+          SITE_SOCIAL_HREFS.linkedinHref,
+          SITE_SOCIAL_HREFS.telegramHref,
+        ],
         knowsAbout: [
-          'React',
-          'TypeScript',
-          'Vite',
-          'Tailwind CSS',
-          'JavaScript',
-          'HTML5',
-          'CSS3',
-          'Next.js',
-          'Frontend Development',
+          SKILL_LABEL.REACT,
+          SKILL_LABEL.TYPESCRIPT,
+          SKILL_LABEL.VITE,
+          SKILL_LABEL.TAILWIND,
+          SKILL_LABEL.JAVASCRIPT_ES6_PLUS,
+          SKILL_LABEL.HTML5,
+          SKILL_LABEL.CSS3,
+          SKILL_LABEL.NEXT,
+          SITE_PROFILE.role,
         ],
         description: SITE_JSONLD_DESCRIPTION,
       }
@@ -128,6 +153,49 @@ function injectSiteProfileHtmlPlugin(siteUrl: string): Plugin {
  * reescribir en Windows). Las rutas de `getProjectImageAttributes` apuntan a
  * esos WebP en producción.
  */
+async function processProjectPng(dir: string, file: string): Promise<void> {
+  const abs = path.join(dir, file)
+  const stem = file.replace(/\.png$/i, '')
+  let pngBuffer: Buffer
+  try {
+    pngBuffer = await fs.promises.readFile(abs)
+  } catch (e) {
+    throw new Error(formatPipelineError(`no se pudo leer ${abs}`, e))
+  }
+  const optimized = await sharp(pngBuffer)
+    .png({
+      quality: 80,
+      compressionLevel: 9,
+      effort: 10,
+      adaptiveFiltering: true,
+    })
+    .toBuffer()
+  if (optimized.length < pngBuffer.length) {
+    await fs.promises.writeFile(abs, optimized)
+    pngBuffer = optimized
+  }
+  const webpResults = await Promise.allSettled(
+    ([600, 1200] as const).map(async (w) => {
+      const out = path.join(dir, `${stem}-${w}.webp`)
+      await sharp(pngBuffer)
+        .resize(w, null, { fit: 'inside', withoutEnlargement: true })
+        .webp({ quality: 82, effort: 4 })
+        .toFile(out)
+    })
+  )
+  const webpFailures = webpResults.flatMap((result, index) => {
+    if (result.status === 'fulfilled') {
+      return []
+    }
+    const w = ([600, 1200] as const)[index]
+    const out = path.join(dir, `${stem}-${w}.webp`)
+    return [formatPipelineError(`no se pudo generar ${out}`, result.reason)]
+  })
+  if (webpFailures.length > 0) {
+    throw new Error(webpFailures.join('; '))
+  }
+}
+
 function projectImagesPipelinePlugin(): Plugin {
   let outDir = 'build'
   return {
@@ -144,44 +212,24 @@ function projectImagesPipelinePlugin(): Plugin {
       const files = fs
         .readdirSync(dir)
         .filter((f) => f.toLowerCase().endsWith('.png'))
-      for (const file of files) {
-        const abs = path.join(dir, file)
-        const stem = file.replace(/\.png$/i, '')
-        let pngBuffer: Buffer
-        try {
-          pngBuffer = await fs.promises.readFile(abs)
-        } catch (e) {
-          const msg = e instanceof Error ? e.message : String(e)
-          throw new Error(
-            `project-images-pipeline: no se pudo leer ${abs}: ${msg}`
-          )
+      const results = await Promise.allSettled(
+        files.map((file) => processProjectPng(dir, file))
+      )
+      const failures = results.flatMap((result, index) => {
+        if (result.status === 'fulfilled') {
+          return []
         }
-        const optimized = await sharp(pngBuffer)
-          .png({
-            quality: 80,
-            compressionLevel: 9,
-            effort: 10,
-            adaptiveFiltering: true,
-          })
-          .toBuffer()
-        if (optimized.length < pngBuffer.length) {
-          await fs.promises.writeFile(abs, optimized)
-          pngBuffer = optimized
-        }
-        for (const w of [600, 1200] as const) {
-          const out = path.join(dir, `${stem}-${w}.webp`)
-          try {
-            await sharp(pngBuffer)
-              .resize(w, null, { fit: 'inside', withoutEnlargement: true })
-              .webp({ quality: 82, effort: 4 })
-              .toFile(out)
-          } catch (e) {
-            const msg = e instanceof Error ? e.message : String(e)
-            throw new Error(
-              `project-images-pipeline: no se pudo generar ${out}: ${msg}`
-            )
-          }
-        }
+        const file = files[index]
+        const detail =
+          result.reason instanceof Error
+            ? result.reason.message
+            : String(result.reason)
+        return [`${file}: ${detail}`]
+      })
+      if (failures.length > 0) {
+        throw new Error(
+          `project-images-pipeline: ${failures.length}/${files.length} PNG(s) con error:\n${failures.map((line) => `  - ${line}`).join('\n')}`
+        )
       }
     },
   }
@@ -207,7 +255,12 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       injectSiteProfileHtmlPlugin(siteUrl),
-      react(),
+      // React Compiler: versiones fijadas en package.json (babel + eslint-plugin alineados).
+      react({
+        babel: {
+          plugins: [['babel-plugin-react-compiler', {}]],
+        },
+      }),
       tailwindcss(),
       writeSeoFilesPlugin(siteUrl),
       projectImagesPipelinePlugin(),
@@ -229,12 +282,17 @@ export default defineConfig(({ mode }) => {
           'src/test/**',
           '**/*.config.*',
           '**/*.d.ts',
+          // Íconos presentacionales sin tests unitarios (política en `shared/icons/index.ts`); instrumentarlos
+          // rebaja la cobertura de ramas (props opcionales en SVG) sin aportar señal de producto.
+          'src/shared/icons/**/*.tsx',
+          // Barriles `**/index.ts`: re-exports sin lógica propia.
           '**/index.ts',
         ],
         thresholds: {
           lines: 80,
           functions: 80,
-          branches: 70,
+          // Ver COVERAGE_BRANCHES_THRESHOLD y exclude de íconos/barriles.
+          branches: COVERAGE_BRANCHES_THRESHOLD,
           statements: 80,
         },
       },

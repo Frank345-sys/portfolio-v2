@@ -1,167 +1,152 @@
-import { AnimatedSectionHeading } from '@/shared/components/AnimatedSectionHeading'
+/**
+ * Compositor de la sección "Proyectos" del portfolio (`ProjectsSection`).
+ *
+ * @fileoverview Implementación del archivo `ProjectsSection.tsx` dentro de `components/ProjectsSection`; ver exports para la API pública.
+ * @remarks Coordinar tokens, accesibilidad, scroll sync y Motion con hooks en `./hooks`.
+ */
+
+import { AnimatedSectionHeading } from '@/shared/components/primitives/AnimatedSectionHeading'
 import { LAYOUT, ANIMATION } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
-import { PROJECTS } from './constants'
-import { useProjectsSection } from './hooks'
 import {
-  ProjectInfo,
-  ProjectPreviewCard,
-  ProjectPreviewLightbox,
-} from './subcomponents'
+  PROJECTS_NAV_RAIL_ARIA_LABEL,
+  PROJECTS_SECTION_ANCHOR_ID,
+  PROJECTS_SECTION_TITLE_ID,
+} from './constants/landmarks'
+import { PROJECTS } from './constants/projects'
+import { useProjectsSection } from './hooks/useProjectsSection'
+import { ProjectInfo } from './subcomponents/ProjectInfo/ProjectInfo'
+import { ProjectPreviewCard } from './subcomponents/ProjectPreviewCard/ProjectPreviewCard'
+import { ProjectPreviewModal } from './subcomponents/ProjectPreviewModal/ProjectPreviewModal'
 
 /**
- * Sección de proyectos: composición pura. Toda la lógica de estado vive en {@link useProjectsSection}.
+ * @module components/ProjectsSection/ProjectsSection
  *
- * - Panel lateral sticky (`lg`) + lista de artículos + rail de navegación.
- * - Un solo {@link ProjectPreviewLightbox} montado en viewport `lg` para animar salida y compartir slide con las cards.
+ * Sección Proyectos: `ol` de `article`, panel sticky en `lg`, rail y modal. Estado en {@link useProjectsSection}.
  *
- * @see useProjectsScrollSync — índice activo por scroll / intersección.
- * @see useProjectsSection — orquestación lightbox + derivados.
- * @see `PROJECTS` en `./constants` — las `skills` de cada proyecto deben figurar en el stack (`ABOUT_SKILLS`, AboutSection).
- * @see stackSkillLabelSet — `@/test/stackSkillLabelSet` (aplanado de grupos para asserts de sincronía en Vitest).
- *
+ * @see `./constants` — landmarks; en `lg`, `headingId` del panel distinto del `aria-labelledby` del `article`.
  * @example
  * ```tsx
  * <ProjectsSection />
  * ```
  */
 export function ProjectsSection() {
-  const {
-    totalProjects,
-    activeProject,
-    activeIndex,
-    showInfo,
-    scrollSyncEnabled,
-    articleRefAssigners,
-    handleProjectDotClick,
-    reduceMotion,
-    lightboxProjectIndex,
-    lightboxSlide,
-    setLightboxSlide,
-    openProjectLightbox,
-    closeProjectLightbox,
-    lightboxProject,
-    lightboxValidImages,
-  } = useProjectsSection(PROJECTS)
+  const { data, ui, modal, carousel } = useProjectsSection(PROJECTS)
 
   return (
     <section
-      aria-labelledby="projects-section-heading"
+      aria-labelledby={PROJECTS_SECTION_TITLE_ID}
       className={cn(LAYOUT.container.full, LAYOUT.section.default)}
-      id="proyectos"
+      id={PROJECTS_SECTION_ANCHOR_ID}
     >
       <div className={cn(LAYOUT.spacing.large, LAYOUT.px)}>
-        {/* Titulo de la sección */}
         <AnimatedSectionHeading
           overline="Selección de"
           title="Proyectos"
           titleHighlight="en producción"
-          titleId="projects-section-heading"
+          titleId={PROJECTS_SECTION_TITLE_ID}
         />
 
-        {/* Contenido de la sección */}
         <div className="relative flex w-full gap-10">
+          {/* Panel de información detallada del proyecto activo en desktop */}
           <div className="sticky top-24 hidden h-fit w-[50%] lg:block xl:w-[45%]">
-            {scrollSyncEnabled && activeProject ? (
+            {ui.scrollSyncEnabled && data.activeProject ? (
               <ProjectInfo
-                project={activeProject}
-                visible={showInfo}
-                totalProjects={totalProjects}
-                headingId={`project-${activeProject.id}-title-panel`}
+                project={data.activeProject}
+                visible={ui.showInfo}
+                totalProjects={data.totalProjects}
+                headingId={`project-${data.activeProject.id}-title-panel`}
               />
             ) : null}
           </div>
 
-          <div className={cn(LAYOUT.spacing.large, 'flex-1 xl:space-y-18')}>
-            {PROJECTS.map((project, i) => {
+          {/* Lista de proyectos */}
+          <ol
+            className={cn(
+              LAYOUT.spacing.large,
+              'flex-1 list-none xl:space-y-18'
+            )}
+          >
+            {data.projects.map((project, i) => {
               const articleHeadingId = `project-${project.id}-title`
               return (
-                <article
-                  key={project.id}
-                  ref={articleRefAssigners[i]}
-                  aria-labelledby={articleHeadingId}
-                  data-project-index={i}
-                  className={LAYOUT.spacing.default}
-                >
-                  {/*
-                    Nombre accesible del landmark (`p` + sr-only): en `lg` el panel móvil
-                    está oculto; un `h3` oculto duplicaría el título visible en móvil en el
-                    outline. `aria-labelledby` admite cualquier nodo con texto.
-                  */}
-                  <p id={articleHeadingId} className="sr-only">
-                    {project.title}
-                  </p>
-                  <div className="block lg:hidden">
+                <li key={project.id}>
+                  <article
+                    ref={carousel.articleRefAssigners[i]}
+                    aria-labelledby={articleHeadingId}
+                    data-project-index={i}
+                    className={LAYOUT.spacing.default}
+                  >
+                    {/* Nombre accesible */}
+                    <p id={articleHeadingId} className="sr-only">
+                      {project.title}
+                    </p>
+
+                    {/* Panel de información detallada del proyecto en móvil */}
                     <ProjectInfo
                       project={project}
                       visible={true}
-                      totalProjects={totalProjects}
+                      totalProjects={data.totalProjects}
+                      className="flex lg:hidden"
                     />
-                  </div>
 
-                  <ProjectPreviewCard
-                    images={project.images}
-                    imageAlt={project.title}
-                    subtitle={project.subtitle}
-                    title={project.title}
-                    reduceMotion={reduceMotion}
-                    isActive={scrollSyncEnabled ? activeIndex === i : true}
-                    autoplay={activeIndex === i}
-                    onRequestLightbox={(slideIndex) =>
-                      openProjectLightbox(i, slideIndex)
-                    }
-                    lightboxActive={lightboxProjectIndex === i}
-                    lightboxSlideIndex={
-                      lightboxProjectIndex === i ? lightboxSlide : undefined
-                    }
-                    onLightboxSlideChange={setLightboxSlide}
-                  />
-                </article>
+                    {/* Tarjeta de vista previa del proyecto */}
+                    <ProjectPreviewCard
+                      project={project}
+                      projectIndex={i}
+                      activeIndex={data.activeIndex}
+                      scrollSyncEnabled={ui.scrollSyncEnabled}
+                      modalProjectIndex={modal.index}
+                      openProjectModal={modal.open}
+                      getProjectPreviewSlideIndex={carousel.getSlideIndex}
+                      handleProjectPreviewSlideChange={
+                        carousel.handleSlideChange
+                      }
+                      resolveProjectImageAttributes={
+                        carousel.resolveImageAttributes
+                      }
+                    />
+                  </article>
+                </li>
               )
             })}
-          </div>
+          </ol>
 
-          {/* Navegación entre proyectos */}
+          {/* Navegación por proyectos */}
           <nav
-            aria-label="Navegación entre proyectos"
+            aria-label={PROJECTS_NAV_RAIL_ARIA_LABEL}
             className="sticky top-5/12 -ml-4 hidden h-fit shrink-0 flex-col gap-3 lg:flex"
           >
-            {PROJECTS.map((project, i) => (
+            {data.projects.map((project, i) => (
               <button
                 key={project.id}
                 type="button"
                 data-project-dot-index={i}
-                onClick={handleProjectDotClick}
+                onClick={carousel.handleDotClick}
                 className={cn(
                   'w-1.5 rounded-full',
-                  ANIMATION.transition.default,
-                  activeIndex === i
+                  data.activeIndex === i
                     ? 'bg-information-base h-8'
-                    : 'bg-bg-subtle hover:bg-bg-soft h-4 cursor-pointer'
+                    : 'bg-bg-subtle hover:bg-bg-soft h-4 cursor-pointer',
+                  ANIMATION.transition.default
                 )}
-                aria-label={`Ir al proyecto ${i + 1}`}
-                aria-current={activeIndex === i ? 'true' : undefined}
+                aria-label={`Ir al proyecto ${i + 1}: ${project.title}`}
+                aria-current={data.activeIndex === i ? 'true' : undefined}
               />
             ))}
           </nav>
         </div>
       </div>
 
-      {scrollSyncEnabled ? (
-        <ProjectPreviewLightbox
-          isOpen={lightboxProjectIndex !== null}
-          onClose={closeProjectLightbox}
-          images={lightboxValidImages}
-          imageAlt={lightboxProject?.title ?? ''}
-          title={lightboxProject?.title ?? ''}
-          subtitle={lightboxProject?.subtitle ?? ''}
-          reduceMotion={reduceMotion}
-          autoplay
-          carouselSlideIndex={lightboxSlide}
-          onCarouselSlideChange={setLightboxSlide}
-        />
-      ) : null}
+      {/* Modal de vista previa del proyecto */}
+      <ProjectPreviewModal
+        modalProject={modal.project}
+        modalSlide={modal.slide}
+        setModalSlide={modal.setSlide}
+        onClose={modal.close}
+        resolveProjectImageAttributes={carousel.resolveModalImageAttributes}
+      />
     </section>
   )
 }

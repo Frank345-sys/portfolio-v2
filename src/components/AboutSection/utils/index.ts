@@ -1,1 +1,0 @@
-export { compareSkillTagsByVariant } from './compareSkillTagsByVariant'

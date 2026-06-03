@@ -1,12 +1,35 @@
+/**
+ * Observa bloques por proyecto solo en viewport **≥ lg** y mantiene `activeIndex` alineado al scroll.
+ * Debajo de `lg` reposiciona `activeIndex` por proximidad al centro del viewport.
+ *
+ * @module components/ProjectsSection/hooks/useProjectsScrollSync
+ * @fileoverview Sincroniza `activeIndex` con scroll: `IntersectionObserver` en viewport ≥ lg y fallback por distancia al centro en móvil.
+ * @remarks Usa Lenis si existe; los refs de bloques deben alinearse con `itemCount` y limpiar timeouts al salir de lg.
+ */
+
 import { useLenis } from 'lenis/react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 
 import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
 
-import {
-  PROJECTS_SCROLL_ACTIVE_INDEX_TRANSITION_MS,
-  PROJECTS_SCROLL_INTERSECTION_THRESHOLDS,
-} from '../constants'
+/** Espera antes de actualizar `activeIndex` tras cambiar el bloque más visible (transición en panel lateral). */
+const PROJECTS_SCROLL_ACTIVE_INDEX_TRANSITION_MS = 150 as const
+
+/** Umbrales del `IntersectionObserver` para muestrear `intersectionRatio` por bloque de proyecto. */
+const PROJECTS_SCROLL_INTERSECTION_THRESHOLDS = [
+  0.25, 0.4, 0.55, 0.7, 0.85,
+] as const
+
+interface PanelSyncUi {
+  activeIndex: number
+  showInfo: boolean
+}
 
 interface UseProjectsScrollSyncResult {
   /** Índice del proyecto cuyo bloque tiene mayor ratio de intersección visible. */
@@ -30,14 +53,16 @@ interface UseProjectsScrollSyncResult {
  * En viewports por debajo de `lg` el observer no se registra (lista apilada con su propio texto).
  *
  * @param itemCount - Número de proyectos en la lista (debe coincidir con refs renderizados).
- * @param onExitLgLayout - Invocado en el listener `change` de `matchMedia` al pasar por debajo de `lg` (p. ej. cerrar lightbox). No es un `useEffect`.
+ * @param onExitLgLayout - Invocado en el listener `change` de `matchMedia` al pasar por debajo de `lg` (p. ej. cerrar `ProjectPreviewModal`). No es un `useEffect`.
  */
 export function useProjectsScrollSync(
   itemCount: number,
   onExitLgLayout?: () => void
 ): UseProjectsScrollSyncResult {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [showInfo, setShowInfo] = useState(true)
+  const [panelUi, setPanelUi] = useState<PanelSyncUi>({
+    activeIndex: 0,
+    showInfo: true,
+  })
   const [scrollSyncEnabled, setScrollSyncEnabled] = useState(() => {
     if (typeof window === 'undefined') return false
     return window.matchMedia(MEDIA_QUERY_LG_MIN).matches
@@ -46,7 +71,20 @@ export function useProjectsScrollSync(
   const visibilityRatiosRef = useRef<Array<number>>([])
   const transitionTimeoutRef = useRef<number | null>(null)
   const activeIndexRef = useRef(0)
+  const itemCountRef = useRef(itemCount)
+  const observerRef = useRef<IntersectionObserver | null>(null)
+
+  useEffect(() => {
+    itemCountRef.current = itemCount
+  }, [itemCount])
   const lenis = useLenis()
+
+  const activeIndex =
+    itemCount <= 0 ? 0 : Math.min(panelUi.activeIndex, itemCount - 1)
+
+  useEffect(() => {
+    activeIndexRef.current = activeIndex
+  }, [activeIndex])
 
   useEffect(() => {
     const mq = window.matchMedia(MEDIA_QUERY_LG_MIN)
@@ -58,7 +96,7 @@ export function useProjectsScrollSync(
           window.clearTimeout(transitionTimeoutRef.current)
           transitionTimeoutRef.current = null
         }
-        setShowInfo(true)
+        setPanelUi((prev) => ({ ...prev, showInfo: true }))
         onExitLgLayout?.()
       }
     }
@@ -75,15 +113,25 @@ export function useProjectsScrollSync(
       return
     }
 
-    visibilityRatiosRef.current = Array.from({ length: itemCount }, () => 0)
+    const count = itemCountRef.current
+    visibilityRatiosRef.current = Array.from({ length: count }, () => 0)
     const observer = new IntersectionObserver(
       (entries) => {
+        const currentCount = itemCountRef.current
+        if (visibilityRatiosRef.current.length !== currentCount) {
+          visibilityRatiosRef.current = Array.from(
+            { length: currentCount },
+            () => 0
+          )
+        }
         for (const entry of entries) {
+          // `entry.target` es `Element`; en este árbol siempre es `<article data-project-index>`,
+          // los únicos nodos que registramos vía `setItemRef`. Cast para acceder a `dataset`.
           const index = Number(
             (entry.target as HTMLElement).dataset.projectIndex
           )
           if (Number.isNaN(index)) continue
-          if (index < 0 || index >= itemCount) continue
+          if (index < 0 || index >= currentCount) continue
           visibilityRatiosRef.current[index] = entry.isIntersecting
             ? entry.intersectionRatio
             : 0
@@ -107,15 +155,16 @@ export function useProjectsScrollSync(
           window.clearTimeout(transitionTimeoutRef.current)
         }
 
-        setShowInfo(false)
+        setPanelUi((prev) => ({ ...prev, showInfo: false }))
         transitionTimeoutRef.current = window.setTimeout(() => {
-          setActiveIndex(nextIndex)
           activeIndexRef.current = nextIndex
-          setShowInfo(true)
+          setPanelUi({ activeIndex: nextIndex, showInfo: true })
+          transitionTimeoutRef.current = null
         }, PROJECTS_SCROLL_ACTIVE_INDEX_TRANSITION_MS)
       },
       { threshold: [...PROJECTS_SCROLL_INTERSECTION_THRESHOLDS] }
     )
+    observerRef.current = observer
 
     for (const el of itemRefs.current) {
       if (el) observer.observe(el)
@@ -123,58 +172,77 @@ export function useProjectsScrollSync(
 
     return () => {
       observer.disconnect()
+      observerRef.current = null
       if (transitionTimeoutRef.current) {
         window.clearTimeout(transitionTimeoutRef.current)
       }
     }
-  }, [itemCount, scrollSyncEnabled])
+  }, [scrollSyncEnabled])
+
+  /** Identidad estable (`[]`): no cierra sobre `lenis`; el efecto móvil lista `lenis` y re-suscribe cuando cambia la instancia. */
+  const pickClosestToViewportCenter = useCallback(() => {
+    const viewportCenter = window.innerHeight / 2
+    let nextIndex = 0
+    let minDistance = Number.POSITIVE_INFINITY
+
+    for (const [index, el] of itemRefs.current.entries()) {
+      if (!el) continue
+      const rect = el.getBoundingClientRect()
+      if (rect.bottom < 0 || rect.top > window.innerHeight) continue
+
+      const itemCenter = rect.top + rect.height / 2
+      const distance = Math.abs(itemCenter - viewportCenter)
+      if (distance < minDistance) {
+        minDistance = distance
+        nextIndex = index
+      }
+    }
+
+    if (nextIndex !== activeIndexRef.current) {
+      activeIndexRef.current = nextIndex
+      setPanelUi((prev) =>
+        prev.activeIndex === nextIndex
+          ? prev
+          : { ...prev, activeIndex: nextIndex }
+      )
+    }
+  }, [])
+
+  const pickClosestRef = useRef(pickClosestToViewportCenter)
+  useLayoutEffect(() => {
+    pickClosestRef.current = pickClosestToViewportCenter
+  }, [pickClosestToViewportCenter])
 
   useEffect(() => {
     if (scrollSyncEnabled) return
 
-    const pickClosestToViewportCenter = () => {
-      const viewportCenter = window.innerHeight / 2
-      let nextIndex = 0
-      let minDistance = Number.POSITIVE_INFINITY
+    queueMicrotask(() => {
+      pickClosestRef.current()
+    })
 
-      for (const [index, el] of itemRefs.current.entries()) {
-        if (!el) continue
-        const rect = el.getBoundingClientRect()
-        if (rect.bottom < 0 || rect.top > window.innerHeight) continue
-
-        const itemCenter = rect.top + rect.height / 2
-        const distance = Math.abs(itemCenter - viewportCenter)
-        if (distance < minDistance) {
-          minDistance = distance
-          nextIndex = index
-        }
-      }
-
-      if (nextIndex !== activeIndexRef.current) {
-        activeIndexRef.current = nextIndex
-        setActiveIndex(nextIndex)
-      }
+    const onScrollOrResize = () => {
+      pickClosestRef.current()
     }
 
-    pickClosestToViewportCenter()
-
     const unsubscribeLenisScroll = lenis
-      ? lenis.on('scroll', pickClosestToViewportCenter)
+      ? lenis.on('scroll', onScrollOrResize)
       : undefined
 
     if (!lenis) {
-      window.addEventListener('scroll', pickClosestToViewportCenter, {
+      window.addEventListener('scroll', onScrollOrResize, {
         passive: true,
       })
     }
-    window.addEventListener('resize', pickClosestToViewportCenter)
+    window.addEventListener('resize', onScrollOrResize, {
+      passive: true,
+    })
 
     return () => {
       unsubscribeLenisScroll?.()
       if (!lenis) {
-        window.removeEventListener('scroll', pickClosestToViewportCenter)
+        window.removeEventListener('scroll', onScrollOrResize)
       }
-      window.removeEventListener('resize', pickClosestToViewportCenter)
+      window.removeEventListener('resize', onScrollOrResize)
     }
   }, [scrollSyncEnabled, lenis])
 
@@ -184,7 +252,12 @@ export function useProjectsScrollSync(
     while (refs.length <= index) {
       refs.push(null)
     }
+    const previous = refs[index]
     refs[index] = el
+    const observer = observerRef.current
+    if (!observer) return
+    if (previous) observer.unobserve(previous)
+    if (el) observer.observe(el)
   }, [])
 
   const scrollItemIntoView = useCallback(
@@ -214,7 +287,7 @@ export function useProjectsScrollSync(
 
   return {
     activeIndex,
-    showInfo,
+    showInfo: panelUi.showInfo,
     scrollSyncEnabled,
     setItemRef,
     scrollItemIntoView,

@@ -1,83 +1,76 @@
 /**
  * Escala de z-index semántica — niveles de apilamiento ordenados.
  *
- * Centraliza todos los valores de z-index del sistema. No usar clases
- * `z-*` sueltas en componentes — referenciar siempre este token.
+ * Centraliza los valores de z-index del sistema donde **sí** hace falta separar
+ * capas. No usar `z-*` sueltos fuera de esta escala. **No existe token para
+ * `z-index: 0`** — el contenido en flujo normal no debe fijar z-index; basta
+ * `isolation`,
+ * `relative` o el stacking context que ya imponga el layout.
  *
- * La escala es incremental y no deja huecos entre niveles adyacentes
- * con propósito semántico distinto, para que la jerarquía visual sea
- * predecible en cualquier combinación de overlays activos.
+ * **Jerarquía correcta:** el **header** fijo queda por **debajo** de la capa de
+ * modales/drawers fullscreen (mismo `z-50` para el contenedor que envuelve velo + panel).
+ * Por encima de eso solo tienen sentido los **toasts**.
+ *
+ * **Orden de menor a mayor:** `raised` → `dropdown` → `drawer` → `header`
+ * → `backdrop` (modales/drawers fullscreen) → `toast`.
+ *
+ * ```tsx
+ * <nav className={cn('fixed top-0 …', Z.header)}>…</nav>
+ * <div className={cn('fixed inset-0 …', LAYOUT.overlay.scrim, Z.backdrop)}>
+ *   … panel del modal/drawer como hijo …
+ * </div>
+ * ```
  *
  * @example
- * ```tsx
- * <div className={Z.modal}>...</div>
- * <nav className={Z.header}>...</nav>
- * ```
+ * @fileoverview Catálogo importado por secciones y utilidades; cambios globales de marca o layout.
+ * @remarks Coordinar con tokens en `shared/constants/tokens` y con el sistema de temas si toca color o tipografía.
  */
 export const Z = {
-  /**
-   * @use Fondo base — elementos sin apilamiento especial.
-   *      Equivale a `z-index: 0`.
-   */
-  base: 'z-0',
+  // ── Contenido y elevación ligera ──────────────────────────────────────────
 
   /**
-   * @use Cards en hover, elementos que se elevan al interactuar.
-   *      Equivale a `z-index: 10`.
-   * @combine ANIMATION.hover.lift — para cards que suben visualmente.
+   * @use Cards en hover, thumbnails, controles locales del carrusel.
+   * Equivale a `z-index: 10`.
+   * @combine ANIMATION.hover.lift — cards que ganan relieve al hover.
    */
   raised: 'z-10',
 
   /**
-   * @use Dropdowns, tooltips, menús contextuales — sobre el contenido pero bajo drawers.
-   *      Equivale a `z-index: 20`.
-   * @combine CARD.overlay.panel cuando el contexto lo requiere.
+   * @use Menús locales, chips flotantes, UI que debe superar el bloque cercano pero no el chrome global.
+   * Equivale a `z-index: 20`.
+   * @warning Por debajo del header fijo; menús desplegables globales suelen ir en portal con capa mayor o con `dropdown` + contexto adecuado.
    */
   dropdown: 'z-20',
 
   /**
-   * @use Drawers, sidebars deslizables, paneles laterales.
-   *      Equivale a `z-index: 30`.
-   * @combine CARD.overlay.panel — siempre gestionar z-index desde aquí.
+   * @use Drawers y paneles laterales que no deben tapar el header fijo.
+   * Equivale a `z-index: 30`.
+   * @combine CARD.overlay.panel cuando aplique.
    */
   drawer: 'z-30',
 
-  /**
-   * @use Backdrop de modales — overlay semitransparente que queda justo debajo del modal.
-   *      Equivale a `z-index: 40`.
-   * @combine Z.modal — siempre usar junto al modal que cubre.
-   */
-  backdrop: 'z-40',
+  // ── Chrome de página ──────────────────────────────────────────────────────
 
   /**
-   * @use Modales, diálogos, overlays de pantalla completa.
-   *      Equivale a `z-index: 50`.
-   * @combine CARD.overlay.modal — siempre gestionar z-index desde aquí.
-   * @combine Z.backdrop — usar para el overlay semitransparente debajo del modal.
+   * @use Header / navbar fijo — por encima del scroll del `main`, por debajo de modales.
+   * Equivale a `z-index: 40`.
    */
-  modal: 'z-50',
+  header: 'z-40',
+
+  // ── Overlays de pantalla completa ─────────────────────────────────────────
 
   /**
-   * @use Navbar u header fijo — siempre visible sobre el contenido de página.
-   *      Equivale a `z-index: 60`.
-   * @combine Clases de layout del `<header>` en el componente — no hay token `LAYOUT.header.*`.
-   * @warning No superar este nivel salvo para drawerElevated y toasts.
+   * @use Overlay fullscreen sobre el header: velo/clic-catcher, modal en portal o
+   * drawer móvil (`Modal`, `MobileDrawer`). Un único wrapper fijo `z-50` con scrim +
+   * panel hijo — o dos hermanos ambos `Z.backdrop` y el segundo en DOM encima del velo.
+   * Equivale a `z-index: 50`.
+   * @combine CARD.overlay.modal / panel del drawer dentro del mismo contexto apilado.
    */
-  header: 'z-60',
+  backdrop: 'z-50',
 
   /**
-   * @use Drawer que debe cubrir el header fijo — exclusivo para navegación mobile.
-   *      Equivale a `z-index: 70`.
-   * @warning Usar exclusivamente para drawers de navegación que deben superar el header.
-   *          Para overlays genéricos usar Z.modal. Para toasts usar Z.toast.
-   * @combine Overlay + panel del drawer — ambos deben usar este token.
-   */
-  drawerElevated: 'z-70',
-
-  /**
-   * @use Notificaciones toast y snackbars — deben aparecer sobre cualquier overlay activo.
-   *      Equivale a `z-index: 80`.
-   * @warning Nivel máximo del sistema — no añadir elementos por encima de este valor.
+   * @use Toasts y snackbars — máximo nivel del sistema.
+   * Equivale a `z-index: 80`.
    */
   toast: 'z-80',
 } as const

@@ -1,7 +1,14 @@
+/**
+ * Pruebas de `useMediaQuery` — `matchMedia`, lista de listeners y transiciones de `matches`.
+ *
+ * @fileoverview `renderHook` con `window.matchMedia` mockeado para una query fija y disparo manual de `change`.
+ * @remarks Usa `act` al togglear `matches`; restaura el mock en `afterEach` para no contaminar otros tests.
+ */
+
 import { act, renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { useMediaQuery } from '@/shared/hooks/useMediaQuery'
+import { useMediaQuery } from '@/shared/hooks'
 
 describe('useMediaQuery', () => {
   const query = '(min-width: 800px)'

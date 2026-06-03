@@ -38,22 +38,43 @@ const testFiles = [
   'src/test/**/*.{ts,tsx}',
 ]
 
+/** Resolver + regla compartida: sin maxDepth ⇒ profundidad ilimitada (eslint-plugin-import). */
+const importResolverSettings = {
+  'import/resolver': {
+    typescript: {
+      alwaysTryTypes: true,
+      project: ['./tsconfig.app.json', './tsconfig.node.json'],
+    },
+  },
+}
+
+const importNoCycleRule = ['error', { ignoreExternal: true }]
+
 export default tseslint.config(
   {
     ignores: ['dist/**', 'build/**', 'coverage/**'],
   },
   {
-    files: ['**/*.{js,jsx}'],
+    /** Incluye `.mjs`/`.cjs` (scripts/, commitlint) con reglas JS base; Node tooling añade globals en bloque aparte. */
+    files: ['**/*.{js,jsx,mjs,cjs}'],
     extends: [js.configs.recommended, tseslint.configs.disableTypeChecked],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2023,
       globals: { ...globals.browser },
+    },
+    plugins: {
+      import: importPlugin,
+    },
+    settings: importResolverSettings,
+    rules: {
+      'import/no-cycle': importNoCycleRule,
     },
   },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
+      /** Sin `strictTypeChecked`: no activa `@typescript-eslint/no-unsafe-*` (sí añaden ruido/costo; el checker + `no-explicit-any` cubren el grueso). */
       ...tseslint.configs.recommendedTypeChecked,
       reactPlugin.configs.flat.recommended,
       reactPlugin.configs.flat['jsx-runtime'],
@@ -62,7 +83,7 @@ export default tseslint.config(
       jsxA11y.flatConfigs.recommended,
     ],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2023,
       globals: { ...globals.browser },
       parserOptions: typeAwareParserOptions,
     },
@@ -73,12 +94,7 @@ export default tseslint.config(
       unicorn,
     },
     settings: {
-      'import/resolver': {
-        typescript: {
-          alwaysTryTypes: true,
-          project: ['./tsconfig.app.json', './tsconfig.node.json'],
-        },
-      },
+      ...importResolverSettings,
       react: {
         version: 'detect',
       },
@@ -87,6 +103,8 @@ export default tseslint.config(
       eqeqeq: ['error', 'always'],
       curly: ['error', 'all'],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+      /** Grafos cíclicos entre módulos locales (profundidad ilimitada por defecto). */
+      'import/no-cycle': importNoCycleRule,
       'import/no-duplicates': 'error',
       'import/order': [
         'error',
@@ -130,7 +148,37 @@ export default tseslint.config(
       ],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unnecessary-condition': 'error',
+      '@typescript-eslint/prefer-as-const': 'error',
+      /**
+       * Const exportadas — dos familias legítimas (no mezclar en un único formato):
+       * - **camelCase** (`headerContainer`, `navLink`, …): clases Tailwind/`cn()`, helpers composables.
+       * - **UPPER_CASE / PascalCase** (`HEADER_*_ID`, `LAYOUT`, `TYPOGRAPHY`, …): tokens, IDs semánticos,
+       *   mapas agrupados. `PascalCase` cubre acrónimos en mayúsculas que no llevan `_`.
+       *
+       * Los `filter` `^[a-z]` / `^[A-Z]` separan por “primera letra” (heurística estable para este repo).
+       * `prefix` en naming-convention no sustituye bien este corte; si cambian convenciones, revisar filtros o `custom`.
+       */
+      '@typescript-eslint/naming-convention': [
+        'warn',
+        {
+          selector: 'variable',
+          modifiers: ['const', 'exported'],
+          filter: '^[a-z]',
+          format: ['camelCase'],
+        },
+        {
+          selector: 'variable',
+          modifiers: ['const', 'exported'],
+          filter: '^[A-Z]',
+          format: ['UPPER_CASE', 'PascalCase'],
+        },
+        {
+          selector: 'typeLike',
+          format: ['PascalCase'],
+        },
+      ],
       '@typescript-eslint/prefer-nullish-coalescing': 'error',
+      /** `warn`: no bloquea CI; subir a `error` si se prefiere endurecer (proyecto greenfield o deuda bajo control). */
       'sonarjs/cognitive-complexity': ['warn', 20],
       'sonarjs/no-identical-functions': 'error',
       'sonarjs/no-small-switch': 'warn',
@@ -191,10 +239,23 @@ export default tseslint.config(
     rules: {
       ...vitest.configs.recommended.rules,
       ...testingLibrary.configs['flat/react'].rules,
-      // Bajo-level DOM / mocks: reglas TLC estrictas desactivadas solo en tests.
+      /**
+       * Testing Library: relajado en **todo** el glob de tests por pragmatismo (contenedor, `document`/nodos crudos,
+       * `render().getBy*`). Para acotarlo sin adivinar: en un sprint de limpieza, buscar violaciones si se vuelve a
+       * `error`/`warn` solo en este bloque base y mover `off` a un override con `files` concretos; suele bastar un
+       * subconjunto pequeño respecto al total `*.test.*`.
+       */
       'testing-library/no-container': 'off',
       'testing-library/no-node-access': 'off',
       'testing-library/prefer-screen-queries': 'off',
+      /**
+       * TypeScript “unsafe” + `unbound-method` desactivados **solo en tests**:
+       * - `vi.mock`/`fn`/`spyOn` y módulos simulados suelen producir valores mal tipados o `any` implícitos.
+       * - Asignaciones desde `fixtures`, `partialDeep` o APIs externas espías sin narrowing exhaustivo.
+       * En código de aplicación siguen aplicando `recommendedTypeChecked` (sin `strictTypeChecked`); aquí el coste de
+       * endurecer suele ser ruido sin ganar garantías si no se tipan todos los mocks. Reactivar por archivo si un test
+       * concreto debe quedar tan estricto como producción.
+       */
       '@typescript-eslint/unbound-method': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',

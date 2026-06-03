@@ -1,3 +1,10 @@
+/**
+ * Utilidad `ParseEmphasis` en la capa compartida del proyecto.
+ *
+ * @fileoverview Funciones puras o helpers sin acoplar a una sección concreta del portfolio.
+ * @remarks Preferir pruebas unitarias directas; evitar importar React salvo que el módulo lo requiera.
+ */
+
 import type { ReactNode } from 'react'
 
 /**
