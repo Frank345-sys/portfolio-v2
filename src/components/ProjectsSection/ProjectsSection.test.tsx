@@ -1,21 +1,27 @@
+/**
+ * Tests para components/ProjectsSection/ProjectsSection.test.tsx.
+ *
+ * @fileoverview Suite Vitest que valida el contrato de render, accesibilidad y regresiones del código bajo prueba.
+ * @remarks Usa Testing Library; si el archivo importa `renderWithMotion`, el árbol va envuelto en el proveedor de Motion.
+ */
+
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
 import {
+  renderWithMotion,
   setupIntersectionObserver,
   setupMatchMedia,
-} from '@/test/helpers/mockBrowserApis'
-import { renderWithMotion } from '@/test/renderWithMotion'
+} from '@/test/helpers'
 
 import {
-  PROJECTS,
-  projectArticleLabelId,
   PROJECTS_NAV_RAIL_ARIA_LABEL,
-  PROJECTS_SECTION_TITLE_ID,
   PROJECTS_SECTION_ANCHOR_ID,
-} from './constants'
+  PROJECTS_SECTION_TITLE_ID,
+} from './constants/landmarks'
+import { PROJECTS } from './constants/projects'
 import { ProjectsSection } from './ProjectsSection'
 
 const scrollIntoViewMock = vi.fn()
@@ -74,7 +80,7 @@ describe('ProjectsSection', () => {
       expect(project).toBeDefined()
       expect(article).toHaveAttribute(
         'aria-labelledby',
-        projectArticleLabelId(project!.id)
+        `project-${project!.id}-title`
       )
     }
   })
@@ -83,7 +89,7 @@ describe('ProjectsSection', () => {
     renderWithMotion(<ProjectsSection />)
 
     for (const project of PROJECTS) {
-      const label = document.getElementById(projectArticleLabelId(project.id))
+      const label = document.getElementById(`project-${project.id}-title`)
       expect(label).toBeTruthy()
       expect(label?.tagName.toLowerCase()).toBe('p')
       const rect = label?.getBoundingClientRect()

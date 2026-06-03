@@ -1,15 +1,28 @@
+/**
+ * Pieza de interfaz del portfolio (`ProjectPreviewCard`).
+ *
+ * @fileoverview Implementación del archivo `ProjectPreviewCard.tsx` dentro de `components/ProjectsSection/subcomponents/ProjectPreviewCard`; ver exports para la API pública.
+ * @remarks Estado derivado en `hooks/useProjectPreviewCard`; este archivo solo renderiza.
+ */
+
 import { m } from 'motion/react'
 
-import { ImageCarousel } from '@/shared/components/ImageCarousel'
-import { MOTION_ANIMATION } from '@/shared/constants'
+import { ImageCarousel } from '@/shared/components/composites/ImageCarousel'
+import { MOTION_ANIMATION } from '@/shared/constants/motionAnimations'
 import { ANIMATION, BUTTON, Z } from '@/shared/constants/tokens'
 import { ExpandScreenIcon } from '@/shared/icons'
 import { cn } from '@/shared/utils/cn'
 
-import { ProjectPreviewTitleBlock } from '../ProjectPreviewTitleBlock'
+import { ProjectPreviewTitleBlock } from '../ProjectPreviewTitleBlock/ProjectPreviewTitleBlock'
+import { useProjectPreviewCard } from './hooks/useProjectPreviewCard'
 
 import type { ProjectPreviewCardProps } from './types'
 
+/**
+ * @module components/ProjectsSection/subcomponents/ProjectPreviewCard/ProjectPreviewCard
+ *
+ * Tarjeta de preview con carrusel, CTA de pantalla completa y estado en {@link useProjectPreviewCard}.
+ */
 export function ProjectPreviewCard({
   project,
   projectIndex,
@@ -21,24 +34,25 @@ export function ProjectPreviewCard({
   handleProjectPreviewSlideChange,
   resolveProjectImageAttributes,
 }: ProjectPreviewCardProps) {
-  const isInactiveByScrollSync =
-    scrollSyncEnabled && activeIndex !== projectIndex
-  const isModalBoundToCard =
-    modalProjectIndex !== null && modalProjectIndex === projectIndex
-  const shouldAutoplay = activeIndex === projectIndex && !isModalBoundToCard
-  const previewSlideIndex = getProjectPreviewSlideIndex(projectIndex)
+  const { previewRef, isInactiveByScrollSync, shouldAutoplay } =
+    useProjectPreviewCard({
+      scrollSyncEnabled,
+      activeIndex,
+      projectIndex,
+      modalProjectIndex,
+    })
 
-  const openCurrentProjectModal = () => {
-    openProjectModal(projectIndex, previewSlideIndex)
-  }
+  const previewSlideIndex = getProjectPreviewSlideIndex(projectIndex)
 
   return (
     <m.div
+      ref={previewRef}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{
         opacity: isInactiveByScrollSync ? 0.3 : 1,
         y: 0,
       }}
+      viewport={{ once: true }}
       animate={{
         opacity: isInactiveByScrollSync ? 0.3 : 1,
       }}
@@ -56,7 +70,6 @@ export function ProjectPreviewCard({
       <button
         type="button"
         disabled={isInactiveByScrollSync}
-        aria-disabled={isInactiveByScrollSync}
         className={cn(
           BUTTON.special.icon.solid.primary,
           'absolute top-5 right-5 hidden lg:flex',
@@ -64,12 +77,14 @@ export function ProjectPreviewCard({
         )}
         aria-label={`Ver ${project.title} a pantalla completa`}
         onClick={(e) => {
-          if (isInactiveByScrollSync) return
           e.stopPropagation()
-          openCurrentProjectModal()
+          openProjectModal(
+            projectIndex,
+            getProjectPreviewSlideIndex(projectIndex)
+          )
         }}
       >
-        <ExpandScreenIcon className="h-6 w-6 text-white" aria-hidden />
+        <ExpandScreenIcon className="size-6 text-white" aria-hidden />
       </button>
 
       <ImageCarousel

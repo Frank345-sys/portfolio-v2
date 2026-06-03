@@ -1,61 +1,20 @@
+/**
+ * Pieza de interfaz del portfolio (`ProjectInfo`).
+ *
+ * @fileoverview Implementación del archivo `ProjectInfo.tsx` dentro de `components/ProjectsSection/subcomponents/ProjectInfo`; ver exports para la API pública.
+ * @remarks Coordinar tokens (`@/shared/constants`), accesibilidad y Motion con el resto de la sección.
+ */
+
 import { AnimatePresence, m } from 'motion/react'
 
-import { MOTION_ANIMATION } from '@/shared/constants'
-import {
-  BADGE,
-  BUTTON,
-  TYPOGRAPHY,
-  type ButtonVariantMode,
-} from '@/shared/constants/tokens'
+import { MOTION_ANIMATION } from '@/shared/constants/motionAnimations'
+import { BADGE, BUTTON, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 import { parseEmphasis } from '@/shared/utils/parseEmphasis'
 
+import { ProjectLink } from './subcomponents/ProjectLink/ProjectLink'
+
 import type { Project } from '../../types'
-
-// ---------------------------------------------------------------------------
-// ProjectLink
-// ---------------------------------------------------------------------------
-
-/**
- * Subconjunto de claves de {@link BUTTON.variant} para enlaces con apariencia de botón
- * en pares primario / secundario (p. ej. “sitio en vivo” + “código en GitHub”).
- * Deriva de `BUTTON` para mantener el mismo contrato que los tokens.
- */
-type ButtonLinkVariant = Extract<ButtonVariantMode, 'solid' | 'outline'>
-
-interface ProjectLinkProps {
-  /** URL de destino. */
-  href: string
-  /** Texto visible del enlace. */
-  label: string
-  /**
-   * `solid` — acción principal; `outline` — secundaria junto al enlace al sitio en vivo.
-   * Alineado con {@link BUTTON.variant} vía {@link ButtonLinkVariant}.
-   */
-  variant: ButtonLinkVariant
-}
-
-/**
- * Enlace con apariencia de botón (`BUTTON.variant` + `BUTTON.size.responsive`).
- * Usado para "Ver sitio en vivo" y "Código en GitHub" dentro de `ProjectInfo`.
- */
-function ProjectLink({ href, label, variant }: ProjectLinkProps) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={cn(
-        BUTTON.variant[variant].primary,
-        BUTTON.size.responsive,
-        'normal-case'
-      )}
-    >
-      {label}
-    </a>
-  )
-}
-
 // ---------------------------------------------------------------------------
 // ProjectInfo
 // ---------------------------------------------------------------------------
@@ -80,6 +39,8 @@ interface ProjectInfoProps {
 }
 
 /**
+ * @module components/ProjectsSection/subcomponents/ProjectInfo/ProjectInfo
+ *
  * Panel de información detallada de un proyecto.
  *
  * En viewports `lg` se muestra como sidebar sticky sincronizado con el scroll,
@@ -87,7 +48,8 @@ interface ProjectInfoProps {
  * inline encima de cada `ProjectPreviewCard` con `visible` siempre activo.
  *
  * Incluye: contador de posición, título, subtítulo, descripción, bullets
- * animados, badges de tecnologías y enlaces al sitio (si `link.trim()`) y al repositorio (si `githubLink`).
+ * animados, badges de tecnologías y enlaces al sitio (si `link.trim()`) y al repositorio (si `githubLink`)
+ * mediante el subcomponente `ProjectLink` (nueva pestaña y `aria-label` con aviso accesible).
  *
  * @example
  * ```tsx
@@ -202,11 +164,8 @@ export function ProjectInfo({
           {/* Badges de tecnologías */}
           {project.skills.length > 0 && (
             <div className={BADGE.group.horizontal}>
-              {project.skills.map((label, index) => (
-                <span
-                  key={`${index}__${label}`}
-                  className={BADGE.variant.light.primary}
-                >
+              {project.skills.map((label) => (
+                <span key={label} className={BADGE.variant.light.primary}>
                   {label}
                 </span>
               ))}

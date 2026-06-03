@@ -1,3 +1,10 @@
+/**
+ * Pruebas de `useProjectsScrollSync` — IO en `lg`, fallback por centro, `scrollIntoView` y pulsos de `showInfo`.
+ *
+ * @fileoverview Usa `@/test/helpers` (`IntersectionObserver`, `matchMedia`) y harness con `data-project-index`.
+ * @remarks Incluye `userEvent` donde aplica; el harness lista slots por `itemCount` para registrar refs coherentes.
+ */
+
 import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useMemo } from 'react'
@@ -7,7 +14,7 @@ import {
   getIntersectionObserverCallback,
   setupIntersectionObserver,
   setupMatchMedia,
-} from '@/test/helpers/mockBrowserApis'
+} from '@/test/helpers'
 
 import { useProjectsScrollSync } from '../useProjectsScrollSync'
 

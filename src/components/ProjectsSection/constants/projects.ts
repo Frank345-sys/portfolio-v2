@@ -1,8 +1,16 @@
+/**
+ * Datos de dominio de la sección Proyectos (`PROJECTS`).
+ *
+ * @module components/ProjectsSection/constants/projects
+ * @fileoverview Catálogo de proyectos enriquecidos para carrusel y panel lateral.
+ * @remarks Import directo: `import { PROJECTS } from '@/components/ProjectsSection/constants/projects'`.
+ */
+
 import {
   SITE_GITHUB_PAGES_PORTFOLIO_WEB_HREF,
   SITE_GITHUB_REPO_PORTFOLIO_WEB_HREF,
 } from '@/shared/constants/siteProfile'
-import { SKILL_LABEL } from '@/shared/constants/skills'
+import { SKILL_LABEL } from '@/shared/constants/skills/skillLabels'
 import { withSiteBaseUrl } from '@/shared/utils/withSiteBaseUrl'
 
 import type { Project } from '../types'

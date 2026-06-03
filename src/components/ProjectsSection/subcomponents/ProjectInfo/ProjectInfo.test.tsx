@@ -1,12 +1,23 @@
+/**
+ * Tests para components/ProjectsSection/subcomponents/ProjectInfo/ProjectInfo.test.tsx.
+ *
+ * @fileoverview Suite Vitest que valida el contrato de render, accesibilidad y regresiones del código bajo prueba.
+ * @remarks Usa Testing Library; si el archivo importa `renderWithMotion`, el árbol va envuelto en el proveedor de Motion.
+ */
+
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { SKILL_LABEL } from '@/shared/constants/skills'
-import { renderWithMotion } from '@/test/renderWithMotion'
+import {
+  SITE_GITHUB_PAGES_PORTFOLIO_WEB_HREF,
+  SITE_GITHUB_REPO_PORTFOLIO_WEB_HREF,
+} from '@/shared/constants/siteProfile'
+import { SKILL_LABEL } from '@/shared/constants/skills/skillLabels'
+import { renderWithMotion } from '@/test/helpers'
 
-import { ProjectInfo } from '../subcomponents/ProjectInfo'
+import { ProjectInfo } from './ProjectInfo'
 
-import type { Project } from '../types'
+import type { Project } from '../../types'
 
 const PROJECT_MOCK: Project = {
   id: 5,
@@ -19,8 +30,8 @@ const PROJECT_MOCK: Project = {
   ],
   skills: [SKILL_LABEL.REACT, SKILL_LABEL.TYPESCRIPT],
   images: ['/images/projects/portfolio-legacy.png'],
-  link: 'https://frank345-sys.github.io/portfolio_web/',
-  githubLink: 'https://github.com/Frank345-sys/portfolio_web',
+  link: SITE_GITHUB_PAGES_PORTFOLIO_WEB_HREF,
+  githubLink: SITE_GITHUB_REPO_PORTFOLIO_WEB_HREF,
 }
 
 describe('ProjectInfo', () => {
@@ -67,10 +78,14 @@ describe('ProjectInfo', () => {
     }
 
     expect(
-      screen.getByRole('link', { name: /abrir sitio en vivo/i })
+      screen.getByRole('link', {
+        name: /ver sitio en vivo \(abre en una nueva pestaña\)/i,
+      })
     ).toHaveAttribute('href', PROJECT_MOCK.link)
     expect(
-      screen.getByRole('link', { name: /código en github/i })
+      screen.getByRole('link', {
+        name: /código en github \(abre en una nueva pestaña\)/i,
+      })
     ).toHaveAttribute('href', PROJECT_MOCK.githubLink)
   })
 
@@ -87,12 +102,13 @@ describe('ProjectInfo', () => {
     expect(screen.queryByText('Portfolio Web (Legacy)')).not.toBeInTheDocument()
   })
 
-  it('no muestra enlace al proyecto si link no está definido', () => {
-    const { link: _drop, ...project } = PROJECT_MOCK
-    void _drop
+  it('no muestra enlace al proyecto si link está omitido', () => {
+    const { link: _, ...withoutLink } = PROJECT_MOCK
+    void _
+
     renderWithMotion(
       <ProjectInfo
-        project={project}
+        project={withoutLink}
         visible={true}
         totalProjects={5}
         headingId="project-5-title"
@@ -100,8 +116,33 @@ describe('ProjectInfo', () => {
     )
 
     expect(
-      screen.queryByRole('link', { name: /abrir sitio en vivo/i })
+      screen.queryByRole('link', { name: /ver sitio en vivo/i })
     ).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('link', {
+        name: /código en github \(abre en una nueva pestaña\)/i,
+      })
+    ).toBeInTheDocument()
+  })
+
+  it('no muestra enlace al proyecto si link está vacío', () => {
+    renderWithMotion(
+      <ProjectInfo
+        project={{ ...PROJECT_MOCK, link: '' }}
+        visible={true}
+        totalProjects={5}
+        headingId="project-5-title"
+      />
+    )
+
+    expect(
+      screen.queryByRole('link', { name: /ver sitio en vivo/i })
+    ).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('link', {
+        name: /código en github \(abre en una nueva pestaña\)/i,
+      })
+    ).toBeInTheDocument()
   })
 
   it('no muestra enlace al repositorio si githubLink no está definido', () => {
@@ -119,6 +160,21 @@ describe('ProjectInfo', () => {
     expect(
       screen.queryByRole('link', { name: /código en github/i })
     ).not.toBeInTheDocument()
+  })
+
+  it('muestra las tecnologías del proyecto como chips visibles', () => {
+    renderWithMotion(
+      <ProjectInfo
+        project={PROJECT_MOCK}
+        visible={true}
+        totalProjects={5}
+        headingId="project-5-title"
+      />
+    )
+
+    for (const skill of PROJECT_MOCK.skills) {
+      expect(screen.getByText(skill)).toBeInTheDocument()
+    }
   })
 
   it('no pone id en el h3 del título cuando headingId está omitido', () => {
