@@ -34,6 +34,5 @@ dist-ssr
 # Test coverage
 coverage/
 
-# Lighthouse CLI (npm run lighthouse:pages)
-lighthouse-report.html
-.lighthouse-tmp/
+# React Doctor (informes locales / redirección de CI en máquina de desarrollo)
+react-doctor-report.txt

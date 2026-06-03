@@ -1,57 +1,81 @@
-import { useReducedMotion } from 'motion/react'
+/**
+ * Orquestador de la sección Proyectos: datos, scroll sync, modal y carrusel.
+ *
+ * @module components/ProjectsSection/hooks/useProjectsSection
+ * @fileoverview Compone hooks especializados; el enriquecimiento de slides vive en `enrichProjectsWithSlides`.
+ * @remarks El `close` expuesto persiste el slide en tarjeta; `modal.dismiss` interno (scroll sync al salir de `lg`) solo limpia el índice del modal.
+ */
+
 import {
   useCallback,
   useMemo,
-  useState,
   type Dispatch,
   type MouseEvent,
   type SetStateAction,
 } from 'react'
 
-import { getValidUrls } from '@/shared/utils/getValidUrls'
-
+import { useProjectsCarousel } from './useProjectsCarousel'
+import { useProjectsModal } from './useProjectsModal'
 import { useProjectsScrollSync } from './useProjectsScrollSync'
+import { enrichProjectsWithSlides } from '../utils/enrichProjectsWithSlides'
 
-import type { Project } from '../types'
+import type {
+  Project,
+  ProjectImageAttributes,
+  ProjectWithSlides,
+} from '../types'
+
+type ProjectCarouselImageAttributesResolver = (
+  src: string
+) => ProjectImageAttributes
 
 interface UseProjectsSectionResult {
-  totalProjects: number
-  activeProject: Project | undefined
-  activeIndex: number
-  showInfo: boolean
-  /**
-   * Viewport ≥ lg: observer + panel lateral + lightbox montado.
-   * Una sola fuente de verdad con `useProjectsScrollSync` (sin duplicar `matchMedia`).
-   */
-  scrollSyncEnabled: boolean
-  articleRefAssigners: Array<(el: HTMLElement | null) => void>
-  handleProjectDotClick: (event: MouseEvent<HTMLButtonElement>) => void
-  reduceMotion: boolean | null
-  lightboxProjectIndex: number | null
-  lightboxSlide: number
-  setLightboxSlide: Dispatch<SetStateAction<number>>
-  openProjectLightbox: (projectIndex: number, slideIndex: number) => void
-  closeProjectLightbox: () => void
-  lightboxProject: Project | undefined
-  lightboxValidImages: string[]
+  data: {
+    projects: ProjectWithSlides[]
+    totalProjects: number
+    activeProject: ProjectWithSlides | undefined
+    activeIndex: number
+  }
+  ui: {
+    showInfo: boolean
+    scrollSyncEnabled: boolean
+  }
+  modal: {
+    index: number | null
+    slide: number
+    project: ProjectWithSlides | undefined
+    setSlide: Dispatch<SetStateAction<number>>
+    open: (projectIndex: number, slideIndex: number) => void
+    close: () => void
+  }
+  carousel: {
+    articleRefAssigners: Array<(el: HTMLElement | null) => void>
+    handleDotClick: (event: MouseEvent<HTMLButtonElement>) => void
+    getSlideIndex: (projectIndex: number) => number
+    handleSlideChange: (projectIndex: number, index: number) => void
+    resolveImageAttributes: ProjectCarouselImageAttributesResolver
+    resolveModalImageAttributes: ProjectCarouselImageAttributesResolver
+  }
 }
 
 /**
- * Orquesta scroll sync (`useProjectsScrollSync`), estado del lightbox y derivados
- * para `ProjectsSection`. Cierra el lightbox al salir de `lg` vía `scrollSyncEnabled`.
+ * Compone scroll sync, modal y carrusel para `ProjectsSection`.
+ *
+ * @param projects - Lista fuente (`PROJECTS`): cada `images` debe tener al menos una URL válida tras trim.
  */
 export function useProjectsSection(
   projects: Project[]
 ): UseProjectsSectionResult {
-  const totalProjects = projects.length
-  const [lightboxProjectIndex, setLightboxProjectIndex] = useState<
-    number | null
-  >(null)
-  const [lightboxSlide, setLightboxSlide] = useState(0)
+  const projectsWithSlides = useMemo(
+    () => enrichProjectsWithSlides(projects),
+    [projects]
+  )
 
-  const closeProjectLightbox = useCallback(() => {
-    setLightboxProjectIndex(null)
-  }, [])
+  const totalProjects = projectsWithSlides.length
+
+  const modal = useProjectsModal({
+    projects: projectsWithSlides,
+  })
 
   const {
     activeIndex,
@@ -59,59 +83,55 @@ export function useProjectsSection(
     scrollSyncEnabled,
     setItemRef,
     scrollItemIntoView,
-  } = useProjectsScrollSync(totalProjects, closeProjectLightbox)
+  } = useProjectsScrollSync(totalProjects, modal.dismiss)
+
+  const carousel = useProjectsCarousel({
+    projectCount: totalProjects,
+    setItemRef,
+    scrollItemIntoView,
+    modalProjectIndex: modal.index,
+    modalSlide: modal.slide,
+    setModalSlide: modal.setSlide,
+  })
+
+  const handleCloseModal = useCallback(() => {
+    if (modal.index !== null) {
+      carousel.persistCardSlide(modal.index, modal.slide)
+    }
+    modal.dismiss()
+  }, [carousel, modal])
 
   const activeProject =
-    totalProjects > 0 ? (projects[activeIndex] ?? projects[0]) : undefined
-
-  const articleRefAssigners = useMemo(
-    () =>
-      projects.map((_, i) => (el: HTMLElement | null) => {
-        setItemRef(i, el)
-      }),
-    [projects, setItemRef]
-  )
-
-  const handleProjectDotClick = useCallback(
-    (event: MouseEvent<HTMLButtonElement>) => {
-      const raw = event.currentTarget.dataset.projectDotIndex
-      const index = raw === undefined ? NaN : Number(raw)
-      if (Number.isNaN(index)) return
-      scrollItemIntoView(index)
-    },
-    [scrollItemIntoView]
-  )
-
-  const reduceMotion = useReducedMotion()
-
-  const openProjectLightbox = useCallback(
-    (projectIndex: number, slideIndex: number) => {
-      setLightboxProjectIndex(projectIndex)
-      setLightboxSlide(slideIndex)
-    },
-    []
-  )
-
-  const lightboxProject =
-    lightboxProjectIndex !== null ? projects[lightboxProjectIndex] : undefined
-
-  const lightboxValidImages = getValidUrls(lightboxProject?.images ?? [])
+    totalProjects > 0
+      ? (projectsWithSlides[activeIndex] ?? projectsWithSlides[0])
+      : undefined
 
   return {
-    totalProjects,
-    activeProject,
-    activeIndex,
-    showInfo,
-    scrollSyncEnabled,
-    articleRefAssigners,
-    handleProjectDotClick,
-    reduceMotion,
-    lightboxProjectIndex,
-    lightboxSlide,
-    setLightboxSlide,
-    openProjectLightbox,
-    closeProjectLightbox,
-    lightboxProject,
-    lightboxValidImages,
+    data: {
+      projects: projectsWithSlides,
+      totalProjects,
+      activeProject,
+      activeIndex,
+    },
+    ui: {
+      showInfo,
+      scrollSyncEnabled,
+    },
+    modal: {
+      index: modal.index,
+      slide: modal.slide,
+      project: modal.project,
+      setSlide: modal.setSlide,
+      open: modal.open,
+      close: handleCloseModal,
+    },
+    carousel: {
+      articleRefAssigners: carousel.articleRefAssigners,
+      handleDotClick: carousel.handleDotClick,
+      getSlideIndex: carousel.getSlideIndex,
+      handleSlideChange: carousel.handleSlideChange,
+      resolveImageAttributes: carousel.resolveImageAttributes,
+      resolveModalImageAttributes: carousel.resolveModalImageAttributes,
+    },
   }
 }

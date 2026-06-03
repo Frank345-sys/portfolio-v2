@@ -1,0 +1,83 @@
+/**
+ * Tests para shared/components/LinkCard/LinkCard.test.tsx.
+ *
+ * @fileoverview Suite Vitest que valida el contrato de render, accesibilidad y regresiones del código bajo prueba.
+ * @remarks Usa Testing Library; si el archivo importa `renderWithMotion`, el árbol va envuelto en el proveedor de Motion.
+ */
+
+import { render, screen } from '@testing-library/react'
+import { describe, it, expect } from 'vitest'
+
+import { JsIcon } from '@/shared/icons'
+
+import { LinkCard } from './LinkCard'
+
+describe('LinkCard', () => {
+  it('renderiza enlace con título e ícono', () => {
+    render(
+      <LinkCard
+        href="https://example.com/cert"
+        target="_blank"
+        title="Mi certificado"
+        subtitle=""
+        icon={<span data-testid="icon">📜</span>}
+      />
+    )
+
+    const link = screen.getByRole('link', {
+      name: /mi certificado.*abre en una nueva pestaña/i,
+    })
+    expect(link).toHaveAttribute('href', 'https://example.com/cert')
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    expect(screen.getByText('Mi certificado')).toBeInTheDocument()
+    expect(screen.getByTestId('icon')).toBeInTheDocument()
+  })
+
+  it('renderiza subtítulo cuando se pasa', () => {
+    render(
+      <LinkCard
+        href="/docs"
+        title="Documentación"
+        subtitle="Equipo interno"
+        icon="📘"
+      />
+    )
+
+    expect(screen.getByText('Documentación')).toBeInTheDocument()
+    expect(screen.getByText('Equipo interno')).toBeInTheDocument()
+    const link = screen.getByRole('link', { name: /documentación/i })
+    expect(link).not.toHaveAttribute('target')
+    expect(link).not.toHaveAttribute('rel')
+  })
+
+  it('acepta un componente SVG como ícono', () => {
+    render(
+      <LinkCard
+        href="https://example.com/js"
+        title="JavaScript"
+        subtitle=""
+        icon={<JsIcon aria-hidden />}
+      />
+    )
+
+    const link = screen.getByRole('link')
+    expect(link.querySelector('svg')).toBeInTheDocument()
+  })
+
+  it('respeta aria-label explícito', () => {
+    render(
+      <LinkCard
+        href="https://a.test"
+        aria-label="Enlace personalizado"
+        title="Título visible"
+        subtitle=""
+        icon="⭐"
+      />
+    )
+
+    expect(
+      screen.getByRole('link', { name: /enlace personalizado/i })
+    ).toBeInTheDocument()
+  })
+})

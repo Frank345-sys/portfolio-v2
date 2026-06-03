@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    // ES2023: scripts Node.js (Vite config, scripts/) — entorno siempre actualizado
     "target": "ES2023",
     "lib": ["ES2023"],
     "module": "ESNext",

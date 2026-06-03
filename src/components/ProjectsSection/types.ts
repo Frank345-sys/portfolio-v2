@@ -1,14 +1,35 @@
-import type { SkillLabel } from '@/shared/constants/skills'
+/**
+ * Tipos TypeScript del submódulo «ProjectsSection».
+ *
+ * Tipos compartidos del módulo `ProjectsSection`: datos de dominio (`Project`) y piezas reutilizables
+ * para preview, carrusel y modal ampliado (evita duplicar la misma forma en varias props).
+ *
+ * @fileoverview Contratos compartidos entre componentes, hooks y constantes del mismo directorio.
+ * @remarks Mantener alineado con las props públicas re-exportadas en los `index.ts` del feature.
+ */
+
+import type { SkillLabel } from '@/shared/constants/skills/skillLabels'
+
+import type { ImgHTMLAttributes } from 'react'
 
 /**
- * Tipos compartidos del módulo `ProjectsSection`: datos de dominio (`Project`) y piezas reutilizables
- * para preview, carrusel y lightbox (evita duplicar la misma forma en varias props).
- *
- * @module components/ProjectsSection/types
+ * Al menos una URL de captura (no array vacío a nivel modelo).
+ * Antes del carrusel, `enrichProjectsWithSlides` (`./utils/enrichProjectsWithSlides.ts`) aplica `getValidUrls`;
+ * si no queda ninguna URL válida tras trim, lanza error.
  */
+export type NonEmptySlideList = readonly [string, ...string[]]
+
+/**
+ * URL absoluta HTTPS de enlace público del proyecto (sitio en vivo, GitHub Pages o repositorio).
+ * No incluye `mailto:` ni rutas relativas.
+ */
+type ProjectHttpsUrl = `https://${string}`
 
 /**
  * Proyecto destacado en la sección Portafolio.
+ *
+ * Opcionales: **`link`** (sitio/demo pública), **`githubLink`**. Omitir **`link`** o dejar **`''`** si no aplica —
+ * `ProjectInfo` solo muestra “Ver sitio en vivo” cuando hay URL no vacía tras trim.
  */
 export interface Project {
   id: number
@@ -17,36 +38,17 @@ export interface Project {
   description: string
   bullets: string[]
   skills: SkillLabel[]
-  images: string[]
-  link?: string
-  githubLink?: string
+  images: NonEmptySlideList
+  /** Sitio o demo en HTTPS; cadena vacía equivale a “sin enlace” tras `trim`. */
+  link?: ProjectHttpsUrl | ''
+  /** Repositorio u otro recurso en HTTPS (p. ej. `https://github.com/...`). */
+  githubLink?: ProjectHttpsUrl
 }
 
-/**
- * Título y subtítulo mostrados en overlay de card, panel lateral y cabecera del lightbox.
- */
-export interface ProjectPreviewCopy {
-  title: string
-  subtitle: string
-}
+/** Proyecto con `slides` listos para carrusel (derivados del modelo como en `useProjectsSection`). */
+export type ProjectWithSlides = Project & { slides: NonEmptySlideList }
 
-/**
- * Galería de capturas + texto alternativo base para el carrusel (`ImageCarousel`).
- */
-export interface ProjectPreviewGallery {
-  images: string[]
-  /** Base para `alt` enriquecido por slide (p. ej. nombre del proyecto). */
-  imageAlt: string
-}
-
-/**
- * Sincronización del índice de slide entre la card y el lightbox (estado elevado en `useProjectsSection`).
- */
-export interface ProjectLightboxCarouselSync {
-  /** `true` en la card cuyo proyecto tiene el modal abierto. */
-  lightboxActive?: boolean
-  /** Slide compartido cuando `lightboxActive` (misma fuente que el modal). */
-  lightboxSlideIndex?: number | undefined
-  /** Notifica cambios de slide al padre mientras el lightbox está abierto. */
-  onLightboxSlideChange?: ((index: number) => void) | undefined
-}
+export type ProjectImageAttributes = Pick<
+  ImgHTMLAttributes<HTMLImageElement>,
+  'src' | 'srcSet' | 'sizes'
+>

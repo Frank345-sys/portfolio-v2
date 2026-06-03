@@ -1,27 +1,35 @@
-import { BackgroundBoxes } from '@/shared/components/BackgroundBoxes'
-import {
-  HERO_STACK_HIGHLIGHT,
-  SITE_DISPLAY_NAME,
-  SITE_PROFILE,
-} from '@/shared/constants/siteProfile'
-import { BUTTON, LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
-import { DownloadIcon } from '@/shared/icons'
+/**
+ * Compositor de la sección hero del portfolio (`HeroSection`).
+ *
+ * @fileoverview Implementación del archivo `HeroSection.tsx` dentro de `components/HeroSection`; ver exports para la API pública.
+ * @remarks `BackgroundBoxes` (Motion); `h1` etiquetador en `HeroTitle`.
+ */
+
+import { BackgroundBoxes } from '@/shared/components/composites/BackgroundBoxes'
+import { LAYOUT } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
-/** CV en `public/` — mantener sincronizado con el archivo desplegado. */
-const CV_HREF = `${import.meta.env.BASE_URL}Francisco_Gonzalez_Frontend_Developer_2026.pdf`
-
-const HERO_STATS = [
-  { value: '2+', label: 'Años en frontend' },
-  { value: '5+', label: 'Casos en portfolio' },
-  { value: '+14', label: 'Herramientas y prácticas' },
-] as const
+import { HERO_SECTION_ANCHOR_ID, HERO_SECTION_TITLE_ID } from './constants'
+import { HeroCvCta } from './subcomponents/HeroCvCta/HeroCvCta'
+import { HeroLead } from './subcomponents/HeroLead'
+import { HeroStats } from './subcomponents/HeroStats/HeroStats'
+import { HeroTitle } from './subcomponents/HeroTitle/HeroTitle'
 
 /**
- * Sección hero principal del portfolio.
- * Muestra nombre, rol, descripción, CTA de CV y stats de impacto.
- * Envuelve el contenido en `BackgroundBoxes` (parallax de iconos).
+ * @module components/HeroSection/HeroSection
  *
+ * Sección hero envuelta en **`BackgroundBoxes`** (Motion).
+ *
+ * **Landmark**
+ * - **`<section id={HERO_SECTION_ANCHOR_ID}>`** — ancla de inicio de página.
+ * - **`aria-labelledby={HERO_SECTION_TITLE_ID}`** — el nombre accesible de la sección es el **`h1`**
+ *   con ese `id`, definido dentro de **`HeroTitle`** (este archivo no declara el `h1`).
+ *
+ * **Contenido interior** (columna centrada, en orden): **`HeroTitle`**, **`HeroLead`**, **`HeroCvCta`**, **`HeroStats`**.
+ * El **`<header>`** semántico (introducción con `h1`, rol y stack) lo aporta **solo** `HeroTitle`; aquí no hay un
+ * `<header>` adicional envolviendo toda la sección, para no duplicar el patrón “cabecera de página” fuera del bloque de título.
+ *
+ * @see `./constants.ts` ({@link HERO_SECTION_ANCHOR_ID}, {@link HERO_SECTION_TITLE_ID})
  * @example
  * ```tsx
  * <HeroSection />
@@ -29,79 +37,22 @@ const HERO_STATS = [
  */
 export function HeroSection() {
   return (
-    <BackgroundBoxes>
+    <BackgroundBoxes className="max-h-[680px]">
       <section
-        id="inicio"
-        className={cn(
-          LAYOUT.section.hero,
-          'flex h-full w-full items-center justify-center'
-        )}
-        aria-labelledby="hero-heading"
+        id={HERO_SECTION_ANCHOR_ID}
+        className="flex h-full w-full items-center justify-center"
+        aria-labelledby={HERO_SECTION_TITLE_ID}
       >
         <div className={cn(LAYOUT.container.narrow, LAYOUT.px)}>
-          <div className="flex flex-col items-center justify-center gap-6 text-center sm:gap-8">
-            {/* Título: nombre + rol del desarrollador */}
-            <div className="flex flex-col gap-1 sm:gap-2">
-              <h1 id="hero-heading" className={TYPOGRAPHY.title.hero}>
-                {SITE_DISPLAY_NAME}
-              </h1>
-              <p
-                className={cn(
-                  TYPOGRAPHY.title.subsection,
-                  'text-information-base'
-                )}
-              >
-                {SITE_PROFILE.role}
-              </p>
-              <p
-                className={cn(
-                  TYPOGRAPHY.paragraph.small,
-                  'text-text-subtle max-w-xl'
-                )}
-              >
-                <span className="sr-only">Stack principal: </span>
-                {HERO_STACK_HIGHLIGHT}
-              </p>
-            </div>
-
-            {/* Descripción del rol */}
-            <p className={cn(TYPOGRAPHY.paragraph.lead, LAYOUT.prose.lg)}>
-              Desarrollo interfaces web rápidas, limpias y accesibles,
-              optimizando rendimiento, integración con APIs y experiencia de
-              usuario.
-            </p>
-
-            {/* CTA de descarga de CV */}
-            <a
-              href={CV_HREF}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={BUTTON.special.cta}
-              aria-label={`Ver CV de ${SITE_DISPLAY_NAME} (PDF, se abre en una pestaña nueva)`}
-            >
-              Ver CV (PDF)
-              <DownloadIcon aria-hidden="true" />
-            </a>
-
-            {/* Stats de impacto */}
-            <ul
-              className="flex list-none flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-8"
-              aria-label="Estadísticas de impacto"
-            >
-              {HERO_STATS.map(({ value, label }) => (
-                <li key={label} className={'flex flex-col items-center gap-1'}>
-                  <span className={TYPOGRAPHY.special.stat}>{value}</span>
-                  <span
-                    className={cn(
-                      TYPOGRAPHY.label.default,
-                      'text-text-strong text-center'
-                    )}
-                  >
-                    {label}
-                  </span>
-                </li>
-              ))}
-            </ul>
+          <div className="flex flex-col items-center justify-center gap-6 text-center lg:gap-8">
+            {/* Hero Title */}
+            <HeroTitle />
+            {/* Hero Lead */}
+            <HeroLead />
+            {/* Hero Cv Cta */}
+            <HeroCvCta />
+            {/* Hero Stats */}
+            <HeroStats />
           </div>
         </div>
       </section>

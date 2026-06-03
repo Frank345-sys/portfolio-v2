@@ -1,8 +1,10 @@
 /**
- * Identidad pública del titular en el portfolio: nombre, rol, iniciales y textos
- * de SEO reutilizados en `index.html` (vía `transformIndexHtml` en Vite).
+ * Identidad pública del titular en el portfolio: nombre, rol, iniciales, contacto,
+ * enlaces sociales y textos de SEO reutilizados en `index.html` (vía `transformIndexHtml` en Vite).
  *
  * @module shared/constants/siteProfile
+ * @fileoverview Catálogo importado por secciones y utilidades; cambios globales de marca o layout.
+ * @remarks Coordinar con tokens en `shared/constants/tokens` y con el sistema de temas si toca color o tipografía.
  */
 export const SITE_PROFILE = {
   firstName: 'Frank',
@@ -59,3 +61,57 @@ export const SITE_META_DESCRIPTION_SHORT =
  */
 export const SITE_JSONLD_DESCRIPTION =
   `${SITE_PROFILE.role} — React, TypeScript, interfaces accesibles y de alto rendimiento` as const
+
+/**
+ * Correo público de contacto. Cadena vacía (o solo espacios) oculta la tarjeta
+ * `mailto` en Contact; derivaciones en {@link SITE_CONTACT_EMAIL_TRIMMED} y
+ * {@link SITE_CONTACT_EMAIL_HREF}.
+ */
+export const SITE_CONTACT_EMAIL = 'francgonzalez456@gmail.com' as const
+
+const siteContactEmailTrimmed = SITE_CONTACT_EMAIL.trim()
+
+/**
+ * Mismo correo sin espacios; cadena vacía si el valor solo tiene espacios.
+ * Fuente única para `mailto`, `security.txt` (build Vite) y la sección contacto.
+ */
+export const SITE_CONTACT_EMAIL_TRIMMED = siteContactEmailTrimmed
+
+/**
+ * `mailto:…` listo para `href`, o `''` si no hay correo.
+ */
+export const SITE_CONTACT_EMAIL_HREF = siteContactEmailTrimmed
+  ? `mailto:${siteContactEmailTrimmed}`
+  : ''
+
+/**
+ * Perfiles y mensajería (misma fuente que tarjetas de contacto y `sameAs` en JSON-LD vía Vite).
+ * Claves alineadas con `CONTACT_PROFILE` en `ContactSection/constants.ts` (reexportación).
+ */
+export const SITE_SOCIAL_HREFS = {
+  githubHref: 'https://github.com/Frank345-sys',
+  linkedinHref: 'https://www.linkedin.com/in/francisco-omar-h-glez-utrera/',
+  /** Enlace wa.me con mensaje prellenado para abrir chat en WhatsApp Web o la app. */
+  whatsAppHref:
+    'https://wa.me/522283111621?text=Hola,%20vi%20tu%20perfil%20y%20me%20gustaría%20contactarte.',
+  /** Perfil público `t.me/…` (usuario sin `@`). */
+  telegramHref: 'https://t.me/FrankOmar456',
+} as const
+
+/**
+ * Slug del repo público del portfolio v1 (histórico), bajo la cuenta de `githubHref`.
+ */
+const SITE_GITHUB_REPO_SLUG_PORTFOLIO_WEB = 'portfolio_web' as const
+
+/**
+ * URL al repo del portfolio legacy en GitHub (código). Derivado de `SITE_SOCIAL_HREFS.githubHref`.
+ */
+export const SITE_GITHUB_REPO_PORTFOLIO_WEB_HREF =
+  `${SITE_SOCIAL_HREFS.githubHref}/${SITE_GITHUB_REPO_SLUG_PORTFOLIO_WEB}` as const
+
+/**
+ * Sitio publicado en GitHub Pages del portfolio v1 (`{usuario}.github.io/{slug}/`).
+ * Usuario tomado de `githubHref` en minúsculas (convención de Pages).
+ */
+export const SITE_GITHUB_PAGES_PORTFOLIO_WEB_HREF =
+  `https://${SITE_SOCIAL_HREFS.githubHref.replace(/^https:\/\/github\.com\//u, '').toLowerCase()}.github.io/${SITE_GITHUB_REPO_SLUG_PORTFOLIO_WEB}/` as const

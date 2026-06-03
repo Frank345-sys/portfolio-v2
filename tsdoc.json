@@ -6,6 +6,10 @@
       "syntaxKind": "block"
     },
     {
+      "tagName": "@fileoverview",
+      "syntaxKind": "block"
+    },
+    {
       "tagName": "@use",
       "syntaxKind": "block",
       "allowMultiple": true

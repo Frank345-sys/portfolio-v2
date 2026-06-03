@@ -9,7 +9,17 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . && node scripts/check-tsdoc.mjs",
+    "lint:exports": "node scripts/check-exports.mjs",
+    "lint:env": "node scripts/check-env.mjs",
+    "lint:tsdoc": "node scripts/check-tsdoc.mjs",
+    "tsdoc:fill-placeholders": "node scripts/fill-tsdoc-placeholders.mjs",
+    "tsdoc:fill-placeholders:dry": "node scripts/fill-tsdoc-placeholders.mjs --dry-run",
+    "tsdoc:fix-empty-module": "node scripts/fix-empty-module-tag.mjs",
+    "tsdoc:fix-test-double-blank": "node scripts/fix-tsdoc-test-double-blank.mjs",
+    "tsdoc:homogenize-barrels": "node scripts/homogenize-barrel-tsdoc.mjs",
+    "tsdoc:homogenize-barrels:dry": "node scripts/homogenize-barrel-tsdoc.mjs --dry-run",
+    "lint:env:strict": "node scripts/check-env.mjs --strict-values",
     "knip": "knip",
     "preview": "vite preview",
     "format": "prettier --write .",
@@ -20,15 +30,17 @@
     "test:watch": "vitest",
     "test:changed": "vitest --changed --run",
     "test:coverage": "vitest run --coverage",
-    "test:coverage:ci": "vitest run --coverage",
-    "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm run format:check && npm run lint && npm run knip && npm run test",
-    "check:ci": "npm run format:check && npm run lint && npm run typecheck && npm run knip && npm run test:coverage:ci && npm run build",
+    "test:coverage:ci": "vitest run --coverage --coverage.reporter=text",
+    "typecheck": "tsc -b --noEmit",
+    "check": "npm run format:check && npm run lint && npm run lint:exports && npm run lint:env && npm run typecheck && npm run knip && npm run test",
+    "check:ci": "npm run format:check && npm run lint && npm run lint:exports && npm run lint:env && npm run typecheck && npm run knip && npm run test:coverage:ci && npm run build",
+    "check:extended": "npm run check && npm run react-doctor:full",
     "build:github": "tsc -b && vite build --mode github",
     "deploy:pages": "npm run build:github && gh-pages -d build",
     "deploy": "npm run build && gh-pages -d build",
     "preview:build": "vite preview --outDir build",
-    "lighthouse:pages": "node scripts/lighthouse-pages.mjs"
+    "react-doctor": "react-doctor . --verbose -y --diff main",
+    "react-doctor:full": "react-doctor . --verbose --full"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -36,7 +48,8 @@
     "motion": "^12.35.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "tailwind-merge": "^3.4.0"
+    "tailwind-merge": "^3.4.0",
+    "web-vitals": "^5.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.4.2",
@@ -53,6 +66,7 @@
     "@vitest/coverage-v8": "^4.0.18",
     "@vitest/eslint-plugin": "^1.6.16",
     "@vitest/ui": "^4.0.18",
+    "babel-plugin-react-compiler": "19.1.0-rc.2",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -60,7 +74,7 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-compiler": "^19.1.0-rc.2",
+    "eslint-plugin-react-compiler": "19.1.0-rc.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "eslint-plugin-sonarjs": "^4.0.3",
@@ -75,19 +89,21 @@
     "lint-staged": "^16.3.0",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "react-doctor": "^0.0.39",
+    "react-doctor": "^0.2.6",
     "sharp": "^0.34.5",
     "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4",
-    "vitest": "^4.0.18"
+    "vitest": "^4.0.18",
+    "vitest-axe": "^0.1.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",
       "eslint --fix"
     ],
+    "src/**/*.{ts,tsx}": "node scripts/check-tsdoc.mjs",
     "*.{json,cjs,mjs,md,yml,yaml,html,css}": "prettier --write"
   }
 }

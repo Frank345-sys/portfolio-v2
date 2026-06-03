@@ -1,13 +1,41 @@
-const base = 'w-full mx-auto' as const
-const px = 'px-6 sm:px-8 md:px-10 lg:px-12' as const
+/**
+ * Constantes compartidas del proyecto (`shared/constants/tokens/layout.ts`).
+ *
+ * @fileoverview Catálogo importado por secciones y utilidades; cambios globales de marca o layout.
+ * @remarks Coordinar con tokens en `shared/constants/tokens` y con el sistema de temas si toca color o tipografía.
+ */
+
+import { cn } from '@/shared/utils/cn'
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Fragmentos internos (no exportar)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Clases base compartidas por todos los containers.
+ *
+ * @internal
+ */
+const base = 'w-full mx-auto'
+
+/**
+ * Padding horizontal estándar — compartido como constante interna y exportado
+ * en `LAYOUT.px` para uso externo via `cn()`.
+ *
+ * @internal
+ */
+const px = 'px-6 sm:px-8 md:px-10 lg:px-12'
 
 /**
  * Tokens de layout: contenedores, secciones, spacing, grids, prose, overlay y divider.
  *
+ * **Orden en este archivo:** constantes internas (`base`, `px`) → {@link LAYOUT}
+ * (bloques: `px` → `container` → `section` → `spacing` → `grid` → `prose` → `overlay` → `divider`).
+ *
  * Padding horizontal:
- * Los containers NO incluyen `px` por defecto — añadir `LAYOUT.px` con cn()
+ * Los containers NO incluyen `px` por defecto — añadir `LAYOUT.px` con `cn()`
  * cuando el contenedor necesita margen lateral. Todos los containers comparten
- * el mismo valor de px para garantizar alineación entre secciones.
+ * el mismo valor de `px` para garantizar alineación entre secciones.
  *
  * @example
  * ```tsx
@@ -17,52 +45,51 @@ const px = 'px-6 sm:px-8 md:px-10 lg:px-12' as const
  * ```
  */
 export const LAYOUT = {
+  // ── Padding horizontal ────────────────────────────────────────────────────
   /**
-   * @use Padding horizontal estándar — combinar con cualquier container via cn().
-   * @combine LAYOUT.container.* siempre via cn() — los containers no lo incluyen por defecto.
-   * @warning Todos los containers de una misma sección deben usar el mismo px
+   * @use Padding horizontal estándar — combinar con cualquier container via `cn()`.
+   * @combine LAYOUT.container.* siempre via `cn()` — los containers no lo incluyen por defecto.
+   * @warning Todos los containers de una misma sección deben usar el mismo `px`
    *          para mantener la alineación visual entre ellos.
    */
   px,
 
+  // ── Contenedores ──────────────────────────────────────────────────────────
   container: {
     /**
-     * @use Hero sections, features, grids de máximo ancho (max-w-[1400px]).
-     * @combine LAYOUT.px via cn() cuando necesita margen lateral.
+     * @use Hero sections, features, grids de máximo ancho (`max-w-[1400px]`).
+     * @combine LAYOUT.px via `cn()` cuando necesita margen lateral.
      */
-    wide: `${base} max-w-[1400px]`,
+    wide: cn(base, 'max-w-[1400px]'),
 
     /**
-     * @use Contenedor principal de página — la mayoría de las secciones (max-w-7xl).
-     * @combine LAYOUT.px via cn() cuando necesita margen lateral.
+     * @use Contenedor principal de página — la mayoría de las secciones (`max-w-7xl`).
+     * @combine LAYOUT.px via `cn()` cuando necesita margen lateral.
      */
-    full: `${base} max-w-7xl`,
+    full: cn(base, 'max-w-7xl'),
 
     /**
-     * @use Timelines, textos largos, contenido lineal donde prima la legibilidad (max-w-5xl).
-     * @combine LAYOUT.px via cn() cuando necesita margen lateral.
+     * @use Timelines, textos largos, contenido lineal donde prima la legibilidad (`max-w-5xl`).
+     * @combine LAYOUT.px via `cn()` cuando necesita margen lateral.
      */
-    narrow: `${base} max-w-5xl`,
+    narrow: cn(base, 'max-w-5xl'),
 
     /**
-     * @use Formularios, CTAs aislados, contenido centrado estrecho (max-w-2xl).
-     * @combine LAYOUT.px via cn() cuando necesita margen lateral.
+     * @use Formularios, CTAs aislados, contenido centrado estrecho (`max-w-2xl`).
+     * @combine LAYOUT.px via `cn()` cuando necesita margen lateral.
      */
-    tight: `${base} max-w-2xl`,
+    tight: cn(base, 'max-w-2xl'),
   },
 
+  // ── Secciones (eje vertical) ──────────────────────────────────────────────
   section: {
-    /** @use Sección hero — máximo respiro vertical para impacto inicial. */
-    hero: 'py-24 sm:py-32 md:py-40 lg:py-48',
-
     /** @use Sección estándar con padding generoso — la mayoría de las secciones de página. */
     default: 'py-20 md:py-22 lg:py-24',
   },
 
+  // ── Espaciado entre hijos ─────────────────────────────────────────────────
   spacing: {
-    /**
-     * @use Separación entre sub-bloques dentro de una misma sección.
-     */
+    /** @use Separación entre sub-bloques dentro de una misma sección. */
     large: 'space-y-8 sm:space-y-12 md:space-y-16',
 
     /** @use Separación estándar entre elementos relacionados. */
@@ -75,13 +102,12 @@ export const LAYOUT = {
     small: 'space-y-2 sm:space-y-4',
   },
 
+  // ── Grids responsivos ─────────────────────────────────────────────────────
   grid: {
     /**
-     * @use Hero sections, formularios centrados, contenido de lectura larga,
-     *      layouts de una sola columna en móvil y desktop.
-     * @remarks
-     * Útil como base explícita cuando se necesita un grid de una columna
-     * con gap consistente, en lugar de un simple `flex-col`.
+     * @use Hero sections, formularios centrados, contenido de lectura larga.
+     * @remarks Útil como base explícita cuando se necesita un grid de una columna
+     *          con gap consistente, en lugar de un simple `flex-col`.
      */
     cols1: 'grid grid-cols-1 gap-4',
 
@@ -99,6 +125,7 @@ export const LAYOUT = {
     cols4: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4',
   },
 
+  // ── Ancho de lectura (max-width en texto) ─────────────────────────────────
   /**
    * Limita el ancho de bloques de texto inline — sin `mx-auto`.
    * Usar sobre elementos de texto (`<p>`, `<div>`) dentro de un contenedor
@@ -112,9 +139,27 @@ export const LAYOUT = {
    * </p>
    * ```
    */
+  prose: {
+    /** @use Párrafos cortos, subtítulos compactos (`max-w-md`). */
+    xs: 'max-w-md',
+
+    /** @use Párrafos cortos, subtítulos compactos (`max-w-xl`). */
+    sm: 'max-w-xl',
+
+    /** @use Texto principal de sección, bios, descripciones (`max-w-2xl`). */
+    md: 'max-w-2xl',
+
+    /** @use Bloques de texto anchos, taglines, cabeceras de sección (`max-w-3xl`). */
+    lg: 'max-w-3xl',
+
+    /** @use Textos muy anchos, contenido casi a pantalla completa (`max-w-4xl`). */
+    xl: 'max-w-4xl',
+  },
+
+  // ── Capas pantalla completa (no cards) ───────────────────────────────────
   /**
    * Capas de pantalla completa que no son “cards” — velos detrás de modales/drawers.
-   * @combine Z.backdrop o Z.drawerElevated según el nivel de apilamiento.
+   * @combine `Z.backdrop` en el contenedor fijo del overlay.
    */
   overlay: {
     /**
@@ -123,27 +168,12 @@ export const LAYOUT = {
     scrim: 'bg-bg-white/40 fixed inset-0 backdrop-blur-sm',
   },
 
-  prose: {
-    /** @use Párrafos cortos, subtítulos compactos (max-w-xl). */
-    sm: 'max-w-xl',
-
-    /** @use Texto principal de sección, bios, descripciones (max-w-2xl). */
-    md: 'max-w-2xl',
-
-    /**
-     * @use Bloques de texto anchos, taglines, cabeceras de sección (max-w-3xl).
-     */
-    lg: 'max-w-3xl',
-
-    /** @use Textos muy anchos, contenido casi a pantalla completa (max-w-4xl). */
-    xl: 'max-w-4xl',
-  },
-
+  // ── Divisores ─────────────────────────────────────────────────────────────
   divider: {
     /** @use Separación horizontal entre bloques de contenido. */
-    horizontal: 'w-full h-px bg-stroke-soft',
+    horizontal: 'w-full h-px bg-stroke-subtle',
 
     /** @use Separación vertical — dentro de navbars, toolbars, grupos de iconos. */
-    vertical: 'h-full w-px bg-stroke-soft',
+    vertical: 'h-full w-px bg-stroke-subtle',
   },
 } as const
