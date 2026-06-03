@@ -1,17 +1,34 @@
 /**
- * Scroll-spy por `IntersectionObserver` según ítems de navegación.
+ * Scroll-spy por `IntersectionObserver` según ítems de navegación (`#id` ↔ `getElementById`).
+ *
+ * Las opciones del observer (`rootMargin`, `threshold`) viven en este archivo junto a la lógica
+ * que las consume, para ajustarlas si cambia la altura del header o la sensibilidad del spy.
  *
  * @module components/Header/hooks/useNavScrollSpy
+ * @fileoverview Elige el `href` de nav activo según qué sección intersecta la banda del viewport bajo la cabecera fija.
+ * @remarks `IntersectionObserver` con `rootMargin` calibrado; si las secciones llegan lazy, re-registra vía `MutationObserver` bajo `#contenido-principal`.
  */
 import { useEffect, useRef, useState } from 'react'
 
 import { hashSectionId } from '@/shared/utils/hashSectionId'
 
-import { NAV_SCROLL_SPY_OBSERVER_OPTIONS } from '../constants'
-
 import type { NavItem } from '../types'
 
-const MAIN_LAZY_ROOT_ID = 'contenido-principal'
+const MAIN_LAZY_ROOT_ID = 'contenido-principal' as const
+
+/**
+ * Desplazamiento superior del área de intersección del scroll-spy (px), alineado con
+ * la cabecera fija aproximada. Si cambia mucho la altura del header, revisar este valor.
+ */
+const HEADER_SCROLL_SPY_TOP_OFFSET_PX = 80 as const
+
+/** Opciones de `IntersectionObserver` para scroll-spy: banda bajo la cabecera fija y
+ * por encima del fondo del viewport (evita que varias secciones altas activen todo a la vez). */
+const NAV_SCROLL_SPY_OBSERVER_OPTIONS: IntersectionObserverInit = {
+  root: null,
+  rootMargin: `-${HEADER_SCROLL_SPY_TOP_OFFSET_PX}px 0px -45% 0px`,
+  threshold: [0, 0.05, 0.1, 0.2, 0.35, 0.5, 0.65, 0.8, 1],
+} as const
 
 /**
  * Observa las secciones del documento asociadas a `navItems` (mismo orden que la nav)
@@ -29,56 +46,69 @@ export function useNavScrollSpy(
   navItems: ReadonlyArray<NavItem>
 ): string | null {
   const [activeHref, setActiveHref] = useState<string | null>(null)
-  const intersectingRef = useRef(new Map<Element, boolean>())
+  const navItemsRef = useRef(navItems)
+
+  useEffect(() => {
+    navItemsRef.current = navItems
+  }, [navItems])
+
+  /** Último estado `isIntersecting` por elemento observado (solo dentro del effect). */
+  const intersectingByEl = useRef(new Map<Element, boolean>())
 
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return
 
-    const intersecting = intersectingRef.current
-    const lastOrderedKeyRef = { current: '' as string }
-    const observerInstanceRef: { current: IntersectionObserver | null } = {
-      current: null,
-    }
-    const lastObservedEls: Element[] = []
+    const intersecting = intersectingByEl.current
+    // Clave de la última lista sincronizada: hrefs unidos por '|'; evita recrear el observer si el DOM no cambió.
+    let lastSectionsKey = ''
+    let observer: IntersectionObserver | null = null
+    const observedElements: Element[] = []
+    // RAF pendiente para debounce del MutationObserver.
     let rafId: number | null = null
+    // MutationObserver que detecta secciones lazy montadas bajo #contenido-principal.
     let mo: MutationObserver | null = null
 
-    const disconnect = () => {
-      observerInstanceRef.current?.disconnect()
-      observerInstanceRef.current = null
-      for (const el of lastObservedEls) {
+    /** Desconecta el observer activo y limpia el mapa de intersección. */
+    const disconnectObserver = () => {
+      observer?.disconnect()
+      observer = null
+      for (const el of observedElements) {
         intersecting.delete(el)
       }
-      lastObservedEls.length = 0
+      observedElements.length = 0
     }
 
-    const buildOrdered = (): { href: string; el: Element }[] => {
-      const ordered: { href: string; el: Element }[] = []
-      for (const item of navItems) {
+    /** Lista ordenada de `{ href, el }` para ítems con nodo en el DOM (observables). */
+    const getObservableSections = (): { href: string; el: Element }[] => {
+      const sections: { href: string; el: Element }[] = []
+      for (const item of navItemsRef.current) {
         const id = hashSectionId(item.href)
         if (!id) continue
         const el = document.getElementById(id)
-        if (el) ordered.push({ href: item.href, el })
+        if (el) sections.push({ href: item.href, el })
       }
-      return ordered
+      return sections
     }
 
-    const runSetup = () => {
-      const ordered = buildOrdered()
-      const key = ordered.map((o) => o.href).join('|')
+    /**
+     * Crea o recrea el `IntersectionObserver` si la lista de elementos observados cambió.
+     * Usa `lastSectionsKey` para evitar recreaciones innecesarias cuando el DOM no cambió.
+     */
+    const syncObserver = () => {
+      const sections = getObservableSections()
+      const sectionsKey = sections.map((o) => o.href).join('|')
 
-      if (ordered.length === 0) {
-        disconnect()
-        lastOrderedKeyRef.current = ''
-        setActiveHref(null)
+      if (sections.length === 0) {
+        disconnectObserver()
+        lastSectionsKey = ''
         return
       }
 
-      if (key === lastOrderedKeyRef.current && observerInstanceRef.current) {
+      if (sectionsKey === lastSectionsKey && observer) {
         return
       }
-      lastOrderedKeyRef.current = key
-      disconnect()
+      lastSectionsKey = sectionsKey
+      disconnectObserver()
 
       const callback: IntersectionObserverCallback = (observedEntries) => {
         for (const entry of observedEntries) {
@@ -86,41 +116,44 @@ export function useNavScrollSpy(
         }
 
         let next: string | null = null
-        for (const { href, el } of ordered) {
+        for (const { href, el } of sections) {
           if (intersecting.get(el)) next = href
         }
         setActiveHref(next)
       }
 
-      const observer = new IntersectionObserver(
+      const nextObserver = new IntersectionObserver(
         callback,
         NAV_SCROLL_SPY_OBSERVER_OPTIONS
       )
-      observerInstanceRef.current = observer
+      observer = nextObserver
 
-      for (const { el } of ordered) {
+      for (const { el } of sections) {
         intersecting.set(el, false)
-        lastObservedEls.push(el)
-        observer.observe(el)
+        observedElements.push(el)
+        nextObserver.observe(el)
       }
     }
 
-    runSetup()
+    queueMicrotask(() => {
+      syncObserver()
+    })
 
-    const schedule = () => {
+    /** Debounce de `syncObserver` en un `requestAnimationFrame` para no disparar en cada mutación del DOM. */
+    const scheduleSyncObserver = () => {
       if (rafId !== null) {
         cancelAnimationFrame(rafId)
       }
       rafId = requestAnimationFrame(() => {
         rafId = null
-        runSetup()
+        syncObserver()
       })
     }
 
     const main = document.getElementById(MAIN_LAZY_ROOT_ID)
     if (main) {
       mo = new MutationObserver(() => {
-        schedule()
+        scheduleSyncObserver()
       })
       mo.observe(main, { childList: true, subtree: true })
     }
@@ -130,10 +163,10 @@ export function useNavScrollSpy(
         cancelAnimationFrame(rafId)
       }
       mo?.disconnect()
-      disconnect()
-      lastOrderedKeyRef.current = ''
+      disconnectObserver()
+      lastSectionsKey = ''
     }
-  }, [navItems])
+  }, [])
 
   return activeHref
 }

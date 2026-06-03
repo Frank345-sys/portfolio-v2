@@ -1,9 +1,22 @@
+/**
+ * Pruebas de `useNavUnderlinePosition` — visibilidad y métricas (`left`, `width`) del subrayado desktop.
+ *
+ * @fileoverview Harness con fila de enlaces fija; espera medición tras `ResizeObserver` y `requestAnimationFrame`.
+ * @remarks Alterna `activeHref` para cubrir subrayado oculto vs visible; mock global de `ResizeObserver`.
+ */
+
 import { render, screen, waitFor } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { DEFAULT_NAV_ITEMS } from '../constants'
-import { useNavUnderlinePosition } from '../hooks/useNavUnderlinePosition'
+import { ResizeObserverMock } from '@/test/helpers'
 
+import { DEFAULT_NAV_ITEMS } from '../../constants/navigation'
+import { useNavUnderlinePosition } from '../useNavUnderlinePosition'
+
+/**
+ * Harness que monta `useNavUnderlinePosition` con una fila fija de 300px
+ * y expone `left`, `width` y `visible` del subrayado en `data-testid`.
+ */
 function Harness({ activeHref }: { activeHref: string | null }) {
   const { rowRef, registerLink, underline } = useNavUnderlinePosition(
     activeHref,
@@ -32,15 +45,14 @@ function Harness({ activeHref }: { activeHref: string | null }) {
   )
 }
 
-class ResizeObserverMock {
-  observe = vi.fn()
-  unobserve = vi.fn()
-  disconnect = vi.fn()
-  constructor(callback: ResizeObserverCallback) {
-    void callback
-  }
-}
-
+/**
+ * {@link useNavUnderlinePosition} — medición (`left`, `width`, `visible`) del subrayado en la fila
+ * de enlaces ({@link DEFAULT_NAV_ITEMS}); `ResizeObserver` mockeado.
+ *
+ * **Subrayado + IO vía hook orquestador:** `useHeader.test.tsx`.
+ * **Reglas del href activo (spy):** `useNavScrollSpy.test.tsx`.
+ * **Props Motion sobre el DOM real del `Header`:** `Header.test.tsx` (solo `aria-current`).
+ */
 describe('useNavUnderlinePosition', () => {
   beforeEach(() => {
     globalThis.ResizeObserver =
