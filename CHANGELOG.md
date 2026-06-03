@@ -4,6 +4,30 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ## [Unreleased]
 
+### Añadido
+
+- Scripts `react-doctor` y `react-doctor:full`; `react-doctor.config.json` con schema **0.2.6** y `deadCode: false` (código muerto cubierto por **Knip** en `check` / `check:ci`).
+- Subcomponentes de **Modal** en `Modal/subcomponentes/` (`ModalHeader`, `ModalBody`, `ModalFooter`) y constantes de stats en `HeroStats/constants.ts`.
+- `.gitignore`: `react-doctor-report.txt` (informes locales o redirección en desarrollo).
+- Script **`check:extended`**: `check` + `react-doctor:full` (gate local opcional pre-release).
+
+### Cambiado
+
+- **React Doctor** actualizado a **0.2.6**; workflow en PRs usa `npm exec react-doctor` (sin `@latest`). Auditoría completa local alcanza **100/100** tras ajustes de hooks y semántica HTML.
+- **ErrorBoundary**: sin modo `presentation="fullscreen"`; fallback acotado al área del boundary (cabecera y pie siguen visibles).
+- Accesibilidad: subbloques con `role="group"` sustituidos por `<section aria-labelledby="…">` (About, contacto, pie).
+- **ImageCarousel**: fallback de error con `<img alt="…">` e icono decorativo (sin `div role="img"`).
+- **Modal**: API compuesta (`Modal.Header`, `Modal.Body`, `Modal.Footer`) con un único export de componente raíz.
+- Hooks alineados con **React Compiler** (`useHeader`, `useIsIntersecting`, `useNavScrollSpy`, `useProjectsScrollSync`, `useImageCarousel`).
+- ESLint: `ecmaVersion` **2023** en `eslint.config.js`.
+- README y reglas `.cursor` alineados con el pipeline y la estructura actual.
+- Scripts: tabla README ampliada (`lint:tsdoc`, `lint:env:strict`, `tsdoc:*`, `check:extended`); `test:coverage:ci` con reporter solo `text`; `scripts/README.md` enlaza React Doctor.
+
+### Eliminado
+
+- Script `lighthouse:pages` y `scripts/lighthouse-pages.mjs` (auditoría Lighthouse local); usar DevTools, extensión Lighthouse o PageSpeed Insights hasta integrar CI con umbrales.
+- `public/robots.txt` y `public/sitemap.xml` versionados (solo generación en build vía plugin Vite).
+
 ## [1.6.0] - 2026-04-25
 
 ### Añadido
