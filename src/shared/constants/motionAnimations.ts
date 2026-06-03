@@ -1,3 +1,10 @@
+/**
+ * Presets compartidos para Motion for React (`MOTION_ANIMATION`, overlays y presence fades).
+ *
+ * @fileoverview Implementación en `motionAnimations.ts`; easing, springs y variantes reutilizables.
+ * @remarks Importar desde `@/shared/constants/motionAnimations`; tokens CSS en `@/shared/constants/tokens`.
+ */
+
 import type { Variants } from 'motion/react'
 
 /**
@@ -53,9 +60,14 @@ const presenceFadeExpressiveVariants: Variants = {
  */
 export const OVERLAY_FADE = {
   variants: overlayFadeVariants,
-  initial: 'hidden' as const,
-  animate: 'visible' as const,
-  exit: 'exit' as const,
+  initial: 'hidden',
+  animate: 'visible',
+  exit: 'exit',
+} as const satisfies {
+  readonly variants: Variants
+  readonly initial: 'hidden'
+  readonly animate: 'visible'
+  readonly exit: 'exit'
 }
 
 /**
@@ -65,7 +77,12 @@ export const OVERLAY_FADE = {
  */
 export const PRESENCE_FADE_EXPRESSIVE = {
   variants: presenceFadeExpressiveVariants,
-  initial: 'hidden' as const,
-  animate: 'visible' as const,
-  exit: 'exit' as const,
+  initial: 'hidden',
+  animate: 'visible',
+  exit: 'exit',
+} as const satisfies {
+  readonly variants: Variants
+  readonly initial: 'hidden'
+  readonly animate: 'visible'
+  readonly exit: 'exit'
 }

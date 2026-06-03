@@ -5,13 +5,15 @@
  * en `src/index.css` (`@theme`), actualiza los valores en este módulo para que coincidan.
  *
  * @module shared/constants/breakpoints
+ * @fileoverview Catálogo importado por secciones y utilidades; cambios globales de marca o layout.
+ * @remarks Coordinar con tokens en `shared/constants/tokens` y con el sistema de temas si toca color o tipografía.
  */
 
 /**
  * Anchos mínimos (px) por prefijo Tailwind: clase `xs:` → viewport ≥ `xs`, etc.
  * (Referencia alineada con `index.css` / `@theme`; no exportar evita falso "unused" en análisis estático.)
  */
-const BREAKPOINT_MIN_PX = {
+export const BREAKPOINT_MIN_PX = {
   xs: 375,
   sm: 640,
   md: 768,
@@ -21,7 +23,14 @@ const BREAKPOINT_MIN_PX = {
 } as const
 
 /**
- * Media query `min-width` para viewport ≥ `lg` (1024px), alineada con scroll sync
- * en Projects. El resto de prefijos: `(min-width: ${BREAKPOINT_MIN_PX[clave]}px)`.
+ * Ancho máximo (exclusivo) para layouts que distinguen “móvil muy compacto”.
+ * Queda entre el token `xs` (375px) y `sm` (640px) de Tailwind; no equivale a un solo prefijo.
+ * Usado en el generador de cajas del fondo decorativo (`utils/boxGenerator.ts`).
  */
-export const MEDIA_QUERY_LG_MIN = `(min-width: ${BREAKPOINT_MIN_PX.lg}px)`
+export const VIEWPORT_COMPACT_MAX_PX = 480
+
+/**
+ * Media queries `min-width` alineadas con los prefijos Tailwind.
+ * Uso: `window.matchMedia(MEDIA_QUERY_LG_MIN).matches`
+ */
+export const MEDIA_QUERY_LG_MIN = `(min-width: ${BREAKPOINT_MIN_PX.lg}px)` // ≥ 1024px

@@ -1,6 +1,6 @@
 # Sistema de design tokens
 
-Tokens de diseño del portfolio: tipografía, layout, botones, badges, animaciones, cards, marca y z-index. Los **colores semánticos** y la escala **`shadow-elevation-*`** se definen en `src/index.css` (Tailwind v4: `@import 'tailwindcss'`, `@theme`, bloque **`.dark`**). Esta carpeta exporta **strings de clases** para componer en componentes.
+Tokens de diseño del portfolio: tipografía, layout, botones, badges, animaciones, cards y z-index. Los **colores semánticos** y la escala **`shadow-elevation-*`** se definen en `src/index.css` (Tailwind v4: `@import 'tailwindcss'`, `@theme`, bloque **`.dark`**). Esta carpeta exporta **strings de clases** para componer en componentes.
 
 **Re-export:** solo desde `@/shared/constants/tokens` (vía `index.ts`), no importar archivos sueltos salvo mantenimiento.
 
@@ -10,16 +10,17 @@ Tokens de diseño del portfolio: tipografía, layout, botones, badges, animacion
 
 ```
 tokens/
-  animation.ts    # Transiciones, hover, fade, scroll, loading, stagger
-  badge.ts        # Badges, pills, chips, estado, dots
-  brand.ts        # BRAND.logoIcon (cabecera / pie)
-  button.ts       # Contained / outlined / text + special (CTA, icon, link)
+  animation.ts    # Transiciones, hover, fade, scroll, loading
+  badge.ts        # Badges, estado, dots, specials mínimos (new)
+  button.ts       # solid / outline / lighter / text + special (CTA, icon)
   card.ts         # Superficies (surface, interactive, overlay, layout)
   layout.ts       # Container, section, spacing, grid, prose, divider
   typography.ts   # TYPOGRAPHY + PRIMARY_NAV_LINK (nav principal)
-  z.ts            # Z.base … Z.toast (capas del UI)
+  z.ts            # Z.raised … Z.toast (sin token z-0 — flujo normal)
   index.ts        # export * de los anteriores (no hay módulo INPUT)
 ```
+
+**Marca del sitio (`SiteLogo`):** tamaño del icono, clases del `<a>` (foco, layout, hover) y tipografía del nombre se definen en `@/shared/components/primitives/SiteLogo/SiteLogo.tsx`, no en esta carpeta.
 
 No existe `input.ts`: el portfolio no usa formularios con tokens de campo; para etiquetas de UI genéricas usar **`TYPOGRAPHY.label.*`**.
 
@@ -52,12 +53,6 @@ export function Bloque() {
 
 ## Los tokens de **párrafo** (`paragraph.secondary`, `paragraph.small`, …) aportan tamaño y `leading-relaxed`; el color del texto a menudo **se hereda** del contexto. Si el contraste no alcanza WCAG (p. ej. texto secundario sobre `bg-bg-weak`), añade **`text-text-strong`** o **`text-text-subtle`** con `cn()` según el diseño, o variantes
 
-## BRAND
-
-| Token            | Uso                                                                   |
-| ---------------- | --------------------------------------------------------------------- |
-| `BRAND.logoIcon` | Tamaño del icono junto al nombre (header y enlace de marca en footer) |
-
 ---
 
 ## CARD
@@ -89,7 +84,7 @@ Solo en elementos interactivos. Variantes: `default`, `weak`, `white` (ver `card
 
 ### `CARD.overlay` + **Z**
 
-Combinar con **`Z.drawer`**, **`Z.modal`**, etc. (ver sección Z). El backdrop de modal usa **`Z.backdrop`**.
+Combinar con **`Z.drawer`** o **`Z.backdrop`** según el overlay (ver sección Z).
 
 ### Dark mode
 
@@ -125,30 +120,27 @@ Preferir **siempre** tokens de tipografía en lugar de clases de tamaño sueltas
 
 **`PRIMARY_NAV_LINK`:** encadena `link.nav` + `paragraph.small` — misma base para enlaces de navegación en **desktop**, **drawer móvil** y pie (más utilidades de foco en el componente).
 
-### Links: `TYPOGRAPHY.link` vs `BUTTON.special.link`
-
-| Token                 | Estructura          | Uso                                   |
-| --------------------- | ------------------- | ------------------------------------- |
-| `link.*`              | texto inline        | Párrafos, pie, `PRIMARY_NAV_LINK`     |
-| `BUTTON.special.link` | `inline-flex` + gap | CTA con ícono, fuera de texto corrido |
-
 ---
 
 ## BUTTON
 
-Variantes `contained` / `outlined` / `text`, tamaños `sm`…`xl` / `responsive`, especiales `cta` (no mezclar con `size`), `icon`, `link`, y grupos `group.horizontal` / `vertical` / `attached`. Ver `button.ts` para el mapa completo.
+Variantes `solid` / `outline` / `lighter` / `text` (cada una con paletas `primary`, `neutral`, `error`; `solid` también `white`), tamaños `sm`…`xl` / `responsive`, especiales `cta` (no mezclar con `size`), `icon`, y grupos `group.horizontal` / `vertical` / `attached`. Ver `button.ts` para el mapa completo.
 
 ---
 
 ## BADGE
 
-`variant` y `status` combinan con `BADGE.size.*`; `special.pill`, `chip`, `dot`, etc. tienen reglas propias (no mezclar con tamaño salvo `variant`/`status`). `BADGE.status.online` sobre `bg-bg-white`. Ver comentarios en `badge.ts`.
+`variant` y `status` combinan con `BADGE.size.*`; `special.dot` / `dotSize` / `new` tienen reglas propias (no mezclar `special.*` con `size.*`). `BADGE.status.online` sobre `bg-bg-white`. Ver comentarios en `badge.ts`.
 
 ---
 
 ## ANIMATION
 
-Transiciones, hover, fade, slide, **stagger** (`child1`…`child5` — máximo cinco en serie; en listas largas, retraso por índice en JS), scroll reveal, loading/skeleton. Clase global de skeleton: `.u-skeleton-shimmer`.
+**Rol:** animaciones **simples y homogéneas** en CSS (mismos tiempos y efectos en botones, cards, tooltips, placeholders). Evita mezclar duraciones o easings sueltos.
+
+**Motion** (`motion/react`): animaciones **complejas** (stagger largo, layout, gestos, secuencias). No duplicar eso aquí; usar tokens solo cuando baste una clase.
+
+Incluye: transiciones, hover, fade (tailwindcss-animate), scroll reveal, loading (`spinner`, `skeleton` / `skeletonPulse` en `index.css`).
 
 ---
 
@@ -167,7 +159,7 @@ Definido en `index.css` bajo `@theme`. Usar solo clases semánticas `shadow-elev
 
 ## Z
 
-Usar **`Z.*`** vía `z.ts` (mapea a clases en `@theme`); evitar `z-30` sueltos en componentes. Orden lógico: `base` → `raised` → `dropdown` → `drawer` → `backdrop` → `modal` → `header` → `drawerElevated` → `toast`. El **drawer móvil** y su overlay usan **`Z.drawerElevated`**. Detalle en comentarios de `z.ts` y usos reales en `Header` / `MobileDrawer`.
+Usar **`Z.*`** vía `z.ts`; evitar `z-*` sueltos. No hay token para **z-0** (no suele hacer falta expresarlo). Orden: `raised` → `dropdown` → `drawer` → **`header`** → **`backdrop`** (fullscreen) → `toast`. **`Modal`** / **`MobileDrawer`**: **`Z.backdrop`**. Detalle en `z.ts`.
 
 ---
 
@@ -189,7 +181,7 @@ Usar **`Z.*`** vía `z.ts` (mapea a clases en `@theme`); evitar `z-30` sueltos e
 
 **Bordes:** `border-stroke-soft` · `subtle` · `medium` · `strong`
 
-**Estado / marca:** `information`, `success`, `warning`, `error`, `feature` — variantes `*-base`, `*-dark`, `*-light`, `*-lighter` según el token. En **`.dark`**, muchos `*-light` se expresan como mezclas alfa;
+**Estado / marca:** `information`, `neutral`, `success`, `warning`, `error`, `feature` — variantes `*-base`, `*-dark`, `*-light`, `*-lighter` según el token. En **`.dark`**, muchos `*-light` se expresan como mezclas alfa;
 
 ---
 
@@ -198,7 +190,7 @@ Usar **`Z.*`** vía `z.ts` (mapea a clases en `@theme`); evitar `z-30` sueltos e
 ```tsx
 <button
   className={cn(
-    BUTTON.variant.contained.primary,
+    BUTTON.variant.solid.primary,
     BUTTON.size.md,
     isDisabled && 'pointer-events-none opacity-50'
   )}

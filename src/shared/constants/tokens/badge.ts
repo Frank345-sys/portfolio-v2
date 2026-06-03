@@ -1,25 +1,72 @@
-import { ANIMATION } from './animation'
-import { Z } from './z'
+/**
+ * Constantes compartidas del proyecto (`shared/constants/tokens/badge.ts`).
+ *
+ * @fileoverview Catálogo importado por secciones y utilidades; cambios globales de marca o layout.
+ * @remarks Coordinar con tokens en `shared/constants/tokens` y con el sistema de temas si toca color o tipografía.
+ */
 
-const base =
-  'inline-flex items-center gap-2 font-semibold rounded-full' as const
+import { cn } from '@/shared/utils/cn'
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Base compartida (interno)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Clases base compartidas por todas las variantes de badge.
+ *
+ * @internal
+ */
+const base = 'inline-flex items-center gap-2 font-semibold rounded-full'
+
+/**
+ * Tamaño `sm` — una sola fuente de verdad para `BADGE.size.sm` y el default de
+ * cada `BADGE.variant.<modo>.<paleta>` vía {@link make}.
+ *
+ * @internal
+ */
+const sizeSm = 'px-2.5 py-0.5 text-xs'
+
+/**
+ * Helpers internos por modo — badges no interactivos (sin hover/active como el botón).
+ *
+ * @internal
+ */
+const make = (...palette: string[]): string => cn(base, sizeSm, ...palette)
+
+/** Paleta de {@link BADGE.variant.light.success} — `special.new` añade solo el borde. */
+const lightSuccessPalette = 'bg-success-lighter text-success-base'
 
 /**
  * Tokens de badges: tamaños, variantes semánticas, especiales, estado y grupos.
  *
- * Composición general:
- * - `BADGE.variant.*` y `BADGE.status.*` se combinan con `BADGE.size.*` via cn().
+ * ## Variantes (`BADGE.variant.<modo>.<paleta>`)
+ * Misma filosofía que `BUTTON.variant`: **light**, **solid**, **outline**, **text**.
+ * Todas incluyen `sizeSm` por defecto; para `md`, `lg` o `responsive` combinar en
+ * **segundo** en `cn()` con `BADGE.size.*`.
+ *
+ * Paletas semánticas: `primary`, `success`, `error`, `warning`, `feature`,
+ * `neutral`.
+ *
+ * - **light** — Fondos *-lighter* (lo que antes era el set único de `variant`).
+ * - **solid** — Rellenos densos tipo botón filled.
+ * - **outline** — Transparente + borde de color.
+ * - **text** — Solo texto, sin borde perceptible (borde transparente para misma métrica).
+ *
+ * ## Otros
+ * - `BADGE.status.*` usa la misma base que las variantes (incluye `size.sm` por
+ *   defecto). Para `md`, `lg` o `responsive`, componer en **segundo**:
+ *   `cn(BADGE.status.online, BADGE.size.md)` — igual que `BADGE.variant.*.*`.
  * - `BADGE.special.*` son componentes completos — ya incluyen tamaño propio.
+ *
+ * **Orden en este archivo:** imports → helpers internos → {@link BADGE}.
  *
  * @example
  * ```tsx
- * // Badge estándar
- * <span className={cn(BADGE.variant.primary, BADGE.size.sm)}>Nuevo</span>
+ * <span className={BADGE.variant.light.primary}>Etiqueta</span>
+ * <span className={cn(BADGE.variant.solid.error, BADGE.size.md)}>Md</span>
  *
- * // Chip seleccionable
- * <button className={isActive ? BADGE.special.chipActive : BADGE.special.chip}>
- *   React
- * </button>
+ * // Estado / tamaño — mismo orden que variant (tamaño en segundo término)
+ * <span className={cn(BADGE.status.online, BADGE.size.md)}>En línea</span>
  *
  * // Dot de estado
  * <span className={cn(BADGE.special.dot, 'bg-success-base')} />
@@ -28,65 +75,86 @@ const base =
 export const BADGE = {
   // ── Tamaños ───────────────────────────────────────────────────────────────
   size: {
-    /** @use Etiquetas compactas, tablas, espacios muy densos. */
-    sm: 'px-2.5 py-0.5 text-xs',
+    /** @use Etiquetas compactas, tablas, espacios muy densos (misma cadena que incluyen `BADGE.variant.*.*`). */
+    sm: sizeSm,
 
     /** @use Uso general. */
     md: 'px-3 py-1 text-sm',
 
     /** @use Badges destacados en hero o cabeceras de sección. */
     lg: 'px-4 py-1.5 text-base',
+
+    /**
+     * @use Badges que deben adaptarse al ancho del viewport (equivalente a `sm` → `md` → `lg` por breakpoint).
+     * @nocombine BADGE.special.* (tamaño propio en esos casos)
+     */
+    responsive:
+      'px-2.5 sm:px-3 md:px-4 py-0.5 sm:py-1 md:py-1.5 text-xs sm:text-sm md:text-base',
   },
 
-  // ── Variantes semánticas ──────────────────────────────────────────────────
+  // ── Variantes por modo (light / solid / outline / text) + paleta semántica ──
   variant: {
     /**
-     * @use Estados informativos, novedades, categorías neutras.
-     * @combine BADGE.size.* via cn() para controlar el tamaño.
+     * Fondos pastel / *lighter* — apariencia suave por defecto en listados y filtros.
      */
-    primary: `${base} bg-information-light text-information-dark`,
+    light: {
+      primary: make('bg-information-lighter text-information-base'),
+      success: make(lightSuccessPalette),
+      error: make('bg-error-lighter text-error-base'),
+      warning: make('bg-warning-lighter text-warning-base'),
+      feature: make('bg-feature-lighter text-feature-base'),
+      neutral: make('bg-bg-soft'),
+    },
 
-    /**
-     * @use Confirmaciones, estados completados, validaciones positivas.
-     * @combine BADGE.size.* via cn().
-     */
-    success: `${base} bg-success-light text-success-dark`,
+    /** Rellenos densos — máximo peso sobre el contenido cercano */
+    solid: {
+      primary: make('bg-information-base text-white'),
+      success: make('bg-success-base text-white'),
+      error: make('bg-error-base text-white'),
+      warning: make('bg-warning-base text-white'),
+      feature: make('bg-feature-base text-white'),
+      neutral: make('bg-neutral-base text-text-white'),
+    },
 
-    /**
-     * @use Errores, estados críticos, elementos bloqueados.
-     * @combine BADGE.size.* via cn().
-     */
-    error: `${base} bg-error-light text-error-dark`,
+    /** Solo borde y texto — mismo criterio visual que outline de botón, sin hover */
+    outline: {
+      primary: make(
+        'border border-information-base bg-transparent text-information-base'
+      ),
+      success: make(
+        'border border-success-base bg-transparent text-success-base'
+      ),
+      error: make('border border-error-base bg-transparent text-error-base'),
+      warning: make(
+        'border border-warning-base bg-transparent text-warning-base'
+      ),
+      feature: make(
+        'border border-feature-base bg-transparent text-feature-base'
+      ),
+      neutral: make(
+        'border border-neutral-base bg-transparent text-neutral-base'
+      ),
+    },
 
-    /**
-     * @use Advertencias, acciones preventivas, estados en riesgo.
-     * @combine BADGE.size.* via cn().
-     */
-    warning: `${base} bg-warning-light text-warning-dark`,
-
-    /**
-     * @use Novedades de producto, features nuevas, betas.
-     * @combine BADGE.size.* via cn().
-     */
-    feature: `${base} bg-feature-light text-feature-dark`,
-
-    /**
-     * @use Categorías sin carga semántica, tags genéricos.
-     * @combine BADGE.size.* via cn().
-     */
-    neutral: `${base} bg-bg-soft`,
-
-    /**
-     * @use Máximo contraste — sobre fondos claros o imágenes.
-     * @combine BADGE.size.* via cn().
-     */
-    dark: `${base} bg-bg-strong text-text-white`,
-
-    /**
-     * @use Badges sutiles sin relleno — sobre fondos blancos o cards.
-     * @combine BADGE.size.* via cn().
-     */
-    outline: `${base} bg-bg-white border border-stroke-subtle text-text-strong`,
+    /** Solo tipografía coloreada — sin relleno ni borde visible */
+    text: {
+      primary: make(
+        'border border-transparent bg-transparent text-information-base'
+      ),
+      success: make(
+        'border border-transparent bg-transparent text-success-base'
+      ),
+      error: make('border border-transparent bg-transparent text-error-base'),
+      warning: make(
+        'border border-transparent bg-transparent text-warning-base'
+      ),
+      feature: make(
+        'border border-transparent bg-transparent text-feature-base'
+      ),
+      neutral: make(
+        'border border-transparent bg-transparent text-neutral-base'
+      ),
+    },
   },
 
   // ── Especiales ────────────────────────────────────────────────────────────
@@ -95,87 +163,59 @@ export const BADGE = {
   special: {
     /**
      * @use Indicador circular de color — presencia, disponibilidad, estado.
-     * @combine Componer tamaño + color con cn():
+     * @combine Tamaño + color via `cn()`:
      *          `cn(BADGE.special.dot, BADGE.special.dotSize.md, 'bg-success-base')`
      * @nocombine BADGE.size.* (es un dot, no un badge de texto)
      */
     dot: 'rounded-full shrink-0',
+
     dotSize: {
       /** @use Dot compacto en layouts densos. */
       sm: 'w-2 h-2',
-      /** @use Dot estándar (equivalente al tamaño anterior). */
+      /** @use Dot estándar. */
       md: 'w-2.5 h-2.5',
-      /** @use Dot destacado para métricas/estado principal. */
+      /** @use Dot destacado para métricas o estado principal. */
       lg: 'w-3 h-3',
       /** @use Dot extra grande para uso en hero o cabeceras de sección. */
       xl: 'w-4 h-4',
     },
 
     /**
-     * @use Notificación de novedad sobre un elemento — posición absoluta esquina superior derecha.
-     * @warning El padre debe tener `position: relative` para que el posicionamiento funcione.
-     * @nocombine BADGE.size.* (ya tiene padding propio)
+     * @use Etiqueta de novedad — misma base que {@link BADGE.variant.light.success} más borde.
+     * Posicionamiento (p. ej. `absolute`, offsets, `z-*`) debe aplicarlo el consumidor.
+     * @nocombine BADGE.size.* (usa el mismo tamaño compacto que `variant.light.*`)
      */
-    new: `absolute -top-2 -right-2 ${Z.raised} bg-error-base text-text-white px-2 py-0.5 text-xs font-bold rounded-full`,
-
-    /**
-     * @use Contador de notificaciones o items — número dentro de un círculo pequeño.
-     * @nocombine BADGE.size.* (ya tiene dimensiones mínimas propias)
-     */
-    counter:
-      'inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-error-base text-text-white text-xs font-bold rounded-full',
-
-    /**
-     * @use Tags de categoría, etiquetas de contenido, pills de filtro no interactivos.
-     * @nocombine BADGE.size.* (tamaño propio), BADGE.variant.* (estilo propio)
-     */
-    pill: `px-4 py-2 bg-bg-weak text-sm font-medium rounded-full hover:bg-bg-soft ${ANIMATION.transition.colors}`,
-
-    /**
-     * @use Filtros o tags seleccionables — estado no activo.
-     *      Usar en `<button>` — tiene cursor y estados hover/active.
-     * @combine BADGE.special.chipActive — alternar entre ambos según estado.
-     * @nocombine BADGE.size.* (tamaño propio), BADGE.variant.* (estilo propio)
-     */
-    chip: `px-4 py-2 bg-bg-white border-2 border-stroke-soft text-sm font-medium rounded-full cursor-pointer hover:border-information-base hover:bg-information-lighter hover:text-information-dark ${ANIMATION.transition.default}`,
-
-    /**
-     * @use Filtros o tags seleccionables — estado activo.
-     *      Usar en `<button>` — alternar con chip según estado.
-     * @combine BADGE.special.chip — alternar entre ambos según estado.
-     * @nocombine BADGE.size.* (tamaño propio), BADGE.variant.* (estilo propio)
-     */
-    chipActive:
-      'px-4 py-2 bg-information-base text-text-white text-sm font-medium rounded-full',
+    new: make(lightSuccessPalette, 'border border-success-base'),
   },
 
   // ── Estado / presencia ────────────────────────────────────────────────────
   status: {
     /**
      * @use Indicador de presencia activa — usuario online, servicio activo.
-     * @combine BADGE.size.* via cn().
+     * Incluye el mismo tamaño compacto (`size.sm`) que {@link BADGE.variant};
+     * sobrescribir con `BADGE.size.md` \| `lg` \| `responsive` en **segundo** en {@link cn}.
      * @warning Usar solo sobre `bg-bg-white` — el fondo success-base pierde
      *          contraste dentro de otros badges de color.
      */
-    online: `${base} bg-success-base text-text-white`,
+    online: make('bg-success-base text-text-white'),
 
     /**
      * @use Indicador de presencia inactiva — usuario offline, servicio caído.
-     * @combine BADGE.size.* via cn().
+     * @combine BADGE.size.* — segundo término en {@link cn}, como las variantes.
      */
-    offline: `${base} bg-bg-soft`,
+    offline: make('bg-bg-soft text-text-subtle'),
 
     /**
      * @use Indicador de ocupado — usuario en reunión, servicio con carga alta.
-     * @combine BADGE.size.* via cn().
+     * @combine BADGE.size.* — segundo término en {@link cn}.
      */
-    busy: `${base} bg-warning-light text-warning-dark`,
+    busy: make('bg-warning-lighter text-warning-base'),
 
     /**
      * @use Indicador de ausencia temporal — usuario ausente, servicio en mantenimiento.
-     * @combine BADGE.size.* via cn().
+     * @combine BADGE.size.* — segundo término en {@link cn}.
      */
-    away: `${base} bg-idle-light text-idle-dark`,
+    away: make('bg-idle-lighter text-idle-base'),
   },
 
   group: {

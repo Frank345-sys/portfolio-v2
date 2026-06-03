@@ -1,7 +1,24 @@
+/**
+ * Constantes compartidas del proyecto (`shared/constants/tokens/typography.ts`).
+ *
+ * @fileoverview Catálogo importado por secciones y utilidades; cambios globales de marca o layout.
+ * @remarks Coordinar con tokens en `shared/constants/tokens` y con el sistema de temas si toca color o tipografía.
+ */
+
 import { cn } from '@/shared/utils/cn'
 
 import { ANIMATION } from './animation'
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Bases y escalas (interno)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Clases base por categoría tipográfica.
+ * Se usan como primer argumento en `cn()` dentro de cada token.
+ *
+ * @internal
+ */
 const BASE = {
   title: 'text-text-strong leading-tight tracking-tight',
   paragraph: 'leading-relaxed',
@@ -9,6 +26,12 @@ const BASE = {
   link: ANIMATION.transition.colors,
 } as const
 
+/**
+ * Escala de tamaños responsivos.
+ * Clave con `+` indica progresión fluida entre breakpoints.
+ *
+ * @internal
+ */
 const SIZE = {
   '4xl+': 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl',
   '3xl+': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl',
@@ -27,13 +50,13 @@ const SIZE = {
  * Tokens de tipografía: títulos, párrafos, labels, links y variantes especiales.
  *
  * Links:
- * - Texto inline con estilo de enlace (párrafos, nav) → `TYPOGRAPHY.link.*`
- * - Ítems de nav principal (header, drawer, pie)       → `PRIMARY_NAV_LINK`
- * - Link autónomo con ícono (`inline-flex`, `gap`)    → `BUTTON.special.link`
+ * - Cada variante de link es autocontenida (incluye tamaño).
  *
  * Labels:
  * - Dentro de formularios  → `INPUT.label.*`
  * - Uso general en UI      → `TYPOGRAPHY.label.*`
+ *
+ * **Orden en este archivo:** imports → `BASE` / `SIZE` internos → {@link TYPOGRAPHY} → {@link PRIMARY_NAV_LINK}.
  *
  * @example
  * ```tsx
@@ -43,116 +66,125 @@ const SIZE = {
  * ```
  */
 export const TYPOGRAPHY = {
+  // ── Títulos ───────────────────────────────────────────────────────────────
   title: {
     /** @use H1 — título principal de la página, máximo impacto. */
-    hero: `${SIZE['4xl+']} font-bold ${BASE.title}`,
+    hero: cn(BASE.title, SIZE['4xl+'], 'font-bold'),
 
     /** @use H2 — título de sección. */
-    section: `${SIZE['3xl+']} font-bold ${BASE.title}`,
+    section: cn(BASE.title, SIZE['3xl+'], 'font-bold'),
 
     /** @use H3 — subtítulo de sección. */
-    subsection: `${SIZE['xl+']} font-semibold ${BASE.title}`,
+    subsection: cn(BASE.title, SIZE['xl+'], 'font-semibold'),
 
     /** @use H4–H5 — título pequeño dentro de un bloque de contenido. */
-    small: `${SIZE['base+']} font-semibold ${BASE.title}`,
+    small: cn(BASE.title, SIZE['base+'], 'font-semibold'),
 
     /**
      * @use Título de card o panel — cabecera de componente.
      * @nocombine CARD.layout.title (son semánticamente equivalentes — usar uno u otro)
      */
-    xsmall: `${SIZE['sm+']} font-medium ${BASE.title}`,
+    xsmall: cn(BASE.title, SIZE['sm+'], 'font-medium'),
 
     /** @use Overline, etiqueta de sección, label sobre un título. */
-    xxsmall: `${SIZE['xs+']} font-medium ${BASE.title}`,
+    xxsmall: cn(BASE.title, SIZE['xs+'], 'font-medium'),
   },
 
+  // ── Párrafos ──────────────────────────────────────────────────────────────
   paragraph: {
     /** @use Texto intro o lead — inmediatamente debajo del hero. */
-    lead: `${SIZE['lg+']} text-text-strong font-normal ${BASE.paragraph}`,
+    lead: cn(BASE.paragraph, SIZE['lg+'], 'text-text-strong font-normal'),
 
     /** @use Texto grande destacado — citas, bloques de intro en secciones. */
-    large: `${SIZE.xl} text-text-strong ${BASE.paragraph}`,
+    large: cn(BASE.paragraph, SIZE.xl, 'text-text-strong'),
 
     /** @use Texto principal del cuerpo — la mayoría del contenido de la página. */
-    primary: `${SIZE.base} ${BASE.paragraph}`,
+    primary: cn(BASE.paragraph, SIZE.base),
 
     /** @use Texto secundario — descripciones, metadatos, contenido de apoyo. */
-    secondary: `${SIZE.sm} ${BASE.paragraph}`,
+    secondary: cn(BASE.paragraph, SIZE.sm),
 
     /** @use Texto muy pequeño — timestamps, versiones, metadata auxiliar. */
-    small: `${SIZE.xs} ${BASE.paragraph}`,
+    small: cn(BASE.paragraph, SIZE.xs),
 
     /** @use Texto muted — notas al pie, aclaraciones, contenido de muy bajo énfasis. */
-    muted: `${SIZE.sm} text-text-subtle ${BASE.paragraph}`,
+    muted: cn(BASE.paragraph, SIZE.sm, 'text-text-subtle'),
   },
 
-  // Labels genéricos de UI. Para labels de formulario usar INPUT.label.*
+  // ── Labels (UI general; formularios → INPUT.label.*) ─────────────────────
   label: {
     /** @use Label de UI general — etiquetas, categorías, metadatos fuera de formularios. */
-    default: `text-sm ${BASE.label}`,
+    default: cn(BASE.label, 'text-base'),
 
     /** @use Label grande — cuando el contexto necesita más prominencia que default. */
-    large: `text-base ${BASE.label}`,
+    large: cn(BASE.label, 'text-lg'),
 
     /** @use Label pequeño — etiquetas dentro de componentes compactos. */
-    small: `text-xs ${BASE.label}`,
+    small: cn(BASE.label, 'text-sm'),
 
     /** @use Overline — categoría en mayúsculas sobre un título, etiqueta de sección. */
     overline:
       'text-xs font-semibold uppercase tracking-widest text-text-subtle',
   },
 
-  // Links inline. Para links autónomos con ícono usar BUTTON.special.link
+  // ── Links inline ──────────────────────────────────────────────────────────
+  // Cada variante incluye su tamaño; son autocontenidas y no requieren
+  // combinarse con paragraph.* externamente.
   link: {
     /**
      * @use Link dentro de párrafos o texto corrido — con underline visible.
-     * @nocombine BUTTON.special.link (son para contextos distintos)
      */
-    default: `text-information-base hover:text-information-dark underline underline-offset-2 ${BASE.link}`,
+    default: cn(
+      BASE.link,
+      SIZE.sm,
+      'text-information-base hover:text-information-dark',
+      'underline underline-offset-2'
+    ),
 
     /**
      * @use Link inline sin underline — cuando el contexto ya indica que es clickeable.
-     * @nocombine BUTTON.special.link (son para contextos distintos)
      */
-    plain: `text-information-base hover:text-information-dark ${BASE.link}`,
+    plain: cn(
+      BASE.link,
+      SIZE.sm,
+      'text-information-base hover:text-information-dark'
+    ),
 
     /**
      * @use Links de navbar o sidebar — texto sutil que se oscurece al hover.
-     * @nocombine BUTTON.special.link (son para contextos distintos)
      */
-    nav: `hover:text-text-strong font-medium ${BASE.link}`,
+    nav: cn(BASE.link, SIZE.sm, 'hover:text-text-strong font-medium'),
 
     /**
      * @use Links del footer — tamaño reducido, color muy sutil.
-     * @nocombine BUTTON.special.link (son para contextos distintos)
      */
-    footer: `text-text-subtle hover:text-text-strong text-sm ${BASE.link}`,
+    footer: cn(BASE.link, SIZE.xs, 'text-text-subtle hover:text-text-strong'),
   },
 
+  // ── Uso especial (énfasis, código, citas, stats) ──────────────────────────
   special: {
-    /** @use Palabras clave dentro de párrafos — resaltado inline sin color. */
+    /**
+     * @use Palabras clave dentro de párrafos — resaltado inline sin color.
+     * @remarks Modificador puro (sin token de tamaño); hereda el tamaño del texto circundante.
+     */
     emphasis: 'text-text-strong font-medium',
 
     /** @use `<figcaption>` o `<caption>` — descripción de imágenes, gráficos y tablas. */
-    caption: `${SIZE.xs} text-text-subtle italic`,
+    caption: cn(SIZE.xs, 'text-text-subtle italic'),
 
     /** @use Código inline dentro de texto — variables, nombres de función, comandos cortos. */
-    code: 'text-sm font-mono bg-bg-soft text-text-strong px-1.5 py-0.5 rounded',
+    code: cn(
+      SIZE.xs,
+      'bg-bg-soft text-text-strong rounded px-1.5 py-0.5 font-mono'
+    ),
 
     /** @use `<blockquote>` — citas textuales dentro de artículos o posts. */
-    quote: 'text-lg sm:text-xl md:text-2xl italic',
+    quote: cn(SIZE['lg+'], 'italic'),
 
     /** @use Número destacado o stat — métricas, counters, KPIs. */
-    stat: 'text-xl sm:text-2xl md:text-3xl font-bold text-text-strong tabular-nums leading-tight',
+    stat: cn(
+      SIZE['xl+'],
+      'text-text-strong leading-tight font-bold tabular-nums'
+    ),
   },
 } as const
-
-/**
- * Enlace de ítems de navegación principal — misma base en cabecera (desktop + drawer) y pie.
- *
- * @combine `FOOTER_FOCUS_VISIBLE` u otras utilidades de foco según el fondo del bloque.
- */
-export const PRIMARY_NAV_LINK = cn(
-  TYPOGRAPHY.link.nav,
-  TYPOGRAPHY.paragraph.small
-)

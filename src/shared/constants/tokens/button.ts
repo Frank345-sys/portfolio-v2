@@ -1,189 +1,395 @@
+/**
+ * Constantes compartidas del proyecto (`shared/constants/tokens/button.ts`).
+ *
+ * @fileoverview Catálogo importado por secciones y utilidades; cambios globales de marca o layout.
+ * @remarks Coordinar con tokens en `shared/constants/tokens` y con el sistema de temas si toca color o tipografía.
+ */
+
+import { cn } from '@/shared/utils/cn'
+
 import { ANIMATION } from './animation'
 
-const base =
-  `inline-flex items-center justify-center font-medium tracking-wide rounded-lg ${ANIMATION.transition.default} focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-40 disabled:pointer-events-none select-none uppercase text-[0.8125rem] leading-[1.75] cursor-pointer` as const
+// ─────────────────────────────────────────────────────────────────────────────
+// Tipos
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Paletas de color disponibles para todas las variantes. */
+type Palette = 'primary' | 'neutral' | 'error'
+
+/** Mapa tipado de variantes para un conjunto de paletas `P`. */
+type VariantMap<P extends string> = Record<P, string>
 
 /**
- * Tokens de botones: contained, outlined, text, especiales y grupos.
+ * Clases de paleta por modo, compartidas entre botones de texto e ícono.
+ * Cada entrada representa solo las clases que difieren entre paletas —
+ * la base del modo se aplica por separado en la fábrica.
  *
- * Composición general:
- * - `BUTTON.variant.*.*` se combina con `BUTTON.size.*` via cn().
- * - `BUTTON.special.*` son autónomos — ver cada variante para restricciones.
+ * @internal
+ */
+type PaletteClasses = VariantMap<Palette>
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Bases compartidas (interno)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Clases compartidas por **todos** los botones — texto e ícono.
+ * Layout, transición, accesibilidad y estados globales.
  *
- * Links: para un link con ícono usar `BUTTON.special.link`.
- *        Para texto inline con estilo de enlace usar `TYPOGRAPHY.link.*`.
+ * @internal — no usar directamente; componer vía {@link base} o {@link iconBase}.
+ */
+const baseShared = cn(
+  'inline-flex shrink-0 items-center justify-center gap-2',
+  ANIMATION.transition.default,
+  'focus-visible:ring-2 focus-visible:ring-offset-2',
+  'disabled:pointer-events-none disabled:opacity-40',
+  'cursor-pointer select-none'
+)
+
+/**
+ * Base para botones de texto.
+ * Extiende {@link baseShared} con tipografía, radio y `focus:outline-none`.
  *
- * @example
+ * @internal — usar vía {@link makeVariant}.
+ */
+const base = cn(
+  baseShared,
+  'rounded-lg text-[0.8125rem] leading-[1.75] font-medium tracking-wide uppercase',
+  'focus:outline-none'
+)
+
+/**
+ * Base para botones de ícono circular.
+ * Extiende {@link baseShared} con radio `full`, padding propio y `focus-visible:outline-none`.
+ *
+ * @internal — usar vía {@link makeIconVariant}.
+ */
+const iconBase = cn(
+  baseShared,
+  'rounded-full p-1',
+  'focus-visible:outline-none'
+)
+
+// ── Bases por modo ────────────────────────────────────────────────────────────
+
+/** @internal */
+const baseOutline = 'bg-transparent border-2 shadow-none'
+
+/** @internal */
+const baseLighter = 'border border-transparent shadow-none'
+
+/** @internal */
+const baseText = 'bg-transparent shadow-none'
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Fábricas (interno)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Une {@link base} con las clases del modo y la paleta.
+ * Los conflictos se resuelven con `twMerge` ({@link cn}).
+ *
+ * @internal
+ */
+const makeVariant = (...classes: string[]): string => cn(base, ...classes)
+
+/**
+ * Une {@link iconBase} con las clases del modo y la paleta.
+ * Misma semántica que {@link makeVariant} pero para botones de ícono circular.
+ *
+ * @internal
+ */
+const makeIconVariant = (...classes: string[]): string =>
+  cn(iconBase, ...classes)
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Clases de paleta por modo (fuente única — texto e ícono comparten estos datos)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Clases de paleta para el modo **solid**.
+ * Se aplican directamente sobre {@link base} / {@link iconBase} — el modo solid
+ * no tiene base de modo propia (sin sombra, sin borde, sin `bg-transparent`).
+ *
+ * @internal
+ */
+const solidPalette = {
+  primary: cn(
+    'bg-information-base text-white',
+    'hover:bg-information-dark',
+    'active:bg-information-dark/40',
+    'focus-visible:ring-information-dark'
+  ),
+  neutral: cn(
+    'bg-neutral-base text-text-white',
+    'hover:bg-neutral-dark',
+    'active:bg-neutral-dark/40',
+    'focus-visible:ring-neutral-dark'
+  ),
+  error: cn(
+    'bg-error-base text-white',
+    'hover:bg-error-dark',
+    'active:bg-error-dark/40',
+    'focus-visible:ring-error-dark'
+  ),
+} satisfies PaletteClasses
+
+/**
+ * Clases de paleta para el modo **outline**.
+ * Se aplican sobre {@link baseOutline} tanto en botón de texto como de ícono.
+ *
+ * @internal
+ */
+const outlinePalette = {
+  primary: cn(
+    'text-information-base border-information-base',
+    'hover:bg-information-light hover:border-information-base',
+    'active:border-information-light active:bg-information-light/40',
+    'focus-visible:ring-information-base'
+  ),
+  neutral: cn(
+    'text-neutral-base border-neutral-base',
+    'hover:bg-neutral-light hover:border-neutral-base',
+    'active:border-neutral-light active:bg-neutral-light/40',
+    'focus-visible:ring-neutral-base'
+  ),
+  error: cn(
+    'text-error-base border-error-base',
+    'hover:bg-error-light hover:border-error-base',
+    'active:border-error-light active:bg-error-light/40',
+    'focus-visible:ring-error-base'
+  ),
+} satisfies PaletteClasses
+
+/**
+ * Clases de paleta para el modo **lighter**.
+ * Se aplican sobre {@link baseLighter} tanto en botón de texto como de ícono.
+ *
+ * @internal
+ */
+const lighterPalette = {
+  primary: cn(
+    'bg-information-lighter text-information-base',
+    'hover:bg-information-light active:bg-information-light/40',
+    'focus-visible:ring-information-base'
+  ),
+  neutral: cn(
+    'bg-neutral-lighter text-neutral-base',
+    'hover:bg-neutral-light active:bg-neutral-light/40',
+    'focus-visible:ring-neutral-base'
+  ),
+  error: cn(
+    'bg-error-lighter text-error-base',
+    'hover:bg-error-light active:bg-error-light/40',
+    'focus-visible:ring-error-base'
+  ),
+} satisfies PaletteClasses
+
+/**
+ * Clases de paleta para el modo **text**.
+ * Se aplican sobre {@link baseText} tanto en botón de texto como de ícono.
+ *
+ * @internal
+ */
+const textPalette = {
+  primary: cn(
+    'text-information-base',
+    'hover:bg-information-light active:bg-information-light/40',
+    'focus-visible:ring-information-base'
+  ),
+  neutral: cn(
+    'text-neutral-base',
+    'hover:bg-neutral-light active:bg-neutral-light/40',
+    'focus-visible:ring-neutral-base'
+  ),
+  error: cn(
+    'text-error-base',
+    'hover:bg-error-light active:bg-error-light/40',
+    'focus-visible:ring-error-base'
+  ),
+} satisfies PaletteClasses
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Mapas de variante por modo
+// Texto e ícono se generan desde la misma paleta — fuente única de verdad.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Modo **solid** — botón de texto. */
+const solid = {
+  primary: makeVariant(solidPalette.primary),
+  neutral: makeVariant(solidPalette.neutral),
+  error: makeVariant(solidPalette.error),
+} satisfies VariantMap<Palette>
+
+/** Modo **outline** — botón de texto. */
+const outline = {
+  primary: makeVariant(baseOutline, outlinePalette.primary),
+  neutral: makeVariant(baseOutline, outlinePalette.neutral),
+  error: makeVariant(baseOutline, outlinePalette.error),
+} satisfies VariantMap<Palette>
+
+/** Modo **lighter** — botón de texto. */
+const lighter = {
+  primary: makeVariant(baseLighter, lighterPalette.primary),
+  neutral: makeVariant(baseLighter, lighterPalette.neutral),
+  error: makeVariant(baseLighter, lighterPalette.error),
+} satisfies VariantMap<Palette>
+
+/** Modo **text** — botón de texto. */
+const text = {
+  primary: makeVariant(baseText, textPalette.primary),
+  neutral: makeVariant(baseText, textPalette.neutral),
+  error: makeVariant(baseText, textPalette.error),
+} satisfies VariantMap<Palette>
+
+/** Modo **solid** — botón de ícono. */
+const iconSolid = {
+  primary: makeIconVariant(solidPalette.primary),
+  neutral: makeIconVariant(solidPalette.neutral),
+  error: makeIconVariant(solidPalette.error),
+} satisfies VariantMap<Palette>
+
+/** Modo **outline** — botón de ícono. */
+const iconOutline = {
+  primary: makeIconVariant(baseOutline, outlinePalette.primary),
+  neutral: makeIconVariant(baseOutline, outlinePalette.neutral),
+  error: makeIconVariant(baseOutline, outlinePalette.error),
+} satisfies VariantMap<Palette>
+
+/** Modo **lighter** — botón de ícono. */
+const iconLighter = {
+  primary: makeIconVariant(baseLighter, lighterPalette.primary),
+  neutral: makeIconVariant(baseLighter, lighterPalette.neutral),
+  error: makeIconVariant(baseLighter, lighterPalette.error),
+} satisfies VariantMap<Palette>
+
+/** Modo **text** — botón de ícono. */
+const iconText = {
+  primary: makeIconVariant(baseText, textPalette.primary),
+  neutral: makeIconVariant(baseText, textPalette.neutral),
+  error: makeIconVariant(baseText, textPalette.error),
+} satisfies VariantMap<Palette>
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Export público
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Tokens de diseño para botones.
+ *
+ * ## Composición básica
+ * Combina `BUTTON.variant.<modo>.<paleta>` con `BUTTON.size.*` usando `cn()`:
  * ```tsx
- * <button className={cn(BUTTON.variant.contained.primary, BUTTON.size.md)}>
+ * <button className={cn(BUTTON.variant.solid.primary, BUTTON.size.md)}>
  *   Enviar
  * </button>
+ * ```
+ *
+ * ## Botones de ícono
+ * Mismos modos y paletas que `variant`, vía `special.icon.<modo>.<paleta>`.
+ * Siempre agregar `aria-label` descriptivo:
+ * ```tsx
+ * <button className={BUTTON.special.icon.solid.primary} aria-label="Guardar">
+ *   <Icon />
+ * </button>
+ * ```
+ *
+ * ## Especiales autónomos
+ * ```tsx
+ * <button className={BUTTON.special.cta}>Comenzar</button>
+ * ```
+ *
+ * ## Grupos de botones
+ * ```tsx
+ * <div className={BUTTON.group.horizontal}>
+ *   <button>Cancelar</button>
+ *   <button>Aceptar</button>
+ * </div>
  * ```
  */
 export const BUTTON = {
   // ── Tamaños ───────────────────────────────────────────────────────────────
   size: {
-    /**
-     * @use Contextos muy densos — tablas, toolbars, inline actions.
-     * @warning Para uso general preferir `md` — `sm` reduce el área de toque.
-     */
+    /** Compacto. Para uso puntual; preferir `md` en la mayoría de los casos. */
     sm: 'px-3 py-2 text-sm',
 
-    /** @use Uso general — la mayoría de las acciones de la UI. */
+    /** Uso general — la mayoría de las acciones. */
     md: 'px-4 py-2 text-[0.875rem]',
 
-    /** @use Acciones destacadas dentro de secciones de contenido. */
+    /** Mayor presencia: acciones secundarias destacadas, toolbars. */
     lg: 'px-[22px] py-[10px] text-[0.9375rem]',
 
-    /**
-     * @use CTAs aislados de alto impacto — uno por vista como máximo.
-     * @nocombine BUTTON.special.cta (ya incluye tamaño xl propio)
-     */
-    xl: 'px-7 py-3 text-base',
-
-    /** @use Botones que deben adaptarse automáticamente al breakpoint del viewport. */
+    /** Se adapta al breakpoint del viewport. */
     responsive:
       'px-2.5 sm:px-4 md:px-[22px] py-1.5 sm:py-2 md:py-2.5 text-[0.8125rem] sm:text-[0.875rem] md:text-[0.9375rem]',
   },
 
   // ── Variantes ─────────────────────────────────────────────────────────────
   variant: {
-    // Relleno sólido — máxima prominencia. Para la acción principal de un contexto.
-    contained: {
-      /**
-       * @use Acción principal — submit, confirmar, continuar.
-       * @combine BUTTON.size.* via cn().
-       */
-      primary: `${base} bg-information-base text-text-white shadow-elevation-sm hover:bg-information-dark hover:shadow-elevation-md active:opacity-90 active:shadow-elevation-xs focus-visible:ring-information-base`,
-
-      /**
-       * @use Acción de confirmación positiva — guardar, activar, completar.
-       * @combine BUTTON.size.* via cn().
-       */
-      success: `${base} bg-success-base text-text-white shadow-elevation-sm hover:bg-success-dark hover:shadow-elevation-md active:opacity-90 active:shadow-elevation-xs focus-visible:ring-success-base`,
-
-      /**
-       * @use Acción destructiva — eliminar, desactivar, revocar.
-       * @combine BUTTON.size.* via cn().
-       */
-      danger: `${base} bg-error-base text-text-white shadow-elevation-sm hover:bg-error-dark hover:shadow-elevation-md active:opacity-90 active:shadow-elevation-xs focus-visible:ring-error-base`,
-
-      /**
-       * @use Acción con consecuencias reversibles que requieren atención — archivar, pausar.
-       * @combine BUTTON.size.* via cn().
-       */
-      warning: `${base} bg-warning-base text-text-white shadow-elevation-sm hover:bg-warning-dark hover:shadow-elevation-md active:opacity-90 active:shadow-elevation-xs focus-visible:ring-warning-base`,
-
-      /**
-       * @use Máximo contraste sobre fondos claros — acciones sobre imágenes o fondos de color.
-       * @combine BUTTON.size.* via cn().
-       */
-      dark: `${base} bg-bg-strong text-text-white shadow-elevation-sm hover:bg-bg-surface hover:shadow-elevation-md active:opacity-90 active:shadow-elevation-xs focus-visible:ring-stroke-strong`,
-    },
-
-    // Borde fino, fondo transparente — acción secundaria junto a un contained.
-    outlined: {
-      /**
-       * @use Acción secundaria junto a `contained.primary` — cancelar, volver, ver más.
-       * @combine BUTTON.size.* via cn().
-       */
-      primary: `${base} bg-transparent text-information-base border-2 border-information-base hover:bg-information-lighter active:bg-information-light/30 focus-visible:ring-information-base`,
-
-      /**
-       * @use Acción secundaria junto a `contained.success`.
-       * @combine BUTTON.size.* via cn().
-       */
-      success: `${base} bg-transparent text-success-base border-2 border-success-base hover:bg-success-lighter active:bg-success-light/30 focus-visible:ring-success-base`,
-
-      /**
-       * @use Acción de cancelación de un flujo destructivo.
-       * @combine BUTTON.size.* via cn().
-       */
-      danger: `${base} bg-transparent text-error-base border-2 border-error-base hover:bg-error-lighter active:bg-error-light/30 focus-visible:ring-error-base`,
-
-      /**
-       * @use Acción secundaria en contextos de advertencia.
-       * @combine BUTTON.size.* via cn().
-       */
-      warning: `${base} bg-transparent text-warning-base border-2 border-warning-base hover:bg-warning-lighter active:bg-warning-light/30 focus-visible:ring-warning-base`,
-
-      /**
-       * @use Acción secundaria genérica sin carga semántica — sobre fondos claros.
-       * @combine BUTTON.size.* via cn().
-       */
-      neutral: `${base} bg-transparent text-text-strong border-2 border-stroke-subtle hover:bg-bg-soft hover:border-stroke-strong active:bg-bg-subtle focus-visible:ring-stroke-strong`,
-    },
-
-    // Sin borde ni fondo — mínima prominencia, acciones terciarias o en listas.
-    text: {
-      /**
-       * @use Acción terciaria, links de acción dentro de contenido.
-       * @combine BUTTON.size.* via cn().
-       */
-      primary: `${base} bg-transparent text-information-base hover:bg-information-lighter active:bg-information-light/40 focus-visible:ring-information-base`,
-
-      /**
-       * @use Acción positiva de baja prominencia — dentro de listas o tablas.
-       * @combine BUTTON.size.* via cn().
-       */
-      success: `${base} bg-transparent text-success-base hover:bg-success-lighter active:bg-success-light/40 focus-visible:ring-success-base`,
-
-      /**
-       * @use Acción destructiva de baja prominencia — en tablas, confirmar antes de ejecutar.
-       * @combine BUTTON.size.* via cn().
-       */
-      danger: `${base} bg-transparent text-error-base hover:bg-error-lighter active:bg-error-light/40 focus-visible:ring-error-base`,
-
-      /**
-       * @use Acción preventiva de baja prominencia.
-       * @combine BUTTON.size.* via cn().
-       */
-      warning: `${base} bg-transparent text-warning-base hover:bg-warning-lighter active:bg-warning-light/40 focus-visible:ring-warning-base`,
-
-      /**
-       * @use Acción terciaria sin carga semántica — sobre cualquier fondo.
-       * @combine BUTTON.size.* via cn().
-       */
-      neutral: `${base} bg-transparent text-text-strong hover:bg-bg-soft active:bg-bg-subtle focus-visible:ring-stroke-strong`,
-    },
+    /** Fondo relleno con sombra. */
+    solid,
+    /** Borde visible, fondo transparente. */
+    outline,
+    /** Fondo tenue de la paleta. */
+    lighter,
+    /** Sin fondo ni borde. */
+    text,
   },
 
+  // ── Especiales ────────────────────────────────────────────────────────────
   special: {
     /**
-     * @use CTA hero de máximo impacto — uno por página, siempre visible above the fold.
-     * @nocombine BUTTON.size.* (ya incluye tamaño px-7 py-3 internamente)
+     * Call-to-action de alto impacto.
+     * Sombra prominente y padding generoso. Usar de forma aislada.
      */
-    cta: `${base} gap-2 px-7 py-3 text-[0.9375rem] bg-information-base text-text-white shadow-elevation-md hover:bg-information-dark hover:shadow-elevation-lg active:opacity-90 active:shadow-elevation-sm focus-visible:ring-information-base`,
+    cta: makeVariant(
+      'gap-2 px-7 py-3 text-[0.9375rem]',
+      'bg-information-base text-white shadow-elevation-md',
+      'hover:bg-information-dark hover:shadow-elevation-lg',
+      'active:bg-information-dark/40 active:shadow-elevation-sm',
+      'focus-visible:ring-information-base'
+    ),
 
     /**
-     * @use Acciones de ícono aisladas — toggle de tema, cerrar, menú.
-     *      Usar en `<button>` con un ícono como único hijo.
-     * @nocombine BUTTON.size.* (usa padding circular propio `p-2`)
-     * @warning Sin texto visible — requiere `aria-label` para accesibilidad.
+     * Botón de ícono circular sin etiqueta visible.
+     * Mismos modos y paletas que `variant` — `solid` · `outline` · `lighter` · `text`
+     * × `primary` · `neutral` · `error`. Requiere `aria-label` descriptivo.
+     *
+     * @example
+     * ```tsx
+     * <button className={BUTTON.special.icon.text.neutral} aria-label="Cerrar">
+     *   <XIcon />
+     * </button>
+     * ```
      */
-    icon: `p-1 rounded-full hover:bg-bg-soft active:bg-bg-subtle ${ANIMATION.transition.colors} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-information-base disabled:opacity-40 disabled:pointer-events-none cursor-pointer`,
-
-    /**
-     * @use Link autónomo con ícono — CTAs de texto con flecha, "Ver más", "Descargar".
-     *      Para links dentro de párrafos o nav usar `TYPOGRAPHY.link.*`.
-     * @nocombine BUTTON.size.* (hereda el tamaño del contexto tipográfico)
-     */
-    link: `inline-flex items-center gap-1.5 text-information-base hover:text-information-dark font-medium underline underline-offset-4 decoration-information-light hover:decoration-information-base ${ANIMATION.transition.colors} cursor-pointer`,
+    icon: {
+      solid: iconSolid,
+      outline: iconOutline,
+      lighter: iconLighter,
+      text: iconText,
+    },
   },
 
+  // ── Grupos ────────────────────────────────────────────────────────────────
   group: {
-    /** @use Fila de botones relacionados — acciones de una card, toolbar. */
+    /** Botones en fila con separación y ajuste de línea. */
     horizontal: 'inline-flex gap-2 sm:gap-3 flex-wrap',
 
-    /** @use Stack de botones — acciones en mobile o en paneles estrechos. */
+    /** Botones apilados verticalmente. */
     vertical: 'flex flex-col gap-2 sm:gap-3',
 
     /**
-     * @use Botones unidos como segmented control — sin gap, bordes compartidos.
-     * @warning Los bordes internos se eliminan automáticamente — no añadir border manualmente
-     *          a los hijos o se verán dobles.
+     * Botones unidos sin separación (estilo segmented control).
+     * Los bordes interiores se eliminan automáticamente.
      */
     attached:
       'inline-flex [&>*:not(:first-child)]:rounded-l-none [&>*:not(:last-child)]:rounded-r-none [&>*:not(:first-child)]:border-l-0',
   },
 } as const
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tipos derivados
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Modos visuales disponibles en `BUTTON.variant`. */
+export type ButtonVariantMode = keyof typeof BUTTON.variant
