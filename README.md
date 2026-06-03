@@ -1,6 +1,6 @@
 # portfolio-v2
 
-SPA de portfolio personal. El **perfil unificado** (nombre, rol, títulos de página, metadatos, JSON-LD) vive en [`src/shared/constants/siteProfile.ts`](src/shared/constants/siteProfile.ts).
+SPA de portfolio personal. El **perfil unificado** (nombre visible, rol, títulos de página, metadatos SEO, JSON-LD Person) vive en [`src/shared/constants/siteProfile.ts`](src/shared/constants/siteProfile.ts).
 
 [![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
@@ -12,28 +12,35 @@ SPA de portfolio personal. El **perfil unificado** (nombre, rol, títulos de pá
 
 ## Descripción
 
-**portfolio-v2** es una **SPA** (React 19, Vite 7, TypeScript estricto) con **Tailwind CSS 4** y un sistema de **design tokens** (tipografía, layout, colores semánticos en `index.css`).
+**portfolio-v2** es una **SPA** (**React 19**, **Vite 7**, **TypeScript** en modo estricto) con **Tailwind CSS 4** y un sistema de **design tokens** (`src/shared/constants/tokens/` + primitivos y modo oscuro en `src/index.css`).
 
-Incluye: **Header** (nav + menú móvil), **Hero**, **Sobre mí** (bio, experiencia, formación, skills, certificaciones, valores), **Proyectos** (scroll sync + panel sticky), **Contacto** (tarjetas de enlaces) y **Footer**; desplazamiento suave con **Lenis** (respetando `prefers-reduced-motion`); animaciones con **Motion**; tema claro/oscuro.
+Incluye: **cabecera** (navegación + drawer móvil con trampa de foco), **hero**, **Sobre mí**, **Proyectos** (lista + sincronización de scroll + modal de vistas), **Contacto** y **pie**; desplazamiento suave con **Lenis** (respetando `prefers-reduced-motion`), animaciones con **Motion** (`motion/react`), tema claro/oscuro y carga diferida por sección (`React.lazy` + `Suspense`).
 
-**Build:** el artefacto va a `build/`. Vite aplica plugins que inyectan título, metas, JSON-LD, `robots.txt`, `sitemap.xml` y `.well-known/security.txt` según `VITE_PUBLIC_SITE_URL` (ver [Variables de entorno](#variables-de-entorno)). Además, en producción optimiza PNG de `images/projects/` y genera `-600.webp` / `-1200.webp` para consumo responsive en tarjetas y lightbox. **GitHub Pages** no añade cabeceras HTTP del repo; metas de `referrer` y `Permissions-Policy` complementan (no sustituyen CSP en servidor).
+**Sitio público único (`es`):** el copy está en español en el código; no hay i18n multiidioma por ahora. La hora de contacto (**`OwnerLocalTime`**) usa `Intl` con **`navigator.language`** cuando no pasas la prop `locale`, con respaldo **`es-MX`**.
 
-**Calidad en repo:** ESLint (incl. `jsx-a11y`, React Compiler, testing-library), **Knip** (dependencias y exports), Prettier, Husky (pre-commit, commit-msg), **Commitlint** con scopes enumerados, CI en GitHub Actions, workflow opcional de **React Doctor** en PRs, Dependabot. Documentación viva de tokens: [`src/shared/constants/tokens/readme.md`](src/shared/constants/tokens/readme.md).
+**Build:** artefacto en **`build/`**. Los plugins de Vite inyectan **título, metas, Open Graph**, **JSON-LD**, generan **`robots.txt`**, **`sitemap.xml`** y **`.well-known/security.txt`** a partir de **`VITE_PUBLIC_SITE_URL`** (ver [Variables de entorno](#variables-de-entorno)). En producción también optimizan PNG bajo rutas de proyectos y generan **`*.webp`** para `srcset`/`sizes`.
+
+**Errores de render / red:** **`ErrorBoundary`** en **`main.tsx`** (límite raíz) y otro bajo **`<main>`** en **`App.tsx`**, agrupando las cuatro secciones lazy. Si varios chunks fallan, se muestra **un solo** fallback dentro del área del boundary (cabecera y pie siguen visibles).
+
+**Rendimiento en cliente:** tras el arranque se registran métricas con la librería **`web-vitals`** (**LCP**, **INP**, **CLS**, **FCP**, **TTFB**). Por defecto en **desarrollo** se escribe **`console.warn` ‘[web-vitals]’** con valor y rating; en **producción** puedes enlazar **`reportWebVitals(callback)`** a analíticas (ver [`src/shared/utils/reportWebVitals.ts`](src/shared/utils/reportWebVitals.ts)).
+
+**Calidad:** ESLInt (entre otros `jsx-a11y`, React Compiler, testing-library), **Knip**, Prettier, Husky (**pre-commit**, **commit-msg**), **Commitlint** con scopes en lista cerrada, GitHub Actions, workflow opcional **React Doctor** en PRs, Dependabot.
 
 ---
 
 ## Stack
 
-| Categoría   | Tecnología                                                                                                                  |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------- |
-| **Build**   | Vite 7, `tsc -b` antes del bundle                                                                                           |
-| **UI**      | React 19, **Motion** (`motion/react`), utilidad **`cn`** (clsx + tailwind-merge)                                            |
-| **Estilos** | Tailwind CSS 4 (`@tailwindcss/vite`), tokens en `src/shared/constants/tokens/`, primitivos y modo oscuro en `src/index.css` |
-| **Scroll**  | Lenis bajo `SmoothScrollRoot`                                                                                               |
-| **Tests**   | Vitest 4, Testing Library, jsdom, umbrales de cobertura en `vite.config.ts`                                                 |
-| **Deploy**  | `gh-pages` → rama `gh-pages` (script `deploy:pages` con modo `github`)                                                      |
+| Categoría       | Tecnología                                                                        |
+| --------------- | --------------------------------------------------------------------------------- |
+| **Build**       | Vite 7, `tsc -b` previo al bundle                                                 |
+| **UI**          | React 19, Motion (`motion/react`), **`cn`** (clsx + tailwind-merge)               |
+| **Estilos**     | Tailwind CSS 4 (`@tailwindcss/vite`), tokens TS + tema en `index.css`             |
+| **Scroll**      | Lenis dentro de **`SmoothScrollRoot`**                                            |
+| **Test**        | Vitest 4, Testing Library, jsdom; **vitest-axe** + **axe-core** en flujos clave   |
+| **Rendimiento** | **`web-vitals`** (runtime); auditorías Lighthouse manuales (DevTools / PageSpeed) |
+| **Deploy**      | **`gh-pages`** → rama `gh-pages`; scripts **`deploy`** / **`deploy:pages`**       |
 
-**Alias:** `@` → `src` (`vite.config.ts`, `tsconfig`).
+**Alias:** `@` → **`src`** (en `vite.config.ts` y `tsconfig.app.json`).
 
 ---
 
@@ -41,194 +48,177 @@ Incluye: **Header** (nav + menú móvil), **Hero**, **Sobre mí** (bio, experien
 
 ```
 src/
-├── main.tsx, App.tsx, index.css
-├── components/
-│   ├── AboutSection/       # subcomponents, __tests__, constants, types
-│   ├── ContactSection/
-│   ├── Footer/
-│   ├── Header/
-│   ├── HeroSection/
-│   ├── ProjectsSection/    # hooks, subcomponents, tests
-│   └── ...
+├── main.tsx              # StrictMode → ErrorBoundary raíz → App; reportWebVitals()
+├── App.tsx               # LazyMotion, Lenis shell, Header, main (grain + ErrorBoundary + Suspense ×4), Footer lazy
+├── index.css             # Tailwind @import, tokens CSS, modo oscuro, utilidades (.u-*)
+├── components/           # Secciones de página por dominio (About, Hero, Projects, …)
 ├── shared/
-│   ├── components/         # carrusel, LinkCard, ThemeToggle, TimelineItem, etc.
-│   ├── constants/          # siteProfile, tokens/, skills/, enums/
-│   ├── hooks/
-│   └── utils/              # cn, parseEmphasis, …
-└── test/                   # setup, renderWithMotion, helpers solo-test
+│   ├── components/      # Modal (+ subcomponentes), carrusel, ThemeToggle, ErrorBoundary, SiteLogo, …
+│   ├── constants/       # siteProfile, siteTimezone, breakpoints, tokens/, skills/, motion/
+│   ├── hooks/, utils/
+│   └── icons/
+└── test/                 # setup.ts, vitest-axe.d.ts; helpers/ (renderWithMotion, mocks, barrel `index.ts`)
 ```
 
-- **`App.tsx`:** skip link, grano de fondo, `Header`, `main` (Hero, About, Projects, Contact), `Footer`, todo bajo `SmoothScrollRoot` + `LazyMotion` / `MotionConfig`.
-- **`src/shared/constants/siteProfile.ts`:** nombre visible, rol, textos SEO y JSON-LD; consumido por Vite, secciones y tests afines.
-- **Tema visual:** `ThemeToggle` persiste en `localStorage`, sincroniza clase `dark` en `<html>`, actualiza `meta[name="theme-color"]` dinámicamente y `src/index.css` declara `color-scheme` para controles nativos en claro/oscuro.
+- **`siteProfile`** se importa también en **`vite.config.ts`** para SEO en tiempo de build (acople intencional; documentado en auditoría).
 
 ---
 
 ## Scripts (`npm run …`)
 
-| Script                                             | Descripción                                                                                                                                                                          |
-| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `dev`                                              | Servidor de desarrollo (HMR).                                                                                                                                                        |
-| `build`                                            | `tsc -b && vite build` → salida en **`build/`**.                                                                                                                                     |
-| `build:github`                                     | Build con modo `github` (usa `.env.github` si existe) para publicar bajo `VITE_BASE_PATH` del repo.                                                                                  |
-| `preview` / `preview:build`                        | Previsualizar el build local.                                                                                                                                                        |
-| `deploy`                                           | `build` + `gh-pages` a rama `gh-pages` (flujo base `VITE_BASE_PATH=/` si no se define otra).                                                                                         |
-| `deploy:pages`                                     | `build:github` + `gh-pages` (recomendado para el subpath de GitHub Pages).                                                                                                           |
-| `lint`                                             | ESLint en todo el proyecto.                                                                                                                                                          |
-| `knip`                                             | Análisis de dependencias no usadas, exports huérfanos y archivos sueltos ([Knip](https://knip.dev/)); configuración en `knip.json`.                                                  |
-| `format` / `format:check`                          | Prettier.                                                                                                                                                                            |
-| `typecheck`                                        | `tsc --noEmit`.                                                                                                                                                                      |
-| `test` / `test:watch` / `test:changed` / `test:ui` | Vitest.                                                                                                                                                                              |
-| `test:coverage` / `test:coverage:ci`               | Cobertura (local: en Windows abre el HTML; en macOS/Linux abrir `coverage/index.html` manualmente o con `open`/`xdg-open`).                                                          |
-| `check`                                            | `typecheck` → `format:check` → `lint` → `knip` → `test` (rápido).                                                                                                                    |
-| `check:ci`                                         | Igual que la CI: `format:check` → `lint` → `typecheck` → `knip` → `test:coverage:ci` → `build`.                                                                                      |
-| `lighthouse:pages`                                 | Audita en headless la URL pública (por defecto GitHub Pages); genera `lighthouse-report.html` (ignorada por git). Requiere Chromium; en Windows a veces `CHROME_PATH` a Edge/Chrome. |
-| `prepare`                                          | Instala hooks de Husky.                                                                                                                                                              |
+| Script                                          | Descripción                                                                                                                                    |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dev`                                           | Servidor de desarrollo Vite                                                                                                                    |
+| `build` / `build:github`                        | Producción estándar o modo **`github`** (`.env.github`) para subruta Pages                                                                     |
+| `preview` / `preview:build`                     | Preview del contenido ya construido en **`build/`**                                                                                            |
+| `deploy` / `deploy:pages`                       | **`gh-pages`** (segundo script fuerza **`build:github`**)                                                                                      |
+| `lint`                                          | **ESLint** + **`scripts/check-tsdoc.mjs`** (cabeceras TSDoc en barrels, fuente y tests)                                                        |
+| `lint:tsdoc`                                    | Solo **`check-tsdoc.mjs`** (sin ESLint; útil para iterar cabeceras)                                                                            |
+| `lint:exports`                                  | Barrels sin nombres duplicados en re-exports (`scripts/check-exports.mjs`)                                                                     |
+| `lint:env`                                      | Variables **`VITE_*`** presentes según `.env.example` y modo Vite (por defecto `production`)                                                   |
+| `lint:env:strict`                               | Igual que `lint:env` pero falla si alguna **`VITE_*`** está vacía                                                                              |
+| `knip`                                          | Dependencias/export/archivos huérfanos ([Knip](https://knip.dev/); ver `knip.json`)                                                            |
+| `format` / `format:check`                       | Prettier                                                                                                                                       |
+| `typecheck`                                     | **`tsc -b --noEmit`**                                                                                                                          |
+| `test`, `test:watch`, `test:changed`, `test:ui` | Vitest                                                                                                                                         |
+| `test:coverage`                                 | Cobertura con umbrales (`vite.config.ts`); genera informe **HTML** en **`coverage/`**                                                          |
+| `test:coverage:ci`                              | Mismos umbrales; reporter solo **`text`** (logs de CI más ligeros; sin depender del HTML)                                                      |
+| `check`                                         | **`format:check` → `lint` → `lint:exports` → `lint:env` → `typecheck` → `knip` → `test`** (mismo orden que `check:ci`, sin cobertura ni build) |
+| `check:ci`                                      | **`format:check` → `lint` → `lint:exports` → `lint:env` → `typecheck` → `knip` → `test:coverage:ci` → `build`** (mismo bloque que CI)          |
+| `check:extended`                                | **`check`** + **`react-doctor:full`** (gate local + auditoría React completa; opcional pre-release)                                            |
+| `react-doctor`                                  | Diagnóstico React (**diff** vs `main`; ver `react-doctor.config.json`)                                                                         |
+| `react-doctor:full`                             | Auditoría completa del repo (objetivo **100/100** en reglas React Doctor)                                                                      |
+| `tsdoc:fill-placeholders`                       | Sustituye placeholders tras `node scripts/check-tsdoc.mjs --fix` (ver [`scripts/README.md`](scripts/README.md))                                |
+| `tsdoc:fill-placeholders:dry`                   | Vista previa sin escribir archivos                                                                                                             |
+| `tsdoc:homogenize-barrels`                      | Homogeneiza texto TSDoc en barrels (migración puntual)                                                                                         |
+| `tsdoc:homogenize-barrels:dry`                  | Vista previa sin escribir                                                                                                                      |
+| `tsdoc:fix-empty-module`                        | Repara `@module` vacíos en barrels                                                                                                             |
+| `tsdoc:fix-test-double-blank`                   | Repara doble línea en blanco en cabeceras de tests                                                                                             |
+| `prepare`                                       | Husky                                                                                                                                          |
 
-### GitHub Pages (subruta `…/repo/`)
+**Salida de build:** **`build/`**, no **`dist/`** (fijado en `vite.config.ts`).
 
-1. **Settings → Pages:** rama `gh-pages`, carpeta `/ (root)`.
-2. Definir **base** y **URL canónica** antes de build, p. ej. en `.env.github` o en la sesión:
+---
 
-   ```bash
-   # Windows PowerShell
-   $env:VITE_BASE_PATH="/portfolio-v2/"; $env:VITE_PUBLIC_SITE_URL="https://frank345-sys.github.io/portfolio-v2/"; npm run deploy:pages
-   ```
+## GitHub Pages (`…/portfolio-v2/` o subpath similar)
 
-3. Ajusta `/portfolio-v2/` y la URL a tu usuario y nombre de repo. La primera publicación crea/actualiza `gh-pages` con el contenido de `build/`.
+1. **Settings → Pages:** rama **`gh-pages`**, carpeta **root**.
+2. Definir **`VITE_BASE_PATH`** y **`VITE_PUBLIC_SITE_URL`** coherentes antes de **`npm run deploy:pages`** / CI (véase [.env.github](.env.github) trackeado como plantilla de ejemplo para Pages).
+3. **No** esperes cabeceras HTTP avanzadas (CSP completa, `X-Frame-Options`, etc.) solo con Pages: sirve ficheros estáticos. Para eso hace falta **proxy/CDN/hosting configurable** (`_headers`, workers, servidor propio). El proyecto documenta esa limitación en comentarios de **`vite.config.ts`** y en metas **`referrer` / `Permissions-Policy`** solo a nivel HTML.
 
-**Detalle de salida de build:** no es `dist/`, sino **`build/`** (fijado en `vite.config.ts` para alinear con `gh-pages`).
+---
+
+## SEO: `robots.txt` y `sitemap.xml`
+
+Se **generan en el plugin** `writeSeoFilesPlugin` dentro de **`vite.config.ts`** al **`closeBundle`** usando **`VITE_PUBLIC_SITE_URL`**.
+
+**Importante:** no hay copias paralelas versionadas en **`public/`** para esos dos archivos, para evitar divergencias. Tras un **`npm run build`**, están en **`build/`** listos para Pages.
+
+Otros assets en **`public/`** (PDF CV, **`og-image.png`**, capturas PNG, íconos) siguen copiándose tal cual.
 
 ---
 
 ## Design system (resumen)
 
-Convención: colores y espaciado semánticos vía clases `text-text-*`, `bg-bg-*`, `border-stroke-*`, `shadow-elevation-*`, etc. — ver [`src/index.css`](src/index.css) y [tokens/readme](src/shared/constants/tokens/readme.md).
+Convención: colores y espacio semánticos (`text-text-*`, `bg-bg-*`, …). Referencia rápida: [`src/shared/constants/tokens/readme.md`](src/shared/constants/tokens/readme.md) y [`src/index.css`](src/index.css).
 
-| Módulo (TS)     | Export                           | Rol                                                      |
-| --------------- | -------------------------------- | -------------------------------------------------------- |
-| `typography.ts` | `TYPOGRAPHY`, `PRIMARY_NAV_LINK` | Títulos, párrafos, links, special                        |
-| `layout.ts`     | `LAYOUT`                         | Secciones, grids, prose, dividers, spacing               |
-| `button.ts`     | `BUTTON`                         | Variantes, tamaños, CTA, grupos                          |
-| `card.ts`       | `CARD`                           | Superficies, interactivo, overlay, layout interno        |
-| `badge.ts`      | `BADGE`                          | Badges, chips, dots, grupos                              |
-| `animation.ts`  | `ANIMATION`                      | Transiciones, stagger, scroll, loading                   |
-| `brand.ts`      | `BRAND`                          | Tamaño de icono de marca (header/footer)                 |
-| `z.ts`          | `Z`                              | Capas (header, modal, drawer móvil, …)                   |
-| `index.ts`      | Re-export                        | No hay módulo `INPUT` (sin formularios con ese sistema). |
-
-`import { … } from '@/shared/constants/tokens'`.
-
-Utilidad: **`cn()`** en `src/shared/utils/cn.ts` (clsx + tailwind-merge).
-
----
-
-## Filosofía del pipeline (pre-commit y CI)
-
-- **lint-staged** (`--no-stash`): Prettier y ESLint solo en archivos en staging; evita el fallo de `git apply` al restaurar.
-- **test:changed:** Vitest solo sobre cambios respecto al commit anterior — rápido; la suite completa y cobertura corren en CI o con `check:ci`.
-- **Knip** en `npm run check` y CI: detecta dependencias sin uso, exports muertos y archivos aislados (complementa el análisis estático del repo).
-- **typecheck** en pre-commit: no subir tipos rotos.
-- **Commitlint** (hook `commit-msg`, no el pre-commit): valida [Conventional Commits](https://www.conventionalcommits.org/) con **scopes en lista cerrada** y **kebab-case**; **longitud mínima del scope 2**; asunto con **máximo 100 caracteres** en el encabezado. Detalle: `commitlint.config.cjs`.
-
-Efecto: formato consistente, tests afectados en verde, tipos correctos, mensajes de commit legibles y filtrables.
-
----
-
-## Tests
-
-- **Runner:** Vitest, entorno `jsdom`, setup en `src/test/setup.ts` (jest-dom, `matchMedia` para temas y Motion).
-- **Cobertura:** umbrales en `vite.config.ts` (líneas, funciones, ramas, statements); `test:coverage:ci` en CI.
-- **Cantidad:** decenas de archivos de test bajo `**/__tests__/**` y `*.test.ts(x)`; ejecutar `npm run test` para el recuento actual.
-
-`renderWithMotion` envuelve pruebas que usan componentes con Motion/LazyMotion.
-
----
-
-## TypeScript
-
-`tsconfig.app.json`: opciones estrictas (`noUncheckedIndexedAccess`, `noImplicitOverride`, `exactOptionalPropertyTypes`, etc.). `npm run build` ejecuta `tsc -b` antes de Vite.
-
----
-
-## Estilos
-
-`src/index.css`: `@import 'tailwindcss'`, primitivos en `:root`, `@theme` con tokens semánticos, bloque **`.dark`**. Prettier con `prettier-plugin-tailwindcss` y `tailwindFunctions: ['clsx', 'cn']`.
-
-Incluye además:
-
-- `html { color-scheme: light; }`
-- `html.dark { color-scheme: dark; }`
-
-Esto alinea widgets nativos del navegador (inputs, scrollbars y controles del UA) con el tema activo.
-
----
-
-## Calidad: Husky y CI
-
-| Evento            | Qué corre                                                                |
-| ----------------- | ------------------------------------------------------------------------ |
-| **pre-commit**    | `lint-staged` → `test:changed` → `typecheck`                             |
-| **commit-msg**    | `commitlint --edit`                                                      |
-| **CI** (`ci.yml`) | `format:check`, `lint`, `typecheck`, `knip`, `test:coverage:ci`, `build` |
-| **PR (opcional)** | Workflow `react-doctor`                                                  |
-
----
-
-## Gitflow (resumen)
-
-Ramas `main` (producción), `develop` (integración), ramas `feat/*`, `fix/*`, `chore/*`, `release/*`, `hotfix/*` según el flujo acordado en el equipo. **No** hacer push directo a `main` sin proceso.
-
----
-
-## Instalación
-
-Requisito: **Node 20+**, npm.
-
-```bash
-git clone <url>
-cd portfolio-v2
-npm install
-```
-
-`npm install` dispara `prepare` (Husky).
+Utilidad **`cn()`:** [`src/shared/utils/cn.ts`](src/shared/utils/cn.ts).
 
 ---
 
 ## Variables de entorno
 
-- Prefijo **`VITE_`**, lectura con `import.meta.env` (nunca `process.env` en código de app).
-- Útiles en build: **`VITE_BASE_PATH`** (p. ej. `/portfolio-v2/`), **`VITE_PUBLIC_SITE_URL`** (URL canónica del sitio desplegado, para sitemap, JSON-LD y `security.txt`).
-- Vite carga `.env`, `.env.local`, y por **modo** `.env.[mode]` (p. ej. `development`, `production`, `github`).
+| Aspecto                                                        | Detalle                                                                                                                                                                                                                                                                      |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prefijo público cliente                                        | Solo **`VITE_*`** llega de forma estable al bundle (`import.meta.env`). No uses secretos ahí.                                                                                                                                                                                |
+| **`.env.example`**                                             | Lista mínima y documentada (**`VITE_BASE_PATH`**, **`VITE_PUBLIC_SITE_URL`** + nota sobre `PROD`, `BASE_URL`). Es la plantilla recomendada para nuevos clones.                                                                                                               |
+| **`.env.development`** / `.env.production` / `.env.github`\*\* | Pueden estar versionadas en el repo cuando solo contienen **variables públicas** de ejemplo para cada modo. Manténlas **alineadas** con `.env.example` y con la URL real de despliegue (`VITE_PUBLIC_SITE_URL` sin slash final, coherente con `index.html` y el plugin SEO). |
+| `import.meta.env`                                              | También **`PROD`**, **`DEV`**, **`MODE`**, **`BASE_URL`** los inyecta Vite.                                                                                                                                                                                                  |
 
-### SEO/tema: `theme-color` dinámico
+Ejemplo rápido (PowerShell) para Pages:
 
-- `index.html` declara un `meta` base:
-
-  ```html
-  <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
-  ```
-
-- `useTheme` lo sincroniza al tema activo:
-  - `light` → `#ffffff`
-  - `dark` → `#111111`
-
-Con esto, la barra de dirección del navegador móvil refleja el tema real de la app (no solo `prefers-color-scheme` del sistema).
-
-No commitear secretos; `.env` local en `.gitignore` si aplica.
+```powershell
+$env:VITE_BASE_PATH="/portfolio-v2/"
+$env:VITE_PUBLIC_SITE_URL="https://frank345-sys.github.io/portfolio-v2"
+npm run deploy:pages
+```
 
 ---
 
-## Mejoras futuras ( ideas )
+## Accesibilidad y tests automatizados
 
-- Afinar **imágenes** (formatos modernos, `srcset` / tamaños) según presupuesto y CDN.
-- **Cobertura** multiplataforma en script (`open` / `xdg-open`) para el informe HTML.
-- Cualquier **CSP o cabeceras** estrictas requieren hosting con control (no solo HTML estático en Pages).
+- **Lint:** **`eslint-plugin-jsx-a11y`** (reglas recomendadas).
+- **Unit / integración ligera:** algunos tests usan **`axe()`** de **vitest-axe** contra el árbol renderizado (**Modal abierto**, **MobileDrawer abierto**, **ImageCarousel multi-slide**). El matcher **`toHaveNoViolations`** se registra en [`src/test/setup.ts`](src/test/setup.ts).
 
-Documentación de Cursor: reglas en `.cursor/rules/`, skills en `.cursor/skills/` (pueden resumirse en `.agents/` local si se usa; esa carpeta no se versiona).
+**Fallo de imagen en carrusel:** fallback con **`<img alt="…">`** descriptivo e icono decorativo **`aria-hidden`** (sin **`role="alert"`** intrusivo en la carga de un slide).
+
+Ejecutar toda la suite: **`npm run test`**. Para Motion + LazyMotion usar **`renderWithMotion`** (definido en [`src/test/helpers/renderWithMotion.tsx`](src/test/helpers/renderWithMotion.tsx), reexportado por **`@/test/helpers`**).
+
+---
+
+## Filosofía del pipeline
+
+- **lint-staged**: Prettier y ESLint `--fix` en staged; **`check-tsdoc.mjs`** solo en archivos **`src/**/\*.{ts,tsx}`** staged (no escanea todo `src/` en cada commit).
+- **pre-commit**: `lint-staged` → **`npm run test:changed`** → **`typecheck`** (ver `.husky/pre-commit`). Knip, `lint:exports`, `lint:env` y build siguen en **`check`** / **`check:ci`**.
+- **commit-msg**: **Commitlint** con Conventional Commits y **scopes kebab-case** (detalle operativo en `commitlint.config.cjs` y en `.cursor/rules/commits-branches.mdc`).
+- **Knip** en `check` y CI.
+- **Pre-release opcional:** `npm run check:extended` (`check` + React Doctor completo). Los scripts bajo **`scripts/`** están documentados en [`scripts/README.md`](scripts/README.md).
+
+---
+
+## TypeScript
+
+`tsconfig.app.json`: modo estricto (`noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, etc.). **`npm run build`** ejecuta **`tsc -b`** antes de Vite.
+
+---
+
+## Estilos
+
+`src/index.css`: **`@import 'tailwindcss'`**, primitivos, **`@theme`**, bloque **`.dark`**, utilidades `.u-*` (grano del `main`, skip link…). Prettier ordena clases Tailwind mediante **`prettier-plugin-tailwindcss`** (`tailwindFunctions`: `clsx`, **`cn`**).
+
+---
+
+## Calidad en CI (`ci.yml`)
+
+El workflow ejecuta **`npm run check:ci`** (véase **`package.json`**): **`format:check`** → **`lint`** → **`lint:exports`** → **`lint:env`** → **`typecheck`** → **`knip`** → **`test:coverage:ci`** → **`build`**.
+
+Workflow opcional **`react-doctor`** en PRs (versión fijada en `package.json`, p. ej. **0.2.6**; `npm exec` en CI, sin `@latest`). Modo **`--diff`** vs rama base. Local: `npm run react-doctor` (diff vs `main`); auditoría completa: `npm run react-doctor:full`. En `react-doctor.config.json`, **`deadCode: false`** evita duplicar el barrido de Knip; el informe **`react-doctor-report.txt`** está en **`.gitignore`** (solo artefacto local o del runner en CI).
+
+---
+
+## Gitflow (resumen breve)
+
+Ramas **`main`** (producción), **`develop`**, **`feat/*`**, **`fix/*`**, **`chore/*`**, **`release/*`**, **`hotfix/*`**. Convenciones y scopes de Commitlint descritos en la regla de commits del repo. Evitar push directo a **`main`** sin proceso.
+
+---
+
+## Instalación
+
+Requisitos: **Node ≥ 20**, npm.
+
+```bash
+git clone <url-del-repo>
+cd portfolio-v2
+npm install   # ejecuta también `prepare` → Husky
+```
+
+---
+
+## Mejoras posibles fuera del alcance actual
+
+- Alimentar **`reportWebVitals`** con **`navigator.sendBeacon`**, dataLayer u otro backend.
+- i18n estructurada (mensajes externos, rutas por idioma) si el producto crece más allá de un solo idioma.
+- **Cabeceras HTTP** fuertes (CSP granular, **`frame-ancestors`**, políticas nuevas): requiere infraestructura distinta de “solo ficheros HTML en gh-pages”.
+- Opcional: **`canvas`** en entorno de test para eliminar warnings de axe/jsdom relacionados con `getContext`.
+
+---
+
+## Reglas Cursor / IA
+
+Directorio **`.cursor/rules/`** con convenciones (commits, diseño, motion, tokens). Skills en **`.cursor/skills/`** para auditorías (accesibilidad, SEO, CWV, calidad) y guías de stack (React, Vite, Vitest, TypeScript, Tailwind, Node).
 
 ---
 
 ## License
 
-Repositorio privado / uso personal; añade un `LICENSE` si publicas y quieres términos explícitos.
+Repositorio de uso personal; añade un **`LICENSE`** si publicas con términos explícitos.
