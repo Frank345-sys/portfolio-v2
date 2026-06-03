@@ -1,3 +1,10 @@
+/**
+ * Estado reactivo de `window.matchMedia(query).matches` para breakpoints u otras media queries.
+ *
+ * @fileoverview Expone `matches` con `useSyncExternalStore` y snapshot SSR estable (`false` sin `window`).
+ * @remarks Pasa una `query` estable (p. ej. constante importada) para no re-suscribirte al listener en cada render.
+ */
+
 import { useCallback, useSyncExternalStore } from 'react'
 
 /**

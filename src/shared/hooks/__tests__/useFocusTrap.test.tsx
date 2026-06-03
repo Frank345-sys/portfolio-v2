@@ -1,3 +1,10 @@
+/**
+ * Pruebas de `useFocusTrap` — captura de Tab, ciclo entre focables y restauración del foco al salir.
+ *
+ * @fileoverview Vitest + `fireEvent` sobre harnesses con uno o dos botones bajo la ref devuelta por el hook.
+ * @remarks Verifica listeners en `document` (captura) y limpieza al pasar `isActive` a false o al desmontar con trap activo.
+ */
+
 import { render, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 

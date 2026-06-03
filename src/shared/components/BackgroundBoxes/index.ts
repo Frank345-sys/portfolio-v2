@@ -1,1 +1,0 @@
-export { BackgroundBoxes } from './BackgroundBoxes'

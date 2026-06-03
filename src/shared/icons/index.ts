@@ -1,37 +1,62 @@
 /**
- * Exportaciones nombradas de iconos SVG (`JsIcon`, `GithubIcon`, etc.).
+ * Barrel global de iconos SVG del portfolio (`CloseIcon`, `GithubIcon`, etc.).
+ *
+ * Estructura por categoría (sin barrels intermedios):
+ * - `brands/` — tecnologías y herramientas de desarrollo
+ * - `ui/` — controles y acciones
+ * - `media/` — imágenes y diseño
+ * - `social/` — redes y contacto
+ * - `nav/` — flechas y navegación
+ *
+ * Convención: un componente por archivo, PascalCase + sufijo `Icon`, export nombrado,
+ * props `SVGProps<SVGSVGElement>` (`className`, `color` vía `currentColor`, tamaño vía clases).
  *
  * @example
  * ```tsx
  * import { JsIcon } from '@/shared/icons'
- * <JsIcon className="w-6 h-6" aria-hidden />
+ * <JsIcon className="h-6 w-6" aria-hidden />
  * ```
  *
  * @module shared/icons
+ * @remarks Importar siempre desde este barrel: `import { … } from '@/shared/icons'`.
  */
 
-export { JsIcon } from './JsIcon.tsx'
-export { TsIcon } from './TsIcon.tsx'
-export { HtmlIcon } from './HtmlIcon.tsx'
-export { CssIcon } from './CssIcon.tsx'
-export { ReactIcon } from './ReactIcon.tsx'
-export { NextIcon } from './NextIcon.tsx'
-export { AstroIcon } from './AstroIcon.tsx'
-export { TailwindIcon } from './TailwindIcon.tsx'
-export { BootstrapIcon } from './BootstrapIcon.tsx'
-export { FramerMotionIcon } from './FramerMotionIcon.tsx'
-export { GitIcon } from './GitIcon.tsx'
-export { GithubIcon } from './GithubIcon.tsx'
-export { LinkedinIcon } from './LinkedinIcon.tsx'
-export { MailIcon } from './MailIcon.tsx'
-export { FigmaIcon } from './FigmaIcon.tsx'
-export { VsCodeIcon } from './VsCodeIcon.tsx'
-export { WhatsappIcon } from './WhatsappIcon.tsx'
-export { CloseIcon } from './CloseIcon.tsx'
-export { CodeIcon } from './CodeIcon.tsx'
-export { DownloadIcon } from './DownloadIcon.tsx'
-export { ExpandScreenIcon } from './ExpandScreenIcon.tsx'
-export { ImageBrokenIcon } from './ImageBrokenIcon.tsx'
-export { ArrowPrevIcon } from './ArrowPrevIcon.tsx'
-export { ArrowNextIcon } from './ArrowNextIcon.tsx'
-export { ArrowUpIcon } from './ArrowUpIcon.tsx'
+// brands — tecnologías / SDKs
+export { AiIcon } from './brands/AiIcon'
+export { AstroIcon } from './brands/AstroIcon'
+export { BootstrapIcon } from './brands/BootstrapIcon'
+export { CssIcon } from './brands/CssIcon'
+export { GitIcon } from './brands/GitIcon'
+export { HtmlIcon } from './brands/HtmlIcon'
+export { JsIcon } from './brands/JsIcon'
+export { NextIcon } from './brands/NextIcon'
+export { ReactIcon } from './brands/ReactIcon'
+export { TailwindIcon } from './brands/TailwindIcon'
+export { TsIcon } from './brands/TsIcon'
+export { VsCodeIcon } from './brands/VsCodeIcon'
+
+// ui — controles / acciones
+export { CloseIcon } from './ui/CloseIcon'
+export { CodeIcon } from './ui/CodeIcon'
+export { DownloadIcon } from './ui/DownloadIcon'
+export { ExpandScreenIcon } from './ui/ExpandScreenIcon'
+export { HelpCircleIcon } from './ui/HelpCircleIcon'
+export { RefreshIcon } from './ui/RefreshIcon'
+export { SeoWebBusinessIcon } from './ui/SeoWebBusinessIcon'
+
+// media — imágenes / display
+export { FigmaIcon } from './media/FigmaIcon'
+export { FramerMotionIcon } from './media/FramerMotionIcon'
+export { ImageBrokenIcon } from './media/ImageBrokenIcon'
+
+// social — redes / contacto
+export { GithubIcon } from './social/GithubIcon'
+export { LinkedinIcon } from './social/LinkedinIcon'
+export { MailIcon } from './social/MailIcon'
+export { TelegramIcon } from './social/TelegramIcon'
+export { WhatsappIcon } from './social/WhatsappIcon'
+
+// nav — flechas / navegación
+export { ArrowNextIcon } from './nav/ArrowNextIcon'
+export { ArrowPrevIcon } from './nav/ArrowPrevIcon'
+export { ArrowUpIcon } from './nav/ArrowUpIcon'

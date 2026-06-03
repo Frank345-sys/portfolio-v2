@@ -1,10 +1,16 @@
 /**
- * Configuración global de Vitest: matchers de `@testing-library/jest-dom`.
+ * Configuración global de Vitest: matchers de `@testing-library/jest-dom` y **`vitest-axe`**
+ * (`expect(await axe(...)).toHaveNoViolations()`).
  *
  * @module test/setup
+ * @fileoverview Helpers compartidos por Vitest (mocks, render, setup).
+ * @remarks Importado solo desde archivos `*.test.*` o `setup.ts`; no incluir en el bundle de producción.
  */
 import '@testing-library/jest-dom'
-import { vi } from 'vitest'
+import { expect, vi } from 'vitest'
+import * as vitestAxeMatchers from 'vitest-axe/dist/matchers.js'
+
+expect.extend(vitestAxeMatchers)
 
 /**
  * Mock de `matchMedia` para tests.

@@ -1,7 +1,39 @@
+/**
+ * Constantes compartidas del proyecto (`shared/constants/tokens/card.ts`).
+ *
+ * @fileoverview Catálogo importado por secciones y utilidades; cambios globales de marca o layout.
+ * @remarks Coordinar con tokens en `shared/constants/tokens` y con el sistema de temas si toca color o tipografía.
+ */
+
+import { cn } from '@/shared/utils/cn'
+
 import { ANIMATION } from './animation'
 
-const BASE = 'rounded-lg border border-stroke-soft' as const
-const PAD = { sm: 'p-4', md: 'p-4 sm:p-6', lg: 'p-6 sm:p-8' } as const
+// ─────────────────────────────────────────────────────────────────────────────
+// Fragmentos internos (no exportar)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Clases estructurales compartidas por todas las superficies e interactivas.
+ * Define borde, radio y sombra base.
+ *
+ * @internal
+ */
+const BASE = 'rounded-lg border border-stroke-soft shadow-elevation-xs'
+
+/**
+ * Escala de padding interno por densidad.
+ *
+ * @internal
+ */
+const PAD = {
+  /** @use Contextos densos o de apoyo — compact, subtle, weak, white. */
+  sm: 'p-4',
+  /** @use Contenido rico con varios bloques internos — default y elevated. */
+  md: 'p-4 sm:p-6',
+  /** @use Máximo respiro — overlays y modales. */
+  lg: 'p-6 sm:p-8',
+} as const
 
 /**
  * Tokens de card: superficies estáticas, interactivas, overlays y layout interno.
@@ -13,6 +45,8 @@ const PAD = { sm: 'p-4', md: 'p-4 sm:p-6', lg: 'p-6 sm:p-8' } as const
  * - Estructura interna        → `CARD.layout.*`
  *
  * Dark mode automático — los tokens semánticos se adaptan solos con la clase `.dark`.
+ *
+ * **Orden en este archivo:** imports → `BASE` / `PAD` internos → {@link CARD}.
  *
  * @example
  * ```tsx
@@ -29,92 +63,92 @@ export const CARD = {
   // ── Superficies estáticas ──────────────────────────────────────────────────
   // Para contenedores de información que no se clickean.
   // Aplicar en <div>, <section>, <article> — nunca en <button> o <a>.
-  // Regla de padding y sombra en surface.*:
-  // PAD.md (p-6 sm:p-8): default y elevated — contenido rico con varios bloques internos.
-  // PAD.sm (p-4): compact, subtle, weak, white — contextos densos o de apoyo.
-  // Sombra: solo en `elevated` (shadow-elevation-md) y en `weak`/`white` (shadow-elevation-xs).
-  // `compact` y `subtle` no tienen sombra — son superficies de fondo, no de elevación.
   surface: {
     /**
-     * @use Contenido principal, secciones destacadas — fondo blanco sin sombra.
-     *      Padding generoso (p-6 sm:p-8) para contenido rico con varios bloques internos.
-     * @nocombine CARD.interactive.* (son mutuamente excluyentes por semántica)
+     * @use Contenido principal, secciones destacadas — fondo blanco.
+     * @nocombine CARD.interactive.* (mutuamente excluyentes por semántica)
      */
-    default: `${BASE} bg-bg-white ${PAD.md}`,
-
-    /**
-     * @use Paneles que deben destacar sobre el fondo de la página — añade sombra md.
-     * @nocombine CARD.interactive.* (son mutuamente excluyentes por semántica)
-     */
-    elevated: `${BASE} bg-bg-white shadow-elevation-md ${PAD.md}`,
-
-    /**
-     * @use Listas densas, sidebars y widgets compactos — padding reducido (p-4)
-     *      respecto a `default` para contextos con espacio limitado.
-     * @nocombine CARD.interactive.* (son mutuamente excluyentes por semántica)
-     */
-    compact: `${BASE} bg-bg-white ${PAD.sm}`,
-
-    /**
-     * @use Áreas de apoyo, contexto adicional, secciones secundarias.
-     * @nocombine CARD.interactive.* (son mutuamente excluyentes por semántica)
-     */
-    subtle: `${BASE} bg-bg-weak ${PAD.md}`,
+    default: cn(BASE, 'bg-bg-white', PAD.sm),
 
     /**
      * @use SkillGroup, ValueCard, contenedores de información sobre fondos neutros.
-     * @nocombine CARD.interactive.* (son mutuamente excluyentes por semántica)
+     * @nocombine CARD.interactive.* (mutuamente excluyentes por semántica)
      */
-    weak: `${BASE} bg-bg-weak ${PAD.sm} shadow-elevation-xs`,
+    weak: cn(BASE, 'bg-bg-weak', PAD.sm),
 
     /**
      * @use Formularios, listados, widgets aislados sobre fondos tenues.
-     * @nocombine CARD.interactive.* (son mutuamente excluyentes por semántica)
+     * @nocombine CARD.interactive.* (mutuamente excluyentes por semántica)
      */
-    white: `${BASE} bg-bg-white ${PAD.sm} shadow-elevation-xs`,
+    white: cn(BASE, 'bg-bg-white', PAD.sm),
   },
 
   // ── Superficies interactivas ───────────────────────────────────────────────
-  // Los valores hover:shadow-* se escriben literales (no via token) para mantener
-  // variantes explícitas de hover sin depender de composición externa.
   // SOLO para elementos clickeables: <a>, <button>, [role="button"].
   // Incluyen cursor, hover y transición — no tienen sentido en <div>.
+  //
+  // Los valores hover:shadow-* se escriben literales para mantener
+  // variantes explícitas de hover sin depender de composición externa.
   interactive: {
     /**
      * @use Cards navegables sobre fondo blanco — padding generoso para contenido rico.
      *      Usar en `<a>` o `<button>`.
-     * @nocombine CARD.surface.* (son mutuamente excluyentes por semántica)
+     * @nocombine CARD.surface.* (mutuamente excluyentes por semántica)
      */
-    default: `${BASE} bg-bg-white ${PAD.md} cursor-pointer ${ANIMATION.transition.default} hover:border-stroke-subtle hover:shadow-elevation-xs`,
+    default: cn(
+      BASE,
+      'bg-bg-white',
+      PAD.md,
+      'cursor-pointer',
+      ANIMATION.transition.default,
+      'hover:border-stroke-subtle hover:shadow-elevation-xs'
+    ),
 
     /**
      * @use Tarjetas de selección, opciones de lista, skill cards.
      *      Usar en `<button>` — resalta con borde information al hover.
-     * @nocombine CARD.surface.* (son mutuamente excluyentes por semántica)
+     * @nocombine CARD.surface.* (mutuamente excluyentes por semántica)
      */
-    weak: `${BASE} bg-bg-weak ${PAD.sm} shadow-elevation-xs cursor-pointer ${ANIMATION.transition.default} hover:border-information-base hover:bg-bg-soft`,
+    weak: cn(
+      BASE,
+      'bg-bg-weak',
+      PAD.sm,
+      'cursor-pointer',
+      ANIMATION.transition.default,
+      'hover:border-information-base hover:bg-bg-soft'
+    ),
 
     /**
      * @use Cards de producto, items navegables sobre fondos tenues.
      *      Usar en `<a>` — eleva la sombra al hover.
-     * @nocombine CARD.surface.* (son mutuamente excluyentes por semántica)
+     * @nocombine CARD.surface.* (mutuamente excluyentes por semántica)
      */
-    white: `${BASE} bg-bg-white ${PAD.sm} shadow-elevation-xs cursor-pointer ${ANIMATION.transition.default} hover:border-stroke-subtle hover:shadow-elevation-sm`,
+    white: cn(
+      BASE,
+      'bg-bg-white',
+      PAD.sm,
+      'cursor-pointer',
+      ANIMATION.transition.default,
+      'hover:border-stroke-subtle hover:shadow-elevation-sm'
+    ),
   },
 
+  // ── Overlays ───────────────────────────────────────────────────────────────
   overlay: {
     /**
      * @use Drawers, tooltips con cuerpo, bandejas laterales — flotantes de nivel medio.
-     * @warning Usar solo dentro de un portal o contexto con z-index gestionado (Z.drawer).
+     * @warning Usar solo dentro de un portal o contexto con z-index gestionado (`Z.drawer`).
      */
-    panel:
-      'rounded-lg border border-stroke-subtle bg-bg-white shadow-elevation-xl p-4',
+    panel: cn(
+      'border-stroke-subtle bg-bg-white shadow-elevation-xl rounded-lg border',
+      PAD.sm
+    ),
 
     /**
      * @use Modales pequeños, popovers, previews flotantes — mayor elevación que panel.
-     * @warning Usar solo dentro de un portal o contexto con z-index gestionado (Z.modal).
+     * @warning Usar solo dentro de un portal o contexto con z-index gestionado (`Z.backdrop`).
      */
-    modal: `rounded-lg bg-bg-weak ${PAD.md} shadow-elevation-lg`,
+    modal: cn('bg-bg-weak shadow-elevation-lg rounded-lg', PAD.md),
   },
 
   // ── Estructura interna ─────────────────────────────────────────────────────

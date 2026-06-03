@@ -1,10 +1,16 @@
 /**
  * Mapa canónico de etiquetas de stack (as const).
  * Reutilizar en About, Projects, etc.
+ *
+ * @module shared/constants/skills/skillLabels
+ * @fileoverview Catálogo importado por secciones y utilidades; cambios globales de marca o layout.
+ * @remarks Import directo: `import { SKILL_LABEL } from '@/shared/constants/skills/skillLabels'`.
  */
 export const SKILL_LABEL = {
   JAVASCRIPT_ES6_PLUS: 'JavaScript ES6+',
   TYPESCRIPT: 'TypeScript',
+  /** Build tool del repo; útil para JSON-LD y metadatos. */
+  VITE: 'Vite',
   HTML5: 'HTML5',
   CSS3: 'CSS3',
   REACT: 'React.js',
@@ -44,5 +50,8 @@ export const SKILL_LABEL = {
   POO: 'POO',
 } as const
 
-/** Literal union de todas las etiquetas de stack definidas en `SKILL_LABEL`. */
+/**
+ * Sólo valores literales de `SKILL_LABEL` (canónicos, una fuente de verdad).
+ * Usar al tipar `label` en stack / proyectos; no sustituir por `string` suelto.
+ */
 export type SkillLabel = (typeof SKILL_LABEL)[keyof typeof SKILL_LABEL]

@@ -4,6 +4,51 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-06-02
+
+### Añadido
+
+- Refactor global: componentes compartidos en **`primitives/`** y **`composites/`**; subcomponentes de página con tests co-localizados por carpeta.
+- **Modal** compuesto (`Modal.Header`, `Modal.Body`, `Modal.Footer`); subcomponentes en `Modal/subcomponentes/`.
+- Constantes de stats en **`HeroStats/constants.ts`**; subcomponentes Hero (CvCta, Stats, Title, Lead).
+- Scripts de calidad: **`check-tsdoc`**, **`check-env`**, **`check-exports`**; **`lint-staged`** valida cabeceras TSDoc en `src/**/*.{ts,tsx}` staged.
+- **`react-doctor`** / **`react-doctor:full`**; **`react-doctor.config.json`** (`deadCode: false`); script **`check:extended`**.
+- **`.env.example`**; plantilla **`.env.github`** documentada para Pages.
+- **`web-vitals`** en runtime (`reportWebVitals`); **`vitest-axe`** en tests clave (Modal, MobileDrawer, ImageCarousel).
+- Iconos reorganizados en **`brands/`**, **`media/`**, **`nav/`**, **`social/`**, **`ui/`**.
+- Hooks **`useIsIntersecting`**; utilidades **`createCompareByLegendOrder`**, **`withSiteBaseUrl`**, **`reportWebVitals`**.
+- Tests de integración **`App.test.tsx`**; helpers de test (`renderWithMotion`, mocks compartidos, `vitest-axe.d.ts`).
+- Foto de perfil en **`public/images/profile/`**.
+- CI: workflow React Doctor en modo **diff** vs rama base del PR.
+
+### Cambiado
+
+- **React Doctor** actualizado a **0.2.6**; auditoría completa local **100/100**.
+- **`check`** y **`check:ci`**: orden unificado (`format` → `lint` → exports → env → `typecheck` → Knip → tests → build en CI).
+- CI (**`ci.yml`**): un solo paso **`npm run check:ci`**.
+- **ErrorBoundary**: fallback acotado al área del boundary (cabecera y pie visibles).
+- Accesibilidad: **`section aria-labelledby`** en lugar de `role="group"`; **ThemeToggle** con `aria-labelledby`; **ImageCarousel** con fallback `<img alt="…">`.
+- Hooks alineados con **React Compiler** (`useHeader`, `useIsIntersecting`, `useNavScrollSpy`, `useProjectsScrollSync`, `useImageCarousel`).
+- **ProjectsSection**: hooks **`useProjectsModal`** / **`useProjectsCarousel`**; utils de imágenes y slides en la sección; modal unificado.
+- ESLint: **`ecmaVersion` 2023**; glob extendido a **`.mjs`/`.cjs`**.
+- TypeScript app: target **`ES2023`**.
+- **`vite.config.ts`**: `security.txt` con **`Expires` dinámico**; umbrales de cobertura documentados; pipeline de imágenes con **sharp** endurecido.
+- **`knip.json`**: ignora `vitest-axe.d.ts` (ya no ignora `react-doctor` como dependencia).
+- **`tsdoc.json`**: tag **`@fileoverview`** registrado.
+- README, **`scripts/README.md`** y pipeline documentados.
+
+### Arreglado
+
+- **ThemeToggle**: id fijo `theme-toggle-label` y enlace accesible con `aria-labelledby`.
+- **ErrorBoundary**: alerta y botón Reintentar con tests de restauración.
+
+### Eliminado
+
+- Script **`lighthouse:pages`** y **`scripts/lighthouse-pages.mjs`** (auditoría Lighthouse manual vía DevTools / PageSpeed).
+- **`public/robots.txt`** y **`public/sitemap.xml`** versionados (generación en build vía plugin Vite).
+- Barriles y utilidades muertas (`shared/constants/index`, `enums/`, `projectImageWebp`, **`ProgressiveImage`** standalone, estructura plana legacy en `shared/components/`).
+- Carpeta **`__tests__/`** dispersa; tests junto a cada módulo.
+
 ## [1.6.0] - 2026-04-25
 
 ### Añadido
