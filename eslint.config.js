@@ -55,10 +55,11 @@ export default tseslint.config(
     ignores: ['dist/**', 'build/**', 'coverage/**'],
   },
   {
-    files: ['**/*.{js,jsx}'],
+    /** Incluye `.mjs`/`.cjs` (scripts/, commitlint) con reglas JS base; Node tooling añade globals en bloque aparte. */
+    files: ['**/*.{js,jsx,mjs,cjs}'],
     extends: [js.configs.recommended, tseslint.configs.disableTypeChecked],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2023,
       globals: { ...globals.browser },
     },
     plugins: {
@@ -82,7 +83,7 @@ export default tseslint.config(
       jsxA11y.flatConfigs.recommended,
     ],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2023,
       globals: { ...globals.browser },
       parserOptions: typeAwareParserOptions,
     },
