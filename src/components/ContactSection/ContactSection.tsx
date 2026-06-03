@@ -1,23 +1,45 @@
-import { AnimatedSectionHeading } from '@/shared/components/AnimatedSectionHeading'
-import { LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
+/**
+ * Compositor de la sección "Contacto" del portfolio (`ContactSection`).
+ *
+ * @fileoverview Implementación del archivo `ContactSection.tsx` dentro de `components/ContactSection`; ver exports para la API pública.
+ * @remarks Exporta `CONTACT_SECTION_TITLE_ID` y `CONTACT_MAIN_COLUMN_HEADING_ID` acoplados al JSX del compositor.
+ */
+import { AnimatedSectionHeading } from '@/shared/components/primitives/AnimatedSectionHeading'
+import { LAYOUT } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
-import { CONTACT_EMAIL_HREF } from './constants'
-import { ContactLinkCards, ProfileAside } from './subcomponents'
+import { CONTACT_SECTION_ANCHOR_ID } from './constants'
+import { ContactLead } from './subcomponents/ContactLead/ContactLead'
+import { ContactLinkCards } from './subcomponents/ContactLinkCards/ContactLinkCards'
+import { ProfileAside } from './subcomponents/ProfileAside/ProfileAside'
+
+/** `id` del `h2` principal (`AnimatedSectionHeading`), referenciado por el `<section>`. */
+export const CONTACT_SECTION_TITLE_ID = 'contact-section-heading' as const
 
 /**
- * Sección de contacto: copy, `nav` de enlaces y `aside` con disponibilidad y metadatos.
+ * Encabezado **solo lectores de pantalla** que agrupa el lead y la `nav` de tarjetas
+ * (`<section aria-labelledby>` en la columna principal).
+ */
+export const CONTACT_MAIN_COLUMN_HEADING_ID =
+  'contact-main-column-heading' as const
+
+/**
+ * @module components/ContactSection/ContactSection
+ *
+ * Landmark de contacto: heading animado, columna principal (`ContactLead`, `ContactLinkCards`) y `ProfileAside`.
  *
  * @example
  * ```tsx
  * <ContactSection />
  * ```
+ * @see {@link CONTACT_SECTION_ANCHOR_ID} para el `id` del landmark
+ * @see `./constants` para datos de contacto y redes
  */
 export function ContactSection() {
   return (
     <section
-      id="contacto"
-      aria-labelledby="contact-section-heading"
+      id={CONTACT_SECTION_ANCHOR_ID}
+      aria-labelledby={CONTACT_SECTION_TITLE_ID}
       className={cn(LAYOUT.container.full, LAYOUT.section.default)}
     >
       <div
@@ -27,25 +49,23 @@ export function ContactSection() {
           overline="Contacto"
           title="Hablemos de tu"
           titleHighlight="próximo paso"
-          titleId="contact-section-heading"
+          titleId={CONTACT_SECTION_TITLE_ID}
         />
 
-        <div className="grid min-h-0 items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_400px] xl:gap-8">
-          <div
-            className={cn(
-              'flex h-full min-h-0 flex-col',
-              LAYOUT.spacing.default
-            )}
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_400px] xl:gap-8">
+          <section
+            aria-labelledby={CONTACT_MAIN_COLUMN_HEADING_ID}
+            className={cn(LAYOUT.spacing.default, 'flex flex-col')}
           >
-            <p className={cn(TYPOGRAPHY.paragraph.lead, LAYOUT.prose.lg)}>
-              ¿Colaboración en producto, revisión o rol React/TypeScript? Mira
-              el código y proyectos en GitHub o escríbeme por LinkedIn, WhatsApp
-              {CONTACT_EMAIL_HREF ? ' o correo' : ''}.
-            </p>
-
+            <h3 id={CONTACT_MAIN_COLUMN_HEADING_ID} className="sr-only">
+              Mensaje introductorio y enlaces para contactarme
+            </h3>
+            {/* Contact Lead */}
+            <ContactLead />
+            {/* Contact Link Cards */}
             <ContactLinkCards />
-          </div>
-
+          </section>
+          {/* Profile Aside */}
           <ProfileAside />
         </div>
       </div>

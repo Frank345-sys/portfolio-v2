@@ -1,3 +1,13 @@
+/**
+ * Tests para `ProfileAside` — contrato de landmark, accesibilidad y contenido del aside de perfil.
+ *
+ * @fileoverview Valida `complementary`, tres `role="group"` con `h3`, leyenda de disponibilidad,
+ * cardinalidad de servicios, metadatos (`dl`) y elemento `<time>` con `datetime` ISO válido.
+ * La fila «Zona» se valida condicionalmente según `CONTACT_ASIDE_ZONE_LABEL_TRIM`.
+ * @remarks No usa `renderWithMotion` — `ProfileAside` no tiene animaciones propias de Motion.
+ * `OwnerLocalTime` renderiza un `<time datetime>` real; el test valida que el ISO sea parseable
+ * por `Date.parse` y que el texto muestre formato `HH:MM`.
+ */
 import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
@@ -31,21 +41,21 @@ describe('ProfileAside', () => {
     ).toBeInTheDocument()
   })
 
-  it('agrupa disponibilidad, servicios y metadatos con role=group y aria-labelledby', () => {
+  it('agrupa disponibilidad, servicios y metadatos en section con aria-labelledby', () => {
     const { container } = render(<ProfileAside />)
     expect(
       container.querySelector(
-        `[role="group"][aria-labelledby="${CONTACT_ASIDE_AVAILABILITY_HEADING_ID}"]`
+        `section[aria-labelledby="${CONTACT_ASIDE_AVAILABILITY_HEADING_ID}"]`
       )
     ).toBeInTheDocument()
     expect(
       container.querySelector(
-        `[role="group"][aria-labelledby="${CONTACT_ASIDE_SERVICES_HEADING_ID}"]`
+        `section[aria-labelledby="${CONTACT_ASIDE_SERVICES_HEADING_ID}"]`
       )
     ).toBeInTheDocument()
     expect(
       container.querySelector(
-        `[role="group"][aria-labelledby="${CONTACT_ASIDE_METADATA_HEADING_ID}"]`
+        `section[aria-labelledby="${CONTACT_ASIDE_METADATA_HEADING_ID}"]`
       )
     ).toBeInTheDocument()
   })
@@ -68,6 +78,8 @@ describe('ProfileAside', () => {
       level: 3,
       name: /tiempo de respuesta, hora local y zona horaria de referencia/i,
     })
+    // jsdom no implementa layout real — getBoundingClientRect devuelve 0×0 para .sr-only
+    // de Tailwind (1px×1px clip), que sí es estable como señal de elemento visualmente oculto.
     const rect = metadataHeading.getBoundingClientRect()
     expect(rect.width <= 1 && rect.height <= 1).toBe(true)
   })
@@ -110,10 +122,10 @@ describe('ProfileAside', () => {
     const aside = screen.getByRole('complementary', {
       name: /resumen de perfil y disponibilidad/i,
     })
-    const metaGroup = within(aside).getByRole('group', {
+    const metaSection = within(aside).getByRole('region', {
       name: /tiempo de respuesta, hora local y zona horaria de referencia/i,
     })
-    const dl = metaGroup.querySelector('dl')
+    const dl = metaSection.querySelector('dl')
     expect(dl).toBeTruthy()
     const inDl = within(dl as HTMLElement)
 
@@ -134,6 +146,8 @@ describe('ProfileAside', () => {
     })
     const timeEl = aside.querySelector('time[datetime]')
     expect(timeEl).toBeTruthy()
+    // Valida que OwnerLocalTime emita un datetime ISO parseable y texto con formato HH:MM.
+    // Date.parse devuelve NaN para strings inválidos — isNaN(NaN) es true → test falla si el formato es incorrecto.
     const iso = timeEl?.getAttribute('datetime') ?? ''
     expect(iso.length).toBeGreaterThan(0)
     expect(Number.isNaN(Date.parse(iso))).toBe(false)

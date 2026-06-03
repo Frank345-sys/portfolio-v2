@@ -1,7 +1,16 @@
+/**
+ * Tests para `ContactSection` — contrato de landmark, accesibilidad y estructura del compositor.
+ *
+ * @fileoverview Valida ancla de sección, `aria-labelledby` → `h2`, columna principal como `<section>`
+ * y `h3` sr-only, presencia de `<p>` lead, `<nav>` de tarjetas y `<aside>` de perfil.
+ * @remarks Usa `renderWithMotion` — `ContactSection` tiene animaciones triggeradas por `IntersectionObserver`,
+ * que se mockea en `beforeEach`. Solo valida el compositor; copy y `href` de subcomponentes
+ * se cubren en sus propios `*.test.tsx`.
+ */
 import { screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-import { renderWithMotion } from '@/test/renderWithMotion'
+import { renderWithMotion } from '@/test/helpers'
 
 import { CONTACT_SECTION_ANCHOR_ID } from './constants'
 import {
@@ -10,6 +19,8 @@ import {
   CONTACT_SECTION_TITLE_ID,
 } from './ContactSection'
 
+// Preserva el IntersectionObserver nativo para restaurarlo en afterEach
+// y evitar contaminación entre tests.
 const ioReserve = globalThis.IntersectionObserver
 
 /**
@@ -17,8 +28,8 @@ const ioReserve = globalThis.IntersectionObserver
  *
  * **Cobertura (solo compositor)**
  * - Landmark de sección: `id` de ancla, `aria-labelledby` → `h2` de título
- * - Columna principal: `role="group"`, `h3` sr-only y nombre accesible coherente
- * - Presencia estructural: un `<p>` hijo directo del `group` (lead), `nav` de tarjetas y `aside` (sin repetir copy ni `href`; eso vive en subcomponentes)
+ * - Columna principal: `region` con `aria-labelledby`, `h3` sr-only y nombre accesible coherente
+ * - Presencia estructural: un `<p>` hijo directo de la columna (lead), `nav` de tarjetas y `aside` (sin repetir copy ni `href`; eso vive en subcomponentes)
  */
 describe('ContactSection', () => {
   beforeEach(() => {
@@ -53,7 +64,7 @@ describe('ContactSection', () => {
   it('agrupa columna principal (lead + nav) con heading sr-only', () => {
     renderWithMotion(<ContactSection />)
 
-    const mainColumn = screen.getByRole('group', {
+    const mainColumn = screen.getByRole('region', {
       name: /mensaje introductorio y enlaces para contactarme/i,
     })
     expect(mainColumn).toHaveAttribute(
@@ -63,7 +74,8 @@ describe('ContactSection', () => {
 
     const mainHeading = within(mainColumn).getByRole('heading', { level: 3 })
     expect(mainHeading).toHaveAttribute('id', CONTACT_MAIN_COLUMN_HEADING_ID)
-    // jsdom marca muchos `.sr-only` como “visibles” para toBeVisible(); el rect 1×1 de Tailwind sí es estable aquí
+    // jsdom marca muchos `.sr-only` como visibles con toBeVisible() porque el rect 1×1
+    // de Tailwind es técnicamente visible; comprobamos dimensiones directamente.
     const { width, height } = mainHeading.getBoundingClientRect()
     expect(width <= 1 && height <= 1).toBe(true)
     expect(mainHeading).toHaveTextContent(
@@ -74,7 +86,7 @@ describe('ContactSection', () => {
   it('monta lead (párrafo), navegación de tarjetas dentro de la columna y aside de perfil', () => {
     renderWithMotion(<ContactSection />)
 
-    const mainColumn = screen.getByRole('group', {
+    const mainColumn = screen.getByRole('region', {
       name: /mensaje introductorio y enlaces para contactarme/i,
     })
     expect(mainColumn.querySelectorAll(':scope > p')).toHaveLength(1)
