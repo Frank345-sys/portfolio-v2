@@ -1,10 +1,18 @@
+/**
+ * Raíz de la aplicación React del portfolio (montaje de secciones y providers).
+ *
+ * @fileoverview Orquesta skip link, `<Header>`, `<main>` con secciones lazy y `<Footer>` fuera del contenido principal.
+ * @remarks Todas las secciones y Footer usan `React.lazy` + `Suspense` con `SectionLazyFallback` para reducir CLS.
+ * Un `ErrorBoundary` agrupa las secciones bajo `<main>`; Footer tiene su propio `Suspense` fuera del límite —
+ * si falla antes de montarse, lo captura el boundary de `main.tsx`.
+ */
 import { LazyMotion, domAnimation, MotionConfig } from 'motion/react'
 import { lazy, Suspense } from 'react'
 
 import { Header } from '@/components/Header'
-import { ErrorBoundary } from '@/shared/components'
-import { SectionLazyFallback } from '@/shared/components/SectionLazyFallback'
-import { SmoothScrollRoot } from '@/shared/components/SmoothScrollRoot'
+import { SectionLazyFallback } from '@/shared/components/composites/SectionLazyFallback'
+import { ErrorBoundary } from '@/shared/components/primitives/ErrorBoundary'
+import { SmoothScrollRoot } from '@/shared/components/primitives/SmoothScrollRoot'
 const HeroSection = lazy(async () => {
   const m = await import('@/components/HeroSection')
   return { default: m.HeroSection }
@@ -33,6 +41,10 @@ const Footer = lazy(async () => {
  * `MotionConfig` respeta `prefers-reduced-motion`.
  * `HeroSection` y el resto de secciones bajo `Suspense` usan `SectionLazyFallback` para reducir CLS
  * y anuncian carga a lectores de pantalla (portada vs. bloques con `min-h` en secciones internas).
+ *
+ * Un solo **`ErrorBoundary`** agrupa todas las secciones bajo **`main`**; si todos los chunks lazy
+ * fallan (red), se muestra un único estado de error. El pie es `lazy`; si lanzara antes de montarse,
+ * el límite de **`main.tsx`** muestra el mismo fallback acotado al área del boundary.
  */
 export function App() {
   return (
@@ -60,8 +72,6 @@ export function App() {
               >
                 <HeroSection />
               </Suspense>
-            </ErrorBoundary>
-            <ErrorBoundary>
               <Suspense
                 fallback={
                   <SectionLazyFallback
@@ -72,8 +82,6 @@ export function App() {
               >
                 <AboutSection />
               </Suspense>
-            </ErrorBoundary>
-            <ErrorBoundary>
               <Suspense
                 fallback={
                   <SectionLazyFallback
@@ -84,8 +92,6 @@ export function App() {
               >
                 <ProjectsSection />
               </Suspense>
-            </ErrorBoundary>
-            <ErrorBoundary>
               <Suspense
                 fallback={
                   <SectionLazyFallback
@@ -98,18 +104,16 @@ export function App() {
               </Suspense>
             </ErrorBoundary>
           </main>
-          <ErrorBoundary>
-            <Suspense
-              fallback={
-                <SectionLazyFallback
-                  ariaLabel="Cargando pie de página"
-                  variant="footer"
-                />
-              }
-            >
-              <Footer />
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense
+            fallback={
+              <SectionLazyFallback
+                ariaLabel="Cargando pie de página"
+                variant="footer"
+              />
+            }
+          >
+            <Footer />
+          </Suspense>
         </SmoothScrollRoot>
       </MotionConfig>
     </LazyMotion>
