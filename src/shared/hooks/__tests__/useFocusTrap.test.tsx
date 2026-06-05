@@ -1,11 +1,12 @@
 /**
  * Pruebas de `useFocusTrap` — captura de Tab, ciclo entre focables y restauración del foco al salir.
  *
- * @fileoverview Vitest + `fireEvent` sobre harnesses con uno o dos botones bajo la ref devuelta por el hook.
+ * @fileoverview Vitest + `userEvent` sobre harnesses con uno o dos botones bajo la ref devuelta por el hook.
  * @remarks Verifica listeners en `document` (captura) y limpieza al pasar `isActive` a false o al desmontar con trap activo.
  */
 
-import { render, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest'
 
 import { useFocusTrap } from '../useFocusTrap'
@@ -71,32 +72,34 @@ describe('useFocusTrap', () => {
     const { rerender } = render(<TrapHarness isActive={false} />)
     rerender(<TrapHarness isActive={true} />)
 
-    const first = document.querySelectorAll('button')[0]
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: 'First' })
+    )
+  })
+
+  it('Tab en el último elemento focuseable vuelve al primero', async () => {
+    const user = userEvent.setup()
+    render(<TrapHarness isActive />)
+
+    const first = screen.getByRole('button', { name: 'First' })
+    const last = screen.getByRole('button', { name: 'Second' })
+    last.focus()
+    expect(document.activeElement).toBe(last)
+
+    await user.tab()
+
     expect(document.activeElement).toBe(first)
   })
 
-  it('Tab en el último elemento focuseable vuelve al primero', () => {
+  it('Shift+Tab en el primer elemento focuseable va al último', async () => {
+    const user = userEvent.setup()
     render(<TrapHarness isActive />)
 
-    const buttons = document.querySelectorAll('button')
-    const last = buttons[buttons.length - 1]
-    last?.focus()
-    expect(document.activeElement).toBe(last)
+    const first = screen.getByRole('button', { name: 'First' })
+    const last = screen.getByRole('button', { name: 'Second' })
+    first.focus()
 
-    fireEvent.keyDown(document, { key: 'Tab', shiftKey: false })
-
-    expect(document.activeElement).toBe(buttons[0])
-  })
-
-  it('Shift+Tab en el primer elemento focuseable va al último', () => {
-    render(<TrapHarness isActive />)
-
-    const buttons = document.querySelectorAll('button')
-    const first = buttons[0]
-    const last = buttons[buttons.length - 1]
-    first?.focus()
-
-    fireEvent.keyDown(document, { key: 'Tab', shiftKey: true })
+    await user.tab({ shift: true })
 
     expect(document.activeElement).toBe(last)
   })
@@ -128,26 +131,23 @@ describe('useFocusTrap', () => {
     expect(removed.length).toBeGreaterThan(0)
   })
 
-  it('contenedor sin elementos focuseables no lanza al pulsar Tab', () => {
+  it('contenedor sin elementos focuseables no lanza al pulsar Tab', async () => {
+    const user = userEvent.setup()
     render(<EmptyTrapHarness isActive />)
 
-    expect(() =>
-      fireEvent.keyDown(document, { key: 'Tab', shiftKey: false })
-    ).not.toThrow()
+    await expect(user.tab()).resolves.not.toThrow()
   })
 
   it('al desactivar restaura el foco al elemento que lo tenía antes', () => {
-    const { rerender, getByTestId, getByRole } = render(
-      <RestoreFocusHarness active={false} />
-    )
+    const { rerender } = render(<RestoreFocusHarness active={false} />)
 
-    const outside = getByTestId('outside-focus')
+    const outside = screen.getByTestId('outside-focus')
     outside.focus()
     expect(document.activeElement).toBe(outside)
 
     rerender(<RestoreFocusHarness active />)
     expect(document.activeElement).toBe(
-      getByRole('button', { name: /inside/i })
+      screen.getByRole('button', { name: /inside/i })
     )
 
     rerender(<RestoreFocusHarness active={false} />)
