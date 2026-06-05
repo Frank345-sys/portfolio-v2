@@ -5,7 +5,7 @@
  * @remarks Los cambios de texto o `href` suelen requerir actualizar tests que fijen el contrato de la sección.
  */
 
-export { SITE_PROFILE } from '@/shared/constants/siteProfile'
+export { SITE_PROFILE } from '@/shared/constants/siteProfile/siteProfile'
 import type { SkillLabel } from '@/shared/constants/skills/skillLabels'
 
 import {
