@@ -101,9 +101,9 @@ export function ErrorBoundaryFallback({
           </span>
         </div>
 
-        <h1 className={cn(TYPOGRAPHY.title.section, 'text-balance')}>
+        <h2 className={cn(TYPOGRAPHY.title.section, 'text-balance')}>
           No pudimos cargar el contenido
-        </h1>
+        </h2>
         <p
           className={cn(
             TYPOGRAPHY.paragraph.secondary,
