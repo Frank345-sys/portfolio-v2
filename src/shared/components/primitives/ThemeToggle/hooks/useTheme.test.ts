@@ -6,12 +6,21 @@
  */
 
 import { renderHook, act } from '@testing-library/react'
+import { createElement } from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
+import { THEME_STORAGE_KEY } from '@/shared/constants/theme'
+
+import { ThemeProvider } from '../ThemeProvider'
 import { useTheme } from './useTheme'
 
-const STORAGE_KEY = 'theme'
 function noopOnPrefersColorSchemeChange() {}
+
+function renderUseTheme() {
+  return renderHook(() => useTheme(), {
+    wrapper: ({ children }) => createElement(ThemeProvider, null, children),
+  })
+}
 
 describe('useTheme', () => {
   const mockMatchMedia = vi.fn()
@@ -53,8 +62,8 @@ describe('useTheme', () => {
   })
 
   it('retorna isDark y setTheme', () => {
-    const { result } = renderHook(() => useTheme())
-    expect(result.current.isDark).toBeDefined()
+    const { result } = renderUseTheme()
+    expect(result.current.isDark).toBe(false)
     expect(typeof result.current.setTheme).toBe('function')
   })
 
@@ -65,7 +74,7 @@ describe('useTheme', () => {
       removeEventListener: mockRemoveEventListener,
     })
 
-    const { result } = renderHook(() => useTheme())
+    const { result } = renderUseTheme()
 
     expect(result.current.isDark).toBe(false)
     expect(document.documentElement.classList.contains('dark')).toBe(false)
@@ -75,9 +84,9 @@ describe('useTheme', () => {
   })
 
   it('inicializa en dark cuando localStorage tiene "dark"', () => {
-    localStorage.setItem(STORAGE_KEY, 'dark')
+    localStorage.setItem(THEME_STORAGE_KEY, 'dark')
 
-    const { result } = renderHook(() => useTheme())
+    const { result } = renderUseTheme()
 
     expect(result.current.isDark).toBe(true)
     expect(document.documentElement.classList.contains('dark')).toBe(true)
@@ -87,16 +96,16 @@ describe('useTheme', () => {
   })
 
   it('inicializa en light cuando localStorage tiene "light"', () => {
-    localStorage.setItem(STORAGE_KEY, 'light')
+    localStorage.setItem(THEME_STORAGE_KEY, 'light')
 
-    const { result } = renderHook(() => useTheme())
+    const { result } = renderUseTheme()
 
     expect(result.current.isDark).toBe(false)
     expect(document.documentElement.classList.contains('dark')).toBe(false)
   })
 
   it('setTheme("dark") actualiza isDark, aplica clase y persiste en localStorage', () => {
-    const { result } = renderHook(() => useTheme())
+    const { result } = renderUseTheme()
 
     act(() => {
       result.current.setTheme('dark')
@@ -104,15 +113,15 @@ describe('useTheme', () => {
 
     expect(result.current.isDark).toBe(true)
     expect(document.documentElement.classList.contains('dark')).toBe(true)
-    expect(localStorage.setItem).toHaveBeenCalledWith(STORAGE_KEY, 'dark')
+    expect(localStorage.setItem).toHaveBeenCalledWith(THEME_STORAGE_KEY, 'dark')
     expect(
       document.getElementById('meta-theme-color')?.getAttribute('content')
     ).toBe('#171717')
   })
 
   it('setTheme("light") actualiza isDark a false, quita clase y persiste', () => {
-    localStorage.setItem(STORAGE_KEY, 'dark')
-    const { result } = renderHook(() => useTheme())
+    localStorage.setItem(THEME_STORAGE_KEY, 'dark')
+    const { result } = renderUseTheme()
 
     act(() => {
       result.current.setTheme('light')
@@ -120,23 +129,26 @@ describe('useTheme', () => {
 
     expect(result.current.isDark).toBe(false)
     expect(document.documentElement.classList.contains('dark')).toBe(false)
-    expect(localStorage.setItem).toHaveBeenCalledWith(STORAGE_KEY, 'light')
+    expect(localStorage.setItem).toHaveBeenCalledWith(
+      THEME_STORAGE_KEY,
+      'light'
+    )
     expect(
       document.getElementById('meta-theme-color')?.getAttribute('content')
     ).toBe('#ffffff')
   })
 
   it('crea meta theme-color si no existe en el DOM', () => {
-    const { result } = renderHook(() => useTheme())
+    const { result } = renderUseTheme()
 
     expect(result.current.isDark).toBe(false)
     const meta = document.getElementById('meta-theme-color')
-    expect(meta).not.toBeNull()
+    expect(meta).toBeInTheDocument()
     expect(meta?.getAttribute('name')).toBe('theme-color')
   })
 
   it('no lanza al desmontar', () => {
-    const { unmount } = renderHook(() => useTheme())
+    const { unmount } = renderUseTheme()
     expect(() => unmount()).not.toThrow()
   })
 
@@ -144,7 +156,7 @@ describe('useTheme', () => {
    * El primer `useEffect` persiste el tema antes de que el segundo lea
    * `getStoredTheme()`. Para ejercitar el listener de `prefers-color-scheme`
    * (líneas 51–60) sin tocar el hook, usamos un `localStorage` donde
-   * `setItem(STORAGE_KEY, …)` no escribe en el almacén interno.
+   * `setItem(THEME_STORAGE_KEY, …)` no escribe en el almacén interno.
    */
   describe('listener prefers-color-scheme (persistencia de theme desactivada en tests)', () => {
     beforeEach(() => {
@@ -155,7 +167,7 @@ describe('useTheme', () => {
       vi.stubGlobal('localStorage', {
         getItem: vi.fn((key: string) => storage[key] ?? null),
         setItem: vi.fn((key: string, value: string) => {
-          if (key !== STORAGE_KEY) storage[key] = value
+          if (key !== THEME_STORAGE_KEY) storage[key] = value
         }),
         removeItem: vi.fn(),
         clear: vi.fn(() => {
@@ -177,7 +189,7 @@ describe('useTheme', () => {
     })
 
     it('sin tema legible en storage registra listener change en matchMedia', () => {
-      renderHook(() => useTheme())
+      renderUseTheme()
 
       expect(mockAddEventListener).toHaveBeenCalledWith(
         'change',
@@ -186,11 +198,11 @@ describe('useTheme', () => {
     })
 
     it('con tema ya presente en storage no registra listener de prefers-color-scheme', () => {
-      const storage: Record<string, string> = { [STORAGE_KEY]: 'light' }
+      const storage: Record<string, string> = { [THEME_STORAGE_KEY]: 'light' }
       vi.stubGlobal('localStorage', {
         getItem: vi.fn((key: string) => storage[key] ?? null),
         setItem: vi.fn((key: string, value: string) => {
-          if (key !== STORAGE_KEY) storage[key] = value
+          if (key !== THEME_STORAGE_KEY) storage[key] = value
         }),
         removeItem: vi.fn(),
         clear: vi.fn(),
@@ -199,7 +211,7 @@ describe('useTheme', () => {
       })
 
       mockAddEventListener.mockClear()
-      renderHook(() => useTheme())
+      renderUseTheme()
 
       expect(mockAddEventListener).not.toHaveBeenCalled()
     })
@@ -211,7 +223,7 @@ describe('useTheme', () => {
         removeEventListener: mockRemoveEventListener,
       })
 
-      const { result } = renderHook(() => useTheme())
+      const { result } = renderUseTheme()
 
       expect(result.current.isDark).toBe(true)
       expect(document.documentElement.classList.contains('dark')).toBe(true)
@@ -232,7 +244,7 @@ describe('useTheme', () => {
         removeEventListener: mockRemoveEventListener,
       })
 
-      const { result } = renderHook(() => useTheme())
+      const { result } = renderUseTheme()
 
       expect(result.current.isDark).toBe(false)
 
@@ -251,16 +263,30 @@ describe('useTheme', () => {
     })
 
     it('al desmontar elimina el listener change de matchMedia', () => {
-      const { unmount } = renderHook(() => useTheme())
+      const { unmount } = renderUseTheme()
 
       const handler = mockAddEventListener.mock.calls.find(
         ([evt]) => evt === 'change'
       )?.[1]
 
-      expect(handler).toBeDefined()
+      expect(typeof handler).toBe('function')
       unmount()
 
       expect(mockRemoveEventListener).toHaveBeenCalledWith('change', handler)
     })
+  })
+})
+
+describe('useTheme fuera de ThemeProvider', () => {
+  it('lanza error descriptivo si se usa sin ThemeProvider', () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined)
+
+    expect(() => {
+      renderHook(() => useTheme())
+    }).toThrow(/useTheme debe usarse dentro de ThemeProvider/)
+
+    consoleError.mockRestore()
   })
 })
