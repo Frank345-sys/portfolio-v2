@@ -40,13 +40,13 @@ vi.mock('@/shared/hooks', () => ({
 function TestHarness() {
   const {
     isOpen,
-    isMobileDrawerOpen,
+    isLgMin,
     setIsOpen,
     isAtTop,
     activeNavHref,
     rowRef,
     registerLink,
-    underline,
+    desktopNavUnderlineMotion,
   } = useHeader(DEFAULT_NAV_ITEMS)
 
   return (
@@ -73,12 +73,12 @@ function TestHarness() {
       />
       <span data-testid="is-open">{isOpen ? 'yes' : 'no'}</span>
       <span data-testid="is-mobile-drawer-open">
-        {isMobileDrawerOpen ? 'yes' : 'no'}
+        {isOpen && !isLgMin ? 'yes' : 'no'}
       </span>
       <span data-testid="is-at-top">{isAtTop ? 'yes' : 'no'}</span>
       <span data-testid="active">{activeNavHref ?? 'none'}</span>
       <span data-testid="underline-visible">
-        {underline.visible ? 'yes' : 'no'}
+        {desktopNavUnderlineMotion.animate.opacity === 1 ? 'yes' : 'no'}
       </span>
       <button
         type="button"
@@ -184,7 +184,7 @@ describe('useHeader', () => {
       )
     })
 
-    it('en lg isMobileDrawerOpen es false y se cierra el estado interno del drawer', async () => {
+    it('en lg el drawer derivado (isOpen && !isLgMin) es false y isOpen se resetea', async () => {
       const { rerender } = render(<TestHarness />)
       act(() => {
         screen.getByTestId('toggle-drawer').click()
@@ -205,7 +205,7 @@ describe('useHeader', () => {
       })
     })
 
-    it('en lg isMobileDrawerOpen permanece no aunque se pulse alternar', async () => {
+    it('en lg el drawer derivado permanece cerrado aunque se pulse alternar', async () => {
       mockUseMediaQuery.mockReturnValue(true)
       render(<TestHarness />)
       expect(screen.getByTestId('is-mobile-drawer-open')).toHaveTextContent(
@@ -246,6 +246,10 @@ describe('useHeader', () => {
 
   /** `activeNavHref` y visibilidad del subrayado propagados desde el IO capturado. */
   describe('scroll-spy + subrayado (IO simulado)', () => {
+    beforeEach(() => {
+      mockUseMediaQuery.mockReturnValue(true)
+    })
+
     it('propaga activeNavHref y subrayado cuando el scroll-spy marca sección', async () => {
       render(<TestHarness />)
       await act(async () => {
