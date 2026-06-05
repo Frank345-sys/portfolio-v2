@@ -5,14 +5,7 @@
  * @remarks Autoplay desactivado con `prefers-reduced-motion`; transiciones Motion vía `MotionConfig` global.
  */
 
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { MOTION_ANIMATION } from '@/shared/constants/motionAnimations'
 import { useMediaQuery } from '@/shared/hooks'
@@ -135,6 +128,8 @@ function createSlideVariants(duration: number): Variants {
   }
 }
 
+const IMAGE_CAROUSEL_SLIDE_VARIANTS = createSlideVariants(0.75)
+
 // ---------------------------------------------------------------------------
 // Hook principal
 // ---------------------------------------------------------------------------
@@ -210,10 +205,6 @@ export function useImageCarousel({
     slideRef.current = slide
   }, [slide])
 
-  const slideVariants = useMemo(() => createSlideVariants(0.75), [])
-
-  // ── Navegación ───────────────────────────────────────────────────────────
-
   /**
    * Navega al slide anterior o siguiente de forma circular.
    * Con `manual = true`:
@@ -221,51 +212,40 @@ export function useImageCarousel({
    * 2. Establece una pausa antes del siguiente ciclo automático.
    * 3. Incrementa `manualNavEpoch` para reiniciar el efecto de autoplay.
    */
-  const goToSlide = useCallback(
-    (target: ImageCarouselNavDirection, manual = false) => {
-      if (count <= 1) return
+  function goToSlide(target: ImageCarouselNavDirection, manual = false) {
+    if (count <= 1) return
 
-      if (manual) {
-        if (autoplayTimeoutRef.current !== null) {
-          window.clearTimeout(autoplayTimeoutRef.current)
-          autoplayTimeoutRef.current = null
-        }
-        pauseAutoplayUntilRef.current =
-          Date.now() + IMAGE_CAROUSEL_AUTOPLAY_PAUSE_AFTER_MANUAL_MS
-        if (autoplay && !prefersReducedMotion && hasCarousel) {
-          setManualNavEpoch((e) => e + 1)
-        }
+    if (manual) {
+      if (autoplayTimeoutRef.current !== null) {
+        window.clearTimeout(autoplayTimeoutRef.current)
+        autoplayTimeoutRef.current = null
       }
-
-      const next =
-        target === 'prev' ? (slide - 1 + count) % count : (slide + 1) % count
-
-      if (controlled) {
-        onSlideChangeRef.current?.(next)
-      } else {
-        setInternalSlide(next)
+      pauseAutoplayUntilRef.current =
+        Date.now() + IMAGE_CAROUSEL_AUTOPLAY_PAUSE_AFTER_MANUAL_MS
+      if (autoplay && !prefersReducedMotion && hasCarousel) {
+        setManualNavEpoch((e) => e + 1)
       }
-    },
-    [autoplay, count, controlled, hasCarousel, prefersReducedMotion, slide]
-  )
+    }
 
-  /** Handler de clic para el botón «siguiente» — detiene la propagación. */
-  const goNext = useCallback(
-    (event: MouseEvent) => {
-      event.stopPropagation()
-      goToSlide('next', true)
-    },
-    [goToSlide]
-  )
+    const next =
+      target === 'prev' ? (slide - 1 + count) % count : (slide + 1) % count
 
-  /** Handler de clic para el botón «anterior» — detiene la propagación. */
-  const goPrev = useCallback(
-    (event: MouseEvent) => {
-      event.stopPropagation()
-      goToSlide('prev', true)
-    },
-    [goToSlide]
-  )
+    if (controlled) {
+      onSlideChangeRef.current?.(next)
+    } else {
+      setInternalSlide(next)
+    }
+  }
+
+  function goNext(event: MouseEvent) {
+    event.stopPropagation()
+    goToSlide('next', true)
+  }
+
+  function goPrev(event: MouseEvent) {
+    event.stopPropagation()
+    goToSlide('prev', true)
+  }
 
   // ── Autoplay ─────────────────────────────────────────────────────────────
 
@@ -324,7 +304,7 @@ export function useImageCarousel({
     slide,
     count,
     hasCarousel,
-    slideVariants,
+    slideVariants: IMAGE_CAROUSEL_SLIDE_VARIANTS,
     regionLabel: resolveRegionLabel(imageAlt, carouselAriaLabel),
     imgAlt: resolveImgAlt(imageAlt, slide, count, hasCarousel),
     currentSrc: slides[slide] ?? '',
