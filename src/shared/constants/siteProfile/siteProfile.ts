@@ -35,14 +35,14 @@ export const SITE_TAGLINE =
  */
 export const HERO_STACK_HIGHLIGHT = 'React · TypeScript · Next.js' as const
 
-/** Sufijo alineado con el título de `index.html` y OG/Twitter. */
+/** Sufijo alineado con el título de `index.html` y OG/Twitter (≤60 caracteres en conjunto). */
 const PAGE_TITLE_STACK = 'React & TypeScript' as const
 
 /**
- * Título de documento, Open Graph y Twitter.
+ * Título de documento, Open Graph y Twitter (~50 caracteres; validado en `siteProfile.seo.test.ts`).
  */
 export const SITE_PAGE_TITLE =
-  `${SITE_DISPLAY_NAME} — ${SITE_PROFILE.role} | ${PAGE_TITLE_STACK}` as const
+  `${SITE_DISPLAY_NAME} · ${PAGE_TITLE_STACK}` as const
 
 /**
  * Meta `description` principal (larga).
