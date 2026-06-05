@@ -12,6 +12,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
 import {
   renderWithMotion,
+  runAxeAudit,
   setupIntersectionObserver,
   setupMatchMedia,
 } from '@/test/helpers'
@@ -76,11 +77,10 @@ describe('ProjectsSection', () => {
     renderWithMotion(<ProjectsSection />)
     const articles = screen.getAllByRole('article')
     for (const [index, article] of articles.entries()) {
-      const project = PROJECTS[index]
-      expect(project).toBeDefined()
+      const project = PROJECTS[index]!
       expect(article).toHaveAttribute(
         'aria-labelledby',
-        `project-${project!.id}-title`
+        `project-${project.id}-title`
       )
     }
   })
@@ -92,9 +92,10 @@ describe('ProjectsSection', () => {
       const label = document.getElementById(`project-${project.id}-title`)
       expect(label).toBeTruthy()
       expect(label?.tagName.toLowerCase()).toBe('p')
-      const rect = label?.getBoundingClientRect()
-      expect(rect).toBeDefined()
-      expect(rect!.width <= 1 && rect!.height <= 1).toBe(true)
+      expect(label).toBeInTheDocument()
+      const rect = label!.getBoundingClientRect()
+      expect(rect.width).toBeLessThanOrEqual(1)
+      expect(rect.height).toBeLessThanOrEqual(1)
       expect(label).toHaveTextContent(project.title)
     }
   })
@@ -162,4 +163,9 @@ describe('ProjectsSection', () => {
 
     expect(spy).toHaveBeenCalledWith(MEDIA_QUERY_LG_MIN)
   })
+
+  it('axe: sección Proyectos sin violaciones conocidas', async () => {
+    const { container } = renderWithMotion(<ProjectsSection />)
+    expect(await runAxeAudit(container)).toHaveNoViolations()
+  }, 15_000)
 })
