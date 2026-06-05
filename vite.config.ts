@@ -17,7 +17,7 @@ import {
   SITE_PAGE_TITLE,
   SITE_PROFILE,
   SITE_SOCIAL_HREFS,
-} from './src/shared/constants/siteProfile'
+} from './src/shared/constants/siteProfile/siteProfile'
 import { SKILL_LABEL } from './src/shared/constants/skills/skillLabels'
 
 import type { Plugin } from 'vite'
