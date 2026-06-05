@@ -73,15 +73,16 @@ describe('ThemeToggle', () => {
     expect(setTheme).toHaveBeenCalledWith('dark')
   })
 
-  it('tiene role switch, aria-labelledby al span theme-toggle-label y aria-checked accesible', () => {
+  it('tiene role switch, aria-labelledby al span visible y aria-checked accesible', () => {
     mockedUseTheme.mockReturnValue({
       isDark: true,
       setTheme: vi.fn(),
     })
     renderWithMotion(<ThemeToggle />)
     const switch_ = screen.getByRole('switch', { name: /modo/i })
-    expect(switch_).toHaveAttribute('aria-labelledby', 'theme-toggle-label')
-    const labelEl = document.getElementById('theme-toggle-label')
+    const labelledBy = switch_.getAttribute('aria-labelledby')
+    expect(labelledBy).toBeTruthy()
+    const labelEl = document.getElementById(labelledBy!)
     expect(labelEl).not.toBeNull()
     expect(labelEl).toHaveTextContent(/modo oscuro/i)
     expect(switch_).toHaveAttribute('aria-checked', 'true')
