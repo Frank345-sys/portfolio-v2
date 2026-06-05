@@ -8,6 +8,8 @@
 import { act, renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { setupMatchMedia } from '@/test/helpers'
+
 import { FLOATING_BOX_COUNT } from '../../utils/boxGenerator'
 import { useBackgroundBoxes } from '../useBackgroundBoxes'
 
@@ -20,11 +22,10 @@ describe('useBackgroundBoxes', () => {
     })
   })
 
-  it('expone boxes, isLg, parallaxEnabled, mouseX y mouseY', () => {
+  it('expone boxes, parallaxEnabled, mouseX y mouseY', () => {
     const { result } = renderHook(() => useBackgroundBoxes())
 
     expect(result.current.boxes).toHaveLength(FLOATING_BOX_COUNT)
-    expect(typeof result.current.isLg).toBe('boolean')
     expect(typeof result.current.parallaxEnabled).toBe('boolean')
     expect(result.current.mouseX.get()).toBe(0)
     expect(result.current.mouseY.get()).toBe(0)
@@ -64,5 +65,17 @@ describe('useBackgroundBoxes', () => {
     } finally {
       rafSpy.mockRestore()
     }
+  })
+
+  it('desactiva parallax cuando el viewport está por debajo de lg', () => {
+    setupMatchMedia({ lgMatches: false })
+    const { result } = renderHook(() => useBackgroundBoxes())
+    expect(result.current.parallaxEnabled).toBe(false)
+  })
+
+  it('habilita parallax en lg cuando no hay movimiento reducido', () => {
+    setupMatchMedia({ lgMatches: true })
+    const { result } = renderHook(() => useBackgroundBoxes())
+    expect(result.current.parallaxEnabled).toBe(true)
   })
 })
