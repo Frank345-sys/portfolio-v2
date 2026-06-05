@@ -17,8 +17,8 @@ describe('useParallaxMouse', () => {
 
   it('retorna mouseX y mouseY', () => {
     const { result } = renderHook(() => useParallaxMouse())
-    expect(result.current.mouseX).toBeDefined()
-    expect(result.current.mouseY).toBeDefined()
+    expect(result.current.mouseX.get()).toBe(0)
+    expect(result.current.mouseY.get()).toBe(0)
   })
 
   it('inicializa mouseX y mouseY en 0', () => {
