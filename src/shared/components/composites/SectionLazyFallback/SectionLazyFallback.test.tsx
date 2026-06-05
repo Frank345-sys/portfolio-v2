@@ -34,8 +34,22 @@ describe('SectionLazyFallback', () => {
     }
   )
 
+  it.each(['hero', 'about', 'projects', 'contact', 'footer'] as const)(
+    'variante %s se renderiza sin errores',
+    (variant) => {
+      expect(() => {
+        render(
+          <SectionLazyFallback
+            ariaLabel={`Cargando sección ${variant}`}
+            variant={variant}
+          />
+        )
+      }).not.toThrow()
+    }
+  )
+
   it('las variantes de sección aplican contenedor ancho completo y sección', () => {
-    const { container, rerender } = render(
+    const { rerender } = render(
       <SectionLazyFallback ariaLabel="A" variant="about" />
     )
     const status = screen.getByRole('status', { name: /a/i })
@@ -43,7 +57,7 @@ describe('SectionLazyFallback', () => {
     expect(status.className).toMatch(/py-20/)
 
     rerender(<SectionLazyFallback ariaLabel="P" variant="projects" />)
-    expect(container.querySelector('[role="status"]')?.className).toMatch(
+    expect(screen.getByRole('status', { name: /p/i }).className).toMatch(
       /max-w-7xl/
     )
   })
