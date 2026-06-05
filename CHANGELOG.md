@@ -4,6 +4,28 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ## [Unreleased]
 
+### Añadido
+
+- Script **`optimize:public`** (`scripts/optimize-public-assets.mjs`) para comprimir assets en `public/`.
+- **`ThemeProvider`** con transición de tema (`runThemeTransition`); **`useTheme`** pasa a consumir contexto.
+- Hook **`useScrollAnimationPause`** y **`useFloatingBoxFloat`** en BackgroundBoxes (pausa de animaciones decorativas durante scroll).
+- Utilidad **`backgroundBoxesViewportTier`** para densidad de cajas según viewport.
+- Constantes modulares: **`siteProfile/`**, **`theme.ts`**, **`imageIntrinsic.ts`**; enlaces legacy de portfolio en **`portfolioLegacyLinks.ts`**.
+- Helper de test **`expectNoAxeViolations`** para aserciones axe reutilizables.
+
+### Cambiado
+
+- **ProjectsSection**: hooks simplificados (`useProjectsModal`, `useProjectsCarousel`, `useProjectsScrollSync`, `useProjectsSection`); atributos de imagen resueltos en el componente; menos memoización manual (React Compiler).
+- **Header**: hooks simplificados (`useHeader`, `useNavScrollSpy`, `useNavUnderlinePosition`); cierre de drawer en `lg` sin `queueMicrotask`.
+- **`useImageCarousel`** y **`useTimelineItem`**: eliminada memoización prematura; variantes Motion del carrusel como constante de módulo.
+- **BackgroundBoxes**: parallax y flotación refactorizados; tier de viewport en generador de cajas.
+- **Assets públicos** optimizados (CV PDF, foto de perfil, `og-image.png`).
+- Tests ampliados con **vitest-axe** y helpers compartidos en App, Modal, Header, ProjectInfo, ErrorBoundary y secciones lazy.
+
+### Eliminado
+
+- **`siteProfile.ts`** monolítico (sustituido por carpeta `siteProfile/`).
+
 ## [1.7.0] - 2026-06-02
 
 ### Añadido
