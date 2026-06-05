@@ -7,6 +7,7 @@
 
 import { useCallback, useState } from 'react'
 
+import { PROJECT_CAPTURE_INTRINSIC } from '@/shared/constants/imageIntrinsic'
 import { Z } from '@/shared/constants/tokens'
 import { ImageBrokenIcon } from '@/shared/icons'
 import { cn } from '@/shared/utils/cn'
@@ -74,6 +75,8 @@ export function ImageCarouselSlideImage({
       {!hasImageError ? (
         <img
           src={src}
+          width={PROJECT_CAPTURE_INTRINSIC.width}
+          height={PROJECT_CAPTURE_INTRINSIC.height}
           {...(srcSet !== undefined ? { srcSet } : {})}
           {...(sizes !== undefined ? { sizes } : {})}
           alt={alt}
