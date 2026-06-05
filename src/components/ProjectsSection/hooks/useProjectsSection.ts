@@ -3,11 +3,10 @@
  *
  * @module components/ProjectsSection/hooks/useProjectsSection
  * @fileoverview Compone hooks especializados; el enriquecimiento de slides vive en `enrichProjectsWithSlides`.
- * @remarks El `close` expuesto persiste el slide en tarjeta; `modal.dismiss` interno (scroll sync al salir de `lg`) solo limpia el índice del modal.
+ * @remarks `modal.close` persiste el slide en tarjeta antes de cerrar; `modal.dismiss` (solo interno, vía scroll sync al salir de `lg`) limpia el índice sin persistir.
  */
 
 import {
-  useCallback,
   useMemo,
   type Dispatch,
   type MouseEvent,
@@ -19,15 +18,7 @@ import { useProjectsModal } from './useProjectsModal'
 import { useProjectsScrollSync } from './useProjectsScrollSync'
 import { enrichProjectsWithSlides } from '../utils/enrichProjectsWithSlides'
 
-import type {
-  Project,
-  ProjectImageAttributes,
-  ProjectWithSlides,
-} from '../types'
-
-type ProjectCarouselImageAttributesResolver = (
-  src: string
-) => ProjectImageAttributes
+import type { Project, ProjectWithSlides } from '../types'
 
 interface UseProjectsSectionResult {
   data: {
@@ -53,8 +44,6 @@ interface UseProjectsSectionResult {
     handleDotClick: (event: MouseEvent<HTMLButtonElement>) => void
     getSlideIndex: (projectIndex: number) => number
     handleSlideChange: (projectIndex: number, index: number) => void
-    resolveImageAttributes: ProjectCarouselImageAttributesResolver
-    resolveModalImageAttributes: ProjectCarouselImageAttributesResolver
   }
 }
 
@@ -77,33 +66,27 @@ export function useProjectsSection(
     projects: projectsWithSlides,
   })
 
-  const {
-    activeIndex,
-    showInfo,
-    scrollSyncEnabled,
-    setItemRef,
-    scrollItemIntoView,
-  } = useProjectsScrollSync(totalProjects, modal.dismiss)
+  const scroll = useProjectsScrollSync(totalProjects, modal.dismiss)
 
   const carousel = useProjectsCarousel({
     projectCount: totalProjects,
-    setItemRef,
-    scrollItemIntoView,
+    setItemRef: scroll.setItemRef,
+    scrollItemIntoView: scroll.scrollItemIntoView,
     modalProjectIndex: modal.index,
     modalSlide: modal.slide,
     setModalSlide: modal.setSlide,
   })
 
-  const handleCloseModal = useCallback(() => {
+  function handleCloseModal() {
     if (modal.index !== null) {
       carousel.persistCardSlide(modal.index, modal.slide)
     }
     modal.dismiss()
-  }, [carousel, modal])
+  }
 
   const activeProject =
     totalProjects > 0
-      ? (projectsWithSlides[activeIndex] ?? projectsWithSlides[0])
+      ? (projectsWithSlides[scroll.activeIndex] ?? projectsWithSlides[0])
       : undefined
 
   return {
@@ -111,11 +94,11 @@ export function useProjectsSection(
       projects: projectsWithSlides,
       totalProjects,
       activeProject,
-      activeIndex,
+      activeIndex: scroll.activeIndex,
     },
     ui: {
-      showInfo,
-      scrollSyncEnabled,
+      showInfo: scroll.showInfo,
+      scrollSyncEnabled: scroll.scrollSyncEnabled,
     },
     modal: {
       index: modal.index,
@@ -130,8 +113,6 @@ export function useProjectsSection(
       handleDotClick: carousel.handleDotClick,
       getSlideIndex: carousel.getSlideIndex,
       handleSlideChange: carousel.handleSlideChange,
-      resolveImageAttributes: carousel.resolveImageAttributes,
-      resolveModalImageAttributes: carousel.resolveModalImageAttributes,
     },
   }
 }
