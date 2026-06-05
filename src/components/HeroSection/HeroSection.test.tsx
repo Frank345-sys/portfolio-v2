@@ -8,7 +8,7 @@
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { renderWithMotion } from '@/test/helpers'
+import { renderWithMotion, runAxeAudit } from '@/test/helpers'
 
 import {
   HERO_LEAD,
@@ -55,4 +55,9 @@ describe('HeroSection', () => {
       screen.getByRole('list', { name: /estadísticas de impacto/i })
     ).toBeInTheDocument()
   })
+
+  it('axe: landmark del hero sin violaciones conocidas', async () => {
+    const { container } = renderWithMotion(<HeroSection />)
+    expect(await runAxeAudit(container)).toHaveNoViolations()
+  }, 15_000)
 })
