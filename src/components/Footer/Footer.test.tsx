@@ -9,7 +9,7 @@
 import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { escapeRegex } from '@/test/helpers'
+import { escapeRegex, runAxeAudit } from '@/test/helpers'
 
 import {
   FOOTER_BRAND,
@@ -86,4 +86,9 @@ describe('Footer', () => {
       )
     ).toBeInTheDocument()
   })
+
+  it('axe: pie de página sin violaciones conocidas', async () => {
+    const { container } = render(<Footer />)
+    expect(await runAxeAudit(container)).toHaveNoViolations()
+  }, 15_000)
 })
