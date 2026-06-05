@@ -18,7 +18,7 @@ import {
   SITE_PROFILE,
   SITE_DISPLAY_NAME,
   SITE_TAGLINE,
-} from '@/shared/constants/siteProfile'
+} from '@/shared/constants/siteProfile/siteProfile'
 
 /**
  * Hrefs de las secciones a las que el pie enlaza (inicio / contacto).
