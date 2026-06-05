@@ -7,10 +7,15 @@
  * @remarks Importado solo desde archivos `*.test.*` o `setup.ts`; no incluir en el bundle de producción.
  */
 import '@testing-library/jest-dom'
-import { expect, vi } from 'vitest'
+import { afterEach, expect, vi } from 'vitest'
 import * as vitestAxeMatchers from 'vitest-axe/dist/matchers.js'
 
 expect.extend(vitestAxeMatchers)
+
+/** Evita que tests de tema dejen `dark` activo y falseen axe color-contrast en otras suites. */
+afterEach(() => {
+  document.documentElement.classList.remove('dark')
+})
 
 /**
  * Mock de `matchMedia` para tests.
@@ -36,3 +41,17 @@ window.matchMedia = vi.fn((query: string) => ({
   removeEventListener: vi.fn(),
   dispatchEvent: vi.fn(),
 }))
+
+vi.stubGlobal(
+  'IntersectionObserver',
+  vi.fn(function IntersectionObserverMock() {
+    return {
+      observe: vi.fn(),
+      unobserve: vi.fn(),
+      disconnect: vi.fn(),
+      root: null,
+      rootMargin: '',
+      thresholds: [],
+    }
+  })
+)
