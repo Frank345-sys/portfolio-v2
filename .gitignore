@@ -13,6 +13,11 @@ build
 dist-ssr
 *.local
 
+# Secretos locales (plantillas públicas versionadas: .env.example, .env.development, …)
+.env
+.env.*.local
+!.env.example
+
 # Editor directories and files — `/*` + negaciones para poder versionar ajustes puntuales
 .vscode/*
 !.vscode/extensions.json
