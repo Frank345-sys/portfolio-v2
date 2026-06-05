@@ -6,12 +6,14 @@
  */
 
 import { m, AnimatePresence } from 'motion/react'
+import { useId } from 'react'
 
 import { useTheme } from '@/shared/components/primitives/ThemeToggle/hooks/useTheme'
 import {
   MOTION_ANIMATION,
   PRESENCE_FADE_EXPRESSIVE,
 } from '@/shared/constants/motionAnimations'
+import type { Theme } from '@/shared/constants/theme'
 import { TYPOGRAPHY, BADGE } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
@@ -23,9 +25,9 @@ const KNOB_TRAVEL_X_PX = 16 as const
  *
  * Conmutador accesible (`role="switch"`) claro/oscuro, sincronizado con `useTheme`
  * y etiqueta de modo visible. El nombre accesible del switch coincide con el texto
- * visible (WCAG 2.5.3) vía **`aria-labelledby="theme-toggle-label"`** (`id` fijo en el `span`).
- * En layout actual solo hay un **`ThemeToggle`** montado a la vez (cabecera `lg` o drawer móvil),
- * así el `id` no se duplica.
+ * visible (WCAG 2.5.3) vía **`aria-labelledby`** al `span` con {@link useId}.
+ * En layout actual solo hay un **`ThemeToggle`** montado a la vez (cabecera `lg+` o drawer móvil),
+ * con `id` único vía `useId()` en la etiqueta visible.
  *
  * @example
  * ```tsx
@@ -34,8 +36,12 @@ const KNOB_TRAVEL_X_PX = 16 as const
  */
 export function ThemeToggle() {
   const { isDark, setTheme } = useTheme()
+  const labelId = useId()
 
-  const toggle = () => setTheme(isDark ? 'light' : 'dark')
+  const toggle = () => {
+    const nextTheme: Theme = isDark ? 'light' : 'dark'
+    setTheme(nextTheme)
+  }
 
   return (
     <div className="inline-flex items-center gap-3 select-none">
@@ -43,7 +49,7 @@ export function ThemeToggle() {
         type="button"
         role="switch"
         aria-checked={isDark}
-        aria-labelledby="theme-toggle-label"
+        aria-labelledby={labelId}
         onClick={toggle}
         className={cn(
           'flex h-5 w-9 shrink-0 items-center rounded-full p-0.5',
@@ -65,7 +71,7 @@ export function ThemeToggle() {
 
       <AnimatePresence mode="wait" initial={false}>
         <m.span
-          id="theme-toggle-label"
+          id={labelId}
           key={isDark ? 'dark' : 'light'}
           {...PRESENCE_FADE_EXPRESSIVE}
           className={cn(TYPOGRAPHY.paragraph.small, 'min-w-24 font-medium')}
