@@ -7,9 +7,9 @@
  *
  * @module components/Header/hooks/useNavUnderlinePosition
  * @fileoverview Mide geometría del enlace activo respecto a la fila de nav y expone métricas para Motion (`navDesktopUnderlineMotion`).
- * @remarks Usa `ResizeObserver` y `resize` global; el callback de medición se mantiene estable vía ref para el Compiler.
+ * @remarks `ResizeObserver` solo en la fila; remide en `activeHref`, resize y `document.fonts.ready`.
  */
-import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 
 import { MOTION_ANIMATION } from '@/shared/constants/motionAnimations'
 
@@ -29,6 +29,32 @@ const UNDERLINE_HIDDEN: NavUnderlineMetrics = {
   visible: false,
 }
 
+/** Calcula métricas del subrayado sin efectos secundarios (un solo `setState` en el consumidor). */
+function computeNavUnderlineMetrics(
+  navItemsLength: number,
+  isNavRowVisible: boolean,
+  activeHref: string | null,
+  row: HTMLDivElement | null,
+  linkRefs: ReadonlyMap<string, HTMLAnchorElement>
+): NavUnderlineMetrics {
+  if (navItemsLength === 0 || !isNavRowVisible || !row || !activeHref) {
+    return UNDERLINE_HIDDEN
+  }
+
+  const link = linkRefs.get(activeHref)
+  if (!link) {
+    return UNDERLINE_HIDDEN
+  }
+
+  const rowRect = row.getBoundingClientRect()
+  const linkRect = link.getBoundingClientRect()
+  return {
+    left: Math.round(linkRect.left - rowRect.left + row.scrollLeft),
+    width: Math.round(linkRect.width),
+    visible: true,
+  }
+}
+
 /**
  * Mide la posición del enlace activo respecto a la fila de nav (`rowRef`) para colocar
  * una línea indicadora (p. ej. con Motion).
@@ -38,7 +64,9 @@ const UNDERLINE_HIDDEN: NavUnderlineMetrics = {
  */
 export function useNavUnderlinePosition(
   activeHref: string | null,
-  navItems: ReadonlyArray<NavItem>
+  navItems: ReadonlyArray<NavItem>,
+  /** `true` cuando la fila desktop es visible (p. ej. viewport `lg+`). */
+  isNavRowVisible = true
 ) {
   const rowRef = useRef<HTMLDivElement>(null)
   const linkRefs = useRef(new Map<string, HTMLAnchorElement>())
@@ -46,80 +74,49 @@ export function useNavUnderlinePosition(
   const [underline, setUnderline] =
     useState<NavUnderlineMetrics>(UNDERLINE_HIDDEN)
 
-  /** Devuelve un callback ref que registra/desregistra el `<a>` de `href` en `linkRefs`. */
-  const registerLink = useCallback((href: string) => {
-    return (el: HTMLAnchorElement | null) => {
-      if (el) linkRefs.current.set(href, el)
-      else linkRefs.current.delete(href)
-    }
-  }, [])
+  const registerLink = (href: string) => (el: HTMLAnchorElement | null) => {
+    if (el) linkRefs.current.set(href, el)
+    else linkRefs.current.delete(href)
+  }
 
-  /** Mide y actualiza la posición del subrayado según `activeHref` y la geometría actual del DOM. */
-  const measureUnderline = useCallback(() => {
-    if (navItems.length === 0) {
-      setUnderline(UNDERLINE_HIDDEN)
-      return
+  useLayoutEffect(() => {
+    const measure = () => {
+      setUnderline(
+        computeNavUnderlineMetrics(
+          navItems.length,
+          isNavRowVisible,
+          activeHref,
+          rowRef.current,
+          linkRefs.current
+        )
+      )
     }
+
+    const rafId = window.requestAnimationFrame(measure)
 
     const row = rowRef.current
-    if (!row || !activeHref) {
-      setUnderline(UNDERLINE_HIDDEN)
-      return
-    }
-    const link = linkRefs.current.get(activeHref)
-    if (!link) {
-      setUnderline(UNDERLINE_HIDDEN)
-      return
-    }
-    const rowRect = row.getBoundingClientRect()
-    const linkRect = link.getBoundingClientRect()
-    setUnderline({
-      left: Math.round(linkRect.left - rowRect.left + row.scrollLeft),
-      width: Math.round(linkRect.width),
-      visible: true,
-    })
-  }, [activeHref, navItems])
-
-  // Ref estable al callback de medición — evita que los efectos de resize/ResizeObserver
-  // capturen una closure obsoleta sin necesidad de re-suscribirse al cambiar activeHref.
-  const measureUnderlineRef = useRef(measureUnderline)
-
-  // Effect 1: sincroniza measureUnderlineRef con la versión más reciente de measureUnderline.
-  useLayoutEffect(() => {
-    measureUnderlineRef.current = measureUnderline
-  }, [measureUnderline])
-
-  // Effect 2: mide en el siguiente RAF tras cambiar activeHref o navItems.
-  useLayoutEffect(() => {
-    const id = window.requestAnimationFrame(() => {
-      measureUnderlineRef.current()
-    })
-    return () => window.cancelAnimationFrame(id)
-  }, [measureUnderline])
-
-  // Effect 3: re-mide en resize de ventana y en cambios de tamaño de la fila (ResizeObserver).
-  useLayoutEffect(() => {
-    const row = rowRef.current
-    if (!row) return
-
-    const onResize = () => {
-      measureUnderlineRef.current()
+    if (!row) {
+      return () => window.cancelAnimationFrame(rafId)
     }
 
-    window.addEventListener('resize', onResize)
+    window.addEventListener('resize', measure)
 
-    if (typeof ResizeObserver === 'undefined') {
-      return () => window.removeEventListener('resize', onResize)
+    let ro: ResizeObserver | undefined
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(measure)
+      ro.observe(row)
     }
 
-    const ro = new ResizeObserver(onResize)
-    ro.observe(row)
+    if (typeof document.fonts !== 'undefined') {
+      void document.fonts.ready.then(measure)
+    }
 
     return () => {
-      ro.disconnect()
-      window.removeEventListener('resize', onResize)
+      window.cancelAnimationFrame(rafId)
+      ro?.disconnect()
+      window.removeEventListener('resize', measure)
     }
-  }, [])
+  }, [activeHref, isNavRowVisible, navItems.length])
 
   return { rowRef, registerLink, underline }
 }
