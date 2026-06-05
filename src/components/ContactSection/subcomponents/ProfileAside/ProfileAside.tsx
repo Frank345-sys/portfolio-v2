@@ -89,7 +89,8 @@ function MetaCell({ term, children }: MetaCellProps) {
 /**
  * @module components/ContactSection/subcomponents/ProfileAside/ProfileAside
  *
- * `<aside>` complementario: disponibilidad, servicios y metadatos ({@link OwnerLocalTime}).
+ * Panel lateral (`<section aria-label>`): disponibilidad, servicios y metadatos ({@link OwnerLocalTime}).
+ * No usa `<aside>` para evitar landmark complementario anidado dentro del `<section>` de contacto.
  *
  * @example
  * ```tsx
@@ -101,7 +102,7 @@ function MetaCell({ term, children }: MetaCellProps) {
  */
 export function ProfileAside() {
   return (
-    <aside
+    <section
       className={cn(
         CARD.surface.weak,
         LAYOUT.spacing.default,
@@ -167,6 +168,6 @@ export function ProfileAside() {
           )}
         </dl>
       </section>
-    </aside>
+    </section>
   )
 }
