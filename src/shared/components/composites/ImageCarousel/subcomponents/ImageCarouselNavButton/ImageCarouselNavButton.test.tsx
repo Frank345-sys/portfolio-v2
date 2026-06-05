@@ -5,7 +5,7 @@
  * @remarks Usa Testing Library; si el archivo importa `renderWithMotion`, el árbol va envuelto en el proveedor de Motion.
  */
 
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
 
@@ -67,7 +67,8 @@ describe('ImageCarouselNavButton', () => {
     expect(onArrowNavigate).not.toHaveBeenCalled()
   })
 
-  it('con ArrowLeft llama onArrowNavigate("prev")', () => {
+  it('con ArrowLeft llama onArrowNavigate("prev")', async () => {
+    const user = userEvent.setup()
     const onClick = vi.fn()
     const onArrowNavigate = vi.fn()
 
@@ -81,12 +82,14 @@ describe('ImageCarouselNavButton', () => {
     )
 
     const button = screen.getByRole('button', { name: /nav/i })
-    fireEvent.keyDown(button, { key: 'ArrowLeft' })
+    await user.click(button)
+    await user.keyboard('{ArrowLeft}')
 
     expect(onArrowNavigate).toHaveBeenCalledWith('prev')
   })
 
-  it('con ArrowRight llama onArrowNavigate("next")', () => {
+  it('con ArrowRight llama onArrowNavigate("next")', async () => {
+    const user = userEvent.setup()
     const onArrowNavigate = vi.fn()
 
     render(
@@ -98,9 +101,8 @@ describe('ImageCarouselNavButton', () => {
       />
     )
 
-    fireEvent.keyDown(screen.getByRole('button', { name: /nav/i }), {
-      key: 'ArrowRight',
-    })
+    await user.click(screen.getByRole('button', { name: /nav/i }))
+    await user.keyboard('{ArrowRight}')
 
     expect(onArrowNavigate).toHaveBeenCalledWith('next')
   })
