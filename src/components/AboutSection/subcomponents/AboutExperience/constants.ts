@@ -10,7 +10,7 @@
  */
 import type { AboutTimelineEntry } from '@/components/AboutSection/types'
 import { TIMELINE_CHIP } from '@/shared/components/primitives/TimelineItem/constants'
-import { SITE_PROFILE } from '@/shared/constants/siteProfile'
+import { SITE_PROFILE } from '@/shared/constants/siteProfile/siteProfile'
 import { SKILL_LABEL } from '@/shared/constants/skills/skillLabels'
 
 import { ABOUT_TIMELINE_LEGEND_ITEMS } from '../../constants'
