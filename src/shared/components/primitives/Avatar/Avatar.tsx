@@ -7,6 +7,7 @@
 
 import { useState } from 'react'
 
+import { PROFILE_AVATAR_INTRINSIC } from '@/shared/constants/imageIntrinsic'
 import { ANIMATION } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
@@ -67,6 +68,8 @@ export function Avatar({
           <img
             src={src}
             alt={photoAlt}
+            width={PROFILE_AVATAR_INTRINSIC.width}
+            height={PROFILE_AVATAR_INTRINSIC.height}
             loading="lazy"
             decoding="async"
             className="h-full w-full rounded-full object-cover"
