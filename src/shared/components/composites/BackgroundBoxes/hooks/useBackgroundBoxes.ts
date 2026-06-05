@@ -12,6 +12,7 @@ import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
 import { useMediaQuery } from '@/shared/hooks'
 
 import { useParallaxMouse } from './useParallaxMouse'
+import { useScrollAnimationPause } from './useScrollAnimationPause'
 import { generateBoxes } from '../utils/boxGenerator'
 
 import type { BoxData, ParallaxMotionValues } from '../types'
@@ -19,7 +20,7 @@ import type { BoxData, ParallaxMotionValues } from '../types'
 /**
  * Ancho asumido en SSR / entornos sin `window` para el layout inicial de cajas.
  */
-const SSR_FALLBACK_WIDTH_PX = 1440
+const SSR_FALLBACK_WIDTH_PX = 1440 as const
 
 function getInitialBoxes(): BoxData[] {
   return generateBoxes(
@@ -29,9 +30,7 @@ function getInitialBoxes(): BoxData[] {
 
 interface UseBackgroundBoxesReturn extends ParallaxMotionValues {
   boxes: BoxData[]
-  /** `true` si el viewport cumple `lg` y el usuario no pidió movimiento reducido. */
-  isLg: boolean
-  /** Parallax del puntero activo solo si `isLg` y no hay `prefers-reduced-motion`. */
+  /** Parallax del puntero activo solo si `lg`, no hay movimiento reducido y no hay scroll activo. */
   parallaxEnabled: boolean
 }
 
@@ -41,9 +40,10 @@ interface UseBackgroundBoxesReturn extends ParallaxMotionValues {
  */
 export function useBackgroundBoxes(): UseBackgroundBoxesReturn {
   const isLg = useMediaQuery(MEDIA_QUERY_LG_MIN)
+  const animationsPaused = useScrollAnimationPause()
   // Parallax del puntero (no animación Motion): MotionConfig no lo desactiva.
   const prefersReducedMotion = useReducedMotion() ?? false
-  const parallaxEnabled = isLg && !prefersReducedMotion
+  const parallaxEnabled = isLg && !prefersReducedMotion && !animationsPaused
   const { mouseX, mouseY } = useParallaxMouse({ enabled: parallaxEnabled })
   const [boxes, setBoxes] = useState<BoxData[]>(getInitialBoxes)
 
@@ -62,5 +62,5 @@ export function useBackgroundBoxes(): UseBackgroundBoxesReturn {
     }
   }, [])
 
-  return { boxes, isLg, parallaxEnabled, mouseX, mouseY }
+  return { boxes, parallaxEnabled, mouseX, mouseY }
 }
