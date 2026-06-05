@@ -23,13 +23,6 @@ export const BREAKPOINT_MIN_PX = {
 } as const
 
 /**
- * Ancho máximo (exclusivo) para layouts que distinguen “móvil muy compacto”.
- * Queda entre el token `xs` (375px) y `sm` (640px) de Tailwind; no equivale a un solo prefijo.
- * Usado en el generador de cajas del fondo decorativo (`utils/boxGenerator.ts`).
- */
-export const VIEWPORT_COMPACT_MAX_PX = 480
-
-/**
  * Media queries `min-width` alineadas con los prefijos Tailwind.
  * Uso: `window.matchMedia(MEDIA_QUERY_LG_MIN).matches`
  */
