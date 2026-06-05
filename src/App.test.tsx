@@ -10,6 +10,8 @@
 import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
+import { runAxeAudit } from '@/test/helpers'
+
 import { App } from './App'
 
 vi.mock('@/components/Header', () => ({
@@ -78,8 +80,8 @@ describe('App', () => {
 
   it('renderiza header, hero, about, projects, contact y footer en orden', async () => {
     render(<App />)
-    expect(await screen.findByTestId('header-mock')).toBeInTheDocument()
-    expect(await screen.findByTestId('hero-section-mock')).toBeInTheDocument()
+    expect(screen.getByTestId('header-mock')).toBeInTheDocument()
+    expect(screen.getByTestId('hero-section-mock')).toBeInTheDocument()
     expect(await screen.findByTestId('about-section-mock')).toBeInTheDocument()
     expect(
       await screen.findByTestId('projects-section-mock')
@@ -93,9 +95,7 @@ describe('App', () => {
   it('mantiene Hero, About, Projects y Contact dentro del <main> y el Footer fuera', async () => {
     render(<App />)
     const main = screen.getByRole('main')
-    expect(
-      await within(main).findByTestId('hero-section-mock')
-    ).toBeInTheDocument()
+    expect(within(main).getByTestId('hero-section-mock')).toBeInTheDocument()
     expect(
       await within(main).findByTestId('about-section-mock')
     ).toBeInTheDocument()
@@ -107,4 +107,9 @@ describe('App', () => {
     ).toBeInTheDocument()
     expect(within(main).queryByTestId('footer-mock')).not.toBeInTheDocument()
   })
+
+  it('axe: compositor raíz (mocks) sin violaciones conocidas', async () => {
+    const { container } = render(<App />)
+    expect(await runAxeAudit(container)).toHaveNoViolations()
+  }, 15_000)
 })
