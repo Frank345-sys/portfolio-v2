@@ -55,9 +55,13 @@ export const CONTACT_STATUS_MEANINGS = [
  */
 export const CONTACT_STATUS_ROWS = [
   { id: 'remote', label: 'Trabajo remoto', meaning: 'available' },
-  { id: 'hybrid', label: 'Trabajo híbrido', meaning: 'available' },
-  { id: 'onsite', label: 'Trabajo presencial', meaning: 'available' },
+  { id: 'hybrid', label: 'Trabajo híbrido', meaning: 'unavailable' },
+  { id: 'onsite', label: 'Trabajo presencial', meaning: 'unavailable' },
   { id: 'part_time', label: 'Jornada parcial', meaning: 'available' },
-  { id: 'relocation', label: 'Abierto a relocalización', meaning: 'available' },
+  {
+    id: 'relocation',
+    label: 'Abierto a relocalización',
+    meaning: 'unavailable',
+  },
   { id: 'freelance', label: 'Proyectos freelance', meaning: 'limited' },
 ] as const satisfies readonly ContactStatusRowEntry[]
