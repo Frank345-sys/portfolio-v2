@@ -12,6 +12,9 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 - Utilidad **`backgroundBoxesViewportTier`** para densidad de cajas según viewport.
 - Constantes modulares: **`siteProfile/`**, **`theme.ts`**, **`imageIntrinsic.ts`**; enlaces legacy de portfolio en **`portfolioLegacyLinks.ts`**.
 - Helper de test **`expectNoAxeViolations`** para aserciones axe reutilizables.
+- **`TimelineItem`**: prop opcional **`modalidad`** (`TIMELINE_MODALIDAD`: Presencial, Híbrido, Remoto) visible junto a la empresa/institución.
+- **Experiencia laboral DIDACTECA** en `ABOUT_EXPERIENCE` (Jun 2026 — Actualidad) con chips de skills aprendidas.
+- Etiquetas de stack **`SCRUM`**, **`Turborepo`**, **`Apollo Client`**, **`CI/CD`** y **`Arquitectura Front-end`** en `skillLabels`, `AboutSkills` y timeline de experiencia.
 
 ### Cambiado
 
@@ -21,6 +24,16 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 - **BackgroundBoxes**: parallax y flotación refactorizados; tier de viewport en generador de cajas.
 - **Assets públicos** optimizados (CV PDF, foto de perfil, `og-image.png`).
 - Tests ampliados con **vitest-axe** y helpers compartidos en App, Modal, Header, ProjectInfo, ErrorBoundary y secciones lazy.
+- **About — formación y experiencia**: modalidad en ITSX (Presencial), TripleTen (Remoto), B Life (Presencial) y DIDACTECA (Híbrido).
+- **AboutBio**: copy de «Quién soy» reequilibrado (perfil general, no centrado en un solo empleador); párrafo de impacto con **SEO** (metadatos, HTML semántico, Core Web Vitals) y **SCRUM**.
+- **AboutHero**: `fullName` y `overline` centralizados en `ABOUT_HERO`; layout del avatar sin margen extra en desktop.
+- **Avatar**: props `loading`, `fetchPriority`, `onImageError` y `onImageLoad`; foto con carga prioritaria por defecto (`eager` / `high`).
+- **ProfileAside**: disponibilidad actualizada (remoto y jornada parcial disponibles; híbrido, presencial y relocalización no disponibles).
+
+### Arreglado
+
+- **AboutExperience.test**: aserciones acotadas al `listitem` del timeline cuando hay textos duplicados (mismo rol o chips entre entradas).
+- **TimelineItem.test**: cobertura de `modalidad`; acento `information` validado en el contenedor de empresa.
 
 ### Eliminado
 
