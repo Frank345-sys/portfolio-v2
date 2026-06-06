@@ -50,22 +50,37 @@ describe('AboutExperience', () => {
 
     it('renderiza todos los items de ABOUT_EXPERIENCE', () => {
       render(<AboutExperience />)
-      for (const item of ABOUT_EXPERIENCE) {
-        expect(screen.getByText(item.heading)).toBeInTheDocument()
-        expect(screen.getByText(item.company)).toBeInTheDocument()
-        expect(screen.getAllByText(item.period).length).toBeGreaterThan(0)
+      const timeline = screen.getByRole('list', {
+        name: /experiencia profesional/i,
+      })
+      const listItems = within(timeline).getAllByRole('listitem')
+      expect(listItems.length).toBeGreaterThanOrEqual(ABOUT_EXPERIENCE.length)
+
+      for (const [index, item] of ABOUT_EXPERIENCE.entries()) {
+        const listItem = listItems[index]!
+        expect(within(listItem).getByText(item.heading)).toBeInTheDocument()
+        expect(within(listItem).getByText(item.company)).toBeInTheDocument()
+        expect(
+          within(listItem).getAllByText(item.period).length
+        ).toBeGreaterThan(0)
       }
     })
 
     it('los chips del primer item (con chips) se renderizan', () => {
       render(<AboutExperience />)
+      const timeline = screen.getByRole('list', {
+        name: /experiencia profesional/i,
+      })
       const itemWithChips = ABOUT_EXPERIENCE.find(
         (e) => (e.chips?.length ?? 0) > 0
       )
       expect(itemWithChips).toBeDefined()
       expect(itemWithChips!.chips!.length).toBeGreaterThan(0)
+      const itemIndex = ABOUT_EXPERIENCE.indexOf(itemWithChips!)
+      const listItem = within(timeline).getAllByRole('listitem')[itemIndex]!
+
       for (const chip of itemWithChips!.chips!) {
-        expect(screen.getByText(chip.label)).toBeInTheDocument()
+        expect(within(listItem).getByText(chip.label)).toBeInTheDocument()
       }
     })
 
