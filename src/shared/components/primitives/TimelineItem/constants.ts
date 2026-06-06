@@ -10,9 +10,12 @@ import type { SkillLabel } from '@/shared/constants/skills/skillLabels'
 
 import {
   TIMELINE_CHIP_VARIANT,
+  TIMELINE_MODALIDAD,
   type TimelineChip,
   type TimelineChipVariant,
 } from './types'
+
+export { TIMELINE_MODALIDAD }
 
 /**
  * Orden de categorías al ordenar chips (ver `utils/orderTimelineChipsByLegend.ts` y `TimelineItem`).
