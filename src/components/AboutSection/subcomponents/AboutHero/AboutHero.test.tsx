@@ -66,10 +66,7 @@ describe('AboutHero', () => {
       expect(
         screen
           .getByRole('heading', {
-            name: new RegExp(
-              `^${ABOUT_HERO.firstName}\\s+${ABOUT_HERO.lastName}$`,
-              'i'
-            ),
+            name: new RegExp(`^${ABOUT_HERO.fullName}$`, 'i'),
           })
           .closest('header')
       ).toBeInTheDocument()
@@ -77,12 +74,9 @@ describe('AboutHero', () => {
 
     it('muestra la overline Sobre mí y el título con el nombre', () => {
       renderWithMotion(<AboutHero />)
-      expect(screen.getByText(/sobre mí/i)).toBeInTheDocument()
+      expect(screen.getByText(ABOUT_HERO.overline)).toBeInTheDocument()
       const heading = screen.getByRole('heading', {
-        name: new RegExp(
-          `^${ABOUT_HERO.firstName}\\s+${ABOUT_HERO.lastName}$`,
-          'i'
-        ),
+        name: new RegExp(`^${ABOUT_HERO.fullName}$`, 'i'),
       })
       expect(heading).toBeInTheDocument()
       expect(heading.id).toBe(ABOUT_HERO_SECTION_TITLE_ID)
@@ -107,10 +101,7 @@ describe('AboutHero', () => {
       const avatarImg = screen.getByRole('img', {
         name: /foto de frank gonzález/i,
       })
-      expect(avatarImg).toHaveAttribute(
-        'alt',
-        `Foto de ${ABOUT_HERO.firstName} ${ABOUT_HERO.lastName}`
-      )
+      expect(avatarImg).toHaveAttribute('alt', `Foto de ${ABOUT_HERO.fullName}`)
       const initialsSpan =
         avatarImg.parentElement?.querySelector('span[hidden]')
       expect(initialsSpan).toHaveTextContent(ABOUT_HERO.avatarInitials)
