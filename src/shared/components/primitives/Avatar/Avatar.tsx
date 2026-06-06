@@ -24,32 +24,40 @@ interface AvatarProps {
   name?: string
   src?: string
   size?: AvatarSize
+  loading?: 'lazy' | 'eager'
+  fetchPriority?: 'high' | 'low' | 'auto'
+  onImageError?: () => void
+  onImageLoad?: () => void
   className?: string
 }
 
-/**
- * @module shared/components/Avatar/Avatar
- *
- * Avatar decorativo accesible con fallback de iniciales y ring animado.
- */
 export function Avatar({
   initials,
   name,
   src,
   size = 'lg',
+  loading = 'eager',
+  fetchPriority = 'high',
+  onImageError,
+  onImageLoad,
   className,
 }: AvatarProps) {
-  const initialsOnlyLabel = name ? `Avatar de ${name}` : `Avatar de ${initials}`
-  const photoAlt = name ? `Foto de ${name}` : `Avatar con iniciales ${initials}`
   const [hasImageError, setHasImageError] = useState(false)
-  const showPhoto = Boolean(src) && !hasImageError
+  const showPhoto = !!src && !hasImageError
+
+  const initialsLabel = name
+    ? `Avatar de ${name}`
+    : (`Avatar con iniciales ${initials}` as const)
+
+  const photoAlt = name
+    ? `Foto de ${name}`
+    : (`Avatar con iniciales ${initials}` as const)
 
   return (
     <div
+      role={!showPhoto ? 'img' : undefined}
+      aria-label={!showPhoto ? initialsLabel : undefined}
       className={cn('relative shrink-0', AVATAR_SIZES[size], className)}
-      {...(!showPhoto
-        ? { role: 'img' as const, 'aria-label': initialsOnlyLabel }
-        : {})}
     >
       <div
         className={cn(
@@ -64,21 +72,26 @@ export function Avatar({
           !showPhoto && 'u-avatar-feature-gradient'
         )}
       >
-        {showPhoto ? (
+        {showPhoto && (
           <img
             src={src}
             alt={photoAlt}
             width={PROFILE_AVATAR_INTRINSIC.width}
             height={PROFILE_AVATAR_INTRINSIC.height}
-            loading="lazy"
+            loading={loading}
+            fetchPriority={fetchPriority}
             decoding="async"
             className="h-full w-full rounded-full object-cover"
-            onError={() => setHasImageError(true)}
+            onError={() => {
+              setHasImageError(true)
+              onImageError?.()
+            }}
+            onLoad={onImageLoad}
           />
-        ) : null}
+        )}
         <span
-          hidden={showPhoto}
-          {...(!showPhoto ? { 'aria-hidden': true } : {})}
+          hidden={showPhoto || undefined}
+          aria-hidden={!showPhoto || undefined}
         >
           {initials}
         </span>
