@@ -28,8 +28,10 @@ export { SITE_PROFILE }
  * El `satisfies` garantiza el contrato {@link AboutHeroData} sin perder el tipo literal.
  */
 export const ABOUT_HERO = {
+  overline: 'Sobre mí',
   firstName: SITE_PROFILE.firstName,
   lastName: SITE_PROFILE.lastName,
+  fullName: `${SITE_PROFILE.firstName} ${SITE_PROFILE.lastName}`,
   badge: SITE_PROFILE.role,
   location: 'Puebla, México',
   tagline: `${SITE_TAGLINE} Stack principal: **React**, **TypeScript** y **Next.js** en e-commerce, B2B y herramientas internas.`,
