@@ -14,19 +14,19 @@ import type { AboutBioParagraph } from './types'
 export const ABOUT_BIO = [
   {
     id: 'about-bio-intro',
-    text: `Soy **Francisco Omar Habib González Utrera**, ingeniero en sistemas computacionales, con especialidad en **ingeniería de software**. Llevo **más de dos años** de recorrido en frontend (formación intensiva y entrega en producción). Cubrí e-commerce, B2B, ERP y landings, cerca de producto y de back-end.`,
+    text: `Soy **Francisco Omar Habib González Utrera**, ingeniero en sistemas computacionales con especialidad en **ingeniería de software**. Llevo **más de dos años** en frontend construyendo interfaces, integrando **APIs** y colaborando con equipos multidisciplinarios en modalidad presencial, híbrida y remota.`,
   },
   {
     id: 'about-bio-positioning',
-    text: 'Diseño e implemento interfaces de producto con **React** y **TypeScript**: de landings a plataformas con **APIs**, priorizando rendimiento, accesibilidad y consistencia con diseño.',
+    text: 'Diseño e implemento interfaces de producto con **React** y **TypeScript**: desde **landings** hasta **ERP** y **plataformas internas**, priorizando rendimiento, accesibilidad y consistencia con diseño.',
   },
   {
     id: 'about-bio-proof',
-    text: 'Refactorizaciones con impacto medible donde he logrado **~40% menos** código de frontend y **carga aproximadamente a la mitad** (de ~3s a **~1,4–1,6s**) en un núcleo B2B, además de desarrollar y **homogeneizar la UI** con el ecosistema de producto completo.',
+    text: 'En proyectos con deuda técnica, he aplicado refactorizaciones con impacto medible: **~40% menos** código de frontend y **carga aproximadamente a la mitad** (de ~3s a **~1,4–1,6s**) en flujos críticos. También **homogeneicé la UI** con el ecosistema del producto y reforcé **SEO** en landings —metadatos, HTML semántico y **Core Web Vitals**— junto a mejoras de **UX**.',
   },
   {
     id: 'about-bio-collaboration',
-    text: 'Trabajo junto a diseño **Figma** y equipos de **back-end**: el detalle cuenta para negocio y mantenimiento — **componentes y patrones** listos para extender, no parches aislados.',
+    text: 'Trabajo junto a diseño **Figma**, equipos de **back-end** y metodologías ágiles (**SCRUM**): el detalle cuenta para negocio y mantenimiento — **componentes y patrones** listos para extender, no parches aislados.',
   },
 ] as const satisfies readonly AboutBioParagraph[]
 
