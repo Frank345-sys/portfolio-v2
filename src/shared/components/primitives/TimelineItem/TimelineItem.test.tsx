@@ -115,6 +115,24 @@ describe('TimelineItem', () => {
     expect(screen.getByText('-30% bugs')).toBeInTheDocument()
   })
 
+  it('muestra la modalidad junto a la empresa cuando se proporciona', () => {
+    render(
+      <ol>
+        <TimelineItem
+          period="2025"
+          heading="Rol"
+          company="Institución"
+          modalidad="Híbrido"
+          description="Descripción"
+        />
+      </ol>
+    )
+
+    expect(screen.getByText('Institución')).toBeInTheDocument()
+    expect(screen.getByText('Híbrido')).toBeInTheDocument()
+    expect(screen.getByText('Híbrido')).toHaveClass('text-text-subtle')
+  })
+
   it('aplica acento information en la compañía', () => {
     render(
       <ol>
@@ -127,7 +145,9 @@ describe('TimelineItem', () => {
       </ol>
     )
 
-    expect(screen.getByText('Institución')).toHaveClass('text-information-base')
+    expect(screen.getByText('Institución').closest('p')).toHaveClass(
+      'text-information-base'
+    )
   })
 
   it('no falla cuando la prop chips está ausente', () => {
