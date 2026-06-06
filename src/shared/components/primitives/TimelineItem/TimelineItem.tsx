@@ -84,6 +84,7 @@ type TimelineItemProps = TimelineItemData & { className?: string }
  *   periodEndDatetime="2026-02-28"
  *   heading={SITE_PROFILE.role}
  *   company="B Life · Puebla, MX"
+ *   modalidad="Presencial"
  *   description="Trabajo en productos web e-commerce."
  *   chips={[
  *     TIMELINE_CHIP.technology('E-commerce'),
@@ -100,6 +101,7 @@ export function TimelineItem({
   periodEndDatetime,
   heading,
   company,
+  modalidad,
   description,
   chips,
   className,
@@ -142,7 +144,13 @@ export function TimelineItem({
             'text-information-base font-mono sm:mb-2'
           )}
         >
-          {company}
+          <span>{company}</span>
+          {modalidad !== undefined ? (
+            <>
+              <span aria-hidden="true"> · </span>
+              <span className="text-text-subtle font-normal">{modalidad}</span>
+            </>
+          ) : null}
         </p>
 
         {/* Fecha — visible solo debajo del breakpoint sm (ver nota en JSDoc) */}
