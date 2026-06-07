@@ -29,8 +29,7 @@ interface HamburgerButtonProps {
 }
 
 /** Clases Tailwind compartidas por las tres barras `motion.span`; extraídas para evitar repetición. */
-const HAMBURGER_LINE_BASE_CLASS =
-  'bg-bg-strong block h-0.5 w-5 rounded-full' as const
+const HAMBURGER_LINE_BASE_CLASS = 'bg-bg-strong block h-0.5 w-5 rounded-full'
 
 /**
  * @module components/Header/subcomponents/HamburgerButton/HamburgerButton
@@ -49,7 +48,7 @@ export function HamburgerButton({
   onClick,
   className,
 }: HamburgerButtonProps) {
-  const toggleState = isOpen ? 'open' : 'closed'
+  const motionVariant = isOpen ? 'open' : 'closed'
 
   return (
     <button
@@ -64,22 +63,23 @@ export function HamburgerButton({
         className
       )}
     >
+      {/* Barras del hamburger button */}
       <m.span
         aria-hidden
         {...HAMBURGER_BAR_TOP}
-        animate={toggleState}
+        animate={motionVariant}
         className={cn(HAMBURGER_LINE_BASE_CLASS, 'origin-center')}
       />
       <m.span
         aria-hidden
         {...HAMBURGER_BAR_MID}
-        animate={toggleState}
+        animate={motionVariant}
         className={HAMBURGER_LINE_BASE_CLASS}
       />
       <m.span
         aria-hidden
         {...HAMBURGER_BAR_BOTTOM}
-        animate={toggleState}
+        animate={motionVariant}
         className={cn(HAMBURGER_LINE_BASE_CLASS, 'origin-center')}
       />
     </button>
