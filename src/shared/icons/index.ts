@@ -14,7 +14,7 @@
  * @example
  * ```tsx
  * import { JsIcon } from '@/shared/icons'
- * <JsIcon className="h-6 w-6" aria-hidden />
+ * <JsIcon className="size-6" aria-hidden />
  * ```
  *
  * @module shared/icons
