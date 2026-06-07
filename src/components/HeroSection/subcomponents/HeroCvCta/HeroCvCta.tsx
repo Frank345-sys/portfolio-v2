@@ -22,9 +22,9 @@ export function HeroCvCta() {
       target="_blank"
       rel="noopener noreferrer"
       className={BUTTON.special.cta}
-      aria-label={`Ver CV de ${HERO_TITLE_NAME} (PDF, se abre en una pestaña nueva)`}
     >
       Ver CV (PDF)
+      <span className="sr-only">{` de ${HERO_TITLE_NAME}, se abre en una pestaña nueva`}</span>
       <DownloadIcon aria-hidden="true" />
     </a>
   )
