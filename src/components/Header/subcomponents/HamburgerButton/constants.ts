@@ -5,7 +5,7 @@
  * tres barras del ícono; re-exporta `HEADER_MOBILE_DRAWER_PANEL_ID`.
  * @remarks Sin lógica ni efectos — solo constantes declarativas. Los valores
  * numéricos (`y`, `rotate`) deben coincidir con el diseño del ícono; cambiarlos
- * rompe la ilusión de «X» y requiere ajustar los tests de snapshot del botón.
+ * rompe la ilusión de «X» y requiere revisar los valores numéricos manualmente en el navegador.
  */
 
 /** Re-export de `../../constants/navigation` — co-localiza la dependencia de `HamburgerButton` sin importar desde el módulo raíz. */
@@ -34,14 +34,14 @@ const hamburgerBarBottomVariants: Variants = {
 }
 
 type HamburgerBarMotionPreset = {
-  readonly variants: Variants
-  readonly initial: 'closed'
-  readonly transition?: (typeof MOTION_ANIMATION.spring)['control']
+  variants: Variants
+  initial: 'closed'
+  transition?: (typeof MOTION_ANIMATION.spring)['control']
 }
 
 /**
  * Barras superior e inferior del ícono hamburguesa (spring de control).
- * Uso: `<m.span {...HAMBURGER_BAR_TOP} animate={toggleState} />`.
+ * Uso: `<m.span {...HAMBURGER_BAR_TOP} animate={motionVariant} />`.
  */
 export const HAMBURGER_BAR_TOP = {
   variants: hamburgerBarTopVariants,
@@ -49,7 +49,10 @@ export const HAMBURGER_BAR_TOP = {
   transition: MOTION_ANIMATION.spring.control,
 } as const satisfies HamburgerBarMotionPreset
 
-/** Barra media — fade y colapso sin spring explícito. */
+/**
+ * Barra media — fade y colapso con tween por defecto de Motion (sin spring):
+ * un desvanecido suave encaja mejor que el rebote de las diagonales superior/inferior.
+ */
 export const HAMBURGER_BAR_MID = {
   variants: hamburgerBarMidVariants,
   initial: 'closed',
