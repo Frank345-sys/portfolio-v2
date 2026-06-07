@@ -70,13 +70,12 @@ export function useHeader(navItems: ReadonlyArray<NavItem>): UseHeaderResult {
     isLgMin
   )
 
-  // Drawer: en lg+ forzamos cierre; queueMicrotask difiere setState al siguiente microtask (eslint + React Compiler).
   useEffect(() => {
     if (!isLgMin || !isOpen) return
     queueMicrotask(() => {
       setIsOpen(false)
     })
-  }, [isLgMin, isOpen, setIsOpen])
+  }, [isLgMin, isOpen])
 
   // Sombra al scroll: passive:true para no bloquear el hilo principal.
   useEffect(() => {
