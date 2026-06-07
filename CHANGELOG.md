@@ -4,6 +4,8 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-06-07
+
 ### Añadido
 
 - Script **`optimize:public`** (`scripts/optimize-public-assets.mjs`) para comprimir assets en `public/`.
