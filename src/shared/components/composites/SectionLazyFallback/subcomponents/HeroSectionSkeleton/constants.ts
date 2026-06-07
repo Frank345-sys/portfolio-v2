@@ -141,4 +141,4 @@ export const HERO_DECO_BOX_SLOTS = [
 
 /** Clases base de la superficie de cada caja decorativa (combinar con `surface` del slot). */
 export const DECO_SURFACE_BASE =
-  'bg-bg-weak shadow-elevation-lg flex h-full w-full select-none items-center justify-center'
+  'bg-bg-weak shadow-elevation-lg flex size-full select-none items-center justify-center'
