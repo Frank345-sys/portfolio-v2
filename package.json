@@ -41,8 +41,8 @@
     "optimize:public": "node scripts/optimize-public-assets.mjs",
     "deploy": "npm run build && gh-pages -d build",
     "preview:build": "vite preview --outDir build",
-    "react-doctor": "react-doctor . --verbose -y --diff main",
-    "react-doctor:full": "react-doctor . --verbose --full"
+    "react-doctor": "react-doctor . --verbose -y",
+    "react-doctor:full": "react-doctor . --verbose --diff false"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -91,7 +91,7 @@
     "lint-staged": "^16.3.0",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "react-doctor": "^0.2.6",
+    "react-doctor": "^0.4.0",
     "sharp": "^0.34.5",
     "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
