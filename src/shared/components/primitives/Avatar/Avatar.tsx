@@ -12,9 +12,9 @@ import { ANIMATION } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
 const AVATAR_SIZES = {
-  sm: 'h-20 w-20 text-lg lg:h-24 lg:w-24 lg:text-2xl',
-  md: 'h-28 w-28 text-3xl md:h-32 md:w-32 md:text-4xl lg:h-36 lg:w-36 lg:text-5xl',
-  lg: 'h-32 w-32 text-4xl md:h-36 md:w-36 md:text-5xl lg:h-40 lg:w-40 lg:text-6xl',
+  sm: 'size-20 text-lg lg:size-24 lg:text-2xl',
+  md: 'size-28 text-3xl md:size-32 md:text-4xl lg:size-36 lg:text-5xl',
+  lg: 'size-32 text-4xl md:size-36 md:text-5xl lg:size-40 lg:text-6xl',
 } as const
 
 type AvatarSize = keyof typeof AVATAR_SIZES
@@ -57,7 +57,7 @@ export function Avatar({
     <div
       role={!showPhoto ? 'img' : undefined}
       aria-label={!showPhoto ? initialsLabel : undefined}
-      className={cn('relative shrink-0', AVATAR_SIZES[size], className)}
+      className={cn('relative', AVATAR_SIZES[size], className)}
     >
       <div
         className={cn(
@@ -68,7 +68,7 @@ export function Avatar({
 
       <div
         className={cn(
-          'shadow-elevation-lg relative flex h-full w-full items-center justify-center overflow-hidden rounded-full font-bold text-white',
+          'shadow-elevation-lg relative flex size-full items-center justify-center overflow-hidden rounded-full font-bold text-white',
           !showPhoto && 'u-avatar-feature-gradient'
         )}
       >
@@ -81,7 +81,7 @@ export function Avatar({
             loading={loading}
             fetchPriority={fetchPriority}
             decoding="async"
-            className="h-full w-full rounded-full object-cover"
+            className="size-full rounded-full object-cover"
             onError={() => {
               setHasImageError(true)
               onImageError?.()
