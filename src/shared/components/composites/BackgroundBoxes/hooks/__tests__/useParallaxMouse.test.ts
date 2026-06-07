@@ -56,6 +56,33 @@ describe('useParallaxMouse', () => {
     )
   })
 
+  it('expone parallaxActive true cuando enabled y sin movimiento reducido', () => {
+    const { result } = renderHook(() => useParallaxMouse({ enabled: true }))
+    expect(result.current.parallaxActive).toBe(true)
+  })
+
+  it('con prefers-reduced-motion no registra mousemove y parallaxActive es false', () => {
+    const addSpy = vi.spyOn(window, 'addEventListener')
+    vi.spyOn(window, 'matchMedia').mockImplementation((query: string) => ({
+      matches: query.includes('prefers-reduced-motion'),
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }))
+
+    const { result } = renderHook(() => useParallaxMouse({ enabled: true }))
+
+    expect(result.current.parallaxActive).toBe(false)
+    expect(addSpy.mock.calls.filter((c) => c[0] === 'mousemove')).toHaveLength(
+      0
+    )
+    addSpy.mockRestore()
+  })
+
   it('con enabled false no registra mousemove y mantiene valores en 0', () => {
     const addSpy = vi.spyOn(window, 'addEventListener')
     const { result } = renderHook(() => useParallaxMouse({ enabled: false }))
