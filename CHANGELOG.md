@@ -18,10 +18,15 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ### Cambiado
 
+- **Toolchain React Doctor:** migración a **`doctor.config.ts`** (v0.4.0); diff local por defecto vs **`develop`**; `react-doctor:full` con **`--diff false`**; CI falla si hay issues tras comentar el PR; auditoría completa **100/100**.
+- **Hooks (simplificación):** refactor de hooks de **BackgroundBoxes**, **Header**, **ProjectsSection**, **`useImageCarousel`**, **`useIsIntersecting`** y **`useMediaQuery`** — menos efectos/refs redundantes, sin `useCallback`/`useMemo` manual (React Compiler); **`useIsIntersecting`** pasa a callback ref (React Doctor).
+- **`useBackgroundBoxes`:** elimina **`useReducedMotion`**; **`prefers-reduced-motion`** para el parallax de puntero queda centralizado en **`useParallaxMouse`** (`parallaxActive`), alineado con **`MotionConfig`** global para animaciones Motion.
+- **`breakpoints`:** **`MEDIA_QUERY_REDUCED_MOTION`** compartida; convención **`as const`** unificada en constantes numéricas y media queries del proyecto.
 - **ProjectsSection**: hooks simplificados (`useProjectsModal`, `useProjectsCarousel`, `useProjectsScrollSync`, `useProjectsSection`); atributos de imagen resueltos en el componente; menos memoización manual (React Compiler).
-- **Header**: hooks simplificados (`useHeader`, `useNavScrollSpy`, `useNavUnderlinePosition`); cierre de drawer en `lg` sin `queueMicrotask`.
+- **Header**: hooks simplificados (`useHeader`, `useNavScrollSpy`, `useNavUnderlinePosition`); medición del subrayado sin RAF innecesario.
 - **`useImageCarousel`** y **`useTimelineItem`**: eliminada memoización prematura; variantes Motion del carrusel como constante de módulo.
-- **BackgroundBoxes**: parallax y flotación refactorizados; tier de viewport en generador de cajas.
+- **BackgroundBoxes**: parallax y flotación refactorizados; tier de viewport en generador de cajas; pausa por scroll con `useState` en lugar de `useReducer`.
+- **`runThemeTransition`:** consume **`MEDIA_QUERY_REDUCED_MOTION`** desde **`breakpoints`**.
 - **Assets públicos** optimizados (CV PDF, foto de perfil, `og-image.png`).
 - Tests ampliados con **vitest-axe** y helpers compartidos en App, Modal, Header, ProjectInfo, ErrorBoundary y secciones lazy.
 - **About — formación y experiencia**: modalidad en ITSX (Presencial), TripleTen (Remoto), B Life (Presencial) y DIDACTECA (Híbrido).

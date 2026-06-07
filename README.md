@@ -86,8 +86,8 @@ src/
 | `check`                                         | **`format:check` → `lint` → `lint:exports` → `lint:env` → `typecheck` → `knip` → `test`** (mismo orden que `check:ci`, sin cobertura ni build) |
 | `check:ci`                                      | **`format:check` → `lint` → `lint:exports` → `lint:env` → `typecheck` → `knip` → `test:coverage:ci` → `build`** (mismo bloque que CI)          |
 | `check:extended`                                | **`check`** + **`react-doctor:full`** (gate local + auditoría React completa; opcional pre-release)                                            |
-| `react-doctor`                                  | Diagnóstico React (**diff** vs `main`; ver `react-doctor.config.json`)                                                                         |
-| `react-doctor:full`                             | Auditoría completa del repo (objetivo **100/100** en reglas React Doctor)                                                                      |
+| `react-doctor`                                  | Diagnóstico React (**diff** vs `develop` por defecto; ver `doctor.config.ts`; override: `npm run react-doctor -- --diff <rama>`)               |
+| `react-doctor:full`                             | Auditoría completa del repo (`--diff false`; objetivo **100/100** en reglas React Doctor)                                                      |
 | `tsdoc:fill-placeholders`                       | Sustituye placeholders tras `node scripts/check-tsdoc.mjs --fix` (ver [`scripts/README.md`](scripts/README.md))                                |
 | `tsdoc:fill-placeholders:dry`                   | Vista previa sin escribir archivos                                                                                                             |
 | `tsdoc:homogenize-barrels`                      | Homogeneiza texto TSDoc en barrels (migración puntual)                                                                                         |
@@ -182,7 +182,7 @@ Ejecutar toda la suite: **`npm run test`**. Para Motion + LazyMotion usar **`ren
 
 El workflow ejecuta **`npm run check:ci`** (véase **`package.json`**): **`format:check`** → **`lint`** → **`lint:exports`** → **`lint:env`** → **`typecheck`** → **`knip`** → **`test:coverage:ci`** → **`build`**.
 
-Workflow opcional **`react-doctor`** en PRs (versión fijada en `package.json`, p. ej. **0.2.6**; `npm exec` en CI, sin `@latest`). Modo **`--diff`** vs rama base. Local: `npm run react-doctor` (diff vs `main`); auditoría completa: `npm run react-doctor:full`. En `react-doctor.config.json`, **`deadCode: false`** evita duplicar el barrido de Knip; el informe **`react-doctor-report.txt`** está en **`.gitignore`** (solo artefacto local o del runner en CI).
+Workflow opcional **`react-doctor`** en PRs (versión fijada en `package.json`, p. ej. **0.4.0**; `npm exec` en CI, sin `@latest`). Modo **`--diff`** vs rama base del PR (`origin/develop` o `origin/main`). Local: `npm run react-doctor` (diff vs `develop`, definido en `doctor.config.ts`); auditoría completa: `npm run react-doctor:full`. En `doctor.config.ts`, **`deadCode: false`** evita duplicar el barrido de Knip; el informe **`react-doctor-report.txt`** está en **`.gitignore`** (solo artefacto local o del runner en CI). El workflow **falla** si React Doctor reporta issues (tras publicar el comentario en el PR).
 
 ---
 
