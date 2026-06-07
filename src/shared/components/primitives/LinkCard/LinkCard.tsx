@@ -92,7 +92,7 @@ export function LinkCard({
       <div className="flex items-center gap-3">
         <div
           className={cn(
-            'bg-information-light group-hover:bg-information-base flex size-9 shrink-0 items-center justify-center rounded-lg',
+            'bg-information-light group-hover:bg-information-base flex size-9 items-center justify-center rounded-lg',
             ANIMATION.transition.colors,
             // Normaliza SVG dentro del slot (emojis y texto no se ven afectados)
             '[&_svg]:pointer-events-none [&_svg]:block [&_svg]:size-6 [&_svg]:max-h-full [&_svg]:max-w-full'
