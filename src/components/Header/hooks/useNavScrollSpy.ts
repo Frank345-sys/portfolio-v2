@@ -199,18 +199,18 @@ export function useNavScrollSpy(
     navItemsRef.current = navItems
   }, [navItems])
 
-  const intersectingByEl = useRef(new Map<Element, boolean>())
+  const [intersecting] = useState(() => new Map<Element, boolean>())
 
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return
 
     return attachNavScrollSpy({
       navItemsRef,
-      intersecting: intersectingByEl.current,
+      intersecting,
       setActiveHref,
       lazyRootId,
     })
-  }, [lazyRootId])
+  }, [lazyRootId, intersecting])
 
   return activeHref
 }
