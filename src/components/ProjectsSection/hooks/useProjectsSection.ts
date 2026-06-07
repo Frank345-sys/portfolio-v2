@@ -3,15 +3,8 @@
  *
  * @module components/ProjectsSection/hooks/useProjectsSection
  * @fileoverview Compone hooks especializados; el enriquecimiento de slides vive en `enrichProjectsWithSlides`.
- * @remarks `modal.close` persiste el slide en tarjeta antes de cerrar; `modal.dismiss` (solo interno, vía scroll sync al salir de `lg`) limpia el índice sin persistir.
+ * @remarks El `close` expuesto al UI persiste el slide en tarjeta antes de cerrar; scroll sync usa `modal.close` del hook (sin persistencia).
  */
-
-import {
-  useMemo,
-  type Dispatch,
-  type MouseEvent,
-  type SetStateAction,
-} from 'react'
 
 import { useProjectsCarousel } from './useProjectsCarousel'
 import { useProjectsModal } from './useProjectsModal'
@@ -19,6 +12,7 @@ import { useProjectsScrollSync } from './useProjectsScrollSync'
 import { enrichProjectsWithSlides } from '../utils/enrichProjectsWithSlides'
 
 import type { Project, ProjectWithSlides } from '../types'
+import type { Dispatch, MouseEvent, SetStateAction } from 'react'
 
 interface UseProjectsSectionResult {
   data: {
@@ -55,10 +49,7 @@ interface UseProjectsSectionResult {
 export function useProjectsSection(
   projects: Project[]
 ): UseProjectsSectionResult {
-  const projectsWithSlides = useMemo(
-    () => enrichProjectsWithSlides(projects),
-    [projects]
-  )
+  const projectsWithSlides = enrichProjectsWithSlides(projects)
 
   const totalProjects = projectsWithSlides.length
 
@@ -66,7 +57,7 @@ export function useProjectsSection(
     projects: projectsWithSlides,
   })
 
-  const scroll = useProjectsScrollSync(totalProjects, modal.dismiss)
+  const scroll = useProjectsScrollSync(totalProjects, modal.close)
 
   const carousel = useProjectsCarousel({
     projectCount: totalProjects,
@@ -81,7 +72,7 @@ export function useProjectsSection(
     if (modal.index !== null) {
       carousel.persistCardSlide(modal.index, modal.slide)
     }
-    modal.dismiss()
+    modal.close()
   }
 
   const activeProject =
