@@ -2,8 +2,8 @@
  * Estado del modal de vista ampliada de un proyecto (índice, slide y apertura/cierre).
  *
  * @module components/ProjectsSection/hooks/useProjectsModal
- * @fileoverview Expone `open` y cierre vía `close` / `dismiss` (misma función: limpia el índice del modal).
- * @remarks La persistencia del slide en tarjeta la coordina el orquestador (`handleCloseModal`); `dismiss` solo limpia el índice (p. ej. scroll sync al salir de `lg`).
+ * @fileoverview Expone `open` y cierre vía `close` (limpia el índice del modal).
+ * @remarks La persistencia del slide en tarjeta la coordina el orquestador (`handleCloseModal`); `close` solo limpia el índice (p. ej. scroll sync al salir de `lg`).
  */
 
 import { useState, type Dispatch, type SetStateAction } from 'react'
@@ -21,8 +21,6 @@ interface UseProjectsModalResult {
   setSlide: Dispatch<SetStateAction<number>>
   open: (projectIndex: number, slideIndex: number) => void
   close: () => void
-  /** Misma referencia que `close`; scroll sync la usa sin persistir slide en tarjeta. */
-  dismiss: () => void
 }
 
 /**
@@ -34,7 +32,7 @@ export function useProjectsModal({
   const [index, setIndex] = useState<number | null>(null)
   const [slide, setSlide] = useState(0)
 
-  function dismiss() {
+  function close() {
     setIndex(null)
   }
 
@@ -49,7 +47,6 @@ export function useProjectsModal({
     project: index !== null ? projects[index] : undefined,
     setSlide,
     open,
-    close: dismiss,
-    dismiss,
+    close,
   }
 }
