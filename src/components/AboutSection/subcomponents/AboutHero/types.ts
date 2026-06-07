@@ -13,10 +13,14 @@
  * Implementa el contrato que `satisfies` en {@link ABOUT_HERO} garantiza en tiempo de compilación.
  */
 export interface AboutHeroData {
+  /** Overline del encabezado de sección (p. ej. «Sobre mí»). */
+  overline: string
   /** Nombre de pila (parte principal del título animado). */
   firstName: string
   /** Apellido o fragmento resaltado en `information` tras el nombre. */
   lastName: string
+  /** Nombre completo legible para labels accesibles del avatar. */
+  fullName: string
   /** Texto del badge principal (p. ej. rol). */
   badge: string
   /** Ubicación legible, sin emoji (el icono se añade en UI con `aria-hidden`). */
@@ -25,6 +29,6 @@ export interface AboutHeroData {
   tagline: string
   /** Iniciales para avatar / fallback. */
   avatarInitials: string
-  /** Ruta de foto de perfil o URL. */
-  avatarPhotoSrc: string
+  /** Ruta de foto de perfil o URL; omitir si no hay foto disponible. */
+  avatarPhotoSrc?: string
 }

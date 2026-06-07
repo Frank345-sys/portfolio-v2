@@ -69,6 +69,10 @@ export const ABOUT_SKILLS: SkillGroup[] = [
         variant: SKILL_TAG_VARIANT.PROFICIENTE,
       },
       { label: SKILL_LABEL.ASTRO, variant: SKILL_TAG_VARIANT.FAMILIAR },
+      {
+        label: SKILL_LABEL.APOLLO_CLIENT,
+        variant: SKILL_TAG_VARIANT.FAMILIAR,
+      },
       { label: SKILL_LABEL.BOOTSTRAP, variant: SKILL_TAG_VARIANT.FAMILIAR },
       { label: SKILL_LABEL.NODE, variant: SKILL_TAG_VARIANT.FAMILIAR },
       { label: SKILL_LABEL.EXPRESS, variant: SKILL_TAG_VARIANT.FAMILIAR },
@@ -104,6 +108,8 @@ export const ABOUT_SKILLS: SkillGroup[] = [
         label: SKILL_LABEL.RESTFUL_APIS,
         variant: SKILL_TAG_VARIANT.PROFICIENTE,
       },
+      { label: SKILL_LABEL.TURBOREPO, variant: SKILL_TAG_VARIANT.FAMILIAR },
+      { label: SKILL_LABEL.CI_CD, variant: SKILL_TAG_VARIANT.FAMILIAR },
     ],
   },
   {
@@ -123,6 +129,11 @@ export const ABOUT_SKILLS: SkillGroup[] = [
         variant: SKILL_TAG_VARIANT.PROFICIENTE,
       },
       { label: SKILL_LABEL.UI_UX, variant: SKILL_TAG_VARIANT.PROFICIENTE },
+      { label: SKILL_LABEL.SCRUM, variant: SKILL_TAG_VARIANT.FAMILIAR },
+      {
+        label: SKILL_LABEL.FRONTEND_ARCHITECTURE,
+        variant: SKILL_TAG_VARIANT.FAMILIAR,
+      },
     ],
   },
 ]

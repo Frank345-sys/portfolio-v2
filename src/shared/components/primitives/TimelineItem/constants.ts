@@ -5,14 +5,17 @@
  * @remarks Los cambios de texto o `href` suelen requerir actualizar tests que fijen el contrato de la sección.
  */
 
-export { SITE_PROFILE } from '@/shared/constants/siteProfile'
+export { SITE_PROFILE } from '@/shared/constants/siteProfile/siteProfile'
 import type { SkillLabel } from '@/shared/constants/skills/skillLabels'
 
 import {
   TIMELINE_CHIP_VARIANT,
+  TIMELINE_MODALIDAD,
   type TimelineChip,
   type TimelineChipVariant,
 } from './types'
+
+export { TIMELINE_MODALIDAD }
 
 /**
  * Orden de categorías al ordenar chips (ver `utils/orderTimelineChipsByLegend.ts` y `TimelineItem`).

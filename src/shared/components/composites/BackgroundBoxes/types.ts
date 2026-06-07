@@ -38,6 +38,12 @@ export interface ParallaxMotionValues {
   mouseY: MotionValue<number>
 }
 
+/** Retorno de `useParallaxMouse`: valores Motion y si el listener de puntero está activo. */
+export interface UseParallaxMouseReturn extends ParallaxMotionValues {
+  /** `true` solo si `enabled` y no hay `prefers-reduced-motion` (parallax decorativo off). */
+  parallaxActive: boolean
+}
+
 /**
  * Props de `FloatingBox`: una caja generada más el estado Motion de parallax.
  */
@@ -45,8 +51,8 @@ export interface FloatingBoxProps extends ParallaxMotionValues {
   /** Posición, profundidad e ícono SVG de esta caja (generado por `generateBoxes`). */
   box: BoxData
   /**
-   * Si es `false`, no se enlazan `mouseX`/`mouseY` al offset (viewport &lt; `lg`, movimiento reducido, etc.).
-   * La animación de flotación vertical sigue activa salvo `prefers-reduced-motion`.
+   * Si es `false`, no se enlazan `mouseX`/`mouseY` al offset (viewport &lt; `lg`, movimiento reducido, scroll activo, etc.).
+   * La flotación vertical se pausa en el listener de scroll vía registro interno, no por esta prop.
    * @defaultValue true
    */
   parallaxEnabled?: boolean

@@ -245,9 +245,9 @@ export default tseslint.config(
        * `error`/`warn` solo en este bloque base y mover `off` a un override con `files` concretos; suele bastar un
        * subconjunto pequeño respecto al total `*.test.*`.
        */
-      'testing-library/no-container': 'off',
+      'testing-library/no-container': 'warn',
       'testing-library/no-node-access': 'off',
-      'testing-library/prefer-screen-queries': 'off',
+      'testing-library/prefer-screen-queries': 'warn',
       /**
        * TypeScript “unsafe” + `unbound-method` desactivados **solo en tests**:
        * - `vi.mock`/`fn`/`spyOn` y módulos simulados suelen producir valores mal tipados o `any` implícitos.

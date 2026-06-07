@@ -6,7 +6,6 @@
  */
 
 import { AnimatePresence, m } from 'motion/react'
-import { useCallback, useMemo } from 'react'
 
 import { TYPOGRAPHY, Z } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
@@ -15,11 +14,8 @@ import { useImageCarousel } from '../../hooks/useImageCarousel'
 import { ImageCarouselNavButton } from '../ImageCarouselNavButton/ImageCarouselNavButton'
 import { ImageCarouselSlideImage } from '../ImageCarouselSlideImage/ImageCarouselSlideImage'
 
-import type {
-  ImageCarouselNavDirection,
-  ImageCarouselSharedOptions,
-} from '../../types'
-import type { ImgHTMLAttributes } from 'react'
+import type { ImageCarouselSharedOptions } from '../../types'
+import type { ImgHTMLAttributes, KeyboardEvent } from 'react'
 
 type ImageCarouselImageAttributes = Pick<
   ImgHTMLAttributes<HTMLImageElement>,
@@ -96,21 +92,23 @@ export function ImageCarouselImpl({
       : {}),
   })
 
-  /** Navegación por teclado desde los botones (APG carousel pattern). */
-  const handleArrowNavigate = useCallback(
-    (target: ImageCarouselNavDirection) => goToSlide(target, true),
-    [goToSlide]
-  )
+  /** Flechas ← / → en los botones (APG carousel pattern). */
+  function handleNavKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      goToSlide('prev', true)
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      goToSlide('next', true)
+    }
+  }
 
   /** Atributos de imagen resueltos por el consumidor (si aplica). */
   const {
     src: imageSrc = '',
     srcSet: imageSrcSet,
     sizes: imageSizes,
-  } = useMemo(
-    () => resolveImageAttributes?.(currentSrc) ?? { src: currentSrc },
-    [currentSrc, resolveImageAttributes]
-  )
+  } = resolveImageAttributes?.(currentSrc) ?? { src: currentSrc }
 
   return (
     <div
@@ -125,16 +123,16 @@ export function ImageCarouselImpl({
           initial="enter"
           animate="center"
           exit="exit"
-          className="absolute inset-0 h-full w-full"
+          className="absolute inset-0 size-full"
         >
           <ImageCarouselSlideImage
             key={`${slide}-${imageSrc}`}
             isFirstSlide={slide === 0}
             src={imageSrc}
-            {...(imageSrcSet !== undefined ? { srcSet: imageSrcSet } : {})}
-            {...(imageSizes !== undefined ? { sizes: imageSizes } : {})}
+            srcSet={imageSrcSet}
+            sizes={imageSizes}
             alt={imgAlt}
-            {...(imageClassName !== undefined ? { imageClassName } : {})}
+            imageClassName={imageClassName}
           />
         </m.div>
       </AnimatePresence>
@@ -145,14 +143,14 @@ export function ImageCarouselImpl({
           <ImageCarouselNavButton
             direction="prev"
             onClick={goPrev}
-            onArrowNavigate={handleArrowNavigate}
-            ariaLabel={resolvedPrevLabel}
+            onKeyDown={handleNavKeyDown}
+            aria-label={resolvedPrevLabel}
           />
           <ImageCarouselNavButton
             direction="next"
             onClick={goNext}
-            onArrowNavigate={handleArrowNavigate}
-            ariaLabel={resolvedNextLabel}
+            onKeyDown={handleNavKeyDown}
+            aria-label={resolvedNextLabel}
           />
 
           {/*

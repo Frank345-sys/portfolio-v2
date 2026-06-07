@@ -19,6 +19,7 @@ import type { BackgroundBoxesProps } from './types'
  * Fondo decorativo a pantalla completa: íconos dentro de cajas flotantes animadas y parallax
  * ligado al puntero cuando el viewport cumple el breakpoint `lg` (`min-width` 1024px, `MEDIA_QUERY_LG_MIN`)
  * y el usuario no tiene `prefers-reduced-motion` activo (ver `useBackgroundBoxes`).
+ * Durante el scroll, la flotación y el parallax se pausan para aliviar el hilo principal.
  *
  * En cada redimensionamiento de ventana se vuelven a generar posiciones y tamaños de las cajas.
  * Las cajas viven en una lista absoluta detrás; `children` se renderiza en un panel relativo

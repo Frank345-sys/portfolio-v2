@@ -13,5 +13,6 @@ export {
   setupIntersectionObserver,
   setupMatchMedia,
 } from './mockBrowserApis'
+export { runAxeAudit } from './expectNoAxeViolations'
 export { renderWithMotion } from './renderWithMotion'
 export { ResizeObserverMock } from './resizeObserverMock'

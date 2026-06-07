@@ -8,37 +8,30 @@
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import {
-  SITE_GITHUB_PAGES_PORTFOLIO_WEB_HREF,
-  SITE_GITHUB_REPO_PORTFOLIO_WEB_HREF,
-} from '@/shared/constants/siteProfile'
-import { SKILL_LABEL } from '@/shared/constants/skills/skillLabels'
 import { renderWithMotion } from '@/test/helpers'
 
 import { ProjectInfo } from './ProjectInfo'
+import {
+  PORTFOLIO_LEGACY_PROJECT_ID,
+  PORTFOLIO_LEGACY_PROJECT_LINKS,
+} from '../../constants/portfolioLegacyLinks'
+import { PROJECTS } from '../../constants/projects'
 
-import type { Project } from '../../types'
+const PORTFOLIO_LEGACY_PROJECT = PROJECTS.find(
+  (project) => project.id === PORTFOLIO_LEGACY_PROJECT_ID
+)
 
-const PROJECT_MOCK: Project = {
-  id: 5,
-  title: 'Portfolio Web (Legacy)',
-  subtitle: 'App Web',
-  description: 'Proyecto de ejemplo para validar el panel de información.',
-  bullets: [
-    'Implementación de componentes reutilizables.',
-    'Aplicación de buenas prácticas de accesibilidad.',
-  ],
-  skills: [SKILL_LABEL.REACT, SKILL_LABEL.TYPESCRIPT],
-  images: ['/images/projects/portfolio-legacy.png'],
-  link: SITE_GITHUB_PAGES_PORTFOLIO_WEB_HREF,
-  githubLink: SITE_GITHUB_REPO_PORTFOLIO_WEB_HREF,
+if (!PORTFOLIO_LEGACY_PROJECT) {
+  throw new Error(
+    `PROJECTS debe incluir el proyecto legacy con id ${PORTFOLIO_LEGACY_PROJECT_ID}`
+  )
 }
 
 describe('ProjectInfo', () => {
   it('renderiza contenido principal y headingId', () => {
     renderWithMotion(
       <ProjectInfo
-        project={PROJECT_MOCK}
+        project={PORTFOLIO_LEGACY_PROJECT}
         visible={true}
         totalProjects={5}
         headingId="project-5-title"
@@ -49,12 +42,10 @@ describe('ProjectInfo', () => {
       'id',
       'project-5-title'
     )
-    expect(screen.getByText('Portfolio Web (Legacy)')).toBeInTheDocument()
+    expect(screen.getByText('Portfolio v1 (histórico)')).toBeInTheDocument()
     expect(screen.getByText('App Web')).toBeInTheDocument()
     expect(
-      screen.getByText(
-        'Proyecto de ejemplo para validar el panel de información.'
-      )
+      screen.getByText(/primera versión pública de mi sitio/i)
     ).toBeInTheDocument()
     expect(screen.getByText('05 / 05')).toBeInTheDocument()
   })
@@ -62,18 +53,19 @@ describe('ProjectInfo', () => {
   it('renderiza bullets, skills y enlaces opcionales', () => {
     renderWithMotion(
       <ProjectInfo
-        project={PROJECT_MOCK}
+        project={PORTFOLIO_LEGACY_PROJECT}
         visible={true}
         totalProjects={5}
         headingId="project-5-title"
       />
     )
 
-    for (const bullet of PROJECT_MOCK.bullets) {
-      expect(screen.getByText(bullet)).toBeInTheDocument()
-    }
+    expect(screen.getAllByRole('listitem')).toHaveLength(
+      PORTFOLIO_LEGACY_PROJECT.bullets.length
+    )
+    expect(screen.getAllByText(/problema:/i).length).toBeGreaterThan(0)
 
-    for (const skill of PROJECT_MOCK.skills) {
+    for (const skill of PORTFOLIO_LEGACY_PROJECT.skills) {
       expect(screen.getByText(skill)).toBeInTheDocument()
     }
 
@@ -81,29 +73,31 @@ describe('ProjectInfo', () => {
       screen.getByRole('link', {
         name: /ver sitio en vivo \(abre en una nueva pestaña\)/i,
       })
-    ).toHaveAttribute('href', PROJECT_MOCK.link)
+    ).toHaveAttribute('href', PORTFOLIO_LEGACY_PROJECT_LINKS.link)
     expect(
       screen.getByRole('link', {
         name: /código en github \(abre en una nueva pestaña\)/i,
       })
-    ).toHaveAttribute('href', PROJECT_MOCK.githubLink)
+    ).toHaveAttribute('href', PORTFOLIO_LEGACY_PROJECT_LINKS.githubLink)
   })
 
   it('no renderiza nada cuando visible es false', () => {
     renderWithMotion(
       <ProjectInfo
-        project={PROJECT_MOCK}
+        project={PORTFOLIO_LEGACY_PROJECT}
         visible={false}
         totalProjects={5}
         headingId="project-5-title"
       />
     )
 
-    expect(screen.queryByText('Portfolio Web (Legacy)')).not.toBeInTheDocument()
+    expect(
+      screen.queryByText('Portfolio v1 (histórico)')
+    ).not.toBeInTheDocument()
   })
 
   it('no muestra enlace al proyecto si link está omitido', () => {
-    const { link: _, ...withoutLink } = PROJECT_MOCK
+    const { link: _, ...withoutLink } = PORTFOLIO_LEGACY_PROJECT
     void _
 
     renderWithMotion(
@@ -128,7 +122,7 @@ describe('ProjectInfo', () => {
   it('no muestra enlace al proyecto si link está vacío', () => {
     renderWithMotion(
       <ProjectInfo
-        project={{ ...PROJECT_MOCK, link: '' }}
+        project={{ ...PORTFOLIO_LEGACY_PROJECT, link: '' }}
         visible={true}
         totalProjects={5}
         headingId="project-5-title"
@@ -146,7 +140,7 @@ describe('ProjectInfo', () => {
   })
 
   it('no muestra enlace al repositorio si githubLink no está definido', () => {
-    const { githubLink: _drop, ...project } = PROJECT_MOCK
+    const { githubLink: _drop, ...project } = PORTFOLIO_LEGACY_PROJECT
     void _drop
     renderWithMotion(
       <ProjectInfo
@@ -165,26 +159,30 @@ describe('ProjectInfo', () => {
   it('muestra las tecnologías del proyecto como chips visibles', () => {
     renderWithMotion(
       <ProjectInfo
-        project={PROJECT_MOCK}
+        project={PORTFOLIO_LEGACY_PROJECT}
         visible={true}
         totalProjects={5}
         headingId="project-5-title"
       />
     )
 
-    for (const skill of PROJECT_MOCK.skills) {
+    for (const skill of PORTFOLIO_LEGACY_PROJECT.skills) {
       expect(screen.getByText(skill)).toBeInTheDocument()
     }
   })
 
   it('no pone id en el h3 del título cuando headingId está omitido', () => {
     renderWithMotion(
-      <ProjectInfo project={PROJECT_MOCK} visible={true} totalProjects={5} />
+      <ProjectInfo
+        project={PORTFOLIO_LEGACY_PROJECT}
+        visible={true}
+        totalProjects={5}
+      />
     )
 
     const titleHeading = screen.getByRole('heading', {
       level: 3,
-      name: PROJECT_MOCK.title,
+      name: PORTFOLIO_LEGACY_PROJECT.title,
     })
     expect(titleHeading).not.toHaveAttribute('id')
   })

@@ -27,8 +27,11 @@ export function HeroStats() {
           aria-label={`${value} ${label}`}
           className="flex flex-col items-center gap-1"
         >
-          <span className={TYPOGRAPHY.special.stat}>{value}</span>
+          <span aria-hidden="true" className={TYPOGRAPHY.special.stat}>
+            {value}
+          </span>
           <span
+            aria-hidden="true"
             className={cn(
               TYPOGRAPHY.label.default,
               'text-text-strong text-center'

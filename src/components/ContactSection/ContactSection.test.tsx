@@ -2,7 +2,7 @@
  * Tests para `ContactSection` — contrato de landmark, accesibilidad y estructura del compositor.
  *
  * @fileoverview Valida ancla de sección, `aria-labelledby` → `h2`, columna principal como `<section>`
- * y `h3` sr-only, presencia de `<p>` lead, `<nav>` de tarjetas y `<aside>` de perfil.
+ * y `h3` sr-only, presencia de `<p>` lead, `<nav>` de tarjetas y panel lateral de perfil.
  * @remarks Usa `renderWithMotion` — `ContactSection` tiene animaciones triggeradas por `IntersectionObserver`,
  * que se mockea en `beforeEach`. Solo valida el compositor; copy y `href` de subcomponentes
  * se cubren en sus propios `*.test.tsx`.
@@ -10,7 +10,7 @@
 import { screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-import { renderWithMotion } from '@/test/helpers'
+import { renderWithMotion, runAxeAudit } from '@/test/helpers'
 
 import { CONTACT_SECTION_ANCHOR_ID } from './constants'
 import {
@@ -97,9 +97,14 @@ describe('ContactSection', () => {
     ).toBeInTheDocument()
 
     expect(
-      screen.getByRole('complementary', {
+      screen.getByRole('region', {
         name: /resumen de perfil y disponibilidad/i,
       })
     ).toBeInTheDocument()
   })
+
+  it('axe: sección Contacto sin violaciones conocidas', async () => {
+    const { container } = renderWithMotion(<ContactSection />)
+    expect(await runAxeAudit(container)).toHaveNoViolations()
+  }, 15_000)
 })

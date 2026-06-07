@@ -1,7 +1,7 @@
 /**
  * Tests para `ProfileAside` — contrato de landmark, accesibilidad y contenido del aside de perfil.
  *
- * @fileoverview Valida `complementary`, tres `role="group"` con `h3`, leyenda de disponibilidad,
+ * @fileoverview Valida `region`, tres `role="group"` con `h3`, leyenda de disponibilidad,
  * cardinalidad de servicios, metadatos (`dl`) y elemento `<time>` con `datetime` ISO válido.
  * La fila «Zona» se valida condicionalmente según `CONTACT_ASIDE_ZONE_LABEL_TRIM`.
  * @remarks No usa `renderWithMotion` — `ProfileAside` no tiene animaciones propias de Motion.
@@ -21,48 +21,54 @@ import {
 import { ProfileAside } from './ProfileAside'
 
 /**
- * {@link ProfileAside}: `complementary` con leyenda, lista de servicios y `dl` de metadatos
+ * {@link ProfileAside}: `region` con leyenda, lista de servicios y `dl` de metadatos
  * (`OwnerLocalTime`, zona). Subbloques con `h3` e IDs estables en `./constants`.
  *
  * **Cobertura**
- * - Landmark: `complementary` y `aria-label`
+ * - Landmark: `region` y `aria-label`
  * - Subbloques: `role="group"` + `aria-labelledby` hacia cada `h3`
  * - Leyenda: lista con nombre accesible; textos Disponible / Limitado / No disponible
  * - Servicios: cardinalidad (`CONTACT_STATUS_ROWS`) y `aria-label` del `ul`
  * - Metadatos: grupo accesible, `dl`, respuesta; hora local (`time` + `datetime` ISO); «Zona» solo si `CONTACT_ASIDE_ZONE_LABEL_TRIM` no está vacío
  */
 describe('ProfileAside', () => {
-  it('expone complementary con nombre accesible de resumen de perfil', () => {
+  it('expone region con nombre accesible de resumen de perfil', () => {
     render(<ProfileAside />)
     expect(
-      screen.getByRole('complementary', {
+      screen.getByRole('region', {
         name: /resumen de perfil y disponibilidad/i,
       })
     ).toBeInTheDocument()
   })
 
   it('agrupa disponibilidad, servicios y metadatos en section con aria-labelledby', () => {
-    const { container } = render(<ProfileAside />)
+    render(<ProfileAside />)
+    const aside = screen.getByRole('region', {
+      name: /resumen de perfil y disponibilidad/i,
+    })
     expect(
-      container.querySelector(
-        `section[aria-labelledby="${CONTACT_ASIDE_AVAILABILITY_HEADING_ID}"]`
-      )
-    ).toBeInTheDocument()
+      within(aside)
+        .getByRole('heading', { level: 3, name: 'Disponibilidad' })
+        .closest('section')
+    ).toHaveAttribute('aria-labelledby', CONTACT_ASIDE_AVAILABILITY_HEADING_ID)
     expect(
-      container.querySelector(
-        `section[aria-labelledby="${CONTACT_ASIDE_SERVICES_HEADING_ID}"]`
-      )
-    ).toBeInTheDocument()
+      within(aside)
+        .getByRole('heading', { level: 3, name: 'Servicios disponibles' })
+        .closest('section')
+    ).toHaveAttribute('aria-labelledby', CONTACT_ASIDE_SERVICES_HEADING_ID)
     expect(
-      container.querySelector(
-        `section[aria-labelledby="${CONTACT_ASIDE_METADATA_HEADING_ID}"]`
-      )
-    ).toBeInTheDocument()
+      within(aside)
+        .getByRole('heading', {
+          level: 3,
+          name: /tiempo de respuesta, hora local y zona horaria de referencia/i,
+        })
+        .closest('section')
+    ).toHaveAttribute('aria-labelledby', CONTACT_ASIDE_METADATA_HEADING_ID)
   })
 
   it('expone h3 visibles para disponibilidad y servicios; sr-only para el bloque de metadatos', () => {
     render(<ProfileAside />)
-    const aside = screen.getByRole('complementary', {
+    const aside = screen.getByRole('region', {
       name: /resumen de perfil y disponibilidad/i,
     })
     expect(
@@ -101,7 +107,7 @@ describe('ProfileAside', () => {
 
   it('lista servicios con un listitem por fila de datos y aria-label en la lista', () => {
     render(<ProfileAside />)
-    const aside = screen.getByRole('complementary', {
+    const aside = screen.getByRole('region', {
       name: /resumen de perfil y disponibilidad/i,
     })
     const list = within(aside).getByRole('list', {
@@ -119,7 +125,7 @@ describe('ProfileAside', () => {
   it('metadatos: dl con respuesta y hora local; Zona condicionada al texto de zona', () => {
     render(<ProfileAside />)
 
-    const aside = screen.getByRole('complementary', {
+    const aside = screen.getByRole('region', {
       name: /resumen de perfil y disponibilidad/i,
     })
     const metaSection = within(aside).getByRole('region', {
@@ -141,7 +147,7 @@ describe('ProfileAside', () => {
   it('renderiza hora local con elemento time y datetime ISO válido', () => {
     render(<ProfileAside />)
 
-    const aside = screen.getByRole('complementary', {
+    const aside = screen.getByRole('region', {
       name: /resumen de perfil y disponibilidad/i,
     })
     const timeEl = aside.querySelector('time[datetime]')

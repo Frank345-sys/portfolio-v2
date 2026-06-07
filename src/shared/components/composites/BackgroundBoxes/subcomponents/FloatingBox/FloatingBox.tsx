@@ -5,10 +5,11 @@
  * @remarks Coordinar tokens (`@/shared/constants`), accesibilidad y Motion con el resto de la sección.
  */
 
-import { m } from 'motion/react'
+import { m, useTransform } from 'motion/react'
 
 import { MOTION_ANIMATION } from '@/shared/constants/motionAnimations'
 
+import { useFloatingBoxFloat } from './hooks/useFloatingBoxFloat'
 import { useFloatingBoxParallax } from './hooks/useFloatingBoxParallax'
 
 import type { FloatingBoxProps } from '../../types'
@@ -30,17 +31,23 @@ export function FloatingBox({
     mouseY,
     parallaxEnabled,
   })
+  const floatY = useFloatingBoxFloat(box)
+  const y = useTransform(
+    [py, floatY],
+    ([parallaxY, floatOffset]: number[]) =>
+      (parallaxY ?? 0) + (floatOffset ?? 0)
+  )
 
   const Icon = box.Icon
 
   return (
     <m.li
-      className="absolute list-none"
+      className="bg-bg-weak shadow-elevation-lg absolute flex list-none items-center justify-center rounded-xl select-none md:rounded-2xl"
       style={{
         left: `${box.x}%`,
         top: `${box.y}%`,
         x: px,
-        y: py,
+        y,
         width: box.size,
         height: box.size,
       }}
@@ -55,23 +62,10 @@ export function FloatingBox({
         },
       }}
     >
-      <m.div
-        className="h-full w-full"
-        animate={{ y: [0, -box.floatAmp, 0] }}
-        transition={{
-          duration: box.floatDur,
-          ease: 'easeInOut' as const,
-          repeat: Infinity,
-          delay: 2 + box.floatDelay,
-        }}
-      >
-        <div className="bg-bg-weak shadow-elevation-lg flex h-full w-full items-center justify-center rounded-xl select-none md:rounded-2xl">
-          <Icon
-            aria-hidden="true"
-            className="h-[50%] w-[50%] shrink-0 sm:h-[55%] sm:w-[55%] lg:h-[60%] lg:w-[60%]"
-          />
-        </div>
-      </m.div>
+      <Icon
+        aria-hidden="true"
+        className="size-[50%] sm:size-[55%] lg:size-[60%]"
+      />
     </m.li>
   )
 }

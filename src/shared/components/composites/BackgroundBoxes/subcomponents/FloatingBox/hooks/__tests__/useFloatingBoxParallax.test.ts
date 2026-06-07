@@ -9,7 +9,7 @@ import { renderHook, act, waitFor } from '@testing-library/react'
 import { useMotionValue } from 'motion/react'
 import { describe, expect, it } from 'vitest'
 
-import { useFloatingBoxParallax } from './useFloatingBoxParallax'
+import { useFloatingBoxParallax } from '../useFloatingBoxParallax'
 
 describe('useFloatingBoxParallax', () => {
   it('con parallaxEnabled false mantiene los springs cerca de 0 aunque cambien mouseX/mouseY', async () => {

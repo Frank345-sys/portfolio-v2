@@ -21,7 +21,7 @@ export function ArrowNextIcon({
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden={ariaHidden}
-      className={cn('h-5 w-5', className)}
+      className={cn('size-5', className)}
       {...props}
     >
       <path

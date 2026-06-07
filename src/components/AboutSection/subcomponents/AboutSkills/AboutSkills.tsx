@@ -98,7 +98,7 @@ export function AboutSkills() {
           items={SKILLS_LEGEND_ITEMS}
           aria-label="Niveles del stack técnico"
         />
-        <ul className={cn(LAYOUT.grid.cols2, 'list-none')}>
+        <ul className={cn(LAYOUT.grid.cols2, 'list-none auto-rows-fr')}>
           {ABOUT_SKILLS.map((group) => (
             <SkillGroup key={group.title} {...group} />
           ))}

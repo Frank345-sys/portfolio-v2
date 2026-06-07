@@ -8,9 +8,10 @@
 import { fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
-import { axe } from 'vitest-axe'
 
-import { renderWithMotion } from '@/test/helpers'
+// fireEvent.error: userEvent no simula fallo de carga en <img>
+
+import { renderWithMotion, runAxeAudit } from '@/test/helpers'
 
 import { ImageCarousel } from './ImageCarousel'
 
@@ -61,8 +62,8 @@ describe('ImageCarousel', () => {
       <ImageCarousel slides={slides} imageAlt="Galería axe" autoplay={false} />
     )
 
-    expect(await axe(container)).toHaveNoViolations()
-  })
+    expect(await runAxeAudit(container)).toHaveNoViolations()
+  }, 15_000)
 
   it('con varias imágenes expone región con etiqueta por defecto', () => {
     renderWithMotion(
@@ -158,7 +159,9 @@ describe('ImageCarousel', () => {
 
     const region = screen.getByRole('region')
     expect(region).toHaveClass('test-carousel-wrap')
-    expect(region.querySelector('img.test-carousel-img')).toBeInTheDocument()
+    expect(
+      within(region).getByRole('img', { name: /c — imagen 1 de 2/i })
+    ).toHaveClass('test-carousel-img')
   })
 
   it('expone contador vivo con aria-live para lectores de pantalla', () => {
@@ -171,28 +174,30 @@ describe('ImageCarousel', () => {
     expect(live.closest('p')).toHaveAttribute('aria-atomic', 'true')
   })
 
-  it('con foco en «siguiente», ArrowLeft navega al slide previo (circular desde el primero)', () => {
+  it('con foco en «siguiente», ArrowLeft navega al slide previo (circular desde el primero)', async () => {
+    const user = userEvent.setup()
     renderWithMotion(
       <ImageCarousel slides={slides} imageAlt="Teclado" autoplay={false} />
     )
 
     const nextBtn = screen.getByRole('button', { name: /imagen siguiente/i })
-    fireEvent.focus(nextBtn)
-    fireEvent.keyDown(nextBtn, { key: 'ArrowLeft' })
+    nextBtn.focus()
+    await user.keyboard('{ArrowLeft}')
 
     expect(
       screen.getByRole('img', { name: /teclado — imagen 2 de 2/i })
     ).toHaveAttribute('src', '/img/b.png')
   })
 
-  it('con foco en «anterior», ArrowRight navega al slide siguiente', () => {
+  it('con foco en «anterior», ArrowRight navega al slide siguiente', async () => {
+    const user = userEvent.setup()
     renderWithMotion(
       <ImageCarousel slides={slides} imageAlt="Teclado2" autoplay={false} />
     )
 
     const prevBtn = screen.getByRole('button', { name: /imagen anterior/i })
-    fireEvent.focus(prevBtn)
-    fireEvent.keyDown(prevBtn, { key: 'ArrowRight' })
+    prevBtn.focus()
+    await user.keyboard('{ArrowRight}')
 
     expect(
       screen.getByRole('img', { name: /teclado2 — imagen 2 de 2/i })

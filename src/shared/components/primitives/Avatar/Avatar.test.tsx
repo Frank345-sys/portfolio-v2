@@ -29,5 +29,7 @@ describe('Avatar', () => {
     expect(photo).toBeInTheDocument()
     expect(photo).toHaveAttribute('src', 'https://example.com/a.png')
     expect(photo).toHaveAttribute('alt', 'Foto de Ada Beta')
+    expect(photo).toHaveAttribute('width', '1')
+    expect(photo).toHaveAttribute('height', '1')
   })
 })

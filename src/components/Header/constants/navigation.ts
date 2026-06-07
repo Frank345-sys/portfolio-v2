@@ -20,7 +20,7 @@ import {
 export { SECTION_ANCHOR_ID, sectionHref }
 
 /** Reexport desde `siteProfile` — mismo contrato único para `Header`/`SiteLogo`/`MobileDrawer` y tests del módulo. */
-export { SITE_DISPLAY_NAME } from '@/shared/constants/siteProfile'
+export { SITE_DISPLAY_NAME } from '@/shared/constants/siteProfile/siteProfile'
 
 /**
  * Ítems de navegación por defecto. Cada `href` debe coincidir con `SECTION_ANCHOR_ID` / `sectionHref`

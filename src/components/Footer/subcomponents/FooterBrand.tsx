@@ -8,11 +8,10 @@ import { SiteLogo } from '@/shared/components/primitives/SiteLogo'
 import { LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
-import {
-  FOOTER_BRAND,
-  FOOTER_BRAND_LANDMARK_HEADING_ID,
-  FOOTER_BRAND_LANDMARK_LABEL,
-} from '../constants'
+import { FOOTER_BRAND, FOOTER_BRAND_LANDMARK_LABEL } from '../constants'
+
+/** `id` del `h2` sr-only del bloque marca (`FooterBrand`). */
+const FOOTER_BRAND_LANDMARK_HEADING_ID = 'footer-brand-heading' as const
 
 /**
  * @module components/Footer/subcomponents/FooterBrand/FooterBrand

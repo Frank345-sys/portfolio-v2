@@ -1,5 +1,5 @@
 /**
- * Pruebas de `useProjectsModal` — apertura, cierre y alias `close` / `dismiss`.
+ * Pruebas de `useProjectsModal` — apertura y cierre.
  *
  * @fileoverview `renderHook` con lista mínima de proyectos enriquecidos manualmente.
  * @remarks No depende de scroll sync ni carrusel; la persistencia del slide la prueba `useProjectsSection`.
@@ -61,24 +61,5 @@ describe('useProjectsModal', () => {
 
     expect(result.current.index).toBeNull()
     expect(result.current.slide).toBe(3)
-  })
-
-  it('close y dismiss son la misma función (contrato documentado en UseProjectsModalResult)', () => {
-    const { result } = renderHook(() => useProjectsModal({ projects }))
-
-    expect(result.current.close).toBe(result.current.dismiss)
-  })
-
-  it('dismiss cierra el modal', () => {
-    const { result } = renderHook(() => useProjectsModal({ projects }))
-
-    act(() => {
-      result.current.open(0, 2)
-    })
-    act(() => {
-      result.current.dismiss()
-    })
-
-    expect(result.current.index).toBeNull()
   })
 })

@@ -13,8 +13,6 @@ import {
   type UseIsIntersectingOptions,
 } from '../useIsIntersecting'
 
-import type { Ref } from 'react'
-
 let observerOptions: IntersectionObserverInit | undefined
 let intersectionObserverCallback: IntersectionObserverCallback | undefined
 const disconnectSpy = vi.fn()
@@ -60,7 +58,7 @@ function Harness({ options }: { options?: UseIsIntersectingOptions }) {
   const [ref, isIntersecting] = useIsIntersecting(options)
 
   return (
-    <div ref={ref as Ref<HTMLDivElement | null>} data-testid="visible">
+    <div ref={ref} data-testid="visible">
       {String(isIntersecting)}
     </div>
   )

@@ -9,17 +9,17 @@ import {
   SECTION_ANCHOR_ID,
   sectionHref,
 } from '@/shared/constants/sectionAnchors'
-import { SITE_DISPLAY_NAME } from '@/shared/constants/siteProfile'
+import { SITE_DISPLAY_NAME } from '@/shared/constants/siteProfile/siteProfile'
 import { ANIMATION, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { CodeIcon } from '@/shared/icons'
 import { cn } from '@/shared/utils/cn'
 
 /** Tamaño del `CodeIcon` junto al nombre (cabecera / drawer / pie). */
-const SITE_LOGO_ICON_CLASS = 'h-7 w-7 md:h-10 md:w-10' as const
+const SITE_LOGO_ICON_CLASS = 'size-7 md:size-10'
 
 /** Clases base del `<a>` de marca: foco visible y fila ícono + nombre. */
 const SITE_LOGO_LINK_DEFAULT =
-  'focus-visible:ring-information-base flex w-fit shrink-0 items-center gap-2 rounded-md no-underline outline-none focus-visible:ring-2 focus-visible:ring-offset-2' as const
+  'focus-visible:ring-information-base flex w-fit items-center gap-2 rounded-md no-underline outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
 
 /** Tipografía por defecto del nombre junto al ícono (cabecera / drawer). */
 const SITE_LOGO_NAME_CLASS = cn(TYPOGRAPHY.label.default, 'tracking-tight')

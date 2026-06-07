@@ -2,16 +2,11 @@
  * Estado del modal de vista ampliada de un proyecto (índice, slide y apertura/cierre).
  *
  * @module components/ProjectsSection/hooks/useProjectsModal
- * @fileoverview Expone `open` y cierre vía `close` / `dismiss` (misma función: limpia el índice del modal).
- * @remarks La persistencia del slide en tarjeta la coordina el orquestador (`handleCloseModal`); `dismiss` solo limpia el índice (p. ej. scroll sync al salir de `lg`).
+ * @fileoverview Expone `open` y cierre vía `close` (limpia el índice del modal).
+ * @remarks La persistencia del slide en tarjeta la coordina el orquestador (`handleCloseModal`); `close` solo limpia el índice (p. ej. scroll sync al salir de `lg`).
  */
 
-import {
-  useCallback,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from 'react'
+import { useState, type Dispatch, type SetStateAction } from 'react'
 
 import type { ProjectWithSlides } from '../types'
 
@@ -26,11 +21,6 @@ interface UseProjectsModalResult {
   setSlide: Dispatch<SetStateAction<number>>
   open: (projectIndex: number, slideIndex: number) => void
   close: () => void
-  /**
-   * Misma referencia que `close` en runtime (`close: dismiss` en el return).
-   * Nombre reservado para scroll sync (`onExitLgLayout`): cierre sin persistencia en tarjeta vía orquestador.
-   */
-  dismiss: () => void
 }
 
 /**
@@ -39,30 +29,24 @@ interface UseProjectsModalResult {
 export function useProjectsModal({
   projects,
 }: UseProjectsModalParams): UseProjectsModalResult {
-  const [modalProjectIndex, setModalProjectIndex] = useState<number | null>(
-    null
-  )
-  const [modalSlide, setModalSlide] = useState(0)
+  const [index, setIndex] = useState<number | null>(null)
+  const [slide, setSlide] = useState(0)
 
-  const dismiss = useCallback(() => {
-    setModalProjectIndex(null)
-  }, [])
+  function close() {
+    setIndex(null)
+  }
 
-  const open = useCallback((projectIndex: number, slideIndex: number) => {
-    setModalProjectIndex(projectIndex)
-    setModalSlide(slideIndex)
-  }, [])
-
-  const project =
-    modalProjectIndex !== null ? projects[modalProjectIndex] : undefined
+  function open(projectIndex: number, slideIndex: number) {
+    setIndex(projectIndex)
+    setSlide(slideIndex)
+  }
 
   return {
-    index: modalProjectIndex,
-    slide: modalSlide,
-    project,
-    setSlide: setModalSlide,
+    index,
+    slide,
+    project: index !== null ? projects[index] : undefined,
+    setSlide,
     open,
-    close: dismiss,
-    dismiss,
+    close,
   }
 }

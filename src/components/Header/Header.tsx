@@ -40,7 +40,7 @@ interface HeaderProps {
  * Landmark **`header`**, nav desktop (scroll-spy + subrayado Motion), `ThemeToggle` y drawer móvil.
  *
  * **Estado** — {@link useHeader} (`./hooks/useHeader.ts`):
- * apertura del drawer (`isMobileDrawerOpen` en &lt; `lg`), `isAtTop` (sombra / fondo),
+ * drawer (`isOpen` + `isLgMin`), `isAtTop` (sombra / fondo),
  * `activeNavHref` (scroll-spy) y **`desktopNavUnderlineMotion`** (`m.span`).
  *
  * **ID del panel drawer:** `./constants/navigation.ts` (**`HEADER_MOBILE_DRAWER_PANEL_ID`** ↔ `HamburgerButton` **`aria-controls`**).
@@ -59,21 +59,24 @@ export function Header({
   className,
 }: HeaderProps) {
   const {
-    isMobileDrawerOpen,
+    isOpen,
     setIsOpen,
     isAtTop,
     activeNavHref,
     desktopNavUnderlineMotion,
     rowRef,
     registerLink,
+    isLgMin,
   } = useHeader(navItems)
+
+  const isDrawerOpen = isOpen && !isLgMin
 
   return (
     <header
       className={cn(
-        'bg-bg-white fixed top-0 w-full',
-        isAtTop ? 'bg-transparent' : 'shadow-elevation-md',
-        ANIMATION.transition.shadow,
+        'fixed top-0 w-full',
+        isAtTop ? 'bg-transparent' : 'bg-bg-white shadow-elevation-md',
+        ANIMATION.transition.colors,
         Z.header,
         className
       )}
@@ -117,22 +120,22 @@ export function Header({
           </div>
         </nav>
 
-        {/* ThemeToggle desktop + hamburguesa */}
+        {/* Slot derecho: tema en desktop, menú en móvil */}
         <div className="flex shrink-0 items-center gap-3">
-          <div className="hidden lg:block">
+          {isLgMin ? (
             <ThemeToggle />
-          </div>
-          <HamburgerButton
-            isOpen={isMobileDrawerOpen}
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="lg:hidden"
-          />
+          ) : (
+            <HamburgerButton
+              isOpen={isDrawerOpen}
+              onClick={() => setIsOpen((prev) => !prev)}
+            />
+          )}
         </div>
       </div>
 
       {/* Drawer*/}
       <MobileDrawer
-        isOpen={isMobileDrawerOpen}
+        isOpen={isDrawerOpen}
         onClose={() => setIsOpen(false)}
         displayName={siteName}
         navItems={navItems}

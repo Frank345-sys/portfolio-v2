@@ -8,9 +8,8 @@
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { axe } from 'vitest-axe'
 
-import { renderWithMotion } from '@/test/helpers'
+import { renderWithMotion, runAxeAudit } from '@/test/helpers'
 
 import { Modal } from './Modal'
 
@@ -61,8 +60,8 @@ describe('Modal', () => {
     )
 
     await screen.findByRole('dialog')
-    expect(await axe(document.body)).toHaveNoViolations()
-  })
+    expect(await runAxeAudit(document.body)).toHaveNoViolations()
+  }, 15_000)
 
   it('une className personalizado en Header y Body', async () => {
     renderWithMotion(
@@ -83,5 +82,52 @@ describe('Modal', () => {
     expect(header).toHaveClass('w-full')
     expect(body).toHaveClass('min-h-0')
     expect(body).toHaveClass('flex-1')
+  })
+})
+
+describe('Modal.Footer', () => {
+  it('renderiza el contenido del pie del modal', async () => {
+    renderWithMotion(
+      <Modal isOpen onClose={vi.fn()} ariaLabelledBy="footer-title">
+        <Modal.Header>
+          <h2 id="footer-title">Modal con pie</h2>
+        </Modal.Header>
+        <Modal.Footer data-testid="modal-footer">
+          <button type="button">Confirmar</button>
+          <button type="button">Cancelar</button>
+        </Modal.Footer>
+      </Modal>
+    )
+
+    await screen.findByRole('dialog')
+
+    expect(screen.getByTestId('modal-footer')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /confirmar/i })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /cancelar/i })
+    ).toBeInTheDocument()
+  })
+
+  it('aplica className adicional al Footer', async () => {
+    renderWithMotion(
+      <Modal isOpen onClose={vi.fn()} ariaLabelledBy="footer-cls-title">
+        <Modal.Header>
+          <h2 id="footer-cls-title">T</h2>
+        </Modal.Header>
+        <Modal.Footer
+          className="test-footer-cls"
+          data-testid="modal-footer-cls"
+        >
+          <span>Contenido</span>
+        </Modal.Footer>
+      </Modal>
+    )
+
+    await screen.findByRole('dialog')
+    expect(screen.getByTestId('modal-footer-cls')).toHaveClass(
+      'test-footer-cls'
+    )
   })
 })

@@ -7,7 +7,12 @@
 import { LAYOUT, TYPOGRAPHY } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
-import { FOOTER_BRAND, FOOTER_BUILT_WITH } from '../constants'
+import { FOOTER_BRAND } from '../constants'
+
+/**
+ * Tecnologías citadas en la línea “Portafolio construido con …” (`FooterBottom`).
+ */
+const FOOTER_BUILT_WITH = 'React, TypeScript y Vite' as const
 
 /**
  * @module components/Footer/subcomponents/FooterBottom/FooterBottom
@@ -19,7 +24,6 @@ import { FOOTER_BRAND, FOOTER_BUILT_WITH } from '../constants'
  * <FooterBottom />
  * ```
  * @see {@link FOOTER_BRAND} para el nombre en el copyright
- * @see {@link FOOTER_BUILT_WITH} para las tecnologías citadas
  */
 export function FooterBottom() {
   // Año calculado en render para mantenerse actualizado sin rebuild
@@ -34,9 +38,7 @@ export function FooterBottom() {
       />
       <div className="flex flex-col gap-2 text-center md:flex-row md:items-center md:justify-between md:text-start">
         <p className={TYPOGRAPHY.paragraph.muted}>
-          © {year} {FOOTER_BRAND.name}
-          {'. '}
-          Todos los derechos reservados.
+          © {year} {FOOTER_BRAND.name}. Todos los derechos reservados.
         </p>
         <p className={TYPOGRAPHY.special.caption}>
           Portafolio construido con {FOOTER_BUILT_WITH}.

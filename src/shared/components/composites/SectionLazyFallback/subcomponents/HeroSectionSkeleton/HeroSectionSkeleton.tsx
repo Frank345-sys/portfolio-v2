@@ -61,12 +61,12 @@ export function HeroSectionSkeleton() {
 
       <div
         className={cn(
-          'relative flex h-full w-full flex-col items-center justify-center backdrop-blur-[1.5px]',
+          'relative flex size-full flex-col items-center justify-center backdrop-blur-[1.5px]',
           Z.raised
         )}
         data-testid="hero-section-skeleton-layer"
       >
-        <section className="flex h-full w-full items-center justify-center">
+        <section className="flex size-full items-center justify-center">
           <div className={cn(LAYOUT.container.narrow, LAYOUT.px)}>
             <div className="flex flex-col items-center justify-center gap-5 text-center lg:gap-7">
               <header className="flex flex-col items-center gap-2">

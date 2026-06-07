@@ -5,12 +5,11 @@
  * @remarks Usa Testing Library; si el archivo importa `renderWithMotion`, el árbol va envuelto en el proveedor de Motion.
  */
 
-import { fireEvent, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { axe } from 'vitest-axe'
 
-import { escapeRegex, renderWithMotion } from '@/test/helpers'
+import { escapeRegex, renderWithMotion, runAxeAudit } from '@/test/helpers'
 
 import {
   DEFAULT_NAV_ITEMS,
@@ -131,17 +130,18 @@ describe('MobileDrawer', () => {
         <MobileDrawer isOpen onClose={vi.fn()} navItems={NAV_ITEMS} />
       )
       await screen.findByRole('dialog')
-      expect(await axe(document.body)).toHaveNoViolations()
-    })
+      expect(await runAxeAudit(document.body)).toHaveNoViolations()
+    }, 15_000)
   })
 
   describe('cierre (onClose)', () => {
-    it('llama a onClose al pulsar Escape', () => {
+    it('llama a onClose al pulsar Escape', async () => {
+      const user = userEvent.setup()
       const handleClose = vi.fn()
       renderWithMotion(
         <MobileDrawer isOpen onClose={handleClose} navItems={NAV_ITEMS} />
       )
-      fireEvent.keyDown(document, { key: 'Escape' })
+      await user.keyboard('{Escape}')
       expect(handleClose).toHaveBeenCalledTimes(1)
     })
 

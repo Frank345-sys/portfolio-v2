@@ -5,7 +5,7 @@
  * @remarks Usa Testing Library; si el archivo importa `renderWithMotion`, el árbol va envuelto en el proveedor de Motion.
  */
 
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
 
@@ -13,15 +13,11 @@ import { ImageCarouselNavButton } from './ImageCarouselNavButton'
 
 describe('ImageCarouselNavButton', () => {
   it('renderiza botón anterior con aria-label', () => {
-    const onClick = vi.fn()
-    const onArrowNavigate = vi.fn()
-
     render(
       <ImageCarouselNavButton
         direction="prev"
-        onClick={onClick}
-        onArrowNavigate={onArrowNavigate}
-        ariaLabel="Ir a la imagen anterior"
+        onClick={vi.fn()}
+        aria-label="Ir a la imagen anterior"
       />
     )
 
@@ -31,15 +27,11 @@ describe('ImageCarouselNavButton', () => {
   })
 
   it('renderiza botón siguiente con aria-label', () => {
-    const onClick = vi.fn()
-    const onArrowNavigate = vi.fn()
-
     render(
       <ImageCarouselNavButton
         direction="next"
-        onClick={onClick}
-        onArrowNavigate={onArrowNavigate}
-        ariaLabel="Ir a la imagen siguiente"
+        onClick={vi.fn()}
+        aria-label="Ir a la imagen siguiente"
       />
     )
 
@@ -51,57 +43,59 @@ describe('ImageCarouselNavButton', () => {
   it('dispara onClick al hacer clic', async () => {
     const user = userEvent.setup()
     const onClick = vi.fn()
-    const onArrowNavigate = vi.fn()
 
     render(
       <ImageCarouselNavButton
         direction="next"
         onClick={onClick}
-        onArrowNavigate={onArrowNavigate}
-        ariaLabel="Siguiente"
+        aria-label="Siguiente"
       />
     )
 
     await user.click(screen.getByRole('button', { name: /siguiente/i }))
     expect(onClick).toHaveBeenCalledTimes(1)
-    expect(onArrowNavigate).not.toHaveBeenCalled()
   })
 
-  it('con ArrowLeft llama onArrowNavigate("prev")', () => {
-    const onClick = vi.fn()
-    const onArrowNavigate = vi.fn()
+  it('con ArrowLeft invoca onKeyDown pasado como prop', async () => {
+    const user = userEvent.setup()
+    const onKeyDown = vi.fn()
 
     render(
       <ImageCarouselNavButton
         direction="next"
-        onClick={onClick}
-        onArrowNavigate={onArrowNavigate}
-        ariaLabel="Nav"
+        onClick={vi.fn()}
+        onKeyDown={onKeyDown}
+        aria-label="Nav"
       />
     )
 
     const button = screen.getByRole('button', { name: /nav/i })
-    fireEvent.keyDown(button, { key: 'ArrowLeft' })
+    await user.click(button)
+    await user.keyboard('{ArrowLeft}')
 
-    expect(onArrowNavigate).toHaveBeenCalledWith('prev')
+    expect(onKeyDown).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'ArrowLeft' })
+    )
   })
 
-  it('con ArrowRight llama onArrowNavigate("next")', () => {
-    const onArrowNavigate = vi.fn()
+  it('con ArrowRight invoca onKeyDown pasado como prop', async () => {
+    const user = userEvent.setup()
+    const onKeyDown = vi.fn()
 
     render(
       <ImageCarouselNavButton
         direction="prev"
         onClick={vi.fn()}
-        onArrowNavigate={onArrowNavigate}
-        ariaLabel="Nav"
+        onKeyDown={onKeyDown}
+        aria-label="Nav"
       />
     )
 
-    fireEvent.keyDown(screen.getByRole('button', { name: /nav/i }), {
-      key: 'ArrowRight',
-    })
+    await user.click(screen.getByRole('button', { name: /nav/i }))
+    await user.keyboard('{ArrowRight}')
 
-    expect(onArrowNavigate).toHaveBeenCalledWith('next')
+    expect(onKeyDown).toHaveBeenCalledWith(
+      expect.objectContaining({ key: 'ArrowRight' })
+    )
   })
 })

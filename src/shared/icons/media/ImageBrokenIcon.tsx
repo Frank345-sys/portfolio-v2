@@ -14,7 +14,7 @@ import { cn } from '@/shared/utils/cn'
  *
  * @example
  * ```tsx
- * <ImageBrokenIcon className="h-10 w-10 text-text-soft" aria-hidden />
+ * <ImageBrokenIcon className="size-10 text-text-soft" aria-hidden />
  * ```
  */
 export function ImageBrokenIcon({
@@ -28,7 +28,7 @@ export function ImageBrokenIcon({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden={ariaHidden}
-      className={cn('h-12 w-12 shrink-0', className)}
+      className={cn('size-12', className)}
       {...props}
     >
       <path

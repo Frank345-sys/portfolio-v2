@@ -9,8 +9,11 @@
  * `AboutExperience.test.tsx` al modificarlas.
  */
 import type { AboutTimelineEntry } from '@/components/AboutSection/types'
-import { TIMELINE_CHIP } from '@/shared/components/primitives/TimelineItem/constants'
-import { SITE_PROFILE } from '@/shared/constants/siteProfile'
+import {
+  TIMELINE_CHIP,
+  TIMELINE_MODALIDAD,
+} from '@/shared/components/primitives/TimelineItem/constants'
+import { SITE_PROFILE } from '@/shared/constants/siteProfile/siteProfile'
 import { SKILL_LABEL } from '@/shared/constants/skills/skillLabels'
 
 import { ABOUT_TIMELINE_LEGEND_ITEMS } from '../../constants'
@@ -27,6 +30,7 @@ export const ABOUT_EXPERIENCE: AboutTimelineEntry[] = [
     periodEndDatetime: '2026-02-28',
     heading: SITE_PROFILE.role,
     company: 'B Life Suplementos Fitness · Puebla, MX',
+    modalidad: TIMELINE_MODALIDAD.PRESENCIAL,
     description:
       'E-commerce, B2B, ERP y landings: componentes reutilizables, refactor de legacy, performance y alineación de UI/UX con coordinación a back-end.',
     chips: [
@@ -43,12 +47,41 @@ export const ABOUT_EXPERIENCE: AboutTimelineEntry[] = [
       TIMELINE_CHIP.applied(SKILL_LABEL.REACT),
       TIMELINE_CHIP.applied(SKILL_LABEL.GIT_GITHUB),
       TIMELINE_CHIP.applied(SKILL_LABEL.FIGMA),
+      TIMELINE_CHIP.learned(SKILL_LABEL.NEXT),
       TIMELINE_CHIP.learned(SKILL_LABEL.ASTRO),
       TIMELINE_CHIP.learned(SKILL_LABEL.FRAMER_MOTION),
       TIMELINE_CHIP.learned(SKILL_LABEL.TYPESCRIPT),
       TIMELINE_CHIP.learned(SKILL_LABEL.UI_UX),
       TIMELINE_CHIP.learned(SKILL_LABEL.TAILWIND),
       TIMELINE_CHIP.learned(SKILL_LABEL.PANDA_CSS),
+    ],
+  },
+  {
+    period: 'Jun 2026 — Actualidad',
+    periodStartDatetime: '2026-06-01',
+    heading: SITE_PROFILE.role,
+    company: 'DIDACTECA · Puebla, MX',
+    modalidad: TIMELINE_MODALIDAD.HIBRIDO,
+    description:
+      'Desarrollo Front-end de un sistema de gestión de inventario y almacén para Editorial DIDACTECA. Participación en la construcción de interfaces responsivas, componentes reutilizables e integración de APIs, trabajando bajo metodologías ágiles (SCRUM) para optimizar procesos internos y mejorar la experiencia de usuario.',
+    chips: [
+      TIMELINE_CHIP.technology('ERP interno'),
+      TIMELINE_CHIP.applied(SKILL_LABEL.HTML5),
+      TIMELINE_CHIP.applied(SKILL_LABEL.CSS3),
+      TIMELINE_CHIP.applied(SKILL_LABEL.JAVASCRIPT_ES6_PLUS),
+      TIMELINE_CHIP.applied(SKILL_LABEL.REACT),
+      TIMELINE_CHIP.applied(SKILL_LABEL.NEXT),
+      TIMELINE_CHIP.applied(SKILL_LABEL.GIT_GITHUB),
+      TIMELINE_CHIP.applied(SKILL_LABEL.FIGMA),
+      TIMELINE_CHIP.applied(SKILL_LABEL.FRAMER_MOTION),
+      TIMELINE_CHIP.applied(SKILL_LABEL.TYPESCRIPT),
+      TIMELINE_CHIP.applied(SKILL_LABEL.UI_UX),
+      TIMELINE_CHIP.applied(SKILL_LABEL.TAILWIND),
+      TIMELINE_CHIP.learned(SKILL_LABEL.SCRUM),
+      TIMELINE_CHIP.learned(SKILL_LABEL.TURBOREPO),
+      TIMELINE_CHIP.learned(SKILL_LABEL.APOLLO_CLIENT),
+      TIMELINE_CHIP.learned(SKILL_LABEL.CI_CD),
+      TIMELINE_CHIP.learned(SKILL_LABEL.FRONTEND_ARCHITECTURE),
     ],
   },
 ]

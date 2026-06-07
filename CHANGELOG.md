@@ -4,6 +4,48 @@ Registro de cambios relevantes del proyecto. El formato se inspira en [Keep a Ch
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-06-07
+
+### Añadido
+
+- Script **`optimize:public`** (`scripts/optimize-public-assets.mjs`) para comprimir assets en `public/`.
+- **`ThemeProvider`** con transición de tema (`runThemeTransition`); **`useTheme`** pasa a consumir contexto.
+- Hook **`useScrollAnimationPause`** y **`useFloatingBoxFloat`** en BackgroundBoxes (pausa de animaciones decorativas durante scroll).
+- Utilidad **`backgroundBoxesViewportTier`** para densidad de cajas según viewport.
+- Constantes modulares: **`siteProfile/`**, **`theme.ts`**, **`imageIntrinsic.ts`**; enlaces legacy de portfolio en **`portfolioLegacyLinks.ts`**.
+- Helper de test **`expectNoAxeViolations`** para aserciones axe reutilizables.
+- **`TimelineItem`**: prop opcional **`modalidad`** (`TIMELINE_MODALIDAD`: Presencial, Híbrido, Remoto) visible junto a la empresa/institución.
+- **Experiencia laboral DIDACTECA** en `ABOUT_EXPERIENCE` (Jun 2026 — Actualidad) con chips de skills aprendidas.
+- Etiquetas de stack **`SCRUM`**, **`Turborepo`**, **`Apollo Client`**, **`CI/CD`** y **`Arquitectura Front-end`** en `skillLabels`, `AboutSkills` y timeline de experiencia.
+
+### Cambiado
+
+- **Toolchain React Doctor:** migración a **`doctor.config.ts`** (v0.4.0); diff local por defecto vs **`develop`**; `react-doctor:full` con **`--diff false`**; CI falla si hay issues tras comentar el PR; auditoría completa **100/100**.
+- **Hooks (simplificación):** refactor de hooks de **BackgroundBoxes**, **Header**, **ProjectsSection**, **`useImageCarousel`**, **`useIsIntersecting`** y **`useMediaQuery`** — menos efectos/refs redundantes, sin `useCallback`/`useMemo` manual (React Compiler); **`useIsIntersecting`** pasa a callback ref (React Doctor).
+- **`useBackgroundBoxes`:** elimina **`useReducedMotion`**; **`prefers-reduced-motion`** para el parallax de puntero queda centralizado en **`useParallaxMouse`** (`parallaxActive`), alineado con **`MotionConfig`** global para animaciones Motion.
+- **`breakpoints`:** **`MEDIA_QUERY_REDUCED_MOTION`** compartida; convención **`as const`** unificada en constantes numéricas y media queries del proyecto.
+- **ProjectsSection**: hooks simplificados (`useProjectsModal`, `useProjectsCarousel`, `useProjectsScrollSync`, `useProjectsSection`); atributos de imagen resueltos en el componente; menos memoización manual (React Compiler).
+- **Header**: hooks simplificados (`useHeader`, `useNavScrollSpy`, `useNavUnderlinePosition`); medición del subrayado sin RAF innecesario.
+- **`useImageCarousel`** y **`useTimelineItem`**: eliminada memoización prematura; variantes Motion del carrusel como constante de módulo.
+- **BackgroundBoxes**: parallax y flotación refactorizados; tier de viewport en generador de cajas; pausa por scroll con `useState` en lugar de `useReducer`.
+- **`runThemeTransition`:** consume **`MEDIA_QUERY_REDUCED_MOTION`** desde **`breakpoints`**.
+- **Assets públicos** optimizados (CV PDF, foto de perfil, `og-image.png`).
+- Tests ampliados con **vitest-axe** y helpers compartidos en App, Modal, Header, ProjectInfo, ErrorBoundary y secciones lazy.
+- **About — formación y experiencia**: modalidad en ITSX (Presencial), TripleTen (Remoto), B Life (Presencial) y DIDACTECA (Híbrido).
+- **AboutBio**: copy de «Quién soy» reequilibrado (perfil general, no centrado en un solo empleador); párrafo de impacto con **SEO** (metadatos, HTML semántico, Core Web Vitals) y **SCRUM**.
+- **AboutHero**: `fullName` y `overline` centralizados en `ABOUT_HERO`; layout del avatar sin margen extra en desktop.
+- **Avatar**: props `loading`, `fetchPriority`, `onImageError` y `onImageLoad`; foto con carga prioritaria por defecto (`eager` / `high`).
+- **ProfileAside**: disponibilidad actualizada (remoto y jornada parcial disponibles; híbrido, presencial y relocalización no disponibles).
+
+### Arreglado
+
+- **AboutExperience.test**: aserciones acotadas al `listitem` del timeline cuando hay textos duplicados (mismo rol o chips entre entradas).
+- **TimelineItem.test**: cobertura de `modalidad`; acento `information` validado en el contenedor de empresa.
+
+### Eliminado
+
+- **`siteProfile.ts`** monolítico (sustituido por carpeta `siteProfile/`).
+
 ## [1.7.0] - 2026-06-02
 
 ### Añadido

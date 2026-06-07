@@ -7,7 +7,6 @@
 
 import { render, screen, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { useMemo } from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 import {
@@ -27,14 +26,10 @@ function TestHarness({ itemCount }: { itemCount: number }) {
     scrollItemIntoView,
   } = useProjectsScrollSync(itemCount)
 
-  const slotKeys = useMemo(
-    () =>
-      Array.from(
-        { length: itemCount },
-        (_, position) =>
-          `scroll-sync-harness-c${String(itemCount)}-p${String(position)}`
-      ),
-    [itemCount]
+  const slotKeys = Array.from(
+    { length: itemCount },
+    (_, position) =>
+      `scroll-sync-harness-c${String(itemCount)}-p${String(position)}`
   )
 
   return (

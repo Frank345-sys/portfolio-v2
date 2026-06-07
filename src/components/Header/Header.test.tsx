@@ -11,7 +11,12 @@ import { act, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { makeIoEntry, renderWithMotion } from '@/test/helpers'
+import {
+  makeIoEntry,
+  renderWithMotion,
+  runAxeAudit,
+  setupMatchMedia,
+} from '@/test/helpers'
 
 import {
   DEFAULT_NAV_ITEMS,
@@ -75,6 +80,22 @@ describe('Header', () => {
    * Props públicas, landmark `banner`, nav desktop y ThemeToggle en escritorio.
    */
   describe('props, landmark y navegación desktop', () => {
+    beforeEach(() => {
+      setupMatchMedia({ lgMatches: true })
+    })
+
+    it('axe: cabecera cerrada sin violaciones conocidas', async () => {
+      renderWithMotion(<Header />)
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole('banner', { name: HEADER_LANDMARK_ARIA_LABEL })
+        ).toBeInTheDocument()
+      })
+
+      expect(await runAxeAudit(document.body)).toHaveNoViolations()
+    }, 15_000)
+
     it('usa SITE_DISPLAY_NAME si no pasas siteName', () => {
       renderWithMotion(<Header />)
       expect(screen.getByText(SITE_DISPLAY_NAME)).toBeInTheDocument()
@@ -143,6 +164,13 @@ describe('Header', () => {
       expect(screen.getByTestId('theme-toggle')).toBeInTheDocument()
     })
 
+    it('no monta el botón hamburguesa en escritorio', () => {
+      renderWithMotion(<Header />)
+      expect(
+        screen.queryByRole('button', { name: /abrir menú/i })
+      ).not.toBeInTheDocument()
+    })
+
     it('expone el landmark header con rol banner y aria-label', () => {
       renderWithMotion(<Header />)
       expect(
@@ -151,10 +179,10 @@ describe('Header', () => {
     })
 
     it('aplica className extra en el elemento header', () => {
-      const { container } = renderWithMotion(
-        <Header className="test-custom-class" />
-      )
-      expect(container.querySelector('header')).toHaveClass('test-custom-class')
+      renderWithMotion(<Header className="test-custom-class" />)
+      expect(
+        screen.getByRole('banner', { name: HEADER_LANDMARK_ARIA_LABEL })
+      ).toHaveClass('test-custom-class')
     })
   })
 
@@ -163,6 +191,10 @@ describe('Header', () => {
    * de `navItems` y ciclo de foco hamburguesa ↔ drawer.
    */
   describe('drawer móvil (estado compartido Header → Hamburger + MobileDrawer)', () => {
+    beforeEach(() => {
+      setupMatchMedia({ lgMatches: false })
+    })
+
     it('al abrir el menú aparece el dialog, la nav móvil y el hamburger pasa a expanded', async () => {
       const user = userEvent.setup()
       renderWithMotion(<Header siteName="Sitio Test" />)
@@ -252,6 +284,21 @@ describe('Header', () => {
         ).toHaveFocus()
       })
     })
+    it('no monta ThemeToggle en la barra cuando viewport < lg', () => {
+      setupMatchMedia({ lgMatches: false })
+      renderWithMotion(<Header />)
+      expect(screen.queryByTestId('theme-toggle')).not.toBeInTheDocument()
+    })
+
+    it('al abrir el drawer en móvil hay un solo ThemeToggle', async () => {
+      setupMatchMedia({ lgMatches: false })
+      const user = userEvent.setup()
+      renderWithMotion(<Header />)
+
+      await user.click(screen.getByRole('button', { name: /abrir menú/i }))
+
+      expect(screen.getAllByTestId('theme-toggle')).toHaveLength(1)
+    })
   })
 
   /**
@@ -269,6 +316,7 @@ describe('Header', () => {
       | undefined
 
     beforeEach(() => {
+      setupMatchMedia({ lgMatches: true })
       spyIoCallback = null
       intersectionObserverBefore = globalThis.IntersectionObserver
 

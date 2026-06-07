@@ -13,7 +13,7 @@ import {
   SECTION_ANCHOR_ID,
   sectionHref,
 } from '@/shared/constants/sectionAnchors'
-import { SITE_DISPLAY_NAME } from '@/shared/constants/siteProfile'
+import { SITE_DISPLAY_NAME } from '@/shared/constants/siteProfile/siteProfile'
 
 import { SiteLogo } from './SiteLogo'
 

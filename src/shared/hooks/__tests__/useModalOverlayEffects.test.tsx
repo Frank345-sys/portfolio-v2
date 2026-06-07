@@ -5,7 +5,8 @@
  * @remarks Espía `document.addEventListener` / `removeEventListener` y las llamadas `stop` / `start` de Lenis.
  */
 
-import { render, fireEvent } from '@testing-library/react'
+import { render } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 
 import { useModalOverlayEffects } from '../useModalOverlayEffects'
@@ -72,19 +73,21 @@ describe('useModalOverlayEffects', () => {
     expect(lenis.start).toHaveBeenCalledTimes(1)
   })
 
-  it('llama onClose al pulsar Escape con overlay abierto', () => {
+  it('llama onClose al pulsar Escape con overlay abierto', async () => {
+    const user = userEvent.setup()
     useLenisMock.mockReturnValue(undefined)
     const onClose = vi.fn()
     render(<Harness isOpen onClose={onClose} />)
-    fireEvent.keyDown(document, { key: 'Escape' })
+    await user.keyboard('{Escape}')
     expect(onClose).toHaveBeenCalledTimes(1)
   })
 
-  it('no llama onClose con teclas distintas a Escape', () => {
+  it('no llama onClose con teclas distintas a Escape', async () => {
+    const user = userEvent.setup()
     useLenisMock.mockReturnValue(undefined)
     const onClose = vi.fn()
     render(<Harness isOpen onClose={onClose} />)
-    fireEvent.keyDown(document, { key: 'Enter' })
+    await user.keyboard('{Enter}')
     expect(onClose).not.toHaveBeenCalled()
   })
 })

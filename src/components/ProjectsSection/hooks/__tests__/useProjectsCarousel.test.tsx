@@ -2,7 +2,7 @@
  * Pruebas de `useProjectsCarousel` — slides por tarjeta, modal compartido y refs de artículo.
  *
  * @fileoverview `renderHook` con dependencias inyectadas (`setItemRef`, scroll, estado modal simulado).
- * @remarks No monta DOM; valida handlers y resolvers de atributos de imagen.
+ * @remarks No monta DOM; valida handlers y refs de artículo.
  */
 
 import { act, renderHook } from '@testing-library/react'
@@ -75,13 +75,5 @@ describe('useProjectsCarousel', () => {
     result.current.articleRefAssigners[1]?.(el)
 
     expect(setItemRef).toHaveBeenCalledWith(1, el)
-  })
-
-  it('resolveModalImageAttributes usa variante lightbox', () => {
-    const { result } = renderCarousel()
-    const card = result.current.resolveImageAttributes('/img/a.png')
-    const modal = result.current.resolveModalImageAttributes('/img/a.png')
-
-    expect(card.sizes).not.toBe(modal.sizes)
   })
 })

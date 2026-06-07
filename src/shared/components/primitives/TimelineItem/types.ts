@@ -29,6 +29,18 @@ export const TIMELINE_CHIP_VARIANT = {
 export type TimelineChipVariant =
   (typeof TIMELINE_CHIP_VARIANT)[keyof typeof TIMELINE_CHIP_VARIANT]
 
+// ─── Modalidad ────────────────────────────────────────────────────────────────
+
+/** Valores canónicos de modalidad presencial / híbrida / remota en entradas del timeline. */
+export const TIMELINE_MODALIDAD = {
+  PRESENCIAL: 'Presencial',
+  HIBRIDO: 'Híbrido',
+  REMOTO: 'Remoto',
+} as const
+
+type TimelineModalidad =
+  (typeof TIMELINE_MODALIDAD)[keyof typeof TIMELINE_MODALIDAD]
+
 // ─── Chip ─────────────────────────────────────────────────────────────────────
 
 /**
@@ -60,6 +72,8 @@ export interface TimelineItemData {
   heading: string
   /** Institución educativa o empresa. */
   company: string
+  /** Modalidad de la cursada o del rol: presencial, híbrida o remota. */
+  modalidad?: TimelineModalidad
   /** Resumen de responsabilidades o logros. */
   description: string
   /** Chips opcionales de contexto: tecnologías, métricas e impacto de skills. */
