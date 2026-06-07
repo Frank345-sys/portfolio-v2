@@ -21,6 +21,10 @@ import { ProjectPreviewCard } from './subcomponents/ProjectPreviewCard/ProjectPr
 import { ProjectPreviewModal } from './subcomponents/ProjectPreviewModal/ProjectPreviewModal'
 import { getProjectImageAttributes } from './utils/getProjectImageAttributes'
 
+/** Resolución de atributos de imagen para el lightbox del modal — referencia estable. */
+const resolveModalImageAttributes = (src: string) =>
+  getProjectImageAttributes(src, { variant: 'lightbox' })
+
 /**
  * @module components/ProjectsSection/ProjectsSection
  *
@@ -144,9 +148,7 @@ export function ProjectsSection() {
         modalSlide={modal.slide}
         setModalSlide={modal.setSlide}
         onClose={modal.close}
-        resolveProjectImageAttributes={(src) =>
-          getProjectImageAttributes(src, { variant: 'lightbox' })
-        }
+        resolveProjectImageAttributes={resolveModalImageAttributes}
       />
     </section>
   )
