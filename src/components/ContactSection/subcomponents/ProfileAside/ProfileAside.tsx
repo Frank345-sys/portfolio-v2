@@ -24,8 +24,8 @@ import type { ReactNode } from 'react'
 
 // Columnas del dl: 3 si hay zona horaria, 2 si no — evita celda vacía en el grid.
 const timezoneCols = CONTACT_ASIDE_ZONE_LABEL_TRIM
-  ? ' xs:grid-cols-3'
-  : ' xs:grid-cols-2'
+  ? 'xs:grid-cols-3'
+  : 'xs:grid-cols-2'
 
 /**
  * Lista de servicios con dot de color por disponibilidad.
