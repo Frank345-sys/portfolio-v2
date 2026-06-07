@@ -5,14 +5,7 @@
  * @remarks {@link useTheme} consume este contexto.
  */
 
-import {
-  createContext,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react'
+import { createContext, useEffect, useState, type ReactNode } from 'react'
 
 import {
   THEME_COLOR_HEX,
@@ -109,20 +102,17 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     return () => media.removeEventListener('change', handleChange)
   }, [])
 
-  const setTheme = useCallback((next: Theme) => {
+  function setTheme(next: Theme) {
     runThemeTransition(() => {
       commitTheme(next)
       setThemeState(next)
     })
-  }, [])
+  }
 
-  const value = useMemo<ThemeContextValue>(
-    () => ({
-      isDark: theme === 'dark',
-      setTheme,
-    }),
-    [theme, setTheme]
-  )
+  const value: ThemeContextValue = {
+    isDark: theme === 'dark',
+    setTheme,
+  }
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
