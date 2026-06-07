@@ -145,7 +145,7 @@ export function ProjectInfo({
                   className={cn(
                     BADGE.special.dot,
                     BADGE.special.dotSize.sm,
-                    'bg-information-base mt-2 shrink-0'
+                    'bg-information-base mt-2'
                   )}
                   aria-hidden
                 />
