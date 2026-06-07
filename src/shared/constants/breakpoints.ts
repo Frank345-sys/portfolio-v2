@@ -26,4 +26,9 @@ export const BREAKPOINT_MIN_PX = {
  * Media queries `min-width` alineadas con los prefijos Tailwind.
  * Uso: `window.matchMedia(MEDIA_QUERY_LG_MIN).matches`
  */
-export const MEDIA_QUERY_LG_MIN = `(min-width: ${BREAKPOINT_MIN_PX.lg}px)` // ≥ 1024px
+export const MEDIA_QUERY_LG_MIN =
+  `(min-width: ${BREAKPOINT_MIN_PX.lg}px)` as const // ≥ 1024px
+
+/** Media query para respetar `prefers-reduced-motion: reduce` (autoplay, Lenis, transiciones CSS). */
+export const MEDIA_QUERY_REDUCED_MOTION =
+  '(prefers-reduced-motion: reduce)' as const
