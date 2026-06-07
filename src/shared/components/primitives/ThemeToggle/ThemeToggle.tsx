@@ -52,7 +52,7 @@ export function ThemeToggle() {
         aria-labelledby={labelId}
         onClick={toggle}
         className={cn(
-          'flex h-5 w-9 shrink-0 items-center rounded-full p-0.5',
+          'flex h-5 w-9 items-center rounded-full p-0.5',
           'focus-visible:ring-information-base cursor-pointer [--tw-ring-offset-color:var(--color-bg-weak)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
           isDark ? 'bg-information-light' : 'bg-stroke-strong/20'
         )}
