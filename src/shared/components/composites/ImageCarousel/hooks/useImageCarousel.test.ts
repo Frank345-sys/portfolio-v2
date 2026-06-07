@@ -11,6 +11,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import {
   useImageCarousel,
   IMAGE_CAROUSEL_AUTOPLAY_MS,
+  IMAGE_CAROUSEL_AUTOPLAY_PAUSE_AFTER_MANUAL_MS,
 } from './useImageCarousel'
 
 import type { MouseEvent } from 'react'
@@ -167,6 +168,39 @@ describe('useImageCarousel', () => {
     })
 
     expect(result.current.slide).toBe(1)
+  })
+
+  it('pausa autoplay tras navegación manual antes de reanudar', () => {
+    const { result } = renderHook(() =>
+      useImageCarousel({
+        slides: baseSlides,
+        imageAlt: 'X',
+        autoplay: true,
+      })
+    )
+
+    act(() => {
+      vi.advanceTimersByTime(IMAGE_CAROUSEL_AUTOPLAY_MS)
+    })
+    expect(result.current.slide).toBe(1)
+
+    act(() => {
+      result.current.goToSlide('next', true)
+    })
+    expect(result.current.slide).toBe(2)
+
+    act(() => {
+      vi.advanceTimersByTime(IMAGE_CAROUSEL_AUTOPLAY_MS)
+    })
+    expect(result.current.slide).toBe(2)
+
+    act(() => {
+      vi.advanceTimersByTime(
+        IMAGE_CAROUSEL_AUTOPLAY_PAUSE_AFTER_MANUAL_MS -
+          IMAGE_CAROUSEL_AUTOPLAY_MS
+      )
+    })
+    expect(result.current.slide).toBe(0)
   })
 
   it('no hace autoplay con prefers-reduced-motion', () => {
