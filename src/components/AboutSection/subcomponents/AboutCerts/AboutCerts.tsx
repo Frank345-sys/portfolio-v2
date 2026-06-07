@@ -22,7 +22,7 @@ import type { AboutCertId } from './types'
 import type { ComponentType, SVGProps } from 'react'
 
 /** Clase CSS para iconos de certificados. */
-const CERT_ICON_CLASS = 'size-6 shrink-0' as const
+const CERT_ICON_CLASS = 'size-6'
 
 /** Alias para componentes SVG con props nativas de `SVGSVGElement`. */
 type SvgIcon = ComponentType<SVGProps<SVGSVGElement>>
