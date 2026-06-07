@@ -28,11 +28,17 @@ jobs:
       - run: npm ci
 
       - name: Run React Doctor (diff vs base branch)
+        id: react-doctor
         env:
           BASE_REF: ${{ github.event.pull_request.base.ref }}
+        continue-on-error: true
         run: |
           git fetch origin "${BASE_REF}"
-          npm exec react-doctor -- . --verbose -y --diff "origin/${BASE_REF}" --pr-comment > react-doctor-report.txt 2>&1 || true
+          set +e
+          npm exec react-doctor -- . --verbose -y --blocking error --diff "origin/${BASE_REF}" --pr-comment > react-doctor-report.txt 2>&1
+          exit_code=$?
+          set -e
+          echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
 
       - name: Comment PR with report
         uses: actions/github-script@v7
@@ -57,7 +63,7 @@ jobs:
               '```',
               '</details>',
               '',
-              '> Generado automáticamente en cada PR hacia `main` o `develop`. Auditoría completa local: `npm run react-doctor:full`.',
+              '> Generado automáticamente en cada PR hacia `main` o `develop`. Config: `doctor.config.ts` (`deadCode: false`). Auditoría completa local: `npm run react-doctor:full`.',
             ].join('\n');
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -65,5 +71,13 @@ jobs:
               repo: context.repo.repo,
               body,
             });
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+
+      - name: Fail if React Doctor reported issues
+        if: steps.react-doctor.outputs.exit_code != '0'
+        run: |
+          echo "React Doctor encontró issues. Revisa el comentario del PR o ejecuta: npm run react-doctor -- --diff ${BASE_REF}"
+          exit 1
         env:
           BASE_REF: ${{ github.event.pull_request.base.ref }}
