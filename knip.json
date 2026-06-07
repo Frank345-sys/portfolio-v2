@@ -1,4 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": ["doctor.config.ts"],
   "ignoreFiles": ["src/test/vitest-axe.d.ts"]
 }
