@@ -219,7 +219,7 @@ export const ANIMATION = {
 
     /**
      * @use Indicador de proceso en curso — spinner circular.
-     * @combine Dimensiones explícitas via `cn()`: `cn(ANIMATION.loading.spinner, 'h-5 w-5')`
+     * @combine Dimensiones explícitas via `cn()`: `cn(ANIMATION.loading.spinner, 'size-5')`
      */
     spinner:
       'animate-spin rounded-full border-2 border-stroke-soft border-t-information-base',
