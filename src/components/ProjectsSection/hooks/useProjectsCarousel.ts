@@ -7,7 +7,6 @@
  */
 
 import {
-  useMemo,
   useState,
   type Dispatch,
   type MouseEvent,
@@ -53,15 +52,11 @@ export function useProjectsCarousel({
     }))
   }
 
-  const articleRefAssigners = useMemo(
-    () =>
-      Array.from(
-        { length: projectCount },
-        (_, i) => (el: HTMLElement | null) => {
-          setItemRef(i, el)
-        }
-      ),
-    [projectCount, setItemRef]
+  const articleRefAssigners = Array.from(
+    { length: projectCount },
+    (_, i) => (el: HTMLElement | null) => {
+      setItemRef(i, el)
+    }
   )
 
   function handleDotClick(event: MouseEvent<HTMLButtonElement>) {
@@ -82,10 +77,7 @@ export function useProjectsCarousel({
       setModalSlide(nextSlide)
       return
     }
-    setCardSlideByProject((prev) => ({
-      ...prev,
-      [projectIndex]: nextSlide,
-    }))
+    persistCardSlide(projectIndex, nextSlide)
   }
 
   return {
