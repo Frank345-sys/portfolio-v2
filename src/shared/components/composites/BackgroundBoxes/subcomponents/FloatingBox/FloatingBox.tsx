@@ -64,7 +64,7 @@ export function FloatingBox({
     >
       <Icon
         aria-hidden="true"
-        className="h-[50%] w-[50%] sm:h-[55%] sm:w-[55%] lg:h-[60%] lg:w-[60%]"
+        className="size-[50%] sm:size-[55%] lg:size-[60%]"
       />
     </m.li>
   )
