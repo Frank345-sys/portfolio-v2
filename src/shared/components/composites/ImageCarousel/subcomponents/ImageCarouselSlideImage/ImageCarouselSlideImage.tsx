@@ -5,15 +5,20 @@
  * @remarks Coordinar tokens (`@/shared/constants`), accesibilidad y Motion con el resto de la sección.
  */
 
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 
 import { PROJECT_CAPTURE_INTRINSIC } from '@/shared/constants/imageIntrinsic'
 import { Z } from '@/shared/constants/tokens'
 import { ImageBrokenIcon } from '@/shared/icons'
 import { cn } from '@/shared/utils/cn'
 
-/** Props del subcomponente interno `ImageCarouselSlideImage`. */
-interface ImageCarouselSlideImageProps {
+import type { ComponentPropsWithoutRef } from 'react'
+
+/** Atributos de `<img>` reutilizados; el resto los fija el componente. */
+interface ImageCarouselSlideImageProps extends Pick<
+  ComponentPropsWithoutRef<'img'>,
+  'srcSet' | 'sizes'
+> {
   /**
    * Indica si este slide es el primero de la lista.
    * El primer slide usa `loading="eager"` para evitar el flash de contenido;
@@ -22,14 +27,10 @@ interface ImageCarouselSlideImageProps {
   isFirstSlide: boolean
   /** URL de la imagen. Si es cadena vacía se renderiza un placeholder invisible. */
   src: string
-  /** `srcset` opcional resuelto por el consumidor del carrusel. */
-  srcSet?: string
-  /** `sizes` opcional resuelto por el consumidor del carrusel. */
-  sizes?: string
   /** Texto alternativo accesible de la imagen. */
   alt: string
   /** Clases extra que se añaden a la `<img>` (p. ej. efecto hover del ancestro `group`). */
-  imageClassName?: string
+  imageClassName?: string | undefined
 }
 
 /**
@@ -62,32 +63,28 @@ export function ImageCarouselSlideImage({
 }: ImageCarouselSlideImageProps) {
   const [hasImageError, setHasImageError] = useState(false)
 
-  const handleImageError = useCallback(() => {
-    setHasImageError(true)
-  }, [])
-
   if (!src) {
-    return <div className="relative h-full w-full" aria-hidden />
+    return <div className="relative size-full" aria-hidden />
   }
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative size-full">
       {!hasImageError ? (
         <img
           src={src}
           width={PROJECT_CAPTURE_INTRINSIC.width}
           height={PROJECT_CAPTURE_INTRINSIC.height}
-          {...(srcSet !== undefined ? { srcSet } : {})}
-          {...(sizes !== undefined ? { sizes } : {})}
+          srcSet={srcSet}
+          sizes={sizes}
           alt={alt}
           className={cn(
-            'absolute inset-0 h-full w-full object-cover object-top',
+            'absolute inset-0 size-full object-cover object-top',
             imageClassName
           )}
           loading={isFirstSlide ? 'eager' : 'lazy'}
           decoding="async"
           draggable={false}
-          onError={handleImageError}
+          onError={() => setHasImageError(true)}
         />
       ) : (
         <div
