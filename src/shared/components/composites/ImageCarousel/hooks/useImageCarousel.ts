@@ -7,6 +7,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
+import { MEDIA_QUERY_REDUCED_MOTION } from '@/shared/constants/breakpoints'
 import { MOTION_ANIMATION } from '@/shared/constants/motionAnimations'
 import { useMediaQuery } from '@/shared/hooks'
 
@@ -17,76 +18,27 @@ import type {
 import type { Variants } from 'motion/react'
 import type { MouseEvent } from 'react'
 
-// ---------------------------------------------------------------------------
-// Constantes internas
-// ---------------------------------------------------------------------------
+export const IMAGE_CAROUSEL_AUTOPLAY_MS = 4000 as const
+export const IMAGE_CAROUSEL_AUTOPLAY_PAUSE_AFTER_MANUAL_MS = 5500 as const
 
-/** Intervalo entre avances automáticos del carrusel (ms). */
-export const IMAGE_CAROUSEL_AUTOPLAY_MS: number = 4000 as const
-
-/**
- * Tiempo de pausa del autoplay tras una navegación manual (ms).
- *
- * Evita que el carrusel avance justo después de que el usuario haya elegido
- * un slide manualmente, lo que resultaría desorientador.
- */
-const IMAGE_CAROUSEL_AUTOPLAY_PAUSE_AFTER_MANUAL_MS: number = 5500
-
-// ---------------------------------------------------------------------------
-// Tipos
-// ---------------------------------------------------------------------------
-
-/** Valor de retorno del hook {@link useImageCarousel}. */
 interface UseImageCarouselReturn {
-  /** Índice del slide activo (0-based). */
   slide: number
-  /** Número total de slides. */
   count: number
-  /** `true` cuando hay más de un slide y el carrusel está activo. */
   hasCarousel: boolean
-  /** Variantes de Motion para la transición de entrada/salida de cada slide. */
   slideVariants: Variants
-  /** Etiqueta accesible del `role="region"` del carrusel. */
   regionLabel: string
-  /** Texto alternativo enriquecido de la imagen activa (incluye índice si hay carrusel). */
   imgAlt: string
-  /** URL del slide activo; cadena vacía si `slides` está vacío. */
   currentSrc: string
-  /** Handler de clic para el botón «siguiente» (llama `stopPropagation`). */
   goNext: (event: MouseEvent) => void
-  /** Handler de clic para el botón «anterior» (llama `stopPropagation`). */
   goPrev: (event: MouseEvent) => void
-  /**
-   * Navega a `'prev'` o `'next'` de forma circular.
-   * Con `manual = true` pausa el autoplay durante
-   * {@link IMAGE_CAROUSEL_AUTOPLAY_PAUSE_AFTER_MANUAL_MS} ms.
-   */
   goToSlide: (target: ImageCarouselNavDirection, manual?: boolean) => void
 }
 
-/** Media query para desactivar autoplay (no es animación Motion). */
-const MEDIA_QUERY_REDUCED_MOTION = '(prefers-reduced-motion: reduce)' as const
-
-type UseImageCarouselOptions = ImageCarouselSharedOptions
-
-// ---------------------------------------------------------------------------
-// Helpers puros (sin estado, fáciles de testear en aislamiento)
-// ---------------------------------------------------------------------------
-
-/**
- * Acota `index` al rango `[0, count - 1]`.
- * Devuelve `0` si `count <= 0`.
- */
 function clampSlideIndex(index: number, count: number): number {
   if (count <= 0) return 0
   return Math.min(Math.max(0, index), count - 1)
 }
 
-/**
- * Resuelve la etiqueta accesible del `role="region"` del carrusel.
- * Usa `carouselAriaLabel` si se proporciona; si no, construye
- * `"Capturas de <imageAlt>"`.
- */
 function resolveRegionLabel(
   imageAlt: string,
   carouselAriaLabel?: string
@@ -94,12 +46,6 @@ function resolveRegionLabel(
   return carouselAriaLabel ?? `Capturas de ${imageAlt}`
 }
 
-/**
- * Construye el `alt` de la imagen activa.
- *
- * - Modo carrusel (varios slides): `"<imageAlt> — imagen <n> de <total>"`.
- * - Slide único: devuelve `imageAlt` sin modificar.
- */
 function resolveImgAlt(
   imageAlt: string,
   slideIndex: number,
@@ -110,11 +56,6 @@ function resolveImgAlt(
   return `${imageAlt} — imagen ${slideIndex + 1} de ${count}`
 }
 
-/**
- * Genera las {@link Variants} de Motion para la transición fade de los slides.
- *
- * @param duration - Duración en segundos del fade entre slides.
- */
 function createSlideVariants(duration: number): Variants {
   const transition = {
     duration,
@@ -130,33 +71,6 @@ function createSlideVariants(duration: number): Variants {
 
 const IMAGE_CAROUSEL_SLIDE_VARIANTS = createSlideVariants(0.75)
 
-// ---------------------------------------------------------------------------
-// Hook principal
-// ---------------------------------------------------------------------------
-
-/**
- * Gestiona el estado, el autoplay y la navegación circular del carrusel de
- * imágenes.
- *
- * ### Modos de operación
- * - **No controlado** (por defecto): el índice activo vive dentro del hook.
- * - **Controlado**: pasa `slideIndex` + `onSlideChange` para sincronizar
- *   varios carruseles (p. ej. tarjeta y modal ampliado).
- *
- * ### Autoplay
- * El autoplay solo se activa cuando `autoplay = true`, no hay
- * `prefers-reduced-motion: reduce` y hay más de un slide. Tras una navegación manual se pausa durante
- * {@link IMAGE_CAROUSEL_AUTOPLAY_PAUSE_AFTER_MANUAL_MS} ms antes de reanudar.
- *
- * @example
- * ```tsx
- * const { slide, goNext, goPrev } = useImageCarousel({
- *   slides: ['/a.png', '/b.png'],
- *   imageAlt: 'Galería',
- *   autoplay: true,
- * })
- * ```
- */
 export function useImageCarousel({
   slides,
   imageAlt,
@@ -164,66 +78,46 @@ export function useImageCarousel({
   carouselAriaLabel,
   slideIndex: slideIndexProp,
   onSlideChange,
-}: UseImageCarouselOptions): UseImageCarouselReturn {
+}: ImageCarouselSharedOptions): UseImageCarouselReturn {
   const prefersReducedMotion = useMediaQuery(MEDIA_QUERY_REDUCED_MOTION)
-  // ── Modo controlado vs. no controlado ───────────────────────────────────
   const controlled =
     typeof slideIndexProp === 'number' && typeof onSlideChange === 'function'
 
-  // ── Estado interno ───────────────────────────────────────────────────────
   const [internalSlide, setInternalSlide] = useState(0)
-  /**
-   * Epoch que crece con cada navegación manual.
-   * Al cambiar reinicia el `useEffect` de autoplay sin incluir `slide` en
-   * las dependencias, evitando un loop de referencias.
-   */
-  const [manualNavEpoch, setManualNavEpoch] = useState(0)
-
-  // ── Refs ─────────────────────────────────────────────────────────────────
-  /** Timestamp hasta el cual el autoplay permanece pausado. */
-  const pauseAutoplayUntilRef = useRef(0)
-  /** Handle del timeout activo de autoplay (`null` si no hay ninguno). */
-  const autoplayTimeoutRef = useRef<number | null>(null)
-  /** Ref estable a `onSlideChange` para usarla dentro de efectos/callbacks. */
+  const pauseUntilRef = useRef(0)
+  const timeoutRef = useRef<number | null>(null)
   const onSlideChangeRef = useRef(onSlideChange)
+  const slideRef = useRef(0)
+  const scheduleAutoplayRef = useRef<(() => void) | null>(null)
 
-  useLayoutEffect(() => {
-    onSlideChangeRef.current = onSlideChange
-  }, [onSlideChange])
-
-  // ── Valores derivados ────────────────────────────────────────────────────
   const count = slides.length
   const hasCarousel = count > 1
-
   const slide = controlled
     ? clampSlideIndex(slideIndexProp, count)
     : internalSlide
 
-  /** Ref estable al índice activo para usarlo dentro del timeout de autoplay. */
-  const slideRef = useRef(slide)
   useLayoutEffect(() => {
+    onSlideChangeRef.current = onSlideChange
     slideRef.current = slide
-  }, [slide])
+  }, [onSlideChange, slide])
 
-  /**
-   * Navega al slide anterior o siguiente de forma circular.
-   * Con `manual = true`:
-   * 1. Cancela el timeout de autoplay pendiente.
-   * 2. Establece una pausa antes del siguiente ciclo automático.
-   * 3. Incrementa `manualNavEpoch` para reiniciar el efecto de autoplay.
-   */
+  const shouldAutoplay = autoplay && !prefersReducedMotion && hasCarousel
+
+  function clearAutoplayTimeout() {
+    if (timeoutRef.current !== null) {
+      window.clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
+    }
+  }
+
   function goToSlide(target: ImageCarouselNavDirection, manual = false) {
     if (count <= 1) return
 
     if (manual) {
-      if (autoplayTimeoutRef.current !== null) {
-        window.clearTimeout(autoplayTimeoutRef.current)
-        autoplayTimeoutRef.current = null
-      }
-      pauseAutoplayUntilRef.current =
+      pauseUntilRef.current =
         Date.now() + IMAGE_CAROUSEL_AUTOPLAY_PAUSE_AFTER_MANUAL_MS
-      if (autoplay && !prefersReducedMotion && hasCarousel) {
-        setManualNavEpoch((e) => e + 1)
+      if (shouldAutoplay) {
+        scheduleAutoplayRef.current?.()
       }
     }
 
@@ -247,59 +141,47 @@ export function useImageCarousel({
     goToSlide('prev', true)
   }
 
-  // ── Autoplay ─────────────────────────────────────────────────────────────
-
   useEffect(() => {
-    const shouldAutoplay = autoplay && !prefersReducedMotion
-    if (!shouldAutoplay || !hasCarousel) return
+    function advanceSlide() {
+      const next = (slideRef.current + 1) % count
 
-    let cancelled = false
-    let timeoutId: number | null = null
+      if (controlled) {
+        onSlideChangeRef.current?.(next)
+      } else {
+        setInternalSlide(next)
+      }
+    }
 
-    /**
-     * Programa el siguiente avance automático respetando la pausa post-manual.
-     * Se llama recursivamente hasta que el efecto se desmonte.
-     */
-    const scheduleTick = () => {
-      if (cancelled) return
+    function scheduleAutoplayTick() {
+      clearAutoplayTimeout()
+
       const waitMs = Math.max(
         IMAGE_CAROUSEL_AUTOPLAY_MS,
-        pauseAutoplayUntilRef.current - Date.now()
+        pauseUntilRef.current - Date.now()
       )
-      timeoutId = window.setTimeout(() => {
-        timeoutId = null
-        if (cancelled) return
-        const next = (slideRef.current + 1) % count
 
-        if (controlled && onSlideChangeRef.current) {
-          onSlideChangeRef.current(next)
-        } else {
-          setInternalSlide(next)
-        }
-
-        scheduleTick()
+      timeoutRef.current = window.setTimeout(() => {
+        timeoutRef.current = null
+        advanceSlide()
+        scheduleAutoplayTick()
       }, waitMs)
     }
 
-    scheduleTick()
+    if (!shouldAutoplay) {
+      scheduleAutoplayRef.current = null
+      clearAutoplayTimeout()
+      return
+    }
+
+    scheduleAutoplayRef.current = scheduleAutoplayTick
+    scheduleAutoplayTick()
 
     return () => {
-      cancelled = true
-      if (timeoutId !== null) {
-        window.clearTimeout(timeoutId)
-        timeoutId = null
-      }
+      scheduleAutoplayRef.current = null
+      clearAutoplayTimeout()
     }
-  }, [
-    autoplay,
-    prefersReducedMotion,
-    hasCarousel,
-    count,
-    controlled,
-    manualNavEpoch,
-  ])
+  }, [shouldAutoplay, count, controlled])
 
-  // ── Valores de retorno ───────────────────────────────────────────────────
   return {
     slide,
     count,
