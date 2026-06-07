@@ -69,14 +69,14 @@ export function useNavUnderlinePosition(
   isNavRowVisible = true
 ) {
   const rowRef = useRef<HTMLDivElement>(null)
-  const linkRefs = useRef(new Map<string, HTMLAnchorElement>())
+  const [links] = useState(() => new Map<string, HTMLAnchorElement>())
 
   const [underline, setUnderline] =
     useState<NavUnderlineMetrics>(UNDERLINE_HIDDEN)
 
   const registerLink = (href: string) => (el: HTMLAnchorElement | null) => {
-    if (el) linkRefs.current.set(href, el)
-    else linkRefs.current.delete(href)
+    if (el) links.set(href, el)
+    else links.delete(href)
   }
 
   useLayoutEffect(() => {
@@ -87,17 +87,15 @@ export function useNavUnderlinePosition(
           isNavRowVisible,
           activeHref,
           rowRef.current,
-          linkRefs.current
+          links
         )
       )
     }
 
-    const rafId = window.requestAnimationFrame(measure)
+    measure()
 
     const row = rowRef.current
-    if (!row) {
-      return () => window.cancelAnimationFrame(rafId)
-    }
+    if (!row) return
 
     window.addEventListener('resize', measure)
 
@@ -112,11 +110,10 @@ export function useNavUnderlinePosition(
     }
 
     return () => {
-      window.cancelAnimationFrame(rafId)
       ro?.disconnect()
       window.removeEventListener('resize', measure)
     }
-  }, [activeHref, isNavRowVisible, navItems.length])
+  }, [activeHref, isNavRowVisible, navItems.length, links])
 
   return { rowRef, registerLink, underline }
 }
