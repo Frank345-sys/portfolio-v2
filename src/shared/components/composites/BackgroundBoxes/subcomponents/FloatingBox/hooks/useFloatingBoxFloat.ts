@@ -1,7 +1,6 @@
 /**
  * Flotación vertical infinita de un `FloatingBox`; al pausar congela el frame actual.
  *
- * @module shared/components/composites/BackgroundBoxes/subcomponents/FloatingBox/hooks/useFloatingBoxFloat
  * @fileoverview Un solo ciclo `animate()` por montaje; pausa/reanuda vía registro de scroll.
  * @remarks Evita `stop()` + reinicio, que provocaba saltos al reposo (`y: 0`) al pausar o reanudar.
  */
@@ -15,17 +14,9 @@ import { registerScrollAnimationControls } from '../../../hooks/useScrollAnimati
 
 import type { MotionValue } from 'motion/react'
 
-type FloatingBoxFloatParams = Pick<
-  BoxData,
-  'floatAmp' | 'floatDur' | 'floatDelay'
->
-
-/**
- * Devuelve un `MotionValue` de traslación vertical con flotación cíclica.
- * La pausa por scroll se aplica en el listener de `useScrollAnimationPause`, no por props.
- */
+/** Flotación vertical infinita; la pausa por scroll congela el frame actual sin saltar a 0. */
 export function useFloatingBoxFloat(
-  box: FloatingBoxFloatParams
+  box: Pick<BoxData, 'floatAmp' | 'floatDur' | 'floatDelay'>
 ): MotionValue<number> {
   const floatY = useMotionValue(0)
 
