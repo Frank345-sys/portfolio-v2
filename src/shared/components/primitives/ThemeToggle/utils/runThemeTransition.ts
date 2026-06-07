@@ -5,12 +5,14 @@
  * @remarks Con `prefers-reduced-motion: reduce` omite la clase y aplica el cambio al instante.
  */
 
+import { MEDIA_QUERY_REDUCED_MOTION } from '@/shared/constants/breakpoints'
+
 /** Duración alineada con `.theme-transitioning` en `index.css` (ms). */
 const CSS_THEME_TRANSITION_MS = 300 as const
 
 function prefersReducedMotion(): boolean {
   if (typeof window === 'undefined') return false
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  return window.matchMedia(MEDIA_QUERY_REDUCED_MOTION).matches
 }
 
 /**
