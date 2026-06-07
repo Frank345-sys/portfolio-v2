@@ -18,7 +18,7 @@ export function ReactIcon({
     <svg
       viewBox="0 0 24 24"
       aria-hidden={ariaHidden}
-      className={cn('h-7 w-7', className)}
+      className={cn('size-7', className)}
       fill="#61DAFB"
       {...props}
     >
