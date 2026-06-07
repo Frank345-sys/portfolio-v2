@@ -10,19 +10,32 @@
       content="camera=(), microphone=(), geolocation=(), interest-cohort=()"
     />
 
-    <!-- Barra de direcciones / PWA: contenido actualizado en cliente vía useTheme -->
+    <!-- Barra de direcciones / PWA: contenido actualizado en cliente vía ThemeProvider -->
     <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
+    <!-- Anti-FOUC: alinear con THEME_STORAGE_KEY y THEME_COLOR_HEX en src/shared/constants/theme.ts -->
+    <script>
+      ;(function () {
+        var key = 'theme'
+        var colors = { light: '#ffffff', dark: '#171717' }
+        var stored = localStorage.getItem(key)
+        var dark =
+          stored === 'dark' ||
+          (stored !== 'light' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+        var root = document.documentElement
+        if (dark) root.classList.add('dark')
+        var meta = document.getElementById('meta-theme-color')
+        if (meta)
+          meta.setAttribute('content', dark ? colors.dark : colors.light)
+      })()
+    </script>
 
     <!-- code icon -->
     <link rel="icon" type="image/svg+xml" href="/portfolio-v2/code-icon.svg" />
 
     <!-- Primary SEO (sustituido en build desde shared/constants/siteProfile) -->
-    <title>Frank González — Frontend engineer | React & TypeScript</title>
+    <title>Frank González · React & TypeScript</title>
     <meta name="description" content="Portfolio de Frank González, Frontend engineer: e-commerce, B2B y ERP en React/TypeScript, con foco en rendimiento, a11y y fidelidad a Figma." />
-    <meta
-      name="keywords"
-      content="frontend developer, desarrollador frontend, React, TypeScript, Vite, Tailwind CSS, JavaScript, portfolio, México"
-    />
     <meta name="author" content="Frank González" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://frank345-sys.github.io/portfolio-v2/" />
@@ -30,7 +43,7 @@
     <!-- Open Graph (LinkedIn, WhatsApp) -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://frank345-sys.github.io/portfolio-v2/" />
-    <meta property="og:title" content="Frank González — Frontend engineer | React & TypeScript" />
+    <meta property="og:title" content="Frank González · React & TypeScript" />
     <meta property="og:description" content="Portfolio de Frank González, Frontend engineer — e-commerce, B2B y producto con React/TypeScript." />
     <meta property="og:image" content="https://frank345-sys.github.io/portfolio-v2/og-image.png" />
     <meta property="og:image:width" content="1200" />
@@ -41,7 +54,7 @@
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://frank345-sys.github.io/portfolio-v2/" />
-    <meta name="twitter:title" content="Frank González — Frontend engineer | React & TypeScript" />
+    <meta name="twitter:title" content="Frank González · React & TypeScript" />
     <meta
       name="twitter:description"
       content="Portfolio de Frank González, Frontend engineer — e-commerce, B2B y producto con React/TypeScript."
@@ -75,8 +88,8 @@
   "description": "Frontend engineer — React, TypeScript, interfaces accesibles y de alto rendimiento"
 }
     </script>
-    <script type="module" crossorigin src="/portfolio-v2/assets/index-CxZfBDtX.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio-v2/assets/index-BYLkNxSC.css">
+    <script type="module" crossorigin src="/portfolio-v2/assets/index-Daj4YBPM.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio-v2/assets/index-CLzUXUUu.css">
   </head>
   <body>
     <div id="root"></div>
