@@ -62,18 +62,15 @@ export function useProjectsScrollSync(
   const activeIndexRef = useRef(0)
   const itemCountRef = useRef(itemCount)
   const observerRef = useRef<IntersectionObserver | null>(null)
-
-  useEffect(() => {
-    itemCountRef.current = itemCount
-  }, [itemCount])
   const lenis = useLenis()
 
   const activeIndex =
     itemCount <= 0 ? 0 : Math.min(panelUi.activeIndex, itemCount - 1)
 
   useEffect(() => {
+    itemCountRef.current = itemCount
     activeIndexRef.current = activeIndex
-  }, [activeIndex])
+  }, [itemCount, activeIndex])
 
   useEffect(() => {
     const mq = window.matchMedia(MEDIA_QUERY_LG_MIN)
