@@ -24,7 +24,7 @@ export function MailIcon({
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden={ariaHidden}
-      className={cn('h-7 w-7', className)}
+      className={cn('size-7', className)}
       {...props}
     >
       <rect width="20" height="16" x="2" y="4" rx="2" />

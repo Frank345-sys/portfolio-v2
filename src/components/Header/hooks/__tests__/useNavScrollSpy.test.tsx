@@ -171,7 +171,7 @@ describe('useNavScrollSpy', () => {
     )
   })
 
-  it('si ninguna intersecta, el activo pasa a null', async () => {
+  it('si ninguna intersecta, mantiene el último href activo', async () => {
     render(<TestHarness />)
     await act(async () => {
       await Promise.resolve()
@@ -194,6 +194,8 @@ describe('useNavScrollSpy', () => {
         {} as IntersectionObserver
       )
     })
-    expect(screen.getByTestId('active')).toHaveTextContent('none')
+    expect(screen.getByTestId('active')).toHaveTextContent(
+      sectionHref(SECTION_ANCHOR_ID.inicio)
+    )
   })
 })

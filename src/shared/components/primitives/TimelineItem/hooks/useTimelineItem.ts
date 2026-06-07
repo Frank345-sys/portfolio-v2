@@ -1,11 +1,9 @@
 /**
  * Vista derivada para `TimelineItem`: chips ordenados y atributos de `<time>` para el periodo.
  *
- * @fileoverview Memoiza chips con {@link orderTimelineChipsByLegend} y `dateTime` vía {@link resolvePeriodDatetime}.
+ * @fileoverview Ordena chips con {@link orderTimelineChipsByLegend} y `dateTime` vía {@link resolvePeriodDatetime}.
  * @remarks Sin efectos secundarios; se recalcula cuando cambian chips o las fechas ISO de inicio/fin.
  */
-
-import { useMemo } from 'react'
 
 import { orderTimelineChipsByLegend } from '../utils/orderTimelineChipsByLegend'
 import { resolvePeriodDatetime } from '../utils/resolvePeriodDatetime'
@@ -37,23 +35,21 @@ export function useTimelineItem({
   periodStartDatetime,
   periodEndDatetime,
 }: UseTimelineItemParams): UseTimelineItemResult {
-  return useMemo(() => {
-    const orderedChips =
-      chips === undefined || chips.length === 0
-        ? []
-        : chips.toSorted(orderTimelineChipsByLegend)
+  const orderedChips =
+    chips === undefined || chips.length === 0
+      ? []
+      : chips.toSorted(orderTimelineChipsByLegend)
 
-    const periodDatetime = resolvePeriodDatetime(
-      periodStartDatetime,
-      periodEndDatetime
-    )
-    const periodTimeProps =
-      periodDatetime !== undefined ? { dateTime: periodDatetime } : undefined
+  const periodDatetime = resolvePeriodDatetime(
+    periodStartDatetime,
+    periodEndDatetime
+  )
+  const periodTimeProps =
+    periodDatetime !== undefined ? { dateTime: periodDatetime } : undefined
 
-    return {
-      orderedChips,
-      hasChips: orderedChips.length > 0,
-      periodTimeProps,
-    }
-  }, [chips, periodStartDatetime, periodEndDatetime])
+  return {
+    orderedChips,
+    hasChips: orderedChips.length > 0,
+    periodTimeProps,
+  }
 }

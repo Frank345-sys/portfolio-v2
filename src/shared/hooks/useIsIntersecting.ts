@@ -2,9 +2,9 @@
  * Visibilidad en viewport mediante `IntersectionObserver` (ref + boolean).
  *
  * @fileoverview Devuelve `[ref, isIntersecting]` para pausar animaciones o autoplay fuera de pantalla.
- * @remarks Re-observa al cambiar `threshold` o `rootMargin`; el ref sigue el tipo `RefObject<T | null>` de React 19.
+ * @remarks Re-observa al cambiar `threshold` o `rootMargin` vía callback ref.
  */
-import { useEffect, useRef, useState, type RefObject } from 'react'
+import { useRef, useState } from 'react'
 
 export interface UseIsIntersectingOptions {
   threshold?: number
@@ -16,14 +16,19 @@ export interface UseIsIntersectingOptions {
  */
 export function useIsIntersecting<T extends HTMLElement = HTMLElement>(
   options: UseIsIntersectingOptions = {}
-): [RefObject<T | null>, boolean] {
+): [(el: T | null) => void, boolean] {
   const { threshold = 0, rootMargin = '0px' } = options
-  const ref = useRef<T>(null)
+  const observerRef = useRef<IntersectionObserver | null>(null)
   const [isIntersecting, setIsIntersecting] = useState(false)
 
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
+  function ref(el: T | null) {
+    observerRef.current?.disconnect()
+    observerRef.current = null
+
+    if (!el) {
+      setIsIntersecting(false)
+      return
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -31,11 +36,9 @@ export function useIsIntersecting<T extends HTMLElement = HTMLElement>(
       },
       { threshold, rootMargin }
     )
-    queueMicrotask(() => {
-      observer.observe(el)
-    })
-    return () => observer.disconnect()
-  }, [threshold, rootMargin])
+    observer.observe(el)
+    observerRef.current = observer
+  }
 
   return [ref, isIntersecting]
 }

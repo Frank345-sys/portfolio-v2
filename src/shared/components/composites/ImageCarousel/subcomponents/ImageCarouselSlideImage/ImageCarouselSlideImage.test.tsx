@@ -22,6 +22,8 @@ describe('ImageCarouselSlideImage', () => {
 
     const img = screen.getByRole('img', { name: /captura del proyecto/i })
     expect(img).toHaveAttribute('src', '/hero.png')
+    expect(img).toHaveAttribute('width', '16')
+    expect(img).toHaveAttribute('height', '9')
   })
 
   it('primer slide usa loading="eager"', () => {
@@ -83,12 +85,14 @@ describe('ImageCarouselSlideImage', () => {
   })
 
   it('con src vacío renderiza placeholder aria-hidden sin img', () => {
-    const { container } = render(
+    const { baseElement } = render(
       <ImageCarouselSlideImage isFirstSlide={false} src="" alt="Vacío" />
     )
 
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
-    expect(container.querySelector('[aria-hidden]')).toBeInTheDocument()
+    expect(
+      baseElement.querySelector('[aria-hidden="true"]')
+    ).toBeInTheDocument()
   })
 
   it('al fallar la carga oculta la img nativa y expone marcador img con etiqueta accesible', () => {
@@ -97,6 +101,7 @@ describe('ImageCarouselSlideImage', () => {
     )
 
     const img = screen.getByRole('img', { name: /^imagen rota$/i })
+    // userEvent no simula fallo de carga en <img>
     fireEvent.error(img)
 
     expect(

@@ -56,4 +56,7 @@ export const ABOUT_SECTION_TITLE_ID = 'about-section-heading' as const
  * Identidad global del sitio reexportada aquí para que los subbloques About (p. ej. hero) consuman el
  * mismo contrato desde este módulo de sección.
  */
-export { SITE_PROFILE, SITE_TAGLINE } from '@/shared/constants/siteProfile'
+export {
+  SITE_PROFILE,
+  SITE_TAGLINE,
+} from '@/shared/constants/siteProfile/siteProfile'

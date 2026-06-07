@@ -12,7 +12,7 @@ import {
   SITE_CONTACT_EMAIL_HREF,
   SITE_CONTACT_EMAIL_TRIMMED,
   SITE_SOCIAL_HREFS,
-} from '@/shared/constants/siteProfile'
+} from '@/shared/constants/siteProfile/siteProfile'
 
 /**
  * Fragmento (`id`) del landmark de la sección contacto — mismo valor que {@link SECTION_ANCHOR_ID.contacto}

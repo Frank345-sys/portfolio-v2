@@ -10,6 +10,8 @@ import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
+import { runAxeAudit } from '@/test/helpers'
+
 import { ErrorBoundary } from './ErrorBoundary'
 
 function ThrowWhen({ bad }: { bad: boolean }) {
@@ -60,4 +62,16 @@ describe('ErrorBoundary', () => {
     expect(screen.getByText('Listo')).toBeInTheDocument()
     spy.mockRestore()
   })
+
+  it('axe: fallback de error sin violaciones conocidas', async () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const { container } = render(
+      <ErrorBoundary>
+        <ThrowWhen bad />
+      </ErrorBoundary>
+    )
+    expect(screen.getByRole('alert')).toBeInTheDocument()
+    expect(await runAxeAudit(container)).toHaveNoViolations()
+    spy.mockRestore()
+  }, 15_000)
 })

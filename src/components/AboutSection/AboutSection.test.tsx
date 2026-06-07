@@ -10,7 +10,7 @@
 import { screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-import { renderWithMotion } from '@/test/helpers'
+import { renderWithMotion, runAxeAudit } from '@/test/helpers'
 
 import { AboutSection } from './AboutSection'
 import {
@@ -51,8 +51,17 @@ describe('AboutSection', () => {
   })
 
   it('tiene la sección con id sobre-mi (ancla de la página)', () => {
-    const { container } = renderWithMotion(<AboutSection />)
-    expect(container.querySelector(`#${ABOUT_SECTION_ANCHOR_ID}`)).toBeTruthy()
+    renderWithMotion(<AboutSection />)
+    expect(
+      screen.getByRole('region', {
+        name(name) {
+          return (
+            name.includes(SITE_PROFILE.firstName) &&
+            name.includes(SITE_PROFILE.lastName)
+          )
+        },
+      })
+    ).toHaveAttribute('id', ABOUT_SECTION_ANCHOR_ID)
   })
 
   it('expone nombre accesible del landmark mediante aria-labelledby → h2', () => {
@@ -96,4 +105,9 @@ describe('AboutSection', () => {
       screen.getByRole('heading', { level: 3, name: /certificaciones/i })
     ).toBeInTheDocument()
   })
+
+  it('axe: sección Sobre mí sin violaciones conocidas', async () => {
+    const { container } = renderWithMotion(<AboutSection />)
+    expect(await runAxeAudit(container)).toHaveNoViolations()
+  }, 15_000)
 })

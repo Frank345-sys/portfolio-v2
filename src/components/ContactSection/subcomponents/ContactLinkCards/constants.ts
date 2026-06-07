@@ -11,29 +11,26 @@
  */
 import { CONTACT_EMAIL_HREF, CONTACT_PROFILE } from '../../constants'
 
-import type {
-  ContactEmailLinkEntry,
-  ContactEmailLinkId,
-  ContactSocialLinkEntry,
-  ContactSocialLinkId,
-} from './types'
+import type { ContactEmailLinkEntry, ContactSocialLinkEntry } from './types'
 
 /**
  * Claves estables para mapear íconos de redes en `ContactLinkCards.tsx`.
+ * Fuente de verdad de {@link ContactSocialLinkId} en `./types`.
  */
 export const CONTACT_SOCIAL_LINK_ID = {
   GITHUB: 'github',
   LINKEDIN: 'linkedin',
   WHATSAPP: 'whatsapp',
   TELEGRAM: 'telegram',
-} as const satisfies Record<string, ContactSocialLinkId>
+} as const
 
 /**
  * Claves estables para tarjetas de correo (escalable a varios `mailto:`).
+ * Fuente de verdad de {@link ContactEmailLinkId} en `./types`.
  */
 export const CONTACT_EMAIL_LINK_ID = {
   MAIL: 'mail',
-} as const satisfies Record<string, ContactEmailLinkId>
+} as const
 
 /**
  * Entradas de correo en orden de visualización.

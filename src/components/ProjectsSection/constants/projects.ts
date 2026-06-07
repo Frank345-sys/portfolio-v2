@@ -6,12 +6,10 @@
  * @remarks Import directo: `import { PROJECTS } from '@/components/ProjectsSection/constants/projects'`.
  */
 
-import {
-  SITE_GITHUB_PAGES_PORTFOLIO_WEB_HREF,
-  SITE_GITHUB_REPO_PORTFOLIO_WEB_HREF,
-} from '@/shared/constants/siteProfile'
 import { SKILL_LABEL } from '@/shared/constants/skills/skillLabels'
 import { withSiteBaseUrl } from '@/shared/utils/withSiteBaseUrl'
+
+import { PORTFOLIO_LEGACY_PROJECT_LINKS } from './portfolioLegacyLinks'
 
 import type { Project } from '../types'
 
@@ -141,7 +139,6 @@ export const PROJECTS: Project[] = [
       SKILL_LABEL.GIT_GITHUB,
     ],
     images: [withSiteBaseUrl('images/projects/portfolio-legacy.png')],
-    link: SITE_GITHUB_PAGES_PORTFOLIO_WEB_HREF,
-    githubLink: SITE_GITHUB_REPO_PORTFOLIO_WEB_HREF,
+    ...PORTFOLIO_LEGACY_PROJECT_LINKS,
   },
 ]

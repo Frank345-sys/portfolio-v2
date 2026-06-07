@@ -62,18 +62,21 @@ describe('AboutHero', () => {
    */
   describe('rendering', () => {
     it('renderiza el bloque introductorio en un header', () => {
-      const { container } = renderWithMotion(<AboutHero />)
-      expect(container.querySelector('header')).toBeInTheDocument()
+      renderWithMotion(<AboutHero />)
+      expect(
+        screen
+          .getByRole('heading', {
+            name: new RegExp(`^${ABOUT_HERO.fullName}$`, 'i'),
+          })
+          .closest('header')
+      ).toBeInTheDocument()
     })
 
     it('muestra la overline Sobre mí y el título con el nombre', () => {
       renderWithMotion(<AboutHero />)
-      expect(screen.getByText(/sobre mí/i)).toBeInTheDocument()
+      expect(screen.getByText(ABOUT_HERO.overline)).toBeInTheDocument()
       const heading = screen.getByRole('heading', {
-        name: new RegExp(
-          `^${ABOUT_HERO.firstName}\\s+${ABOUT_HERO.lastName}$`,
-          'i'
-        ),
+        name: new RegExp(`^${ABOUT_HERO.fullName}$`, 'i'),
       })
       expect(heading).toBeInTheDocument()
       expect(heading.id).toBe(ABOUT_HERO_SECTION_TITLE_ID)
@@ -94,23 +97,25 @@ describe('AboutHero', () => {
     })
 
     it('el avatar usa alt en la foto y mantiene iniciales ocultas en el DOM', () => {
-      const { container } = renderWithMotion(<AboutHero />)
+      renderWithMotion(<AboutHero />)
       const avatarImg = screen.getByRole('img', {
         name: /foto de frank gonzález/i,
       })
-      expect(avatarImg).toHaveAttribute(
-        'alt',
-        `Foto de ${ABOUT_HERO.firstName} ${ABOUT_HERO.lastName}`
-      )
-      const hiddenInitials = container.querySelector('span[hidden]')
-      expect(hiddenInitials).toHaveTextContent(ABOUT_HERO.avatarInitials)
+      expect(avatarImg).toHaveAttribute('alt', `Foto de ${ABOUT_HERO.fullName}`)
+      const initialsSpan =
+        avatarImg.parentElement?.querySelector('span[hidden]')
+      expect(initialsSpan).toHaveTextContent(ABOUT_HERO.avatarInitials)
     })
 
     it('renderiza el anillo decorativo animado del avatar', () => {
-      const { container } = renderWithMotion(<AboutHero />)
+      renderWithMotion(<AboutHero />)
+      const avatarImg = screen.getByRole('img', {
+        name: /foto de frank gonzález/i,
+      })
+      const avatarRoot = avatarImg.parentElement?.parentElement
       expect(
-        container.querySelector('.u-avatar-feature-ring')
-      ).toBeInTheDocument()
+        avatarRoot?.getElementsByClassName('u-avatar-feature-ring').length
+      ).toBeGreaterThan(0)
     })
   })
 
@@ -139,6 +144,7 @@ describe('AboutHero', () => {
     it('si la imagen falla, oculta el img y deja visibles las iniciales', () => {
       renderWithMotion(<AboutHero />)
       const photo = screen.getByRole('img', { name: /foto de frank gonzález/i })
+      // userEvent no simula fallo de carga en <img>
       fireEvent.error(photo)
 
       expect(

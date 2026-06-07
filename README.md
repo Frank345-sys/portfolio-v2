@@ -1,6 +1,6 @@
 # portfolio-v2
 
-SPA de portfolio personal. El **perfil unificado** (nombre visible, rol, títulos de página, metadatos SEO, JSON-LD Person) vive en [`src/shared/constants/siteProfile.ts`](src/shared/constants/siteProfile.ts).
+SPA de portfolio personal. El **perfil unificado** (nombre visible, rol, títulos de página, metadatos SEO, JSON-LD Person) vive en [`src/shared/constants/siteProfile/`](src/shared/constants/siteProfile/siteProfile.ts).
 
 [![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
@@ -14,7 +14,7 @@ SPA de portfolio personal. El **perfil unificado** (nombre visible, rol, título
 
 **portfolio-v2** es una **SPA** (**React 19**, **Vite 7**, **TypeScript** en modo estricto) con **Tailwind CSS 4** y un sistema de **design tokens** (`src/shared/constants/tokens/` + primitivos y modo oscuro en `src/index.css`).
 
-Incluye: **cabecera** (navegación + drawer móvil con trampa de foco), **hero**, **Sobre mí**, **Proyectos** (lista + sincronización de scroll + modal de vistas), **Contacto** y **pie**; desplazamiento suave con **Lenis** (respetando `prefers-reduced-motion`), animaciones con **Motion** (`motion/react`), tema claro/oscuro y carga diferida por sección (`React.lazy` + `Suspense`).
+Incluye: **cabecera** (navegación + drawer móvil con trampa de foco), **hero**, **Sobre mí**, **Proyectos** (lista + sincronización de scroll + modal de vistas), **Contacto** y **pie**; desplazamiento suave con **Lenis** (respetando `prefers-reduced-motion`), animaciones con **Motion** (`motion/react`, `MotionConfig reducedMotion="user"` global), **tema claro/oscuro** con transición (`ThemeProvider`) y carga diferida por sección (`React.lazy` + `Suspense`).
 
 **Sitio público único (`es`):** el copy está en español en el código; no hay i18n multiidioma por ahora. La hora de contacto (**`OwnerLocalTime`**) usa `Intl` con **`navigator.language`** cuando no pasas la prop `locale`, con respaldo **`es-MX`**.
 
@@ -24,21 +24,21 @@ Incluye: **cabecera** (navegación + drawer móvil con trampa de foco), **hero**
 
 **Rendimiento en cliente:** tras el arranque se registran métricas con la librería **`web-vitals`** (**LCP**, **INP**, **CLS**, **FCP**, **TTFB**). Por defecto en **desarrollo** se escribe **`console.warn` ‘[web-vitals]’** con valor y rating; en **producción** puedes enlazar **`reportWebVitals(callback)`** a analíticas (ver [`src/shared/utils/reportWebVitals.ts`](src/shared/utils/reportWebVitals.ts)).
 
-**Calidad:** ESLInt (entre otros `jsx-a11y`, React Compiler, testing-library), **Knip**, Prettier, Husky (**pre-commit**, **commit-msg**), **Commitlint** con scopes en lista cerrada, GitHub Actions, workflow opcional **React Doctor** en PRs, Dependabot.
+**Calidad:** **React Compiler** (Babel + reglas ESLint; sin memoización manual salvo excepciones), ESLint (`jsx-a11y`, testing-library, …), **Knip**, Prettier, Husky (**pre-commit**, **commit-msg**), **Commitlint** con scopes en lista cerrada, GitHub Actions, workflow **React Doctor** en PRs (objetivo **100/100** con `react-doctor:full`), Dependabot.
 
 ---
 
 ## Stack
 
-| Categoría       | Tecnología                                                                        |
-| --------------- | --------------------------------------------------------------------------------- |
-| **Build**       | Vite 7, `tsc -b` previo al bundle                                                 |
-| **UI**          | React 19, Motion (`motion/react`), **`cn`** (clsx + tailwind-merge)               |
-| **Estilos**     | Tailwind CSS 4 (`@tailwindcss/vite`), tokens TS + tema en `index.css`             |
-| **Scroll**      | Lenis dentro de **`SmoothScrollRoot`**                                            |
-| **Test**        | Vitest 4, Testing Library, jsdom; **vitest-axe** + **axe-core** en flujos clave   |
-| **Rendimiento** | **`web-vitals`** (runtime); auditorías Lighthouse manuales (DevTools / PageSpeed) |
-| **Deploy**      | **`gh-pages`** → rama `gh-pages`; scripts **`deploy`** / **`deploy:pages`**       |
+| Categoría       | Tecnología                                                                               |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| **Build**       | Vite 7, `tsc -b` previo al bundle                                                        |
+| **UI**          | React 19 + **React Compiler**, Motion (`motion/react`), **`cn`** (clsx + tailwind-merge) |
+| **Estilos**     | Tailwind CSS 4 (`@tailwindcss/vite`), tokens TS + tema en `index.css`                    |
+| **Scroll**      | Lenis dentro de **`SmoothScrollRoot`**                                                   |
+| **Test**        | Vitest 4, Testing Library, jsdom; **vitest-axe** + **axe-core** en flujos clave          |
+| **Rendimiento** | **`web-vitals`** (runtime); auditorías Lighthouse manuales (DevTools / PageSpeed)        |
+| **Deploy**      | **`gh-pages`** → rama `gh-pages`; scripts **`deploy`** / **`deploy:pages`**              |
 
 **Alias:** `@` → **`src`** (en `vite.config.ts` y `tsconfig.app.json`).
 
@@ -49,18 +49,19 @@ Incluye: **cabecera** (navegación + drawer móvil con trampa de foco), **hero**
 ```
 src/
 ├── main.tsx              # StrictMode → ErrorBoundary raíz → App; reportWebVitals()
-├── App.tsx               # LazyMotion, Lenis shell, Header, main (grain + ErrorBoundary + Suspense ×4), Footer lazy
+├── App.tsx               # LazyMotion, MotionConfig, ThemeProvider, Lenis shell, Header, main (grain + ErrorBoundary + Suspense ×4), Footer lazy
 ├── index.css             # Tailwind @import, tokens CSS, modo oscuro, utilidades (.u-*)
 ├── components/           # Secciones de página por dominio (About, Hero, Projects, …)
 ├── shared/
 │   ├── components/      # Modal (+ subcomponentes), carrusel, ThemeToggle, ErrorBoundary, SiteLogo, …
-│   ├── constants/       # siteProfile, siteTimezone, breakpoints, tokens/, skills/, motion/
+│   ├── constants/       # siteProfile/, siteTimezone, breakpoints, theme.ts, tokens/, skills/, motion/
 │   ├── hooks/, utils/
 │   └── icons/
 └── test/                 # setup.ts, vitest-axe.d.ts; helpers/ (renderWithMotion, mocks, barrel `index.ts`)
 ```
 
-- **`siteProfile`** se importa también en **`vite.config.ts`** para SEO en tiempo de build (acople intencional; documentado en auditoría).
+- **`siteProfile`** (`siteProfile/siteProfile.ts`) se importa también en **`vite.config.ts`** para SEO en tiempo de build (acople intencional; documentado en auditoría).
+- **`MEDIA_QUERY_REDUCED_MOTION`** en **`breakpoints.ts`** centraliza `prefers-reduced-motion` (tema, parallax de BackgroundBoxes, etc.).
 
 ---
 
@@ -72,6 +73,7 @@ src/
 | `build` / `build:github`                        | Producción estándar o modo **`github`** (`.env.github`) para subruta Pages                                                                     |
 | `preview` / `preview:build`                     | Preview del contenido ya construido en **`build/`**                                                                                            |
 | `deploy` / `deploy:pages`                       | **`gh-pages`** (segundo script fuerza **`build:github`**)                                                                                      |
+| `optimize:public`                               | Comprime assets en **`public/`** (CV, foto, OG, capturas) vía **`scripts/optimize-public-assets.mjs`**                                         |
 | `lint`                                          | **ESLint** + **`scripts/check-tsdoc.mjs`** (cabeceras TSDoc en barrels, fuente y tests)                                                        |
 | `lint:tsdoc`                                    | Solo **`check-tsdoc.mjs`** (sin ESLint; útil para iterar cabeceras)                                                                            |
 | `lint:exports`                                  | Barrels sin nombres duplicados en re-exports (`scripts/check-exports.mjs`)                                                                     |
@@ -86,8 +88,8 @@ src/
 | `check`                                         | **`format:check` → `lint` → `lint:exports` → `lint:env` → `typecheck` → `knip` → `test`** (mismo orden que `check:ci`, sin cobertura ni build) |
 | `check:ci`                                      | **`format:check` → `lint` → `lint:exports` → `lint:env` → `typecheck` → `knip` → `test:coverage:ci` → `build`** (mismo bloque que CI)          |
 | `check:extended`                                | **`check`** + **`react-doctor:full`** (gate local + auditoría React completa; opcional pre-release)                                            |
-| `react-doctor`                                  | Diagnóstico React (**diff** vs `main`; ver `react-doctor.config.json`)                                                                         |
-| `react-doctor:full`                             | Auditoría completa del repo (objetivo **100/100** en reglas React Doctor)                                                                      |
+| `react-doctor`                                  | Diagnóstico React (**diff** vs `develop` por defecto; ver `doctor.config.ts`; override: `npm run react-doctor -- --diff <rama>`)               |
+| `react-doctor:full`                             | Auditoría completa del repo (`--diff false`; objetivo **100/100** en reglas React Doctor)                                                      |
 | `tsdoc:fill-placeholders`                       | Sustituye placeholders tras `node scripts/check-tsdoc.mjs --fix` (ver [`scripts/README.md`](scripts/README.md))                                |
 | `tsdoc:fill-placeholders:dry`                   | Vista previa sin escribir archivos                                                                                                             |
 | `tsdoc:homogenize-barrels`                      | Homogeneiza texto TSDoc en barrels (migración puntual)                                                                                         |
@@ -162,7 +164,7 @@ Ejecutar toda la suite: **`npm run test`**. Para Motion + LazyMotion usar **`ren
 - **pre-commit**: `lint-staged` → **`npm run test:changed`** → **`typecheck`** (ver `.husky/pre-commit`). Knip, `lint:exports`, `lint:env` y build siguen en **`check`** / **`check:ci`**.
 - **commit-msg**: **Commitlint** con Conventional Commits y **scopes kebab-case** (detalle operativo en `commitlint.config.cjs` y en `.cursor/rules/commits-branches.mdc`).
 - **Knip** en `check` y CI.
-- **Pre-release opcional:** `npm run check:extended` (`check` + React Doctor completo). Los scripts bajo **`scripts/`** están documentados en [`scripts/README.md`](scripts/README.md).
+- **Pre-release opcional:** `npm run check:extended` (`check` + **`react-doctor:full`**). Config en **`doctor.config.ts`** (`diff: 'develop'`, `deadCode: false` para no duplicar Knip). Los scripts bajo **`scripts/`** están documentados en [`scripts/README.md`](scripts/README.md).
 
 ---
 
@@ -182,7 +184,7 @@ Ejecutar toda la suite: **`npm run test`**. Para Motion + LazyMotion usar **`ren
 
 El workflow ejecuta **`npm run check:ci`** (véase **`package.json`**): **`format:check`** → **`lint`** → **`lint:exports`** → **`lint:env`** → **`typecheck`** → **`knip`** → **`test:coverage:ci`** → **`build`**.
 
-Workflow opcional **`react-doctor`** en PRs (versión fijada en `package.json`, p. ej. **0.2.6**; `npm exec` en CI, sin `@latest`). Modo **`--diff`** vs rama base. Local: `npm run react-doctor` (diff vs `main`); auditoría completa: `npm run react-doctor:full`. En `react-doctor.config.json`, **`deadCode: false`** evita duplicar el barrido de Knip; el informe **`react-doctor-report.txt`** está en **`.gitignore`** (solo artefacto local o del runner en CI).
+Workflow **`react-doctor`** en PRs hacia **`main`** / **`develop`** (versión fijada en `package.json`, p. ej. **0.4.0**; `npm exec` en CI, sin `@latest`). Modo **`--diff origin/<base>`** con **`--blocking error`** y comentario en el PR. Local: `npm run react-doctor` (diff vs **`develop`**, por defecto en `doctor.config.ts`; override: `npm run react-doctor -- --diff <rama>`); auditoría completa del repo: `npm run react-doctor:full` (**`--diff false`**, gate **100/100**). **`deadCode: false`** evita duplicar Knip; **`react-doctor-report.txt`** está en **`.gitignore`**. El workflow **falla** si hay issues tras publicar el comentario.
 
 ---
 

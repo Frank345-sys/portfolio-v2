@@ -171,13 +171,13 @@ export const BADGE = {
 
     dotSize: {
       /** @use Dot compacto en layouts densos. */
-      sm: 'w-2 h-2',
+      sm: 'size-2',
       /** @use Dot estándar. */
-      md: 'w-2.5 h-2.5',
+      md: 'size-2.5',
       /** @use Dot destacado para métricas o estado principal. */
-      lg: 'w-3 h-3',
+      lg: 'size-3',
       /** @use Dot extra grande para uso en hero o cabeceras de sección. */
-      xl: 'w-4 h-4',
+      xl: 'size-4',
     },
 
     /**

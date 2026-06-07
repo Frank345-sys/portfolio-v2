@@ -7,7 +7,7 @@
  * Fragmentos de copy testeados directamente desde el JSX (no desde `ABOUT_BIO`) para
  * detectar regresiones en el texto visible al usuario.
  */
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 
 import { AboutBio } from './AboutBio'
@@ -27,11 +27,12 @@ describe('AboutBio', () => {
    */
   describe('rendering', () => {
     it('agrupa el bloque con role group referenciando el h3', () => {
-      const { container } = render(<AboutBio />)
-      const landmark = container.querySelector(
-        `section[aria-labelledby="${ABOUT_BIO_HEADING_ID}"]`
-      )
+      render(<AboutBio />)
+      const landmark = screen
+        .getByRole('heading', { level: 3, name: /quién soy/i })
+        .closest('section')
       expect(landmark).toBeInTheDocument()
+      expect(landmark).toHaveAttribute('aria-labelledby', ABOUT_BIO_HEADING_ID)
     })
 
     it('expone el título de subsección «Quién soy» como h3 con id', () => {
@@ -45,9 +46,13 @@ describe('AboutBio', () => {
     })
 
     it('renderiza un párrafo por cada entrada de ABOUT_BIO', () => {
-      const { container } = render(<AboutBio />)
-      const paragraphs = container.querySelectorAll('p')
-      expect(paragraphs.length).toBe(ABOUT_BIO.length)
+      render(<AboutBio />)
+      const section = screen
+        .getByRole('heading', { level: 3, name: /quién soy/i })
+        .closest('section') as HTMLElement
+      expect(within(section).getAllByRole('paragraph')).toHaveLength(
+        ABOUT_BIO.length
+      )
     })
 
     it('muestra fragmentos representativos del copy', () => {
@@ -63,8 +68,11 @@ describe('AboutBio', () => {
     })
 
     it('no monta ningún <img> (solo párrafos de bio)', () => {
-      const { container } = render(<AboutBio />)
-      expect(container.querySelector('img')).toBeNull()
+      render(<AboutBio />)
+      const section = screen
+        .getByRole('heading', { level: 3, name: /quién soy/i })
+        .closest('section') as HTMLElement
+      expect(within(section).queryByRole('img')).not.toBeInTheDocument()
     })
 
     it('los párrafos de ABOUT_BIO aplican énfasis en fragmentos ** **', () => {

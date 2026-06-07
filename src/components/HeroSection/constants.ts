@@ -15,7 +15,7 @@ import {
   HERO_STACK_HIGHLIGHT,
   SITE_DISPLAY_NAME,
   SITE_PROFILE,
-} from '@/shared/constants/siteProfile'
+} from '@/shared/constants/siteProfile/siteProfile'
 
 /**
  * Fragmento (`id`) del landmark del hero — mismo valor que {@link SECTION_ANCHOR_ID.inicio}

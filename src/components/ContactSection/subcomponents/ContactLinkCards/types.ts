@@ -1,29 +1,25 @@
 /**
  * Tipos del dominio `ContactLinkCards`.
  *
- * Tipos de entradas de `ContactLinkCards` y claves `CONTACT_*_LINK_ID` en `./constants`.
+ * Tipos de entradas de `ContactLinkCards`; los IDs se derivan de `./constants`.
  *
  * @fileoverview Define `ContactSocialLinkId`, `ContactEmailLinkId`, `ContactSocialLinkEntry`
  * y `ContactEmailLinkEntry` — todos extienden {@link LinkCardDatum} con `id` tipado.
- * @remarks Mantener `ContactSocialLinkId` sincronizado con {@link CONTACT_SOCIAL_LINK_ID}
- * y `ContactEmailLinkId` con {@link CONTACT_EMAIL_LINK_ID} en `./constants`.
+ * @remarks `ContactSocialLinkId` y `ContactEmailLinkId` se infieren de
+ * {@link CONTACT_SOCIAL_LINK_ID} y {@link CONTACT_EMAIL_LINK_ID}; al añadir una tarjeta,
+ * actualizar el objeto en `./constants` y el mapa de íconos en `ContactLinkCards.tsx`.
  */
 import type { LinkCardDatum } from '@/shared/components/primitives/LinkCard'
 
-/**
- * Identificadores de enlace social (alineados con `CONTACT_SOCIAL_LINK_ID` en `./constants`).
- */
-export type ContactSocialLinkId =
-  | 'github'
-  | 'linkedin'
-  | 'whatsapp'
-  | 'telegram'
+import type { CONTACT_EMAIL_LINK_ID, CONTACT_SOCIAL_LINK_ID } from './constants'
 
-/**
- * Identificadores de tarjeta de correo (`CONTACT_EMAIL_LINK_ID` en `./constants`).
- * Ampliar la unión al añadir más entradas en `PRIMARY_EMAIL_LINKS`.
- */
-export type ContactEmailLinkId = 'mail'
+/** Identificadores de enlace social — derivado de {@link CONTACT_SOCIAL_LINK_ID}. */
+export type ContactSocialLinkId =
+  (typeof CONTACT_SOCIAL_LINK_ID)[keyof typeof CONTACT_SOCIAL_LINK_ID]
+
+/** Identificadores de tarjeta de correo — derivado de {@link CONTACT_EMAIL_LINK_ID}. */
+export type ContactEmailLinkId =
+  (typeof CONTACT_EMAIL_LINK_ID)[keyof typeof CONTACT_EMAIL_LINK_ID]
 
 /**
  * Datos que alimentan `LinkCard` en esta sección (= {@link LinkCardDatum}).

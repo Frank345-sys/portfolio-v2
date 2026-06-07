@@ -65,7 +65,7 @@ export function AboutValues() {
       <SectionSubtitle id={ABOUT_VALUES_HEADING_ID}>
         Cómo trabajo
       </SectionSubtitle>
-      <div className={cn(LAYOUT.grid.cols3)}>
+      <div className={cn(LAYOUT.grid.cols3, 'auto-rows-fr')}>
         {ABOUT_VALUES.map((item) => (
           <ValueCard key={item.name} {...item} />
         ))}

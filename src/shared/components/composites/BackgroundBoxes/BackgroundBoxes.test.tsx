@@ -9,7 +9,7 @@
 import { act, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { renderWithMotion } from '@/test/helpers'
+import { renderWithMotion, setupMatchMedia } from '@/test/helpers'
 
 import { BackgroundBoxes } from './BackgroundBoxes'
 import { FLOATING_BOX_COUNT } from './utils/boxGenerator'
@@ -25,10 +25,8 @@ describe('BackgroundBoxes', () => {
   })
 
   it('renderiza el panel de contenido con data-testid', () => {
-    const { getByTestId } = renderWithMotion(
-      <BackgroundBoxes>{null}</BackgroundBoxes>
-    )
-    expect(getByTestId('background-boxes-content')).toBeInTheDocument()
+    renderWithMotion(<BackgroundBoxes>{null}</BackgroundBoxes>)
+    expect(screen.getByTestId('background-boxes-content')).toBeInTheDocument()
   })
 
   it('renderiza el contenido hijo (children)', () => {
@@ -60,6 +58,53 @@ describe('BackgroundBoxes', () => {
       })
       window.dispatchEvent(new Event('resize'))
     })
+    expect(screen.getAllByRole('listitem', { hidden: true })).toHaveLength(
+      FLOATING_BOX_COUNT
+    )
+  })
+})
+
+describe('BackgroundBoxes según viewport', () => {
+  afterEach(() => {
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 1280,
+    })
+    window.dispatchEvent(new Event('resize'))
+  })
+
+  it('adapta el layout en viewport mobile (375px)', () => {
+    setupMatchMedia({ lgMatches: false })
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 375,
+    })
+    window.dispatchEvent(new Event('resize'))
+
+    const { container } = renderWithMotion(
+      <BackgroundBoxes>{null}</BackgroundBoxes>
+    )
+    expect(container.firstElementChild).toBeInTheDocument()
+    expect(screen.getAllByRole('listitem', { hidden: true })).toHaveLength(
+      FLOATING_BOX_COUNT
+    )
+  })
+
+  it('muestra el layout completo en viewport desktop (1440px)', () => {
+    setupMatchMedia({ lgMatches: true })
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      writable: true,
+      value: 1440,
+    })
+    window.dispatchEvent(new Event('resize'))
+
+    const { container } = renderWithMotion(
+      <BackgroundBoxes>{null}</BackgroundBoxes>
+    )
+    expect(container.firstElementChild).toBeInTheDocument()
     expect(screen.getAllByRole('listitem', { hidden: true })).toHaveLength(
       FLOATING_BOX_COUNT
     )

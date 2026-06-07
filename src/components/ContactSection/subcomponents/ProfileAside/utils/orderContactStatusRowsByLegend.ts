@@ -13,6 +13,11 @@ import { CONTACT_STATUS_MEANINGS, CONTACT_STATUS_ROWS } from '../constants'
 
 import type { ContactStatusRowEntry } from '../types'
 
+/** Lookup O(1) de significado por `id` — evita `.find()` repetido al enriquecer filas. */
+const meaningById = new Map(
+  CONTACT_STATUS_MEANINGS.map((meaning) => [meaning.id, meaning])
+)
+
 /**
  * Comparador para `sort` en el aside de contacto: **Disponible** → **Limitado** → **No disponible**;
  * mismo criterio que la leyenda {@link CONTACT_STATUS_MEANINGS} (`ProfileAside/constants.ts`).
@@ -35,7 +40,7 @@ export const orderContactStatusRowsByLegend: (
 export const CONTACT_ASIDE_SERVICE_LIST_ITEMS = CONTACT_STATUS_ROWS.toSorted(
   orderContactStatusRowsByLegend
 ).map((row) => {
-  const meaning = CONTACT_STATUS_MEANINGS.find((m) => m.id === row.meaning)
+  const meaning = meaningById.get(row.meaning)
   // Guarda de integridad: si un `meaning` en CONTACT_STATUS_ROWS no tiene
   // entrada en CONTACT_STATUS_MEANINGS, es un error de datos — falla en build, no en runtime.
   if (meaning === undefined) {

@@ -5,7 +5,11 @@
  * @remarks Pasa una `query` estable (p. ej. constante importada) para no re-suscribirte al listener en cada render.
  */
 
-import { useCallback, useSyncExternalStore } from 'react'
+import { useSyncExternalStore } from 'react'
+
+function getServerSnapshot() {
+  return false
+}
 
 /**
  * Estado reactivo de `window.matchMedia(query).matches`.
@@ -13,22 +17,17 @@ import { useCallback, useSyncExternalStore } from 'react'
  * @param query - Media query CSS (p. ej. `MEDIA_QUERY_LG_MIN`).
  */
 export function useMediaQuery(query: string): boolean {
-  const subscribe = useCallback(
-    (onStoreChange: () => void) => {
-      if (typeof window === 'undefined') return () => {}
-      const mq = window.matchMedia(query)
-      mq.addEventListener('change', onStoreChange)
-      return () => mq.removeEventListener('change', onStoreChange)
-    },
-    [query]
-  )
+  function subscribe(onStoreChange: () => void) {
+    if (typeof window === 'undefined') return () => {}
+    const mq = window.matchMedia(query)
+    mq.addEventListener('change', onStoreChange)
+    return () => mq.removeEventListener('change', onStoreChange)
+  }
 
-  const getSnapshot = useCallback(() => {
+  function getSnapshot() {
     if (typeof window === 'undefined') return false
     return window.matchMedia(query).matches
-  }, [query])
-
-  const getServerSnapshot = useCallback(() => false, [])
+  }
 
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 }

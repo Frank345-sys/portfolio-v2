@@ -2,7 +2,7 @@
 
 Herramientas Node (`.mjs`) que **complementan** la configuración del proyecto. No reemplazan ESLint, Prettier, TypeScript ni Knip.
 
-**React Doctor** no vive en esta carpeta: los comandos `npm run react-doctor` y `npm run react-doctor:full` están en `package.json` (binario `react-doctor`, config en `react-doctor.config.json`). El gate opcional **`check:extended`** encadena `check` + `react-doctor:full`.
+**React Doctor** no vive en esta carpeta: los comandos `npm run react-doctor` y `npm run react-doctor:full` están en `package.json` (binario `react-doctor`, config en **`doctor.config.ts`** en la raíz). El gate opcional **`check:extended`** encadena `check` + `react-doctor:full`.
 
 ## Integración con el toolchain
 

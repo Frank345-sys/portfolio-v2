@@ -26,7 +26,7 @@ import { headerContainer, navLinkActive } from '../../constants/styles'
 import type { MobileDrawerProps } from './types'
 
 /** `id` del título del diálogo (heading oculto; `aria-labelledby` del panel lo referencia). */
-const HEADER_MOBILE_DRAWER_TITLE_SPAN_ID = 'mobile-menu-title' as const
+const DRAWER_DIALOG_TITLE_ID = 'mobile-menu-title' as const
 
 /**
  * @module components/Header/subcomponents/MobileDrawer/MobileDrawer
@@ -35,7 +35,7 @@ const HEADER_MOBILE_DRAWER_TITLE_SPAN_ID = 'mobile-menu-title' as const
  *
  * @example
  * ```tsx
- * <MobileDrawer isOpen={isOpen} onClose={close} navItems={navItems} />
+ * <MobileDrawer isOpen={isDrawerOpen} onClose={closeDrawer} navItems={navItems} />
  * ```
  */
 export function MobileDrawer({
@@ -68,11 +68,11 @@ export function MobileDrawer({
             className="bg-bg-white border-stroke-soft shadow-elevation-lg flex h-full w-72 flex-col border-l"
             role="dialog"
             aria-modal="true"
-            aria-labelledby={HEADER_MOBILE_DRAWER_TITLE_SPAN_ID}
+            aria-labelledby={DRAWER_DIALOG_TITLE_ID}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Heading oculto: referencia `aria-labelledby` del panel. */}
-            <h2 id={HEADER_MOBILE_DRAWER_TITLE_SPAN_ID} className="sr-only">
+            <h2 id={DRAWER_DIALOG_TITLE_ID} className="sr-only">
               Menú de navegación
             </h2>
 

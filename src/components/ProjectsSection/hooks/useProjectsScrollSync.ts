@@ -8,13 +8,7 @@
  */
 
 import { useLenis } from 'lenis/react'
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
 
@@ -22,9 +16,7 @@ import { MEDIA_QUERY_LG_MIN } from '@/shared/constants/breakpoints'
 const PROJECTS_SCROLL_ACTIVE_INDEX_TRANSITION_MS = 150 as const
 
 /** Umbrales del `IntersectionObserver` para muestrear `intersectionRatio` por bloque de proyecto. */
-const PROJECTS_SCROLL_INTERSECTION_THRESHOLDS = [
-  0.25, 0.4, 0.55, 0.7, 0.85,
-] as const
+const PROJECTS_SCROLL_INTERSECTION_THRESHOLDS = [0, 0.5, 1] as const
 
 interface PanelSyncUi {
   activeIndex: number
@@ -38,10 +30,7 @@ interface UseProjectsScrollSyncResult {
   showInfo: boolean
   /** Solo en viewport ≥ lg: observer + sidebar sincronizados con el scroll. */
   scrollSyncEnabled: boolean
-  /**
-   * Registra el nodo DOM del bloque de proyecto `index` (callback de `ref`).
-   * La mutación del array interno queda encapsulada en el hook (compatible con React Compiler).
-   */
+  /** Registra el nodo DOM del bloque de proyecto `index` (callback de `ref`). */
   setItemRef: (index: number, el: HTMLElement | null) => void
   /** Desplaza el bloque del índice dado al viewport (p. ej. al pulsar un ítem en la lista). */
   scrollItemIntoView: (index: number) => void
@@ -73,18 +62,15 @@ export function useProjectsScrollSync(
   const activeIndexRef = useRef(0)
   const itemCountRef = useRef(itemCount)
   const observerRef = useRef<IntersectionObserver | null>(null)
-
-  useEffect(() => {
-    itemCountRef.current = itemCount
-  }, [itemCount])
   const lenis = useLenis()
 
   const activeIndex =
     itemCount <= 0 ? 0 : Math.min(panelUi.activeIndex, itemCount - 1)
 
   useEffect(() => {
+    itemCountRef.current = itemCount
     activeIndexRef.current = activeIndex
-  }, [activeIndex])
+  }, [itemCount, activeIndex])
 
   useEffect(() => {
     const mq = window.matchMedia(MEDIA_QUERY_LG_MIN)
@@ -125,8 +111,6 @@ export function useProjectsScrollSync(
           )
         }
         for (const entry of entries) {
-          // `entry.target` es `Element`; en este árbol siempre es `<article data-project-index>`,
-          // los únicos nodos que registramos vía `setItemRef`. Cast para acceder a `dataset`.
           const index = Number(
             (entry.target as HTMLElement).dataset.projectIndex
           )
@@ -179,26 +163,28 @@ export function useProjectsScrollSync(
     }
   }, [scrollSyncEnabled])
 
-  /** Identidad estable (`[]`): no cierra sobre `lenis`; el efecto móvil lista `lenis` y re-suscribe cuando cambia la instancia. */
-  const pickClosestToViewportCenter = useCallback(() => {
-    const viewportCenter = window.innerHeight / 2
-    let nextIndex = 0
-    let minDistance = Number.POSITIVE_INFINITY
+  useEffect(() => {
+    if (scrollSyncEnabled) return
 
-    for (const [index, el] of itemRefs.current.entries()) {
-      if (!el) continue
-      const rect = el.getBoundingClientRect()
-      if (rect.bottom < 0 || rect.top > window.innerHeight) continue
+    function updateClosestActiveIndex() {
+      const viewportCenter = window.innerHeight / 2
+      let nextIndex = 0
+      let minDistance = Number.POSITIVE_INFINITY
 
-      const itemCenter = rect.top + rect.height / 2
-      const distance = Math.abs(itemCenter - viewportCenter)
-      if (distance < minDistance) {
-        minDistance = distance
-        nextIndex = index
+      for (const [index, el] of itemRefs.current.entries()) {
+        if (!el) continue
+        const rect = el.getBoundingClientRect()
+        if (rect.bottom < 0 || rect.top > window.innerHeight) continue
+
+        const itemCenter = rect.top + rect.height / 2
+        const distance = Math.abs(itemCenter - viewportCenter)
+        if (distance < minDistance) {
+          minDistance = distance
+          nextIndex = index
+        }
       }
-    }
 
-    if (nextIndex !== activeIndexRef.current) {
+      if (nextIndex === activeIndexRef.current) return
       activeIndexRef.current = nextIndex
       setPanelUi((prev) =>
         prev.activeIndex === nextIndex
@@ -206,47 +192,32 @@ export function useProjectsScrollSync(
           : { ...prev, activeIndex: nextIndex }
       )
     }
-  }, [])
 
-  const pickClosestRef = useRef(pickClosestToViewportCenter)
-  useLayoutEffect(() => {
-    pickClosestRef.current = pickClosestToViewportCenter
-  }, [pickClosestToViewportCenter])
-
-  useEffect(() => {
-    if (scrollSyncEnabled) return
-
-    queueMicrotask(() => {
-      pickClosestRef.current()
-    })
-
-    const onScrollOrResize = () => {
-      pickClosestRef.current()
-    }
+    queueMicrotask(updateClosestActiveIndex)
 
     const unsubscribeLenisScroll = lenis
-      ? lenis.on('scroll', onScrollOrResize)
+      ? lenis.on('scroll', updateClosestActiveIndex)
       : undefined
 
     if (!lenis) {
-      window.addEventListener('scroll', onScrollOrResize, {
+      window.addEventListener('scroll', updateClosestActiveIndex, {
         passive: true,
       })
     }
-    window.addEventListener('resize', onScrollOrResize, {
+    window.addEventListener('resize', updateClosestActiveIndex, {
       passive: true,
     })
 
     return () => {
       unsubscribeLenisScroll?.()
       if (!lenis) {
-        window.removeEventListener('scroll', onScrollOrResize)
+        window.removeEventListener('scroll', updateClosestActiveIndex)
       }
-      window.removeEventListener('resize', onScrollOrResize)
+      window.removeEventListener('resize', updateClosestActiveIndex)
     }
   }, [scrollSyncEnabled, lenis])
 
-  const setItemRef = useCallback((index: number, el: HTMLElement | null) => {
+  function setItemRef(index: number, el: HTMLElement | null) {
     if (index < 0) return
     const refs = itemRefs.current
     while (refs.length <= index) {
@@ -258,32 +229,27 @@ export function useProjectsScrollSync(
     if (!observer) return
     if (previous) observer.unobserve(previous)
     if (el) observer.observe(el)
-  }, [])
+  }
 
-  const scrollItemIntoView = useCallback(
-    (index: number) => {
-      const el = itemRefs.current[index]
-      if (!el) return
-      if (lenis) {
-        const rect = el.getBoundingClientRect()
-        const marginTop = Number.parseFloat(
-          getComputedStyle(el).scrollMarginTop
-        )
-        const scrollMarginTop = Number.isNaN(marginTop) ? 0 : marginTop
-        const centerY =
-          rect.top +
-          lenis.scroll -
-          scrollMarginTop +
-          rect.height / 2 -
-          window.innerHeight / 2
-        const target = Math.max(0, Math.min(centerY, lenis.limit))
-        lenis.scrollTo(target, { duration: 1.2, lock: true })
-        return
-      }
-      el.scrollIntoView({ behavior: 'auto', block: 'center' })
-    },
-    [lenis]
-  )
+  function scrollItemIntoView(index: number) {
+    const el = itemRefs.current[index]
+    if (!el) return
+    if (lenis) {
+      const rect = el.getBoundingClientRect()
+      const marginTop = Number.parseFloat(getComputedStyle(el).scrollMarginTop)
+      const scrollMarginTop = Number.isNaN(marginTop) ? 0 : marginTop
+      const centerY =
+        rect.top +
+        lenis.scroll -
+        scrollMarginTop +
+        rect.height / 2 -
+        window.innerHeight / 2
+      const target = Math.max(0, Math.min(centerY, lenis.limit))
+      lenis.scrollTo(target, { duration: 1.2, lock: true })
+      return
+    }
+    el.scrollIntoView({ behavior: 'auto', block: 'center' })
+  }
 
   return {
     activeIndex,

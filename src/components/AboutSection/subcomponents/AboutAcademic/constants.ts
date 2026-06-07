@@ -7,7 +7,10 @@
  * texto visible. `TIMELINE_CHIP` y `SKILL_LABEL` son la fuente de verdad de chips y etiquetas.
  */
 import type { AboutTimelineEntry } from '@/components/AboutSection/types'
-import { TIMELINE_CHIP } from '@/shared/components/primitives/TimelineItem/constants'
+import {
+  TIMELINE_CHIP,
+  TIMELINE_MODALIDAD,
+} from '@/shared/components/primitives/TimelineItem/constants'
 import { SKILL_LABEL } from '@/shared/constants/skills/skillLabels'
 
 import { ABOUT_TIMELINE_LEGEND_ITEMS } from '../../constants'
@@ -24,6 +27,7 @@ export const ABOUT_ACADEMIC: AboutTimelineEntry[] = [
     periodEndDatetime: '2022-01-31',
     heading: 'Ingeniería en Sistemas Computacionales',
     company: 'Instituto Tecnológico Superior de Xalapa (ITSX)',
+    modalidad: TIMELINE_MODALIDAD.PRESENCIAL,
     description:
       'Formación en desarrollo de software, estructuras de datos, bases de datos y con especialidad en ingeniería de software.',
     chips: [
@@ -43,6 +47,7 @@ export const ABOUT_ACADEMIC: AboutTimelineEntry[] = [
     periodEndDatetime: '2024-04-30',
     heading: 'Desarrollador Web',
     company: 'TripleTen Latam',
+    modalidad: TIMELINE_MODALIDAD.REMOTO,
     description:
       'Programa de Desarrollo Web, es un curso de diez meses que abarca HTML, CSS, JS, React.js, Node.js, MongoDB y otros aspectos clave para la creación de sitios web front-end y back-end que implica proyectos basados en desafíos del mundo real.',
     chips: [

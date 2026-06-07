@@ -3,8 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Barra de direcciones / PWA: contenido actualizado en cliente vía useTheme -->
+    <!-- Barra de direcciones / PWA: contenido actualizado en cliente vía ThemeProvider -->
     <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
+    <!-- Anti-FOUC: alinear con THEME_STORAGE_KEY y THEME_COLOR_HEX en src/shared/constants/theme.ts -->
+    <script>
+      ;(function () {
+        var key = 'theme'
+        var colors = { light: '#ffffff', dark: '#171717' }
+        var stored = localStorage.getItem(key)
+        var dark =
+          stored === 'dark' ||
+          (stored !== 'light' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+        var root = document.documentElement
+        if (dark) root.classList.add('dark')
+        var meta = document.getElementById('meta-theme-color')
+        if (meta)
+          meta.setAttribute('content', dark ? colors.dark : colors.light)
+      })()
+    </script>
 
     <!-- code icon -->
     <link rel="icon" type="image/svg+xml" href="/code-icon.svg" />
@@ -12,10 +29,6 @@
     <!-- Primary SEO (sustituido en build desde shared/constants/siteProfile) -->
     <title>@@SITE_PAGE_TITLE@@</title>
     <meta name="description" content="@@SITE_META_DESCRIPTION@@" />
-    <meta
-      name="keywords"
-      content="frontend developer, desarrollador frontend, React, TypeScript, Vite, Tailwind CSS, JavaScript, portfolio, México"
-    />
     <meta name="author" content="@@SITE_DISPLAY_NAME@@" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="%VITE_PUBLIC_SITE_URL%/" />

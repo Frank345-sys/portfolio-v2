@@ -20,7 +20,7 @@ export function CodeIcon({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden={ariaHidden}
-      className={cn('h-5 w-5', className)}
+      className={cn('size-5', className)}
       {...props}
     >
       <path

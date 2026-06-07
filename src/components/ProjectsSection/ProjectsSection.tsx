@@ -19,6 +19,11 @@ import { useProjectsSection } from './hooks/useProjectsSection'
 import { ProjectInfo } from './subcomponents/ProjectInfo/ProjectInfo'
 import { ProjectPreviewCard } from './subcomponents/ProjectPreviewCard/ProjectPreviewCard'
 import { ProjectPreviewModal } from './subcomponents/ProjectPreviewModal/ProjectPreviewModal'
+import { getProjectImageAttributes } from './utils/getProjectImageAttributes'
+
+/** Resolución de atributos de imagen para el lightbox del modal — referencia estable. */
+const resolveModalImageAttributes = (src: string) =>
+  getProjectImageAttributes(src, { variant: 'lightbox' })
 
 /**
  * @module components/ProjectsSection/ProjectsSection
@@ -103,9 +108,7 @@ export function ProjectsSection() {
                       handleProjectPreviewSlideChange={
                         carousel.handleSlideChange
                       }
-                      resolveProjectImageAttributes={
-                        carousel.resolveImageAttributes
-                      }
+                      resolveProjectImageAttributes={getProjectImageAttributes}
                     />
                   </article>
                 </li>
@@ -145,7 +148,7 @@ export function ProjectsSection() {
         modalSlide={modal.slide}
         setModalSlide={modal.setSlide}
         onClose={modal.close}
-        resolveProjectImageAttributes={carousel.resolveModalImageAttributes}
+        resolveProjectImageAttributes={resolveModalImageAttributes}
       />
     </section>
   )

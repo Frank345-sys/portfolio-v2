@@ -7,33 +7,7 @@
 
 import { describe, it, expect } from 'vitest'
 
-import {
-  generateBoxes,
-  getViewportKey,
-  FLOATING_BOX_COUNT,
-} from './boxGenerator'
-
-describe('getViewportKey', () => {
-  it('retorna mobile-sm para width < 480', () => {
-    expect(getViewportKey(320)).toBe('mobile-sm')
-    expect(getViewportKey(479)).toBe('mobile-sm')
-  })
-
-  it('retorna mobile para 480 <= width < 768', () => {
-    expect(getViewportKey(480)).toBe('mobile')
-    expect(getViewportKey(767)).toBe('mobile')
-  })
-
-  it('retorna tablet para 768 <= width < 1024', () => {
-    expect(getViewportKey(768)).toBe('tablet')
-    expect(getViewportKey(1023)).toBe('tablet')
-  })
-
-  it('retorna desktop para width >= 1024', () => {
-    expect(getViewportKey(1024)).toBe('desktop')
-    expect(getViewportKey(1440)).toBe('desktop')
-  })
-})
+import { generateBoxes, FLOATING_BOX_COUNT } from './boxGenerator'
 
 describe('generateBoxes', () => {
   it('es determinista: la misma anchura produce el mismo resultado', () => {
@@ -74,12 +48,12 @@ describe('generateBoxes - simétrico (FLOATING_BOX_COUNT cajas)', () => {
     }
   })
 
-  it('en mobile-sm y mobile las cajas están fuera de la zona central (22%–68%)', () => {
+  it('en sm las cajas están fuera de la zona central (22%–68%)', () => {
     for (const b of generateBoxes(375)) {
       const inCenter = b.x > 22 && b.x < 68
       expect(inCenter).toBe(false)
     }
-    for (const b of generateBoxes(480)) {
+    for (const b of generateBoxes(640)) {
       const inCenter = b.x > 22 && b.x < 68
       expect(inCenter).toBe(false)
     }

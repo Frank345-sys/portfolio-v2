@@ -31,11 +31,15 @@ describe('AboutSkills', () => {
    */
   describe('rendering', () => {
     it('agrupa el bloque con role group referenciando el h3', () => {
-      const { container } = render(<AboutSkills />)
-      const landmark = container.querySelector(
-        `section[aria-labelledby="${ABOUT_SKILLS_HEADING_ID}"]`
-      )
+      render(<AboutSkills />)
+      const landmark = screen
+        .getByRole('heading', { level: 3, name: /stack técnico/i })
+        .closest('section')
       expect(landmark).toBeInTheDocument()
+      expect(landmark).toHaveAttribute(
+        'aria-labelledby',
+        ABOUT_SKILLS_HEADING_ID
+      )
     })
 
     it('expone el título de subsección «Stack técnico» como h3 con id', () => {

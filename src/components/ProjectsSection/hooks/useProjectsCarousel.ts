@@ -1,27 +1,17 @@
 /**
- * Carruseles por tarjeta, refs de artículos, rail de puntos y atributos de imagen.
+ * Carruseles por tarjeta, refs de artículos y rail de puntos.
  *
  * @module components/ProjectsSection/hooks/useProjectsCarousel
- * @fileoverview Estado de slide por proyecto, sincronización con modal, refs y atributos de imagen.
- * @remarks Importa `getProjectImageAttributes` por ruta directa (`../utils/getProjectImageAttributes`), sin barrel en `utils/`.
+ * @fileoverview Estado de slide por proyecto y sincronización con modal.
+ * @remarks Cuando el modal está abierto, `getSlideIndex` y `handleSlideChange` delegan en el slide del modal; al cerrar, el orquestador persiste vía `persistCardSlide`.
  */
 
 import {
-  useCallback,
-  useMemo,
   useState,
   type Dispatch,
   type MouseEvent,
   type SetStateAction,
 } from 'react'
-
-import { getProjectImageAttributes } from '../utils/getProjectImageAttributes'
-
-import type { ProjectImageAttributes } from '../types'
-
-type ProjectCarouselImageAttributesResolver = (
-  src: string
-) => ProjectImageAttributes
 
 interface UseProjectsCarouselParams {
   projectCount: number
@@ -38,12 +28,10 @@ interface UseProjectsCarouselResult {
   handleDotClick: (event: MouseEvent<HTMLButtonElement>) => void
   getSlideIndex: (projectIndex: number) => number
   handleSlideChange: (projectIndex: number, index: number) => void
-  resolveImageAttributes: ProjectCarouselImageAttributesResolver
-  resolveModalImageAttributes: ProjectCarouselImageAttributesResolver
 }
 
 /**
- * Estado del carrusel en tarjetas, refs para scroll sync y resolución de atributos `img`.
+ * Estado del carrusel en tarjetas y refs para scroll sync.
  */
 export function useProjectsCarousel({
   projectCount,
@@ -57,68 +45,40 @@ export function useProjectsCarousel({
     Record<number, number>
   >({})
 
-  const persistCardSlide = useCallback(
-    (projectIndex: number, slide: number) => {
-      setCardSlideByProject((prev) => ({
-        ...prev,
-        [projectIndex]: slide,
-      }))
-    },
-    []
+  function persistCardSlide(projectIndex: number, slide: number) {
+    setCardSlideByProject((prev) => ({
+      ...prev,
+      [projectIndex]: slide,
+    }))
+  }
+
+  const articleRefAssigners = Array.from(
+    { length: projectCount },
+    (_, i) => (el: HTMLElement | null) => {
+      setItemRef(i, el)
+    }
   )
 
-  const articleRefAssigners = useMemo(
-    () =>
-      Array.from({ length: projectCount }, (_, i) => {
-        const index = i
-        return (el: HTMLElement | null) => {
-          setItemRef(index, el)
-        }
-      }),
-    [projectCount, setItemRef]
-  )
+  function handleDotClick(event: MouseEvent<HTMLButtonElement>) {
+    const raw = event.currentTarget.dataset.projectDotIndex
+    const index = raw === undefined ? NaN : Number(raw)
+    if (Number.isNaN(index)) return
+    scrollItemIntoView(index)
+  }
 
-  const handleDotClick = useCallback(
-    (event: MouseEvent<HTMLButtonElement>) => {
-      const raw = event.currentTarget.dataset.projectDotIndex
-      const index = raw === undefined ? NaN : Number(raw)
-      if (Number.isNaN(index)) return
-      scrollItemIntoView(index)
-    },
-    [scrollItemIntoView]
-  )
+  function getSlideIndex(projectIndex: number) {
+    return modalProjectIndex === projectIndex
+      ? modalSlide
+      : (cardSlideByProject[projectIndex] ?? 0)
+  }
 
-  const getSlideIndex = useCallback(
-    (projectIndex: number) =>
-      modalProjectIndex === projectIndex
-        ? modalSlide
-        : (cardSlideByProject[projectIndex] ?? 0),
-    [cardSlideByProject, modalProjectIndex, modalSlide]
-  )
-
-  const handleSlideChange = useCallback(
-    (projectIndex: number, index: number) => {
-      if (modalProjectIndex === projectIndex) {
-        setModalSlide(index)
-        return
-      }
-      setCardSlideByProject((prev) => ({
-        ...prev,
-        [projectIndex]: index,
-      }))
-    },
-    [modalProjectIndex, setModalSlide]
-  )
-
-  const resolveImageAttributes = useCallback(
-    (src: string) => getProjectImageAttributes(src),
-    []
-  )
-
-  const resolveModalImageAttributes = useCallback(
-    (src: string) => getProjectImageAttributes(src, { variant: 'lightbox' }),
-    []
-  )
+  function handleSlideChange(projectIndex: number, nextSlide: number) {
+    if (modalProjectIndex === projectIndex) {
+      setModalSlide(nextSlide)
+      return
+    }
+    persistCardSlide(projectIndex, nextSlide)
+  }
 
   return {
     persistCardSlide,
@@ -126,7 +86,5 @@ export function useProjectsCarousel({
     handleDotClick,
     getSlideIndex,
     handleSlideChange,
-    resolveImageAttributes,
-    resolveModalImageAttributes,
   }
 }

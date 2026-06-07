@@ -18,7 +18,7 @@ export function TsIcon({
     <svg
       viewBox="0 0 24 24"
       aria-hidden={ariaHidden}
-      className={cn('h-7 w-7', className)}
+      className={cn('size-7', className)}
       {...props}
     >
       <rect width="24" height="24" rx="3" fill="#3178C6" />

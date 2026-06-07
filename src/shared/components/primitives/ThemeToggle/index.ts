@@ -5,4 +5,5 @@
  * @remarks Importar desde este barrel: `import { … } from '@/shared/components/primitives/ThemeToggle'`.
  */
 
+export { ThemeProvider } from './ThemeProvider'
 export { ThemeToggle } from './ThemeToggle'

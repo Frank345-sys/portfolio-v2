@@ -28,8 +28,8 @@ import { TIMELINE_CHIP_VARIANT } from './types'
  */
 describe('TimelineItem', () => {
   it('duplica dateTime en ambos <time> cuando hay periodStart/periodEnd máquina-legibles', () => {
-    const { container } = render(
-      <ol>
+    render(
+      <ol aria-label="Timeline de prueba">
         <TimelineItem
           period="Sep 2024 - Feb 2026"
           periodStartDatetime="2024-09-01"
@@ -41,15 +41,15 @@ describe('TimelineItem', () => {
       </ol>
     )
 
-    const times = container.querySelectorAll(
-      'time[datetime="2024-09-01/2026-02-28"]'
-    )
-    expect(times.length).toBe(2)
+    const times = screen
+      .getAllByRole('time')
+      .filter((el) => el.getAttribute('datetime') === '2024-09-01/2026-02-28')
+    expect(times).toHaveLength(2)
   })
 
   it('sin periodEndDatetime usa sólo periodStartDatetime en datetime', () => {
-    const { container } = render(
-      <ol>
+    render(
+      <ol aria-label="Timeline de prueba">
         <TimelineItem
           period="2025 — presente"
           periodStartDatetime="2025-01"
@@ -60,9 +60,11 @@ describe('TimelineItem', () => {
       </ol>
     )
 
-    expect(container.querySelectorAll('time[datetime="2025-01"]')).toHaveLength(
-      2
-    )
+    expect(
+      screen
+        .getAllByRole('time')
+        .filter((el) => el.getAttribute('datetime') === '2025-01')
+    ).toHaveLength(2)
   })
 
   it('renderiza contenido base con props críticas', () => {
@@ -113,6 +115,24 @@ describe('TimelineItem', () => {
     expect(screen.getByText('-30% bugs')).toBeInTheDocument()
   })
 
+  it('muestra la modalidad junto a la empresa cuando se proporciona', () => {
+    render(
+      <ol>
+        <TimelineItem
+          period="2025"
+          heading="Rol"
+          company="Institución"
+          modalidad="Híbrido"
+          description="Descripción"
+        />
+      </ol>
+    )
+
+    expect(screen.getByText('Institución')).toBeInTheDocument()
+    expect(screen.getByText('Híbrido')).toBeInTheDocument()
+    expect(screen.getByText('Híbrido')).toHaveClass('text-text-subtle')
+  })
+
   it('aplica acento information en la compañía', () => {
     render(
       <ol>
@@ -125,7 +145,9 @@ describe('TimelineItem', () => {
       </ol>
     )
 
-    expect(screen.getByText('Institución')).toHaveClass('text-information-base')
+    expect(screen.getByText('Institución').closest('p')).toHaveClass(
+      'text-information-base'
+    )
   })
 
   it('no falla cuando la prop chips está ausente', () => {

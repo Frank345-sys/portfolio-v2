@@ -27,8 +27,10 @@ import { ABOUT_HERO, ABOUT_HERO_SECTION_TITLE_ID } from './constants'
  */
 export function AboutHero() {
   const {
+    overline,
     firstName,
     lastName,
+    fullName,
     badge,
     location,
     tagline,
@@ -36,15 +38,12 @@ export function AboutHero() {
     avatarPhotoSrc,
   } = ABOUT_HERO
 
-  // Nombre completo usado como label accesible del Avatar
-  const fullName = `${firstName} ${lastName}`
-
   return (
     <header className={LAYOUT.spacing.default}>
       <div className="flex items-center justify-between">
         <div className={LAYOUT.spacing.compact}>
           <AnimatedSectionHeading
-            overline="Sobre mí"
+            overline={overline}
             title={firstName}
             titleHighlight={lastName}
             titleId={ABOUT_HERO_SECTION_TITLE_ID}
@@ -68,7 +67,7 @@ export function AboutHero() {
           initials={avatarInitials}
           name={fullName}
           src={avatarPhotoSrc}
-          className="mr-4 hidden sm:block"
+          className="hidden sm:block"
         />
       </div>
 

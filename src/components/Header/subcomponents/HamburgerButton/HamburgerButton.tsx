@@ -9,15 +9,14 @@
 
 import { m } from 'motion/react'
 
-import { MOTION_ANIMATION } from '@/shared/constants/motionAnimations'
 import { BUTTON } from '@/shared/constants/tokens'
 import { cn } from '@/shared/utils/cn'
 
 import {
   HEADER_MOBILE_DRAWER_PANEL_ID,
-  hamburgerBarBottomVariants,
-  hamburgerBarMidVariants,
-  hamburgerBarTopVariants,
+  HAMBURGER_BAR_BOTTOM,
+  HAMBURGER_BAR_MID,
+  HAMBURGER_BAR_TOP,
 } from './constants'
 
 interface HamburgerButtonProps {
@@ -30,8 +29,7 @@ interface HamburgerButtonProps {
 }
 
 /** Clases Tailwind compartidas por las tres barras `motion.span`; extraídas para evitar repetición. */
-const HAMBURGER_LINE_BASE_CLASS =
-  'bg-bg-strong block h-0.5 w-5 rounded-full' as const
+const HAMBURGER_LINE_BASE_CLASS = 'bg-bg-strong block h-0.5 w-5 rounded-full'
 
 /**
  * @module components/Header/subcomponents/HamburgerButton/HamburgerButton
@@ -43,14 +41,14 @@ const HAMBURGER_LINE_BASE_CLASS =
  * <HamburgerButton isOpen={isOpen} onClick={() => setIsOpen(prev => !prev)} />
  * ```
  * @see {@link HEADER_MOBILE_DRAWER_PANEL_ID} para el id del panel controlado
- * @see {@link hamburgerBarTopVariants} {@link hamburgerBarMidVariants} {@link hamburgerBarBottomVariants} para las variantes de animación
+ * @see {@link HAMBURGER_BAR_TOP} {@link HAMBURGER_BAR_MID} {@link HAMBURGER_BAR_BOTTOM} para los presets Motion
  */
 export function HamburgerButton({
   isOpen,
   onClick,
   className,
 }: HamburgerButtonProps) {
-  const toggleState = isOpen ? 'open' : 'closed'
+  const motionVariant = isOpen ? 'open' : 'closed'
 
   return (
     <button
@@ -61,28 +59,27 @@ export function HamburgerButton({
       aria-controls={HEADER_MOBILE_DRAWER_PANEL_ID}
       className={cn(
         BUTTON.special.icon.text.neutral,
-        'flex h-11 w-11 flex-col items-center justify-center gap-1 rounded-full p-0',
+        'flex size-11 flex-col items-center justify-center gap-1 rounded-full p-0',
         className
       )}
     >
+      {/* Barras del hamburger button */}
       <m.span
         aria-hidden
-        animate={toggleState}
-        variants={hamburgerBarTopVariants}
-        transition={MOTION_ANIMATION.spring.control}
+        {...HAMBURGER_BAR_TOP}
+        animate={motionVariant}
         className={cn(HAMBURGER_LINE_BASE_CLASS, 'origin-center')}
       />
       <m.span
         aria-hidden
-        animate={toggleState}
-        variants={hamburgerBarMidVariants}
+        {...HAMBURGER_BAR_MID}
+        animate={motionVariant}
         className={HAMBURGER_LINE_BASE_CLASS}
       />
       <m.span
         aria-hidden
-        animate={toggleState}
-        variants={hamburgerBarBottomVariants}
-        transition={MOTION_ANIMATION.spring.control}
+        {...HAMBURGER_BAR_BOTTOM}
+        animate={motionVariant}
         className={cn(HAMBURGER_LINE_BASE_CLASS, 'origin-center')}
       />
     </button>

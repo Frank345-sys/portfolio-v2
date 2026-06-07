@@ -13,11 +13,15 @@ import {
   useProjectPreviewCard,
 } from './useProjectPreviewCard'
 
-const { useIsIntersectingMock } = vi.hoisted(() => ({
-  useIsIntersectingMock: vi.fn<
-    (options: unknown) => [{ current: null }, boolean]
-  >(() => [{ current: null }, false]),
-}))
+const { useIsIntersectingMock, previewRefMock } = vi.hoisted(() => {
+  const previewRefMock = vi.fn()
+  return {
+    previewRefMock,
+    useIsIntersectingMock: vi.fn<
+      (options: unknown) => [typeof previewRefMock, boolean]
+    >(() => [previewRefMock, false]),
+  }
+})
 
 vi.mock('@/shared/hooks', () => ({
   useIsIntersecting: (options: unknown) => useIsIntersectingMock(options),
@@ -32,7 +36,7 @@ const baseParams = {
 
 describe('useProjectPreviewCard', () => {
   beforeEach(() => {
-    useIsIntersectingMock.mockReturnValue([{ current: null }, false])
+    useIsIntersectingMock.mockReturnValue([previewRefMock, false])
   })
 
   it('delega en useIsIntersecting con PROJECT_PREVIEW_INTERSECTION_OPTIONS', () => {
@@ -58,7 +62,7 @@ describe('useProjectPreviewCard', () => {
   })
 
   it('shouldAutoplay es true con preview visible, proyecto activo y sin modal en la tarjeta', () => {
-    useIsIntersectingMock.mockReturnValue([{ current: null }, true])
+    useIsIntersectingMock.mockReturnValue([previewRefMock, true])
 
     const { result } = renderHook(() => useProjectPreviewCard(baseParams))
 
@@ -73,7 +77,7 @@ describe('useProjectPreviewCard', () => {
   })
 
   it('shouldAutoplay es false si el modal está abierto para la misma tarjeta', () => {
-    useIsIntersectingMock.mockReturnValue([{ current: null }, true])
+    useIsIntersectingMock.mockReturnValue([previewRefMock, true])
 
     const { result } = renderHook(() =>
       useProjectPreviewCard({
@@ -86,7 +90,7 @@ describe('useProjectPreviewCard', () => {
   })
 
   it('shouldAutoplay es false si el proyecto no es el activo aunque sea visible', () => {
-    useIsIntersectingMock.mockReturnValue([{ current: null }, true])
+    useIsIntersectingMock.mockReturnValue([previewRefMock, true])
 
     const { result } = renderHook(() =>
       useProjectPreviewCard({

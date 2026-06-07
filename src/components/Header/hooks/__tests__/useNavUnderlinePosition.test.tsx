@@ -17,10 +17,17 @@ import { useNavUnderlinePosition } from '../useNavUnderlinePosition'
  * Harness que monta `useNavUnderlinePosition` con una fila fija de 300px
  * y expone `left`, `width` y `visible` del subrayado en `data-testid`.
  */
-function Harness({ activeHref }: { activeHref: string | null }) {
+function Harness({
+  activeHref,
+  isNavRowVisible = true,
+}: {
+  activeHref: string | null
+  isNavRowVisible?: boolean
+}) {
   const { rowRef, registerLink, underline } = useNavUnderlinePosition(
     activeHref,
-    DEFAULT_NAV_ITEMS
+    DEFAULT_NAV_ITEMS,
+    isNavRowVisible
   )
   return (
     <div>
@@ -79,5 +86,13 @@ describe('useNavUnderlinePosition', () => {
     })
     expect(screen.getByTestId('underline-left')).toHaveTextContent(/\d+/)
     expect(screen.getByTestId('underline-width')).toHaveTextContent(/\d+/)
+  })
+
+  it('con la fila oculta, no intenta medir el subrayado', async () => {
+    render(<Harness activeHref="#inicio" isNavRowVisible={false} />)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('underline-visible')).toHaveTextContent('no')
+    })
   })
 })
