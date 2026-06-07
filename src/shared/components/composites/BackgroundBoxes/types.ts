@@ -38,6 +38,12 @@ export interface ParallaxMotionValues {
   mouseY: MotionValue<number>
 }
 
+/** Retorno de `useParallaxMouse`: valores Motion y si el listener de puntero está activo. */
+export interface UseParallaxMouseReturn extends ParallaxMotionValues {
+  /** `true` solo si `enabled` y no hay `prefers-reduced-motion` (parallax decorativo off). */
+  parallaxActive: boolean
+}
+
 /**
  * Props de `FloatingBox`: una caja generada más el estado Motion de parallax.
  */
