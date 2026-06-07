@@ -10,9 +10,9 @@ import { ArrowNextIcon, ArrowPrevIcon } from '@/shared/icons'
 import { cn } from '@/shared/utils/cn'
 
 import type { ImageCarouselNavDirection } from '../../types'
+import type { ComponentPropsWithoutRef } from 'react'
 
-const CAROUSEL_NAV_ICON =
-  'text-information-base h-6 w-6 shrink-0 md:h-7 md:w-7' as const
+const CAROUSEL_NAV_ICON = 'text-information-base size-6 md:size-7'
 
 /** Controles flotantes: mismo nivel que `Z.raised` (no menús ni dropdowns). */
 const CAROUSEL_NAV_BUTTON_BASE = cn(
@@ -21,15 +21,12 @@ const CAROUSEL_NAV_BUTTON_BASE = cn(
   BUTTON.special.icon.lighter.primary
 )
 
-interface ImageCarouselNavButtonProps {
+interface ImageCarouselNavButtonProps extends Omit<
+  ComponentPropsWithoutRef<'button'>,
+  'type'
+> {
   /** Botón anterior o siguiente en el carrusel. */
   direction: ImageCarouselNavDirection
-  /** Se dispara al activar el botón (clic); puede combinarse con teclado vía `onArrowNavigate`. */
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
-  /** Flechas ← / → siguen el patrón APG de carrusel (misma acción desde ambos botones). */
-  onArrowNavigate: (target: ImageCarouselNavDirection) => void
-  /** `aria-label` accesible del botón. */
-  ariaLabel: string
 }
 
 /**
@@ -37,29 +34,20 @@ interface ImageCarouselNavButtonProps {
  */
 export function ImageCarouselNavButton({
   direction,
-  onClick,
-  onArrowNavigate,
-  ariaLabel,
+  className,
+  ...rest
 }: ImageCarouselNavButtonProps) {
   const isPrev = direction === 'prev'
 
-  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
-    if (event.key === 'ArrowLeft') {
-      event.preventDefault()
-      onArrowNavigate('prev')
-    } else if (event.key === 'ArrowRight') {
-      event.preventDefault()
-      onArrowNavigate('next')
-    }
-  }
-
   return (
     <button
+      {...rest}
       type="button"
-      onClick={onClick}
-      onKeyDown={handleKeyDown}
-      className={cn(CAROUSEL_NAV_BUTTON_BASE, isPrev ? 'left-5' : 'right-5')}
-      aria-label={ariaLabel}
+      className={cn(
+        CAROUSEL_NAV_BUTTON_BASE,
+        isPrev ? 'left-5' : 'right-5',
+        className
+      )}
     >
       {isPrev ? (
         <ArrowPrevIcon className={CAROUSEL_NAV_ICON} />
